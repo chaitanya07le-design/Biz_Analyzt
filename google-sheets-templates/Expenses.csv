@@ -1,0 +1,3 @@
+ExpenseID,CompanyID,Date,LedgerName,ExpenseType,Amount,Notes
+EXP001,C001,2025-04-01,Office Rent,Direct,45000,April office rent
+EXP002,C001,2025-04-30,Bank Charges,Indirect,760,Bank service charges

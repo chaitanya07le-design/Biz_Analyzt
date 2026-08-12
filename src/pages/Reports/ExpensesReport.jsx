@@ -1,0 +1,244 @@
+import React, { useState, useMemo } from 'react';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import Skeleton from '../../components/shared/Skeleton';
+import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import { useCompany } from '../../context/CompanyContext';
+import { ledgers } from '../../data/mockData';
+
+const ExpensesReport = () => {
+  const navigate = useNavigate();
+  const { currentCompany } = useCompany();
+  const [startDate, setStartDate] = useState('2025-04-01');
+  const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
+  
+  const { ledgers: apiLedgers, loading, useMockData } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+
+  const normalizedLedgers = useMemo(() => {
+    if (useMockData || !apiLedgers || apiLedgers.length === 0) return ledgers;
+    return apiLedgers.map(l => ({
+      id: l.LedgerID || l.id,
+      name: l.LedgerName || l.name || '',
+      group: l.Group || l.group || '',
+      type: l.LedgerType || l.type || '',
+      balance: parseFloat(l.OpeningBalance || l.balance || 0),
+    }));
+  }, [apiLedgers, useMockData]);
+
+  const expenseData = useMemo(() => {
+    const directExpenses = [];
+    const indirectExpenses = [];
+    let totalDirect = 0;
+    let totalIndirect = 0;
+
+    normalizedLedgers.forEach(ledger => {
+      if (ledger.type === 'expense') {
+        const item = {
+          id: ledger.id,
+          name: ledger.name,
+          group: ledger.group,
+          amount: Math.abs(ledger.balance)
+        };
+
+        if (ledger.group === 'Direct Expenses') {
+          directExpenses.push(item);
+          totalDirect += item.amount;
+        } else if (ledger.group === 'Indirect Expenses') {
+          indirectExpenses.push(item);
+          totalIndirect += item.amount;
+        }
+      }
+    });
+
+    return {
+      directExpenses: directExpenses.sort((a, b) => b.amount - a.amount),
+      indirectExpenses: indirectExpenses.sort((a, b) => b.amount - a.amount),
+      totalDirect,
+      totalIndirect,
+      grandTotal: totalDirect + totalIndirect
+    };
+  }, [normalizedLedgers]);
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount);
+  };
+
+  const getPercentage = (amount, total) => {
+    return ((amount / total) * 100).toFixed(1);
+  };
+
+  if (loading) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="min-h-screen bg-canvas-default pb-20 md:pb-6"
+      >
+        <div className="px-4 py-4 md:px-6 md:py-6 space-y-4">
+          <Skeleton variant="text" className="w-48 h-7" />
+          <div className="flex gap-2">
+            <Skeleton variant="rounded" className="w-32 h-10 rounded-lg" />
+            <Skeleton variant="rounded" className="w-32 h-10 rounded-lg" />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <Skeleton variant="rounded" className="h-48 rounded-lg" />
+            <Skeleton variant="rounded" className="h-48 rounded-lg" />
+          </div>
+        </div>
+      </motion.div>
+    );
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className="min-h-screen bg-canvas-default pb-20 md:pb-6"
+    >
+      <div className="px-4 py-4 md:px-6 md:py-6 space-y-4">
+        <motion.div
+          initial={{ y: -10, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="flex items-center justify-between flex-wrap gap-3"
+        >
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate('/reports')}
+              className="p-2 hover:bg-canvas-faint rounded-lg transition-colors"
+            >
+              <svg className="w-5 h-5 text-ink-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <div>
+              <h1 className="text-xl md:text-2xl font-semibold text-ink-default">Expenses</h1>
+              <p className="text-sm text-ink-muted">Direct and Indirect expense breakdown</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="px-3 py-1.5 bg-white border border-canvas-faint rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
+            />
+            <span className="text-ink-muted">to</span>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="px-3 py-1.5 bg-white border border-canvas-faint rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
+            />
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ y: 10, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.1 }}
+          className="grid grid-cols-3 gap-3"
+        >
+          <div className="bg-white rounded-lg border border-canvas-faint p-3 text-center">
+            <p className="text-xs text-ink-muted mb-1">Direct Expenses</p>
+            <p className="text-lg font-semibold text-orange-600">{formatCurrency(expenseData.totalDirect)}</p>
+            <p className="text-xs text-ink-muted mt-1">{expenseData.directExpenses.length} items</p>
+          </div>
+          <div className="bg-white rounded-lg border border-canvas-faint p-3 text-center">
+            <p className="text-xs text-ink-muted mb-1">Indirect Expenses</p>
+            <p className="text-lg font-semibold text-red-600">{formatCurrency(expenseData.totalIndirect)}</p>
+            <p className="text-xs text-ink-muted mt-1">{expenseData.indirectExpenses.length} items</p>
+          </div>
+          <div className="bg-white rounded-lg border border-canvas-faint p-3 text-center">
+            <p className="text-xs text-ink-muted mb-1">Total Expenses</p>
+            <p className="text-lg font-semibold text-brand-primary">{formatCurrency(expenseData.grandTotal)}</p>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ y: 10, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
+          <div className="bg-white rounded-lg border border-canvas-faint overflow-hidden">
+            <div className="px-4 py-3 bg-gradient-to-r from-orange-50 to-amber-50 border-b border-canvas-faint">
+              <h2 className="font-semibold text-ink-default">Direct Expenses</h2>
+              <p className="text-xs text-ink-muted">Cost of goods/services sold</p>
+            </div>
+            <div className="divide-y divide-canvas-faint">
+              {expenseData.directExpenses.map((item, idx) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.02 }}
+                  className="px-4 py-3"
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-ink-default">{item.name}</p>
+                    <div className="text-right">
+                      <p className="text-sm font-semibold text-ink-default">{formatCurrency(item.amount)}</p>
+                      <p className="text-xs text-ink-muted">{getPercentage(item.amount, expenseData.grandTotal)}%</p>
+                    </div>
+                  </div>
+                  <div className="mt-2 h-1 bg-canvas-faint rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-orange-500 rounded-full"
+                      style={{ width: `${getPercentage(item.amount, expenseData.totalDirect)}%` }}
+                    />
+                  </div>
+                </motion.div>
+              ))}
+              {expenseData.directExpenses.length === 0 && (
+                <div className="px-4 py-6 text-center text-sm text-ink-muted">No direct expenses</div>
+              )}
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg border border-canvas-faint overflow-hidden">
+            <div className="px-4 py-3 bg-gradient-to-r from-red-50 to-rose-50 border-b border-canvas-faint">
+              <h2 className="font-semibold text-ink-default">Indirect Expenses</h2>
+              <p className="text-xs text-ink-muted">Operating & administrative costs</p>
+            </div>
+            <div className="divide-y divide-canvas-faint">
+              {expenseData.indirectExpenses.map((item, idx) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.02 }}
+                  className="px-4 py-3"
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-ink-default">{item.name}</p>
+                    <div className="text-right">
+                      <p className="text-sm font-semibold text-ink-default">{formatCurrency(item.amount)}</p>
+                      <p className="text-xs text-ink-muted">{getPercentage(item.amount, expenseData.grandTotal)}%</p>
+                    </div>
+                  </div>
+                  <div className="mt-2 h-1 bg-canvas-faint rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-red-500 rounded-full"
+                      style={{ width: `${getPercentage(item.amount, expenseData.totalIndirect)}%` }}
+                    />
+                  </div>
+                </motion.div>
+              ))}
+              {expenseData.indirectExpenses.length === 0 && (
+                <div className="px-4 py-6 text-center text-sm text-ink-muted">No indirect expenses</div>
+              )}
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+};
+
+export default ExpensesReport;

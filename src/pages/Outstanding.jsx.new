@@ -1,0 +1,165 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import Card from '../components/ui/Card';
+import InlineAlert from '../components/shared/InlineAlert';
+import AgingBarChart from '../components/shared/AgingBarChart';
+import { outstandingReceivables, outstandingPayables } from '../data/mockData';
+
+const Outstanding = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const typeParam = searchParams.get('type');
+  
+  const [activeTab, setActiveTab] = useState(typeParam === 'payable' ? 'payable' : 'receivable');
+  const [viewMode, setViewMode] = useState('parties');
+  const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    if (typeParam) {
+      setActiveTab(typeParam === 'payable' ? 'payable' : 'receivable');
+    }
+  }, [typeParam]);
+
+  const data = activeTab === 'receivable' ? outstandingReceivables : outstandingPayables;
+  const filteredData = data.filter(item =>
+    item.partyName.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const totalOutstanding = filteredData.reduce((sum, item) => sum + item.totalOutstanding, 0);
+  const totalNotDue = filteredData.reduce((sum, item) => sum + item.notDue, 0);
+  const totalOverdue = filteredData.reduce((sum, item) => sum + item.overdue0to30 + item.overdue31to60 + item.overdue61to90 + item.over90, 0);
+
+  const agingData = [
+    { bucket: 'Not Due', amount: filteredData.reduce((sum, item) => sum + item.notDue, 0), count: filteredData.filter(item => item.notDue > 0).length },
+    { bucket: '0-30', amount: filteredData.reduce((sum, item) => sum + item.overdue0to30, 0), count: filteredData.filter(item => item.overdue0to30 > 0).length },
+    { bucket: '31-60', amount: filteredData.reduce((sum, item) => sum + item.overdue31to60, 0), count: filteredData.filter(item => item.overdue31to60 > 0).length },
+    { bucket: '61-90', amount: filteredData.reduce((sum, item) => sum + item.overdue61to90, 0), count: filteredData.filter(item => item.overdue61to90 > 0).length },
+    { bucket: '>90', amount: filteredData.reduce((sum, item) => sum + item.over90, 0), count: filteredData.filter(item => item.over90 > 0).length },
+  ];
+
+  const formatCurrency = (value) => '₹' + value.toLocaleString('en-IN');
+
+  return (
+    <div className="min-h-screen bg-canvas-default pb-20 md:pb-6">
+      <div className="px-4 py-4 md:px-6 md:py-6 space-y-4">
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-xl md:text-2xl font-semibold text-ink-default">Outstanding</h1>
+            <p className="text-sm text-ink-muted mt-1">
+              {activeTab === 'receivable' ? 'Receivables' : 'Payables'} Summary
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card
+            onClick={() => setActiveTab('receivable')}
+            className={`cursor-pointer transition-all ${activeTab === 'receivable' ? 'ring-2 ring-brand-primary' : ''}`}
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
+                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+              </div>
+              <div>
+                <div className="text-xs text-ink-muted">Total Receivable</div>
+                <div className="text-2xl font-bold text-ink-default">
+                  {formatCurrency(outstandingReceivables.reduce((sum, item) => sum + item.totalOutstanding, 0))}
+                </div>
+                <div className="text-xs text-ink-faint mt-1">
+                  {outstandingReceivables.filter(item => item.totalOutstanding > 0).length} parties
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          <Card
+            onClick={() => setActiveTab('payable')}
+            className={`cursor-pointer transition-all ${activeTab === 'payable' ? 'ring-2 ring-brand-primary' : ''}`}
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-red-100 flex items-center justify-center">
+                <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                </svg>
+              </div>
+              <div>
+                <div className="text-xs text-ink-muted">Total Payable</div>
+                <div className="text-2xl font-bold text-ink-default">
+                  {formatCurrency(outstandingPayables.reduce((sum, item) => sum + item.totalOutstanding, 0))}
+                </div>
+                <div className="text-xs text-ink-faint mt-1">
+                  {outstandingPayables.filter(item => item.totalOutstanding > 0).length} parties
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        <div className="bg-white rounded-lg border border-canvas-faint p-4">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-medium text-ink-default">Aging Distribution</h3>
+          </div>
+          <AgingBarChart data={agingData} height={200} />
+        </div>
+
+        <InlineAlert 
+          type="warning"
+          message={`${filteredData.filter(item => item.overdue0to30 + item.overdue31to60 + item.overdue61to90 + item.over90 > 0).length} parties have overdue amounts`}
+        />
+
+        <div className="flex gap-2">
+          <input
+            type="text"
+            placeholder="Search parties..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="flex-1 px-4 py-2 bg-white border border-canvas-faint rounded-lg text-sm outline-none focus:border-brand-primary transition-colors"
+          />
+          <div className="inline-flex rounded-lg border border-canvas-faint bg-canvas-subtle p-1">
+            <button
+              onClick={() => setViewMode('parties')}
+              className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                viewMode === 'parties' ? 'bg-white text-ink-default shadow-sm' : 'text-ink-muted'
+              }`}
+            >
+              Parties
+            </button>
+            <button
+              onClick={() => setViewMode('groups')}
+              className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                viewMode === 'groups' ? 'bg-white text-ink-default shadow-sm' : 'text-ink-muted'
+              }`}
+            >
+              Groups
+            </button>
+          </div>
+        </div>
+
+        <Card>
+          <div className="px-4 py-3 border-b border-canvas-faint flex items-center justify-between">
+            <div>
+              <span className="text-sm font-medium text-ink-default">
+                {filteredData.length} parties
+              </span>
+              <span className="text-sm text-ink-muted ml-2">
+                Total: {formatCurrency(totalOutstanding)}
+              </span>
+            </div>
+          </div>
+
+          <div className="hidden md:block overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-canvas-subtle">
+                <tr>
+                  <th className="px-4 py-3 font-medium text-ink-muted">Party</th>
+                  <th className="px-4 py-3 font-medium text-ink-muted text-right">Total</th>
+                  <th className="px-4 py-3 font-medium text-ink-muted text-right">Not Due</th>
+                  <th className="px-4 py-3 font-medium text-ink-muted text-right">Overdue</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-canvas-faint">
+                {filteredData.filter(item => item.totalOutstanding > 0).map((item, idx) => (
+                  <tr 
+                    key={

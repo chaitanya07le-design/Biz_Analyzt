@@ -1,0 +1,324 @@
+{
+  "id": "tpl_tally_party_sync",
+  "created": "2025-08-07T10:00:00.000Z",
+  "updated": "2025-08-07T10:00:00.000Z",
+  "name": "Tally_Party_Sync",
+  "summary": "Syncs party ledger data from Tally Prime to Google Sheets with multi-company support",
+  "description": "Automated workflow that reads party (ledger) master data from Tally Prime for multiple companies and syncs it to Google Sheets. Supports test mode, smart diffing, and preserves manual edits.",
+  "tags": [
+    {"title": "Tally", "color": "#4CAF50", "icon": "database"},
+    {"title": "Sync", "color": "#2196F3", "icon": "sync"},
+    {"title": "Accounting", "color": "#FF9800", "icon": "account_balance"}
+  ],
+  "author": "BizAnalyzt",
+  "categories": ["accounting", "automation", "tally"],
+  "pieces": [
+    "@puchoaistudio/tool-schedule",
+    "@puchoaistudio/tool-google-sheets",
+    "@puchoaistudio/tool-http",
+    "@puchoaistudio/tool-store"
+  ],
+  "blogUrl": null,
+  "metadata": {
+    "version": "2.0",
+    "requires": ["Tally Prime with HTTP Gateway enabled", "Google Sheets with API access"],
+    "envVars": ["SPREADSHEET_ID", "TALLY_HOST", "TALLY_PORT", "TEST_MODE", "SIGN_FLIP", "PARTY_SHEET_GID", "PARTY_STAGING_GID", "GOOGLE_SHEETS_CONNECTION_ID"]
+  },
+  "platformId": null,
+  "type": "OFFICIAL",
+  "status": "PUBLISHED",
+  "flows": [
+    {
+      "displayName": "Tally_Party_Sync",
+      "valid": true,
+      "schemaVersion": "1.0",
+      "description": "Main workflow for syncing Tally party ledgers to Google Sheets",
+      "notes": [],
+      "trigger": {
+        "name": "trigger",
+        "valid": true,
+        "displayName": "Schedule Trigger",
+        "type": "PIECE_TRIGGER",
+        "settings": {
+          "pieceName": "@puchoaistudio/tool-schedule",
+          "pieceVersion": "2.0.0",
+          "input": {
+            "cron": "0 */2 * * *",
+            "timezone": "Asia/Kolkata"
+          },
+          "sampleData": {},
+          "propertySettings": {
+            "cron": {"type": "MANUAL"},
+            "timezone": {"type": "MANUAL"}
+          },
+          "triggerName": "scheduled_trigger"
+        },
+        "nextAction": {
+          "name": "step_1",
+          "skip": false,
+          "type": "PIECE",
+          "valid": true,
+          "displayName": "Read Companies",
+          "settings": {
+            "input": {
+              "auth": "{{connections['GOOGLE_SHEETS_CONNECTION_ID']}}",
+              "spreadsheet_id": "{{SPREADSHEET_ID}}",
+              "sheet_name": "Companies",
+              "range": "A:F"
+            },
+            "pieceName": "@puchoaistudio/tool-google-sheets",
+            "actionName": "get_all_rows",
+            "pieceVersion": "2.0.0",
+            "errorHandlingOptions": {
+              "retryOnFailure": {"value": false},
+              "continueOnFailure": {"value": false}
+            }
+          },
+          "nextAction": {
+            "name": "step_2",
+            "skip": false,
+            "type": "PIECE",
+            "valid": true,
+            "displayName": "Read Party",
+            "settings": {
+              "input": {
+                "auth": "{{connections['GOOGLE_SHEETS_CONNECTION_ID']}}",
+                "spreadsheet_id": "{{SPREADSHEET_ID}}",
+                "sheet_name": "Party",
+                "range": "A:Q"
+              },
+              "pieceName": "@puchoaistudio/tool-google-sheets",
+              "actionName": "get_all_rows",
+              "pieceVersion": "2.0.0",
+              "errorHandlingOptions": {
+                "retryOnFailure": {"value": false},
+                "continueOnFailure": {"value": false}
+              }
+            },
+            "nextAction": {
+              "name": "step_3",
+              "skip": false,
+              "type": "CODE",
+              "valid": true,
+              "displayName": "Init Storage",
+              "settings": {
+                "input": {
+                  "companies_raw": "{{step_1['rows']}}",
+                  "party_raw": "{{step_2['rows']}}"
+                },
+                "sampleData": {},
+                "sourceCode": {
+                  "code": "export const code = async (inputs) => {\n  const companies_raw = inputs.companies_raw || [];\n  const party_raw = inputs.party_raw || [];\n  const companies = [];\n  for (let i = 1; i < companies_raw.length; i++) {\n    const row = companies_raw[i];\n    if (row && row[0] && row[1]) {\n      companies.push({\n        companyID: row[0],\n        tallyCompanyName: row[1]\n      });\n    }\n  }\n  const existingGUIDs = new Map();\n  const existingPartyIDs = [];\n  for (let i = 1; i < party_raw.length; i++) {\n    const row = party_raw[i];\n    if (row && row[16]) {\n      existingGUIDs.set(row[16], {\n        rowNumber: i + 1,\n        PartyID: row[0],\n        CompanyID: row[1],\n        PartyName: row[2],\n        PartyType: row[3],\n        GroupID: row[4],\n        ContactPerson: row[5],\n        Phone: row[6],\n        Email: row[7],\n        Address: row[8],\n        GSTIN: row[9],\n        OpeningBalance: parseFloat(row[10]) || 0,\n        CreditLimit: parseFloat(row[11]) || 0,\n        CreditDays: parseInt(row[12]) || 0,\n        CreatedAt: row[13],\n        UpdatedAt: row[14],\n        Version: parseInt(row[15]) || 1,\n        TallyGUID: row[16]\n      });\n    }\n    if (row && row[0]) {\n      existingPartyIDs.push(row[0]);\n    }\n  }\n  await store.set('accumulatedNew', []);\n  await store.set('accumulatedUpd', []);\n  await store.set('existingGUIDsMap', Array.from(existingGUIDs.entries()));\n  await store.set('existingPartyIDs', existingPartyIDs);\n  await store.set('companies', companies);\n  await store.set('groupMap', [['Sundry Debtors', 'GRP-0001'], ['Sundry Creditors', 'GRP-0002']]);\n  return {\n    companiesCount: companies.length,\n    existingCount: existingGUIDs.size,\n    companies: companies\n  };\n};",
+                  "packageJson": "{}",
+                  "language": "typescript"
+                },
+                "errorHandlingOptions": {
+                  "retryOnFailure": {"value": false},
+                  "continueOnFailure": {"value": false}
+                }
+              },
+              "nextAction": {
+                "name": "step_4",
+                "skip": false,
+                "type": "LOOP_ON_ITEMS",
+                "valid": true,
+                "displayName": "Loop Companies",
+                "settings": {
+                  "items": "{{step_3['companies']}}",
+                  "sampleData": []
+                },
+                "firstLoopAction": {
+                  "name": "step_5",
+                  "skip": false,
+                  "type": "PIECE",
+                  "valid": true,
+                  "displayName": "Tally Debtors",
+                  "settings": {
+                    "input": {
+                      "method": "POST",
+                      "url": "http://{{TALLY_HOST}}:{{TALLY_PORT}}",
+                      "headers": {"Content-Type": "text/xml"},
+                      "body_type": "raw",
+                      "body": "<ENVELOPE><HEADER><VERSION>1</VERSION><TALLYREQUEST>Export</TALLYREQUEST><TYPE>Collection</TYPE><ID>PartyLedgerCollection</ID></HEADER><BODY><DESC><STATICVARIABLES><SVEXPORTFORMAT>$$SysName:XML</SVEXPORTFORMAT><SVCURRENTCOMPANY>{{step_4['item']['tallyCompanyName']}}</SVCURRENTCOMPANY></STATICVARIABLES><TDL><TDLMESSAGE><COLLECTION NAME=\"PartyLedgerCollection\" ISMODIFY=\"No\"><TYPE>Ledger</TYPE><BELONGSTO>Yes</BELONGSTO><CHILDOF>$$GroupSundryDebtors</CHILDOF><FETCH>NAME,PARENT,GUID,ALTERID,ADDRESS.LIST,EMAIL,LEDGERMOBILE,LEDGERGSTIN,OPENINGBALANCE,CREDITLIMIT,CREDITPERIOD</FETCH></COLLECTION></TDLMESSAGE></TDL></DESC></BODY></ENVELOPE>",
+                      "authType": "NONE",
+                      "stopFlow": false,
+                      "use_proxy": false,
+                      "response_is_binary": false
+                    },
+                    "pieceName": "@puchoaistudio/tool-http",
+                    "actionName": "send_request",
+                    "pieceVersion": "2.0.0",
+                    "errorHandlingOptions": {
+                      "retryOnFailure": {"value": false},
+                      "continueOnFailure": {"value": true}
+                    }
+                  },
+                  "nextAction": {
+                    "name": "step_6",
+                    "skip": false,
+                    "type": "CODE",
+                    "valid": true,
+                    "displayName": "Parse Debtors",
+                    "settings": {
+                      "input": {
+                        "xml": "{{step_5['body']}}"
+                      },
+                      "sampleData": {},
+                      "sourceCode": {
+                        "code": "export const code = async (inputs) => {\n  const xml = inputs.xml || '';\n  const ledgers = [];\n  const regex = /<LEDGER[^>]*>([\\s\\S]*?)<\\/LEDGER>/gi;\n  let match;\n  while ((match = regex.exec(xml)) !== null) {\n    const ledgerXml = match[1];\n    const getTag = (tag) => {\n      const r = new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`, 'i');\n      const m = ledgerXml.match(r);\n      return m ? m[1].trim() : '';\n    };\n    const addrLines = [];\n    const addrRegex = /<ADDRESS[^>]*>([\\s\\S]*?)<\\/ADDRESS>/gi;\n    let addrMatch;\n    while ((addrMatch = addrRegex.exec(ledgerXml)) !== null) {\n      addrLines.push(addrMatch[1].trim());\n    }\n    ledgers.push({\n      guid: getTag('GUID'),\n      name: getTag('NAME'),\n      parent: getTag('PARENT'),\n      address: addrLines.join(', '),\n      email: getTag('EMAIL'),\n      mobile: getTag('LEDGERMOBILE') || getTag('PARTYMOBILE'),\n      gstin: getTag('LEDGERGSTIN') || getTag('PARTYGSTIN'),\n      openingBalance: parseFloat(getTag('OPENINGBALANCE')) || 0,\n      creditLimit: parseFloat(getTag('CREDITLIMIT')) || 0,\n      creditPeriod: parseInt((getTag('CREDITPERIOD') || '').match(/\\d+/) || ['0']) || 0,\n      source: 'Debtor'\n    });\n  }\n  return { ledgers, count: ledgers.length };\n};",
+                        "packageJson": "{}",
+                        "language": "typescript"
+                      },
+                      "errorHandlingOptions": {
+                        "retryOnFailure": {"value": false},
+                        "continueOnFailure": {"value": false}
+                      }
+                    },
+                    "nextAction": {
+                      "name": "step_7",
+                      "skip": false,
+                      "type": "PIECE",
+                      "valid": true,
+                      "displayName": "Tally Creditors",
+                      "settings": {
+                        "input": {
+                          "method": "POST",
+                          "url": "http://{{TALLY_HOST}}:{{TALLY_PORT}}",
+                          "headers": {"Content-Type": "text/xml"},
+                          "body_type": "raw",
+                          "body": "<ENVELOPE><HEADER><VERSION>1</VERSION><TALLYREQUEST>Export</TALLYREQUEST><TYPE>Collection</TYPE><ID>PartyLedgerCollection</ID></HEADER><BODY><DESC><STATICVARIABLES><SVEXPORTFORMAT>$$SysName:XML</SVEXPORTFORMAT><SVCURRENTCOMPANY>{{step_4['item']['tallyCompanyName']}}</SVCURRENTCOMPANY></STATICVARIABLES><TDL><TDLMESSAGE><COLLECTION NAME=\"PartyLedgerCollection\" ISMODIFY=\"No\"><TYPE>Ledger</TYPE><BELONGSTO>Yes</BELONGSTO><CHILDOF>$$GroupSundryCreditors</CHILDOF><FETCH>NAME,PARENT,GUID,ALTERID,ADDRESS.LIST,EMAIL,LEDGERMOBILE,LEDGERGSTIN,OPENINGBALANCE,CREDITLIMIT,CREDITPERIOD</FETCH></COLLECTION></TDLMESSAGE></TDL></DESC></BODY></ENVELOPE>",
+                          "authType": "NONE",
+                          "stopFlow": false,
+                          "use_proxy": false,
+                          "response_is_binary": false
+                        },
+                        "pieceName": "@puchoaistudio/tool-http",
+                        "actionName": "send_request",
+                        "pieceVersion": "2.0.0",
+                        "errorHandlingOptions": {
+                          "retryOnFailure": {"value": false},
+                          "continueOnFailure": {"value": true}
+                        }
+                      },
+                      "nextAction": {
+                        "name": "step_8",
+                        "skip": false,
+                        "type": "CODE",
+                        "valid": true,
+                        "displayName": "Parse Creditors",
+                        "settings": {
+                          "input": {
+                            "xml": "{{step_7['body']}}"
+                          },
+                          "sampleData": {},
+                          "sourceCode": {
+                            "code": "export const code = async (inputs) => {\n  const xml = inputs.xml || '';\n  const ledgers = [];\n  const regex = /<LEDGER[^>]*>([\\s\\S]*?)<\\/LEDGER>/gi;\n  let match;\n  while ((match = regex.exec(xml)) !== null) {\n    const ledgerXml = match[1];\n    const getTag = (tag) => {\n      const r = new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`, 'i');\n      const m = ledgerXml.match(r);\n      return m ? m[1].trim() : '';\n    };\n    const addrLines = [];\n    const addrRegex = /<ADDRESS[^>]*>([\\s\\S]*?)<\\/ADDRESS>/gi;\n    let addrMatch;\n    while ((addrMatch = addrRegex.exec(ledgerXml)) !== null) {\n      addrLines.push(addrMatch[1].trim());\n    }\n    ledgers.push({\n      guid: getTag('GUID'),\n      name: getTag('NAME'),\n      parent: getTag('PARENT'),\n      address: addrLines.join(', '),\n      email: getTag('EMAIL'),\n      mobile: getTag('LEDGERMOBILE') || getTag('PARTYMOBILE'),\n      gstin: getTag('LEDGERGSTIN') || getTag('PARTYGSTIN'),\n      openingBalance: parseFloat(getTag('OPENINGBALANCE')) || 0,\n      creditLimit: parseFloat(getTag('CREDITLIMIT')) || 0,\n      creditPeriod: parseInt((getTag('CREDITPERIOD') || '').match(/\\d+/) || ['0']) || 0,\n      source: 'Creditor'\n    });\n  }\n  return { ledgers, count: ledgers.length };\n};",
+                            "packageJson": "{}",
+                            "language": "typescript"
+                          },
+                          "errorHandlingOptions": {
+                            "retryOnFailure": {"value": false},
+                            "continueOnFailure": {"value": false}
+                          }
+                        },
+                        "nextAction": {
+                          "name": "step_9",
+                          "skip": false,
+                          "type": "CODE",
+                          "valid": true,
+                          "displayName": "Merge and Accumulate",
+                          "settings": {
+                            "input": {
+                              "debtors": "{{step_6['ledgers']}}",
+                              "creditors": "{{step_8['ledgers']}}",
+                              "companyID": "{{step_4['item']['companyID']}}"
+                            },
+                            "sampleData": {},
+                            "sourceCode": {
+                              "code": "export const code = async (inputs) => {\n  const debtors = inputs.debtors || [];\n  const creditors = inputs.creditors || [];\n  const companyID = inputs.companyID;\n  const existingGUIDsMap = await store.get('existingGUIDsMap') || [];\n  const existingGUIDs = new Map(existingGUIDsMap);\n  const existingPartyIDs = await store.get('existingPartyIDs') || [];\n  const groupMap = new Map(await store.get('groupMap') || []);\n  const SIGN_FLIP = await store.get('SIGN_FLIP') === 'true';\n  const merged = new Map();\n  for (const d of debtors) {\n    merged.set(d.guid, { ...d, partyType: 'Customer' });\n  }\n  for (const c of creditors) {\n    if (merged.has(c.guid)) {\n      merged.get(c.guid).partyType = 'Both';\n    } else {\n      merged.set(c.guid, { ...c, partyType: 'Supplier' });\n    }\n  }\n  const newRows = [];\n  const updatedRows = [];\n  let maxID = existingPartyIDs\n    .filter(id => id && id.startsWith('PTY-'))\n    .map(id => parseInt(id.replace('PTY-', '')))\n    .reduce((a, b) => Math.max(a, b), 0);\n  const genID = () => {\n    maxID++;\n    return 'PTY-' + maxID.toString().padStart(4, '0');\n  };\n  const now = () => new Date().toISOString().replace('T', ' ').substring(0, 19);\n  const deriveType = (parent, existingType) => {\n    const p = (parent || '').toLowerCase();\n    if (p.includes('debtor')) return 'Customer';\n    if (p.includes('creditor')) return 'Supplier';\n    if (existingType === 'Both') return 'Both';\n    return 'Unclassified';\n  };\n  for (const [guid, t] of merged) {\n    const existing = existingGUIDs.get(guid);\n    if (!existing) {\n      newRows.push({\n        PartyID: genID(),\n        CompanyID: companyID,\n        PartyName: t.name,\n        PartyType: deriveType(t.parent, t.partyType),\n        GroupID: groupMap.get(t.parent) || '',\n        ContactPerson: '',\n        Phone: t.mobile,\n        Email: t.email,\n        Address: t.address,\n        GSTIN: t.gstin,\n        OpeningBalance: SIGN_FLIP ? -t.openingBalance : t.openingBalance,\n        CreditLimit: t.creditLimit,\n        CreditDays: t.creditPeriod,\n        CreatedAt: now(),\n        UpdatedAt: now(),\n        Version: 1,\n        TallyGUID: guid\n      });\n    } else {\n      const changes = t.name !== existing.PartyName ||\n        deriveType(t.parent, t.partyType) !== existing.PartyType ||\n        (groupMap.get(t.parent) || '') !== existing.GroupID ||\n        (t.mobile || '') !== (existing.Phone || '') ||\n        (t.email || '') !== (existing.Email || '') ||\n        t.address !== existing.Address ||\n        (t.gstin || '') !== (existing.GSTIN || '') ||\n        (SIGN_FLIP ? -t.openingBalance : t.openingBalance) !== existing.OpeningBalance ||\n        t.creditLimit !== existing.CreditLimit ||\n        t.creditPeriod !== existing.CreditDays;\n      if (changes) {\n        updatedRows.push({\n          ...existing,\n          PartyName: t.name,\n          PartyType: deriveType(t.parent, t.partyType),\n          GroupID: groupMap.get(t.parent) || existing.GroupID,\n          Phone: t.mobile || existing.Phone,\n          Email: t.email || existing.Email,\n          Address: t.address,\n          GSTIN: t.gstin || existing.GSTIN,\n          OpeningBalance: SIGN_FLIP ? -t.openingBalance : t.openingBalance,\n          CreditLimit: t.creditLimit,\n          CreditDays: t.creditPeriod,\n          UpdatedAt: now(),\n          Version: existing.Version + 1\n        });\n      }\n    }\n  }\n  const currentNew = await store.get('accumulatedNew') || [];\n  await store.set('accumulatedNew', [...currentNew, ...newRows]);\n  const currentUpd = await store.get('accumulatedUpd') || [];\n  await store.set('accumulatedUpd', [...currentUpd, ...updatedRows]);\n  return {\n    newCount: newRows.length,\n    updCount: updatedRows.length,\n    companyID\n  };\n};",
+                              "packageJson": "{}",
+                              "language": "typescript"
+                            },
+                            "errorHandlingOptions": {
+                              "retryOnFailure": {"value": false},
+                              "continueOnFailure": {"value": false}
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "nextAction": {
+            "name": "step_10",
+            "skip": false,
+            "type": "CODE",
+            "valid": true,
+            "displayName": "Format Output",
+            "settings": {
+              "input": {},
+              "sampleData": {},
+              "sourceCode": {
+                "code": "export const code = async (inputs) => {\n  const newRows = await store.get('accumulatedNew') || [];\n  const updRows = await store.get('accumulatedUpd') || [];\n  const TEST_MODE = await store.get('TEST_MODE') === 'true';\n  const targetSheet = TEST_MODE ? 'PartyStaging' : 'Party';\n  const rowsForAppend = newRows.map(r => [\n    r.PartyID, r.CompanyID, r.PartyName, r.PartyType, r.GroupID,\n    r.ContactPerson, r.Phone, r.Email, r.Address, r.GSTIN,\n    r.OpeningBalance, r.CreditLimit, r.CreditDays,\n    r.CreatedAt, r.UpdatedAt, r.Version, r.TallyGUID\n  ]);\n  const updatesForBatch = updRows.map(r => ({\n    rowNumber: r.rowNumber,\n    values: [\n      r.PartyID, r.CompanyID, r.PartyName, r.PartyType, r.GroupID,\n      r.ContactPerson, r.Phone, r.Email, r.Address, r.GSTIN,\n      r.OpeningBalance, r.CreditLimit, r.CreditDays,\n      r.CreatedAt, r.UpdatedAt, r.Version, r.TallyGUID\n    ]\n  }));\n  return {\n    testMode: TEST_MODE,\n    targetSheet,\n    newCount: newRows.length,\n    updCount: updRows.length,\n    rowsForAppend,\n    updatesForBatch\n  };\n};",
+                "packageJson": "{}",
+                "language": "typescript"
+              },
+              "errorHandlingOptions": {
+                "retryOnFailure": {"value": false},
+                "continueOnFailure": {"value": false}
+              }
+            },
+            "nextAction": {
+              "name": "step_11",
+              "skip": false,
+              "type": "PIECE",
+              "valid": true,
+              "displayName": "Append New Rows",
+              "settings": {
+                "input": {
+                  "auth": "{{connections['GOOGLE_SHEETS_CONNECTION_ID']}}",
+                  "spreadsheet_id": "{{SPREADSHEET_ID}}",
+                  "sheet_name": "{{step_10['targetSheet']}}",
+                  "values": "{{step_10['rowsForAppend']}}"
+                },
+                "pieceName": "@puchoaistudio/tool-google-sheets",
+                "actionName": "append_rows",
+                "pieceVersion": "2.0.0",
+                "errorHandlingOptions": {
+                  "retryOnFailure": {"value": false},
+                  "continueOnFailure": {"value": false}
+                }
+              },
+              "nextAction": {
+                "name": "step_12",
+                "skip": false,
+                "type": "PIECE",
+                "valid": true,
+                "displayName": "Log Sync Summary",
+                "settings": {
+                  "input": {
+                    "auth": "{{connections['GOOGLE_SHEETS_CONNECTION_ID']}}",
+                    "spreadsheet_id": "{{SPREADSHEET_ID}}",
+                    "sheet_name": "SyncLog",
+                    "values": [[\n                      new Date().toISOString(),\n                      'Tally_Party_Sync',\n                      step_10.newCount,\n                      step_10.updCount,\n                      'Success'\n                    ]]
+                  },
+                  "pieceName": "@puchoaistudio/tool-google-sheets",
+                  "actionName": "append_rows",
+                  "pieceVersion": "2.0.0",
+                  "errorHandlingOptions": {
+                    "retryOnFailure": {"value": false},
+                    "continueOnFailure": {"value": false}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "tables": []
+}
