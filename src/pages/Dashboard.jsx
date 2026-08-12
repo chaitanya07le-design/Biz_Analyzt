@@ -36,7 +36,6 @@ const Dashboard = () => {
     loading,
     error,
     connectionStatus,
-    useMockData,
   } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
 
   useEffect(() => {
@@ -85,7 +84,7 @@ const Dashboard = () => {
   }, [voucherLines, filteredVouchers]);
 
   const metrics = useMemo(() => {
-    if (dashboardSummary && !useMockData) {
+    if (dashboardSummary) {
       return {
         cashInHand: dashboardSummary.cashInHand || 0,
         bankBalance: dashboardSummary.bankBalance || 0,
@@ -214,7 +213,7 @@ const Dashboard = () => {
       cashAccountCount,
       bankAccountCount,
     };
-  }, [filteredVouchers, filteredVoucherLines, voucherLines, ledgers, parties, items, itemStockStatus, stockBatches, bankAccounts, cashAccounts, dashboardSummary, useMockData]);
+  }, [filteredVouchers, filteredVoucherLines, voucherLines, ledgers, parties, items, itemStockStatus, stockBatches, bankAccounts, cashAccounts, dashboardSummary]);
 
   const kpis = [
     { 
@@ -426,7 +425,6 @@ const Dashboard = () => {
             </div>
             <p className="text-sm text-ink-muted mt-1">
               {currentCompany?.name || 'Sharma Trading Co.'}
-              {useMockData && <span className="text-yellow-600 ml-2">(Demo Data)</span>}
             </p>
           </div>
           <div className="text-xs text-ink-faint">

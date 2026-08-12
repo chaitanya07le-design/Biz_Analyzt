@@ -10,7 +10,7 @@ const BalanceSheet = () => {
   const { currentCompany } = useCompany();
   const [asOfDate, setAsOfDate] = useState(new Date().toISOString().split('T')[0]);
   
-  const { ledgers, loading, useMockData } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { ledgers, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
 
   const normalizedLedgers = useMemo(() => {
     if (!ledgers || ledgers.length === 0) return [];

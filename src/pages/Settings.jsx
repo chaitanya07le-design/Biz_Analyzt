@@ -96,7 +96,6 @@ export default function Settings() {
   
   const {
     connectionStatus,
-    useMockData,
     sheetsStatus,
     refresh,
     clearCache,
@@ -175,7 +174,6 @@ export default function Settings() {
               <div className="font-semibold text-ink-900">Google Sheets Connection</div>
               <div className="text-xs text-ink-600 mt-0.5">
                 {currentStatus.label}
-                {useMockData && ' - Using demo data'}
               </div>
             </div>
           </div>
