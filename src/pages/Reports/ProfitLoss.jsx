@@ -4,12 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import Skeleton from '../../components/shared/Skeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import { useCompany } from '../../context/CompanyContext';
+import { useDateRange } from '../../context/DateRangeContext';
 
 const ProfitLoss = () => {
   const navigate = useNavigate();
   const { currentCompany } = useCompany();
-  const [startDate, setStartDate] = useState('2025-04-01');
-  const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
+  const { dateRange, setCustomDateRange } = useDateRange();
+  const startDate = dateRange.startDate || '2025-04-01';
+  const endDate = dateRange.endDate || new Date().toISOString().split('T')[0];
   
   const { ledgers, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
 
@@ -126,14 +128,14 @@ const ProfitLoss = () => {
             <input
               type="date"
               value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
+              onChange={(e) => setCustomDateRange(e.target.value, endDate)}
               className="px-3 py-1.5 bg-white border border-canvas-faint rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
             />
             <span className="text-ink-muted">to</span>
             <input
               type="date"
               value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
+              onChange={(e) => setCustomDateRange(startDate, e.target.value)}
               className="px-3 py-1.5 bg-white border border-canvas-faint rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
             />
           </div>

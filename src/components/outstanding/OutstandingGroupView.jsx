@@ -1,21 +1,20 @@
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ExpandableTree from '../shared/ExpandableTree';
-import { 
-  outstandingReceivables, 
-  outstandingPayables,
-  parties,
-  ledgers 
-} from '../../data/mockData';
+import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import { useCompany } from '../../context/CompanyContext';
 
 const OutstandingGroupView = ({ activeTab }) => {
   const navigate = useNavigate();
+  const { currentCompany } = useCompany();
+  const { outstandingReceivables, outstandingPayables, parties, ledgers } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
 
   const data = activeTab === 'receivable' ? outstandingReceivables : outstandingPayables;
-  
   const groupType = activeTab === 'receivable' ? 'Sundry Debtors' : 'Sundry Creditors';
 
   const treeData = useMemo(() => {
+    if (!ledgers || ledgers.length === 0) return [];
+    
     const relevantLedgers = ledgers.filter(l => 
       l.group === groupType || 
       (l.type === 'asset' && groupType === 'Sundry Debtors') ||
@@ -41,7 +40,7 @@ const OutstandingGroupView = ({ activeTab }) => {
       
       if (partyOutstanding) {
         ledgerGroups.get(groupName).children.push({
-          id: p.partyId,
+          id: partyOutstanding.partyId,
           name: partyOutstanding.partyName,
           data: partyOutstanding,
         });
@@ -65,7 +64,7 @@ const OutstandingGroupView = ({ activeTab }) => {
     }).sort((a, b) => b.totalOutstanding - a.totalOutstanding);
 
     return result;
-  }, [data, groupType]);
+  }, [data, groupType, ledgers, parties]);
 
   const handlePartyClick = (node) => {
     if (node.data) {

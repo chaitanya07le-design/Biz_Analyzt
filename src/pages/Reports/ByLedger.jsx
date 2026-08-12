@@ -4,18 +4,17 @@ import { useNavigate } from 'react-router-dom';
 import Skeleton from '../../components/shared/Skeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import { useCompany } from '../../context/CompanyContext';
-import { ledgers, salesVouchers, purchaseVouchers, receiptVouchers, paymentVouchers } from '../../data/mockData';
+import { useDateRange } from '../../context/DateRangeContext';
 
 const ByLedger = () => {
   const navigate = useNavigate();
   const { currentCompany } = useCompany();
-  const [startDate, setStartDate] = useState('2025-04-01');
-  const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
+  const { dateRange } = useDateRange();
   
-  const { ledgers: apiLedgers, vouchers, loading, useMockData } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { ledgers: apiLedgers, vouchers, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
 
   const normalizedLedgers = useMemo(() => {
-    if (useMockData || !apiLedgers || apiLedgers.length === 0) return ledgers;
+    if (!apiLedgers || apiLedgers.length === 0) return [];
     return apiLedgers.map(l => ({
       id: l.LedgerID || l.id,
       name: l.LedgerName || l.name || '',
@@ -23,7 +22,7 @@ const ByLedger = () => {
       type: l.LedgerType || l.type || '',
       balance: parseFloat(l.OpeningBalance || l.balance || 0),
     }));
-  }, [apiLedgers, useMockData]);
+  }, [apiLedgers]);
 
   const ledgerTransactions = useMemo(() => {
     const transactions = {};
@@ -38,17 +37,19 @@ const ByLedger = () => {
       };
     });
 
-    const allVouchers = useMockData || !vouchers || vouchers.length === 0
-      ? [...salesVouchers, ...purchaseVouchers, ...receiptVouchers, ...paymentVouchers]
-      : vouchers.map(v => ({
-          id: v.VoucherID || v.id,
-          date: v.VoucherDate || v.date,
-          voucherNo: v.VoucherNo || v.voucherNo,
-          partyName: v.PartyName || v.partyName,
-          netAmount: parseFloat(v.GrandTotal || v.netAmount || v.grossTotal || 0),
-        }));
+    if (!vouchers || vouchers.length === 0) {
+      return Object.values(transactions).filter(t => t.count > 0).sort((a, b) => b.count - a.count);
+    }
+    
+    let filteredVouchers = vouchers;
+    if (dateRange.startDate && dateRange.endDate) {
+      filteredVouchers = vouchers.filter(v => {
+        const voucherDate = new Date(v.VoucherDate || v.date);
+        return voucherDate >= new Date(dateRange.startDate) && voucherDate <= new Date(dateRange.endDate);
+      });
+    }
 
-    allVouchers.forEach(voucher => {
+    filteredVouchers.forEach(voucher => {
       const ledgerName = voucher.partyName || voucher.PartyName;
       const ledger = normalizedLedgers.find(l => l.name === ledgerName);
       if (ledger) {
@@ -65,7 +66,7 @@ const ByLedger = () => {
     return Object.values(transactions)
       .filter(t => t.count > 0)
       .sort((a, b) => b.count - a.count);
-  }, [normalizedLedgers, useMockData, vouchers]);
+  }, [normalizedLedgers, vouchers, dateRange]);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {
@@ -125,21 +126,6 @@ const ByLedger = () => {
               <h1 className="text-xl md:text-2xl font-semibold text-ink-default">By Ledger</h1>
               <p className="text-sm text-ink-muted">Transactions grouped by ledger</p>
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="px-3 py-1.5 bg-white border border-canvas-faint rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
-            />
-            <span className="text-ink-muted">to</span>
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="px-3 py-1.5 bg-white border border-canvas-faint rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
-            />
           </div>
         </motion.div>
 

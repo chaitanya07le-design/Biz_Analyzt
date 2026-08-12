@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
-import * as mockData from '../data/mockData';
 import { useCompany } from '../context/CompanyContext';
 
 const DEFAULT_COMPANY_ID = 'COMP-0001';
@@ -8,7 +7,6 @@ const DEFAULT_COMPANY_ID = 'COMP-0001';
 const useGoogleSheetsData = (explicitCompanyId) => {
   const { currentCompany } = useCompany();
   const companyId = explicitCompanyId || currentCompany?.id || DEFAULT_COMPANY_ID;
-  const [useMockData, setUseMockData] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState('checking');
   const [sheetsStatus, setSheetsStatus] = useState(null);
   const [data, setData] = useState({
@@ -30,13 +28,13 @@ const useGoogleSheetsData = (explicitCompanyId) => {
     dashboardSummary: null,
     outstandingReceivables: [],
     outstandingPayables: [],
-        stockBatches: [],
-        itemStockStatus: [],
-        customerMovement: [],
-        syncLog: [],
-        geographicSummary: [],
-        orders: [],
-      });
+    stockBatches: [],
+    itemStockStatus: [],
+    customerMovement: [],
+    syncLog: [],
+    geographicSummary: [],
+    orders: [],
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -44,12 +42,10 @@ const useGoogleSheetsData = (explicitCompanyId) => {
     try {
       await api.healthCheck();
       setConnectionStatus('connected');
-      setUseMockData(false);
       return true;
     } catch (err) {
-      console.warn('Backend not available, using mock data');
       setConnectionStatus('disconnected');
-      setUseMockData(true);
+      setError('Cannot connect to backend server. Please ensure the backend is running.');
       return false;
     }
   }, []);
@@ -61,31 +57,6 @@ const useGoogleSheetsData = (explicitCompanyId) => {
     const isConnected = await checkConnection();
 
     if (!isConnected) {
-      setData({
-        companies: [],
-        users: [],
-        userCompanyMapping: [],
-        groups: [],
-        itemCategories: [],
-        itemGroups: [],
-        ledgers: mockData.ledgers,
-        parties: mockData.parties,
-        items: mockData.items,
-        vouchers: [...mockData.salesVouchers, ...mockData.purchaseVouchers],
-        voucherLines: [],
-        bankAccounts: [],
-        cashAccounts: [],
-        settings: [],
-        reminderLog: [],
-        dashboardSummary: mockData.dashboardMetrics,
-        outstandingReceivables: mockData.outstandingReceivables || [],
-        outstandingPayables: mockData.outstandingPayables || [],
-        stockBatches: [],
-        itemStockStatus: [],
-        customerMovement: [],
-        syncLog: [],
-        geographicSummary: [],
-      });
       setLoading(false);
       return;
     }
@@ -175,35 +146,7 @@ const useGoogleSheetsData = (explicitCompanyId) => {
       setError(null);
     } catch (err) {
       console.error('Error fetching data:', err);
-      setError(err.message);
-
-      const currentData = data;
-      setData({
-        companies: currentData.companies.length > 0 ? currentData.companies : [],
-        users: currentData.users.length > 0 ? currentData.users : [],
-        userCompanyMapping: currentData.userCompanyMapping.length > 0 ? currentData.userCompanyMapping : [],
-        groups: currentData.groups.length > 0 ? currentData.groups : [],
-        itemCategories: currentData.itemCategories.length > 0 ? currentData.itemCategories : [],
-        itemGroups: currentData.itemGroups.length > 0 ? currentData.itemGroups : [],
-        ledgers: currentData.ledgers.length > 0 ? currentData.ledgers : mockData.ledgers,
-        parties: currentData.parties.length > 0 ? currentData.parties : mockData.parties,
-        items: currentData.items.length > 0 ? currentData.items : mockData.items,
-        vouchers: currentData.vouchers.length > 0 ? currentData.vouchers : [...mockData.salesVouchers, ...mockData.purchaseVouchers],
-        voucherLines: currentData.voucherLines.length > 0 ? currentData.voucherLines : [],
-        bankAccounts: currentData.bankAccounts.length > 0 ? currentData.bankAccounts : [],
-        cashAccounts: currentData.cashAccounts.length > 0 ? currentData.cashAccounts : [],
-        settings: currentData.settings.length > 0 ? currentData.settings : [],
-        reminderLog: currentData.reminderLog.length > 0 ? currentData.reminderLog : [],
-        dashboardSummary: currentData.dashboardSummary || mockData.dashboardMetrics,
-        outstandingReceivables: currentData.outstandingReceivables.length > 0 ? currentData.outstandingReceivables : mockData.outstandingReceivables || [],
-        outstandingPayables: currentData.outstandingPayables.length > 0 ? currentData.outstandingPayables : mockData.outstandingPayables || [],
-        stockBatches: currentData.stockBatches.length > 0 ? currentData.stockBatches : [],
-        itemStockStatus: currentData.itemStockStatus.length > 0 ? currentData.itemStockStatus : [],
-        customerMovement: currentData.customerMovement.length > 0 ? currentData.customerMovement : [],
-        syncLog: currentData.syncLog.length > 0 ? currentData.syncLog : [],
-        geographicSummary: currentData.geographicSummary.length > 0 ? currentData.geographicSummary : [],
-        orders: currentData.orders.length > 0 ? currentData.orders : [],
-      });
+      setError(err.message || 'Failed to fetch data from server');
     } finally {
       setLoading(false);
     }
@@ -231,7 +174,6 @@ const useGoogleSheetsData = (explicitCompanyId) => {
     loading,
     error,
     connectionStatus,
-    useMockData,
     sheetsStatus,
     refresh,
     clearCache,

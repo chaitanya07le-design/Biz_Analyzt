@@ -4,18 +4,17 @@ import { useNavigate } from 'react-router-dom';
 import Skeleton from '../../components/shared/Skeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import { useCompany } from '../../context/CompanyContext';
-import { items, salesVouchers } from '../../data/mockData';
+import { useDateRange } from '../../context/DateRangeContext';
 
 const ByItem = () => {
   const navigate = useNavigate();
   const { currentCompany } = useCompany();
-  const [startDate, setStartDate] = useState('2025-04-01');
-  const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
+  const { dateRange } = useDateRange();
   
-  const { items: apiItems, vouchers, loading, useMockData } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { items: apiItems, vouchers, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
 
   const normalizedItems = useMemo(() => {
-    if (useMockData || !apiItems || apiItems.length === 0) return items;
+    if (!apiItems || apiItems.length === 0) return [];
     return apiItems.map(i => ({
       id: i.ItemID || i.id,
       name: i.ItemName || i.name || '',
@@ -24,7 +23,7 @@ const ByItem = () => {
       closingQty: parseFloat(i.ClosingQty || i.closingQty || 0),
       closingValue: parseFloat(i.ClosingValue || i.closingValue || 0),
     }));
-  }, [apiItems, useMockData]);
+  }, [apiItems]);
 
   const itemTransactions = useMemo(() => {
     const transactions = {};
@@ -40,36 +39,37 @@ const ByItem = () => {
       };
     });
 
-    if (useMockData || !vouchers || vouchers.length === 0) {
-      salesVouchers.forEach(voucher => {
-        voucher.items?.forEach(lineItem => {
-          if (transactions[lineItem.itemId]) {
-            transactions[lineItem.itemId].qtySold += lineItem.qty;
-            transactions[lineItem.itemId].salesValue += lineItem.amount;
-            transactions[lineItem.itemId].count++;
-          }
-        });
-      });
-    } else {
-      const salesVouchersOnly = vouchers.filter(v => 
-        v.VoucherType === 'Sales' || v.voucherType === 'Sales'
-      );
-      salesVouchersOnly.forEach(voucher => {
-        const itemId = voucher.ItemID || voucher.itemId;
-        const qty = parseFloat(voucher.Quantity || voucher.qty || 0);
-        const amount = parseFloat(voucher.Amount || voucher.amount || voucher.GrandTotal || 0);
-        if (transactions[itemId]) {
-          transactions[itemId].qtySold += qty;
-          transactions[itemId].salesValue += amount;
-          transactions[itemId].count++;
-        }
+    if (!vouchers || vouchers.length === 0) {
+      return Object.values(transactions).filter(t => t.count > 0).sort((a, b) => b.salesValue - a.salesValue);
+    }
+    
+    let filteredVouchers = vouchers;
+    if (dateRange.startDate && dateRange.endDate) {
+      filteredVouchers = vouchers.filter(v => {
+        const voucherDate = new Date(v.VoucherDate || v.date);
+        return voucherDate >= new Date(dateRange.startDate) && voucherDate <= new Date(dateRange.endDate);
       });
     }
+
+    const salesVouchersOnly = filteredVouchers.filter(v => 
+      v.VoucherType === 'Sales' || v.voucherType === 'Sales'
+    );
+    
+    salesVouchersOnly.forEach(voucher => {
+      const itemId = voucher.ItemID || voucher.itemId;
+      const qty = parseFloat(voucher.Quantity || voucher.qty || 0);
+      const amount = parseFloat(voucher.Amount || voucher.amount || voucher.GrandTotal || 0);
+      if (transactions[itemId]) {
+        transactions[itemId].qtySold += qty;
+        transactions[itemId].salesValue += amount;
+        transactions[itemId].count++;
+      }
+    });
 
     return Object.values(transactions)
       .filter(t => t.count > 0)
       .sort((a, b) => b.salesValue - a.salesValue);
-  }, [normalizedItems, useMockData, vouchers]);
+  }, [normalizedItems, vouchers, dateRange]);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {
@@ -133,21 +133,6 @@ const ByItem = () => {
               <h1 className="text-xl md:text-2xl font-semibold text-ink-default">By Item</h1>
               <p className="text-sm text-ink-muted">Transactions grouped by item</p>
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="px-3 py-1.5 bg-white border border-canvas-faint rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
-            />
-            <span className="text-ink-muted">to</span>
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="px-3 py-1.5 bg-white border border-canvas-faint rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
-            />
           </div>
         </motion.div>
 

@@ -8,17 +8,7 @@ import DonutChart from '../components/shared/DonutChart';
 import ReportChart from '../components/shared/ReportChart';
 import useGoogleSheetsData from '../hooks/useGoogleSheetsData';
 import { useCompany } from '../context/CompanyContext';
-import { 
-  salesVouchers, 
-  purchaseVouchers,
-  receiptVouchers,
-  paymentVouchers,
-  salesOrders,
-  purchaseOrders,
-  deliveryNotes,
-  receiptNotes,
-  getMonthlyData
-} from '../data/mockData';
+import { useDateRange } from '../context/DateRangeContext';
 
 const moduleConfig = {
   sales: {
@@ -151,39 +141,32 @@ const ReportPage = () => {
   const { module } = useParams();
   const navigate = useNavigate();
   const { currentCompany } = useCompany();
-  const [startDate, setStartDate] = useState('2025-04-01');
-  const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
+  const { dateRange, setCustomDateRange } = useDateRange();
   const [viewMode, setViewMode] = useState('ledger');
 
   const config = moduleConfig[module];
-  const { vouchers, parties, useMockData, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { vouchers, parties, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
 
   const filteredData = useMemo(() => {
     if (!config) return [];
     
-    let voucherData;
-    if (useMockData || !vouchers || vouchers.length === 0) {
-      switch (module) {
-        case 'sales': voucherData = salesVouchers; break;
-        case 'purchase': voucherData = purchaseVouchers; break;
-        case 'receipt': voucherData = receiptVouchers; break;
-        case 'payment': voucherData = paymentVouchers; break;
-        case 'sales-order': voucherData = salesOrders; break;
-        case 'purchase-order': voucherData = purchaseOrders; break;
-        case 'delivery-note': voucherData = deliveryNotes; break;
-        case 'receipt-note': voucherData = receiptNotes; break;
-        default: voucherData = [];
-      }
-    } else {
-      voucherData = vouchers.filter(v => 
-        (v.VoucherType === config.voucherType || v.voucherType === config.voucherType)
-      );
+    if (!vouchers || vouchers.length === 0) {
+      return [];
     }
     
-    return voucherData.filter(v => {
-      const voucherDate = new Date(v.VoucherDate || v.date);
-      return voucherDate >= new Date(startDate) && voucherDate <= new Date(endDate);
-    }).map(v => ({
+    const voucherData = vouchers.filter(v => 
+      (v.VoucherType === config.voucherType || v.voucherType === config.voucherType)
+    );
+    
+    let dateFilteredVouchers = voucherData;
+    if (dateRange.startDate && dateRange.endDate) {
+      dateFilteredVouchers = voucherData.filter(v => {
+        const voucherDate = new Date(v.VoucherDate || v.date);
+        return voucherDate >= new Date(dateRange.startDate) && voucherDate <= new Date(dateRange.endDate);
+      });
+    }
+    
+    return dateFilteredVouchers.map(v => ({
       id: v.VoucherID || v.id,
       voucherNo: v.VoucherNo || v.voucherNo || '',
       date: v.VoucherDate || v.date,
@@ -194,7 +177,7 @@ const ReportPage = () => {
       outstanding: parseFloat(v.Outstanding || v.outstanding || 0),
       status: v.Status || v.status || '',
     }));
-  }, [config, vouchers, useMockData, module, startDate, endDate]);
+  }, [config, vouchers, module, dateRange]);
 
   const ledgerViewData = useMemo(() => {
     const partyMap = new Map();
@@ -233,8 +216,7 @@ const ReportPage = () => {
   }, [filteredData]);
 
   const handleDateChange = (start, end) => {
-    setStartDate(start);
-    setEndDate(end);
+    setCustomDateRange(start, end);
   };
 
   const handleItemClick = (item) => {
@@ -277,7 +259,15 @@ const ReportPage = () => {
   ];
 
   const monthlyChartData = useMemo(() => {
-    return getMonthlyData(filteredData);
+    const months = {};
+    filteredData.forEach(v => {
+      const date = new Date(v.date);
+      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      months[monthKey] = (months[monthKey] || 0) + v.netAmount;
+    });
+    return Object.entries(months)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([month, amount]) => ({ month, amount }));
   }, [filteredData]);
 
   if (!config) {
@@ -288,8 +278,8 @@ const ReportPage = () => {
     <div className="min-h-screen bg-canvas-default pb-20 md:pb-6">
       <ReportPageHeader 
         title={config.title}
-        startDate={startDate}
-        endDate={endDate}
+        startDate={dateRange.startDate || '2025-04-01'}
+        endDate={dateRange.endDate || new Date().toISOString().split('T')[0]}
         onDateChange={handleDateChange}
       />
       

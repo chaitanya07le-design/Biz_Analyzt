@@ -4,32 +4,36 @@ import { useNavigate } from 'react-router-dom';
 import Skeleton from '../../components/shared/Skeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import { useCompany } from '../../context/CompanyContext';
-import { parties, salesVouchers, purchaseVouchers } from '../../data/mockData';
+import { useDateRange } from '../../context/DateRangeContext';
 
 const TopReport = () => {
   const navigate = useNavigate();
   const { currentCompany } = useCompany();
+  const { dateRange } = useDateRange();
   const [activeTab, setActiveTab] = useState('customers');
-  const [startDate, setStartDate] = useState('2025-04-01');
-  const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
   
-  const { parties: apiParties, vouchers, loading, useMockData } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { parties: apiParties, vouchers, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
 
   const normalizedParties = useMemo(() => {
-    if (useMockData || !apiParties || apiParties.length === 0) return parties;
+    if (!apiParties || apiParties.length === 0) return [];
     return apiParties.map(p => ({
       id: p.PartyID || p.id,
       name: p.PartyName || p.name || '',
       type: p.PartyType || p.type || '',
       city: p.City || p.city || '',
     }));
-  }, [apiParties, useMockData]);
+  }, [apiParties]);
 
   const normalizedVouchers = useMemo(() => {
-    if (useMockData || !vouchers || vouchers.length === 0) {
-      return [...salesVouchers, ...purchaseVouchers];
+    if (!vouchers || vouchers.length === 0) return [];
+    let filteredVouchers = vouchers;
+    if (dateRange.startDate && dateRange.endDate) {
+      filteredVouchers = vouchers.filter(v => {
+        const voucherDate = new Date(v.VoucherDate || v.date);
+        return voucherDate >= new Date(dateRange.startDate) && voucherDate <= new Date(dateRange.endDate);
+      });
     }
-    return vouchers.map(v => ({
+    return filteredVouchers.map(v => ({
       id: v.VoucherID || v.id,
       voucherNo: v.VoucherNo || v.voucherNo || '',
       date: v.VoucherDate || v.date,
@@ -40,7 +44,7 @@ const TopReport = () => {
       outstanding: parseFloat(v.Outstanding || v.outstanding || 0),
       status: v.Status || v.status || '',
     }));
-  }, [vouchers, useMockData]);
+  }, [vouchers, dateRange]);
 
   const topData = useMemo(() => {
     const customerData = {};
@@ -160,21 +164,6 @@ const TopReport = () => {
               <h1 className="text-xl md:text-2xl font-semibold text-ink-default">Top Report</h1>
               <p className="text-sm text-ink-muted">Ranking by transaction volume</p>
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="px-3 py-1.5 bg-white border border-canvas-faint rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
-            />
-            <span className="text-ink-muted">to</span>
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="px-3 py-1.5 bg-white border border-canvas-faint rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
-            />
           </div>
         </motion.div>
 

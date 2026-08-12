@@ -5,13 +5,6 @@ import Skeleton from '../../components/shared/Skeleton';
 import TableSkeleton from '../../components/shared/TableSkeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import { useCompany } from '../../context/CompanyContext';
-import { 
-  salesVouchers, 
-  purchaseVouchers, 
-  receiptVouchers, 
-  paymentVouchers, 
-  journalEntries 
-} from '../../data/mockData';
 
 const DayBook = () => {
   const navigate = useNavigate();
@@ -19,18 +12,11 @@ const DayBook = () => {
   const [startDate, setStartDate] = useState('2025-04-01');
   const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
   
-  const { vouchers, loading, useMockData } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { vouchers, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
 
   const allVouchers = useMemo(() => {
-    if (useMockData || !vouchers || vouchers.length === 0) {
-      const all = [
-        ...salesVouchers.map(v => ({ ...v, category: 'Sales' })),
-        ...purchaseVouchers.map(v => ({ ...v, category: 'Purchase' })),
-        ...receiptVouchers.map(v => ({ ...v, category: 'Receipt' })),
-        ...paymentVouchers.map(v => ({ ...v, category: 'Payment' })),
-        ...journalEntries.map(v => ({ ...v, category: 'Journal', netAmount: v.entries?.reduce((sum, e) => sum + e.debit, 0) || 0 }))
-      ];
-      return all.sort((a, b) => new Date(a.date) - new Date(b.date));
+    if (!vouchers || vouchers.length === 0) {
+      return [];
     }
     
     return vouchers.map(v => ({
@@ -41,7 +27,7 @@ const DayBook = () => {
       partyName: v.PartyName || v.partyName || '',
       netAmount: parseFloat(v.GrandTotal || v.netAmount || 0),
     })).sort((a, b) => new Date(a.date) - new Date(b.date));
-  }, [vouchers, useMockData]);
+  }, [vouchers]);
 
   const filteredVouchers = useMemo(() => {
     return allVouchers.filter(v => {
@@ -182,7 +168,7 @@ const DayBook = () => {
                       {voucher.voucherNo || 'Draft'}
                     </td>
                     <td className="px-4 py-3 text-sm text-ink-default">
-                      {voucher.partyName || voucher.entries?.[0]?.ledgerName || '-'}
+                      {voucher.partyName || '-'}
                     </td>
                     <td className="px-4 py-3 text-sm text-ink-default text-right font-medium whitespace-nowrap">
                       {formatCurrency(voucher.netAmount || voucher.grossTotal || 0)}

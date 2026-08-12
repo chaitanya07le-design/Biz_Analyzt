@@ -2,21 +2,18 @@ import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import { useCompany } from '../../context/CompanyContext';
-import { purchaseOrders, salesOrders } from '../../data/mockData';
 
 const currency = (amount) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(amount || 0);
 
 export default function PendingOrders({ type }) {
   const navigate = useNavigate();
   const { currentCompany } = useCompany();
-  const { orders: allOrders, useMockData, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { orders: allOrders, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
   const isSales = type === 'sales';
   const orderType = isSales ? 'Sales Order' : 'Purchase Order';
   const orders = useMemo(() => {
-    const source = useMockData || !allOrders?.length
-      ? (isSales ? salesOrders : purchaseOrders)
-      : allOrders.filter(o => (o.OrderType || o.orderType) === orderType);
-    return source.filter(order => (order.Status || order.status || '').toUpperCase() === 'PENDING').map(order => ({
+    const source = allOrders || [];
+    return source.filter(o => (o.OrderType || o.orderType) === orderType).filter(order => (order.Status || order.status || '').toUpperCase() === 'PENDING').map(order => ({
       id: order.OrderID || order.VoucherID || order.id,
       number: order.OrderNo || order.VoucherNo || order.voucherNo || '—',
       date: order.OrderDate || order.VoucherDate || order.date,
@@ -25,7 +22,7 @@ export default function PendingOrders({ type }) {
       status: order.Status || order.status || 'PENDING',
       dueDate: order.ExpectedDate || order.DueDate || order.dueDate,
     }));
-  }, [allOrders, useMockData, isSales, orderType]);
+  }, [allOrders, orderType]);
   const total = orders.reduce((sum, order) => sum + order.amount, 0);
 
   return <div className="min-h-screen bg-canvas-default p-4 md:p-6 space-y-5">

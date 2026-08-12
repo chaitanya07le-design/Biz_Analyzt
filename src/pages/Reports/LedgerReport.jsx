@@ -4,16 +4,16 @@ import { useNavigate } from 'react-router-dom';
 import Skeleton from '../../components/shared/Skeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import { useCompany } from '../../context/CompanyContext';
+import { useDateRange } from '../../context/DateRangeContext';
 
 const LedgerReport = () => {
   const navigate = useNavigate();
   const { currentCompany } = useCompany();
+  const { dateRange } = useDateRange();
   const [selectedLedger, setSelectedLedger] = useState(null);
-  const [startDate, setStartDate] = useState('2025-04-01');
-  const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
   const [searchQuery, setSearchQuery] = useState('');
   
-  const { ledgers, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { ledgers, vouchers, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
 
   const normalizedLedgers = useMemo(() => {
     if (!ledgers || ledgers.length === 0) return [];
@@ -31,6 +31,30 @@ const LedgerReport = () => {
       l.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [normalizedLedgers, searchQuery]);
+
+  const ledgerTransactions = useMemo(() => {
+    if (!selectedLedger || !vouchers) return [];
+    
+    let filteredVouchers = vouchers;
+    if (dateRange.startDate && dateRange.endDate) {
+      filteredVouchers = vouchers.filter(v => {
+        const voucherDate = new Date(v.VoucherDate || v.date);
+        return voucherDate >= new Date(dateRange.startDate) && voucherDate <= new Date(dateRange.endDate);
+      });
+    }
+    
+    return filteredVouchers.filter(v => 
+      (v.PartyName || v.partyName) === selectedLedger.name ||
+      (v.LedgerName || v.ledgerName) === selectedLedger.name
+    ).map(v => ({
+      id: v.VoucherID || v.id,
+      date: v.VoucherDate || v.date,
+      voucherNo: v.VoucherNo || v.voucherNo || '',
+      voucherType: v.VoucherType || v.voucherType || '',
+      amount: parseFloat(v.GrandTotal || v.amount || 0),
+      narration: v.Narration || v.narration || '',
+    }));
+  }, [selectedLedger, vouchers, dateRange]);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {
@@ -111,23 +135,6 @@ const LedgerReport = () => {
               </p>
             </div>
           </div>
-          {!selectedLedger && (
-            <div className="flex items-center gap-2">
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="px-3 py-1.5 bg-white border border-canvas-faint rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
-              />
-              <span className="text-ink-muted">to</span>
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="px-3 py-1.5 bg-white border border-canvas-faint rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
-              />
-            </div>
-          )}
         </motion.div>
 
         {!selectedLedger ? (
@@ -181,9 +188,6 @@ const LedgerReport = () => {
                         <p className={`text-sm font-semibold ${ledger.balance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                           {formatCurrency(ledger.balance)}
                         </p>
-                        {ledger.lastTransaction && (
-                          <p className="text-xs text-ink-muted">Last: {ledger.lastTransaction}</p>
-                        )}
                       </div>
                     </div>
                   </motion.div>
@@ -213,9 +217,29 @@ const LedgerReport = () => {
                 </div>
               </div>
             </div>
-            <div className="px-4 py-8 text-center">
-              <p className="text-sm text-ink-muted">Transaction details will be displayed here</p>
-              <p className="text-xs text-ink-faint mt-1">Connect to Google Sheets backend to see actual transactions</p>
+            <div className="divide-y divide-canvas-faint">
+              {ledgerTransactions.length > 0 ? (
+                ledgerTransactions.map((txn, idx) => (
+                  <div key={txn.id} className="px-4 py-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-ink-default">{txn.voucherNo}</p>
+                        <p className="text-xs text-ink-muted">{txn.date} • {txn.voucherType}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-semibold text-ink-default">{formatCurrency(txn.amount)}</p>
+                        {txn.narration && (
+                          <p className="text-xs text-ink-muted truncate max-w-48">{txn.narration}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="px-4 py-8 text-center">
+                  <p className="text-sm text-ink-muted">No transactions found for this period</p>
+                </div>
+              )}
             </div>
           </motion.div>
         )}
