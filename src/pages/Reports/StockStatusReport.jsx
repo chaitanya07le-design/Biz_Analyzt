@@ -119,7 +119,7 @@ const StockStatusReport = () => {
             className="bg-white rounded-xl p-4 border border-canvas-faint"
           >
             <div className="flex items-center gap-2 mb-2">
-              <Package className="w-4 h-4 text-blue-600" />
+              <Package className="w-4 h-4 text-indigo-600" />
               <span className="text-xs text-ink-muted">Total Items</span>
             </div>
             <div className="text-lg font-bold text-ink-default">{summaryStats.total}</div>
@@ -130,45 +130,45 @@ const StockStatusReport = () => {
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.15 }}
-            className="bg-white rounded-xl p-4 border border-red-200 bg-red-50 cursor-pointer hover:bg-red-100"
+            className="bg-white rounded-xl p-4 border border-rose-200 bg-rose-light cursor-pointer hover:bg-rose-100"
             onClick={() => setFilter(filter === 'understock' ? 'all' : 'understock')}
           >
             <div className="flex items-center gap-2 mb-2">
-              <ArrowDown className="w-4 h-4 text-red-600" />
+              <ArrowDown className="w-4 h-4 text-rose-600" />
               <span className="text-xs text-ink-muted">Understock</span>
             </div>
-            <div className="text-lg font-bold text-red-700">{summaryStats.understock}</div>
-            <div className="text-xs text-red-600">Need reorder</div>
+            <div className="text-lg font-bold text-rose-700">{summaryStats.understock}</div>
+            <div className="text-xs text-rose-600">Need reorder</div>
           </motion.div>
 
           <motion.div
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="bg-white rounded-xl p-4 border border-yellow-200 bg-yellow-50 cursor-pointer hover:bg-yellow-100"
+            className="bg-white rounded-xl p-4 border border-amber-200 bg-amber-light cursor-pointer hover:bg-amber-100"
             onClick={() => setFilter(filter === 'overstock' ? 'all' : 'overstock')}
           >
             <div className="flex items-center gap-2 mb-2">
-              <ArrowUp className="w-4 h-4 text-yellow-600" />
+              <ArrowUp className="w-4 h-4 text-amber-600" />
               <span className="text-xs text-ink-muted">Overstock</span>
             </div>
-            <div className="text-lg font-bold text-yellow-700">{summaryStats.overstock}</div>
-            <div className="text-xs text-yellow-600">Slow moving</div>
+            <div className="text-lg font-bold text-amber-700">{summaryStats.overstock}</div>
+            <div className="text-xs text-amber-600">Slow moving</div>
           </motion.div>
 
           <motion.div
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.25 }}
-            className="bg-white rounded-xl p-4 border border-green-200 bg-green-50 cursor-pointer hover:bg-green-100"
+            className="bg-white rounded-xl p-4 border border-teal-200 bg-teal-light cursor-pointer hover:bg-teal-100"
             onClick={() => setFilter(filter === 'fast' ? 'all' : 'fast')}
           >
             <div className="flex items-center gap-2 mb-2">
-              <Star className="w-4 h-4 text-green-600" />
+              <Star className="w-4 h-4 text-teal-600" />
               <span className="text-xs text-ink-muted">Fast Movers</span>
             </div>
-            <div className="text-lg font-bold text-green-700">{summaryStats.fastMovers}</div>
-            <div className="text-xs text-green-600">High velocity</div>
+            <div className="text-lg font-bold text-teal-700">{summaryStats.fastMovers}</div>
+            <div className="text-xs text-teal-600">High velocity</div>
           </motion.div>
         </div>
 
@@ -215,31 +215,31 @@ const StockStatusReport = () => {
                     <td className="px-4 py-3 font-medium text-ink-default">{row.itemName}</td>
                     <td className="px-4 py-3 text-ink-muted">{row.brand}</td>
                     <td className="px-4 py-3 text-right">
-                      <span className={row.currentStock === 0 ? 'text-red-600 font-bold' : ''}>{row.currentStock}</span>
+                      <span className={row.currentStock === 0 ? 'text-rose-600 font-bold' : ''}>{row.currentStock}</span>
                     </td>
                     <td className="px-4 py-3 text-right">{formatCurrency(row.stockValue)}</td>
                     <td className="px-4 py-3 text-right">
-                      <span className={row.isPopular ? 'text-green-600 font-medium' : ''}>{row.salesVelocity}/mo</span>
+                      <span className={row.isPopular ? 'text-teal-600 font-medium' : ''}>{row.salesVelocity}/mo</span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className={`${row.daysOfStock <= 7 ? 'text-red-600 font-bold' : row.daysOfStock <= 14 ? 'text-yellow-600' : 'text-ink-muted'}`}>
+                      <span className={`${row.daysOfStock <= 7 ? 'text-rose-600 font-bold' : row.daysOfStock <= 14 ? 'text-amber-600' : 'text-ink-muted'}`}>
                         {row.daysOfStock}d
                       </span>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex gap-1">
                         {row.isUnderstock && (
-                          <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
+                          <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-rose-light text-rose-700">
                             UNDER
                           </span>
                         )}
                         {row.isOverstock && (
-                          <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700">
+                          <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-amber-light text-amber-700">
                             OVER
                           </span>
                         )}
                         {row.isPopular && (
-                          <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                          <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-teal-light text-teal-700">
                             FAST
                           </span>
                         )}

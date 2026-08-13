@@ -61,8 +61,8 @@ export default function Reports() {
             {category.reports.map((report) => (
               <Card key={report.name} className="cursor-pointer hover:border-brand-300 transition-all">
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0">
-                    <report.icon className="w-5 h-5 text-brand-600" />
+                  <div className="w-10 h-10 rounded-xl bg-indigo-light flex items-center justify-center flex-shrink-0">
+                    <report.icon className="w-5 h-5 text-indigo-600" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="font-semibold text-ink-900">{report.name}</div>

@@ -64,7 +64,7 @@ const VoucherHeader = ({ voucher, onBack }) => {
           )}
           <div className="col-span-2">
             <p className="text-xs text-ink-faint">Party</p>
-            <p className="text-sm text-ink-default font-medium">{voucher.partyName}</p>
+            <p className="text-sm text-ink-default font-medium">{voucher.partyName || '—'}</p>
           </div>
         </div>
 

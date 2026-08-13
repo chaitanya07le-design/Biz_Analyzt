@@ -197,7 +197,7 @@ const BalanceSheet = () => {
           className="grid grid-cols-1 md:grid-cols-2 gap-4"
         >
           <div className="bg-white rounded-lg border border-canvas-faint overflow-hidden">
-            <div className="px-4 py-3 bg-gradient-to-r from-green-50 to-emerald-50 border-b border-canvas-faint">
+            <div className="px-4 py-3 bg-gradient-to-r from-teal-light to-teal-100 border-b border-canvas-faint">
               <h2 className="font-semibold text-ink-default">Assets</h2>
             </div>
             <div className="divide-y divide-canvas-faint">
@@ -223,17 +223,17 @@ const BalanceSheet = () => {
                   ))}
                 </div>
               )}
-              <div className="px-4 py-3 bg-green-50">
+              <div className="px-4 py-3 bg-teal-light">
                 <div className="flex justify-between">
                   <span className="font-semibold text-ink-default">Total Assets</span>
-                  <span className="font-semibold text-green-600">{formatCurrency(reportData.assets.total)}</span>
+                  <span className="font-semibold text-teal-600">{formatCurrency(reportData.assets.total)}</span>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="bg-white rounded-lg border border-canvas-faint overflow-hidden">
-            <div className="px-4 py-3 bg-gradient-to-r from-red-50 to-rose-50 border-b border-canvas-faint">
+            <div className="px-4 py-3 bg-gradient-to-r from-rose-light to-rose-100 border-b border-canvas-faint">
               <h2 className="font-semibold text-ink-default">Liabilities</h2>
             </div>
             <div className="divide-y divide-canvas-faint">
@@ -259,10 +259,10 @@ const BalanceSheet = () => {
                   ))}
                 </div>
               )}
-              <div className="px-4 py-3 bg-red-50">
+              <div className="px-4 py-3 bg-rose-light">
                 <div className="flex justify-between">
                   <span className="font-semibold text-ink-default">Total Liabilities</span>
-                  <span className="font-semibold text-red-600">{formatCurrency(reportData.liabilities.total)}</span>
+                  <span className="font-semibold text-rose-600">{formatCurrency(reportData.liabilities.total)}</span>
                 </div>
               </div>
             </div>
@@ -277,7 +277,7 @@ const BalanceSheet = () => {
         >
           <div className="flex justify-between items-center">
             <span className="font-semibold text-ink-default">Difference (Profit/Loss)</span>
-            <span className={`font-bold text-lg ${reportData.assets.total - reportData.liabilities.total >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+            <span className={`font-bold text-lg ${reportData.assets.total - reportData.liabilities.total >= 0 ? 'text-teal-600' : 'text-rose-600'}`}>
               {formatCurrency(reportData.assets.total - reportData.liabilities.total)}
             </span>
           </div>

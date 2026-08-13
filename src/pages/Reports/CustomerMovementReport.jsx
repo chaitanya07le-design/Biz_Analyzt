@@ -86,9 +86,9 @@ const CustomerMovementReport = () => {
   };
 
   const statusColors = {
-    'Active': 'bg-green-100 text-green-700',
-    'Dormant': 'bg-yellow-100 text-yellow-700',
-    'Churned': 'bg-red-100 text-red-700',
+    'Active': 'bg-teal-light text-teal-700',
+    'Dormant': 'bg-amber-light text-amber-700',
+    'Churned': 'bg-rose-light text-rose-700',
   };
 
   if (loading) {
@@ -126,7 +126,7 @@ const CustomerMovementReport = () => {
             className="bg-white rounded-xl p-4 border border-canvas-faint"
           >
             <div className="flex items-center gap-2 mb-2">
-              <Users className="w-4 h-4 text-blue-600" />
+              <Users className="w-4 h-4 text-indigo-600" />
               <span className="text-xs text-ink-muted">Total Customers</span>
             </div>
             <div className="text-lg font-bold text-ink-default">{summaryStats.total}</div>
@@ -136,39 +136,39 @@ const CustomerMovementReport = () => {
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.15 }}
-            className="bg-white rounded-xl p-4 border border-green-200 bg-green-50"
+            className="bg-white rounded-xl p-4 border border-teal-200 bg-teal-light"
           >
             <div className="flex items-center gap-2 mb-2">
-              <TrendingUp className="w-4 h-4 text-green-600" />
+              <TrendingUp className="w-4 h-4 text-teal-600" />
               <span className="text-xs text-ink-muted">Active</span>
             </div>
-            <div className="text-lg font-bold text-green-700">{summaryStats.active}</div>
+            <div className="text-lg font-bold text-teal-700">{summaryStats.active}</div>
           </motion.div>
 
           <motion.div
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="bg-white rounded-xl p-4 border border-yellow-200 bg-yellow-50"
+            className="bg-white rounded-xl p-4 border border-amber-200 bg-amber-light"
           >
             <div className="flex items-center gap-2 mb-2">
-              <Clock className="w-4 h-4 text-yellow-600" />
+              <Clock className="w-4 h-4 text-amber-600" />
               <span className="text-xs text-ink-muted">Dormant</span>
             </div>
-            <div className="text-lg font-bold text-yellow-700">{summaryStats.dormant}</div>
+            <div className="text-lg font-bold text-amber-700">{summaryStats.dormant}</div>
           </motion.div>
 
           <motion.div
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.25 }}
-            className="bg-white rounded-xl p-4 border border-red-200 bg-red-50"
+            className="bg-white rounded-xl p-4 border border-rose-200 bg-rose-light"
           >
             <div className="flex items-center gap-2 mb-2">
-              <UserX className="w-4 h-4 text-red-600" />
+              <UserX className="w-4 h-4 text-rose-600" />
               <span className="text-xs text-ink-muted">Churned/At Risk</span>
             </div>
-            <div className="text-lg font-bold text-red-700">{summaryStats.churned}</div>
+            <div className="text-lg font-bold text-rose-700">{summaryStats.churned}</div>
           </motion.div>
         </div>
 
@@ -236,7 +236,7 @@ const CustomerMovementReport = () => {
                     <td className="px-4 py-3 text-ink-muted">{row.city}, {row.state}</td>
                     <td className="px-4 py-3 text-ink-muted">{formatDate(row.lastTxn)}</td>
                     <td className="px-4 py-3">
-                      <span className={`font-medium ${row.daysSinceLastTxn > 60 ? 'text-red-600' : row.daysSinceLastTxn > 30 ? 'text-yellow-600' : 'text-green-600'}`}>
+                      <span className={`font-medium ${row.daysSinceLastTxn > 60 ? 'text-rose-600' : row.daysSinceLastTxn > 30 ? 'text-amber-600' : 'text-teal-600'}`}>
                         {row.daysSinceLastTxn}d
                       </span>
                     </td>

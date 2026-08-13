@@ -130,7 +130,7 @@ const ProfitLoss = () => {
               <div className="mt-3 pt-3 border-t border-canvas-faint">
                 <div className="flex justify-between">
                   <span className="font-semibold text-ink-default">Total Income</span>
-                  <span className="font-semibold text-green-600">{formatCurrency(reportData.income.total)}</span>
+                  <span className="font-semibold text-teal-600">{formatCurrency(reportData.income.total)}</span>
                 </div>
               </div>
             </div>
@@ -149,15 +149,15 @@ const ProfitLoss = () => {
               <div className="mt-3 pt-3 border-t border-canvas-faint">
                 <div className="flex justify-between">
                   <span className="font-semibold text-ink-default">Total Direct Expenses</span>
-                  <span className="font-semibold text-red-600">{formatCurrency(reportData.expenses.totalDirect)}</span>
+                  <span className="font-semibold text-rose-600">{formatCurrency(reportData.expenses.totalDirect)}</span>
                 </div>
               </div>
             </div>
           </div>
-          <div className="px-4 py-3 bg-gradient-to-r from-blue-50 to-indigo-50 border-t border-canvas-faint">
+          <div className="px-4 py-3 bg-gradient-to-r from-indigo-light to-indigo-100 border-t border-canvas-faint">
             <div className="flex justify-between items-center">
               <span className="font-semibold text-ink-default">Gross Profit</span>
-              <span className={`font-bold text-lg ${reportData.grossProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              <span className={`font-bold text-lg ${reportData.grossProfit >= 0 ? 'text-teal-600' : 'text-rose-600'}`}>
                 {formatCurrency(Math.abs(reportData.grossProfit))}
               </span>
             </div>
@@ -171,7 +171,7 @@ const ProfitLoss = () => {
           className="bg-white rounded-lg border border-canvas-faint overflow-hidden"
           id="pl"
         >
-          <div className="px-4 py-3 bg-gradient-to-r from-orange-50 to-amber-50 border-b border-canvas-faint">
+          <div className="px-4 py-3 bg-gradient-to-r from-amber-light to-amber-100 border-b border-canvas-faint">
             <h2 className="font-semibold text-ink-default">Profit & Loss Account (Net Profit/Loss)</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-canvas-faint">
@@ -202,10 +202,10 @@ const ProfitLoss = () => {
               )}
             </div>
           </div>
-          <div className="px-4 py-3 bg-gradient-to-r from-green-50 to-emerald-50 border-t border-canvas-faint">
+          <div className="px-4 py-3 bg-gradient-to-r from-teal-light to-teal-100 border-t border-canvas-faint">
             <div className="flex justify-between items-center">
               <span className="font-semibold text-ink-default">Net Profit/Loss</span>
-              <span className={`font-bold text-xl ${reportData.netProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              <span className={`font-bold text-xl ${reportData.netProfit >= 0 ? 'text-teal-600' : 'text-rose-600'}`}>
                 {formatCurrency(Math.abs(reportData.netProfit))}
               </span>
             </div>

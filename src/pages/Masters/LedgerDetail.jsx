@@ -24,6 +24,11 @@ const LedgerDetail = () => {
       line => line.LedgerID === ledgerId || line.LedgerID === ledgerData.LedgerID
     );
 
+    console.log('DEBUG voucherLines total:', voucherLines?.length);
+    console.log('DEBUG ledgerId:', ledgerId);
+    console.log('DEBUG ledgerData.LedgerID:', ledgerData?.LedgerID);
+    console.log('DEBUG matching lines:', ledgerVoucherLines.length);
+
     const txns = ledgerVoucherLines.map(line => {
       const voucher = (vouchers || []).find(v => v.VoucherID === line.VoucherID) || {};
       return {

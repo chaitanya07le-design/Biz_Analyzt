@@ -117,8 +117,8 @@ const GeographicReport = () => {
             className="bg-white rounded-xl p-4 border border-canvas-faint"
           >
             <div className="flex items-center gap-2 mb-2">
-              <MapPin className="w-4 h-4 text-blue-600" />
-              <span className="text-xs text-ink-muted">States</span>
+              <MapPin className="w-4 h-4 text-indigo-600" />
+              <span className="text-xs text-ink-muted">Regions</span>
             </div>
             <div className="text-lg font-bold text-ink-default">{summaryStats.totalStates}</div>
           </motion.div>
@@ -143,7 +143,7 @@ const GeographicReport = () => {
             className="bg-white rounded-xl p-4 border border-canvas-faint"
           >
             <div className="flex items-center gap-2 mb-2">
-              <Users className="w-4 h-4 text-green-600" />
+              <Users className="w-4 h-4 text-teal-600" />
               <span className="text-xs text-ink-muted">Customers</span>
             </div>
             <div className="text-lg font-bold text-ink-default">{summaryStats.totalCustomers}</div>
@@ -156,10 +156,10 @@ const GeographicReport = () => {
             className="bg-white rounded-xl p-4 border border-canvas-faint"
           >
             <div className="flex items-center gap-2 mb-2">
-              <TrendingUp className="w-4 h-4 text-green-600" />
+              <TrendingUp className="w-4 h-4 text-teal-600" />
               <span className="text-xs text-ink-muted">Total Sales</span>
             </div>
-            <div className="text-lg font-bold text-green-700">{formatCurrency(summaryStats.totalSales)}</div>
+            <div className="text-lg font-bold text-teal-700">{formatCurrency(summaryStats.totalSales)}</div>
           </motion.div>
 
           <motion.div
@@ -169,10 +169,10 @@ const GeographicReport = () => {
             className="bg-white rounded-xl p-4 border border-canvas-faint"
           >
             <div className="flex items-center gap-2 mb-2">
-              <DollarSign className="w-4 h-4 text-orange-600" />
+              <DollarSign className="w-4 h-4 text-amber-600" />
               <span className="text-xs text-ink-muted">Outstanding</span>
             </div>
-            <div className="text-lg font-bold text-orange-700">{formatCurrency(summaryStats.totalOutstanding)}</div>
+            <div className="text-lg font-bold text-amber-700">{formatCurrency(summaryStats.totalOutstanding)}</div>
           </motion.div>
         </div>
 
@@ -250,12 +250,12 @@ const GeographicReport = () => {
                     </div>
 
                     <div className="w-24 text-right">
-                      <div className="text-sm font-medium text-green-600">
+                      <div className="text-sm font-medium text-teal-600">
                         {formatCurrency(row.salesValue)}
                       </div>
                       <div className="w-full h-2 bg-canvas-faint rounded-full mt-2 overflow-hidden">
                         <div 
-                          className="h-full bg-gradient-to-r from-green-400 to-green-600 rounded-full transition-all duration-500"
+                          className="h-full bg-gradient-to-r from-teal-400 to-teal-600 rounded-full transition-all duration-500"
                           style={{ width: `${Math.min(salesPercent, 100)}%` }}
                         />
                       </div>

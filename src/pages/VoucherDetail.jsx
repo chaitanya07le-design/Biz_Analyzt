@@ -142,6 +142,21 @@ const VoucherDetail = () => {
           </div>
         );
 
+      case 'Contra':
+      case 'Debit Note':
+      case 'Credit Note':
+        return (
+          <div className="space-y-4">
+            {voucher?.Items && voucher.Items.length > 0 && (
+              <VoucherItemsTable items={voucher.Items} showTax={false} />
+            )}
+            {voucher?.Entries && voucher.Entries.length > 0 && (
+              <VoucherJournalEntries entries={voucher.Entries} />
+            )}
+            {(voucher?.Narration) && <VoucherNarration narration={voucher.Narration} />}
+          </div>
+        );
+
       default:
         return null;
     }
@@ -149,7 +164,14 @@ const VoucherDetail = () => {
 
   return (
     <div className="min-h-screen bg-canvas-default pb-20 md:pb-6">
-      <VoucherHeader voucher={{ ...voucher, type: voucherType, status: voucherStatus }} onBack={handleBack} />
+      <VoucherHeader voucher={{
+        ...voucher,
+        type: voucherType,
+        status: voucherStatus,
+        date: voucher.VoucherDate || voucher.date,
+        partyName: voucher.PartyName || voucher.partyName,
+        voucherNo: voucher.VoucherNo || voucher.voucherNo,
+      }} onBack={handleBack} />
       
       <div className="p-4 md:p-6">
         {renderVoucherBody()}

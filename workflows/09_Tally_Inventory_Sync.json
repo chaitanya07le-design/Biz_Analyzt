@@ -2,7 +2,7 @@
   "created": "1786095018298",
   "updated": "1786095018298",
   "name": "09 - Sync Tally Inventory and Stock Valuation",
-  "description": "Syncs Tally item groups and inventory items to Google Sheets daily at 2 AM. Overwrites existing data with fresh sync.",
+  "description": "Syncs Tally item groups and inventory items to Google Sheets daily at 2 AM. Overwrites existing data with fresh sync. Preserves manually-added columns (Brand, SubCategory, GroupID, MRP, MinStockLevel, MaxStockLevel, Location, IsBatchTracked) for existing items.",
   "tags": ["tally", "sync", "inventory", "stock", "items", "google-sheets"],
   "pieces": [
     "@puchoaistudio/tool-schedule",
@@ -167,46 +167,47 @@
                 "nextAction": {
                   "name": "step_6",
                   "skip": false,
-                  "type": "CODE",
+                  "type": "PIECE",
                   "valid": true,
-                  "displayName": "Transform Items",
+                  "displayName": "Get Existing Items",
                   "settings": {
                     "input": {
-                      "tally_data": "{{step_2['output']}}"
+                      "auth": "",
+                      "spreadsheetId": "",
+                      "sheetId": 2067663692,
+                      "range": "A:V"
                     },
+                    "pieceName": "@puchoaistudio/tool-google-sheets",
+                    "actionName": "get_rows",
                     "sampleData": {},
-                    "sourceCode": {
-                      "code": "export const code = async (inputs) => {\n  const tallyData = inputs.tally_data || {};\n  const items = tallyData.items || [];\n  const now = new Date().toISOString().replace('T', ' ').substring(0, 19);\n  \n  const rows = items.map((item, index) => {\n    const itemID = `ITM-${String(index + 1).padStart(4, '0')}`;\n    return [\n      itemID,\n      'COMP-0001',\n      item.itemName || '',\n      item.categoryId || '',\n      item.itemGroupId || '',\n      item.hsnCode || '',\n      item.unit || '',\n      item.gstRate || 0,\n      item.saleRate || 0,\n      item.purchaseRate || 0,\n      item.openingStock || 0,\n      item.openingValue || 0,\n      item.reorderLevel || 0,\n      item.isActive ? 'TRUE' : 'TRUE',\n      now,\n      now,\n      1\n    ];\n  });\n  \n  return { rows, count: rows.length };\n};",
-                      "packageJson": "{}",
-                      "language": "typescript"
+                    "pieceVersion": "^2.0.9",
+                    "propertySettings": {
+                      "auth": {"type": "MANUAL"},
+                      "spreadsheetId": {"type": "MANUAL"},
+                      "sheetId": {"type": "MANUAL"},
+                      "range": {"type": "MANUAL"}
                     },
                     "errorHandlingOptions": {
                       "retryOnFailure": {"value": false},
-                      "continueOnFailure": {"value": false}
+                      "continueOnFailure": {"value": true}
                     }
                   },
                   "nextAction": {
                     "name": "step_7",
                     "skip": false,
-                    "type": "PIECE",
+                    "type": "CODE",
                     "valid": true,
-                    "displayName": "Clear Items Sheet",
+                    "displayName": "Transform Items",
                     "settings": {
                       "input": {
-                        "auth": "",
-                        "spreadsheetId": "",
-                        "sheetId": 2067663692,
-                        "is_first_row_headers": true
+                        "tally_data": "{{step_2['output']}}",
+                        "existing_items": "{{step_6['body.values']}}"
                       },
-                      "pieceName": "@puchoaistudio/tool-google-sheets",
-                      "actionName": "clear_sheet",
                       "sampleData": {},
-                      "pieceVersion": "^2.0.9",
-                      "propertySettings": {
-                        "auth": {"type": "MANUAL"},
-                        "spreadsheetId": {"type": "MANUAL"},
-                        "sheetId": {"type": "MANUAL"},
-                        "is_first_row_headers": {"type": "MANUAL"}
+                      "sourceCode": {
+                        "code": "export const code = async (inputs) => {\n  const tallyData = inputs.tally_data || {};\n  const existingRows = inputs.existing_items || [];\n  const items = tallyData.items || [];\n  const companyId = 'COMP-0001';\n  const now = new Date().toISOString().replace('T', ' ').substring(0, 19);\n  \n  // Column indices in Items sheet (0-based, A=0, B=1, ...)\n  const COL = {\n    ID: 0,              // A: ItemID\n    Brand: 3,           // D: Brand\n    SubCategory: 5,     // F: SubCategory\n    GroupID: 6,         // G: GroupID\n    MRP: 11,            // L: MRP\n    MinStockLevel: 12,  // M: MinStockLevel\n    MaxStockLevel: 13,  // N: MaxStockLevel\n    Location: 15,       // P: Location\n    CreatedDate: 19,    // T: CreatedDate\n    IsBatchTracked: 21  // V: IsBatchTracked\n  };\n  \n  const getVal = (row, idx) => row && row[idx] !== undefined ? row[idx] : '';\n  \n  // Build lookup map by ItemID\n  const existingMap = {};\n  existingRows.forEach(row => {\n    const id = getVal(row, COL.ID);\n    if (id) {\n      existingMap[id] = {\n        Brand: getVal(row, COL.Brand),\n        SubCategory: getVal(row, COL.SubCategory),\n        GroupID: getVal(row, COL.GroupID),\n        MRP: getVal(row, COL.MRP),\n        MinStockLevel: getVal(row, COL.MinStockLevel),\n        MaxStockLevel: getVal(row, COL.MaxStockLevel),\n        Location: getVal(row, COL.Location),\n        CreatedDate: getVal(row, COL.CreatedDate),\n        IsBatchTracked: getVal(row, COL.IsBatchTracked)\n      };\n    }\n  });\n  \n  const rows = items.map((item, index) => {\n    // Generate composite ItemID matching seed data format\n    const itemID = `ITM-${String(index + 1).padStart(4, '0')}_${companyId}`;\n    const existing = existingMap[itemID] || {};\n    \n    // Preserve existing values for manually-added columns\n    // If new item (no existing row), leave blanks for user to fill\n    const brand = existing.Brand || '';\n    const subCategory = existing.SubCategory || '';\n    const groupID = existing.GroupID || '';\n    const mrp = existing.MRP || '';\n    const minStockLevel = existing.MinStockLevel || '';\n    const maxStockLevel = existing.MaxStockLevel || '';\n    const location = existing.Location || '';\n    const isBatchTracked = existing.IsBatchTracked || 'FALSE';\n    \n    // CreatedDate: preserve existing, only set for new items\n    const createdDate = existing.CreatedDate || now;\n    \n    return [\n      itemID,                                    // 1. A: ItemID (composite)\n      companyId,                                 // 2. B: CompanyID\n      item.itemName || '',                       // 3. C: ItemName\n      brand,                                     // 4. D: Brand (preserve)\n      item.categoryId || '',                     // 5. E: CategoryID\n      subCategory,                               // 6. F: SubCategory (preserve)\n      groupID,                                   // 7. G: GroupID (preserve)\n      item.unit || '',                           // 8. H: Unit\n      item.openingStock || 0,                    // 9. I: OpeningStock\n      item.saleRate || 0,                        // 10. J: SaleRate\n      item.purchaseRate || 0,                    // 11. K: PurchaseRate\n      mrp,                                       // 12. L: MRP (preserve)\n      minStockLevel,                             // 13. M: MinStockLevel (preserve)\n      maxStockLevel,                             // 14. N: MaxStockLevel (preserve)\n      item.reorderLevel || 0,                    // 15. O: ReorderLevel\n      location,                                  // 16. P: Location (preserve)\n      item.hsnCode || '',                        // 17. Q: HSN\n      item.gstRate || 0,                         // 18. R: GST\n      item.isActive ? 'TRUE' : 'FALSE',         // 19. S: IsActive (FIXED)\n      createdDate,                               // 20. T: CreatedDate (preserve)\n      now,                                       // 21. U: LastModifiedDate (always now)\n      isBatchTracked                            // 22. V: IsBatchTracked (preserve)\n    ];\n  });\n  \n  return { rows, count: rows.length };\n};",
+                        "packageJson": "{}",
+                        "language": "typescript"
                       },
                       "errorHandlingOptions": {
                         "retryOnFailure": {"value": false},
@@ -218,31 +219,60 @@
                       "skip": false,
                       "type": "PIECE",
                       "valid": true,
-                      "displayName": "Insert Items",
+                      "displayName": "Clear Items Sheet",
                       "settings": {
                         "input": {
                           "auth": "",
                           "spreadsheetId": "",
                           "sheetId": 2067663692,
-                          "input_type": "json",
-                          "values": {
-                            "values": "{{step_6['rows']}}"
-                          }
+                          "is_first_row_headers": true
                         },
                         "pieceName": "@puchoaistudio/tool-google-sheets",
-                        "actionName": "google-sheets-insert-multiple-rows",
+                        "actionName": "clear_sheet",
                         "sampleData": {},
                         "pieceVersion": "^2.0.9",
                         "propertySettings": {
                           "auth": {"type": "MANUAL"},
                           "spreadsheetId": {"type": "MANUAL"},
                           "sheetId": {"type": "MANUAL"},
-                          "input_type": {"type": "MANUAL"},
-                          "values": {"type": "MANUAL", "schema": {"values": {"type": "ARRAY", "items": {"type": "ARRAY"}}}}
+                          "is_first_row_headers": {"type": "MANUAL"}
                         },
                         "errorHandlingOptions": {
-                          "retryOnFailure": {"value": true},
+                          "retryOnFailure": {"value": false},
                           "continueOnFailure": {"value": false}
+                        }
+                      },
+                      "nextAction": {
+                        "name": "step_9",
+                        "skip": false,
+                        "type": "PIECE",
+                        "valid": true,
+                        "displayName": "Insert Items",
+                        "settings": {
+                          "input": {
+                            "auth": "",
+                            "spreadsheetId": "",
+                            "sheetId": 2067663692,
+                            "input_type": "json",
+                            "values": {
+                              "values": "{{step_7['rows']}}"
+                            }
+                          },
+                          "pieceName": "@puchoaistudio/tool-google-sheets",
+                          "actionName": "google-sheets-insert-multiple-rows",
+                          "sampleData": {},
+                          "pieceVersion": "^2.0.9",
+                          "propertySettings": {
+                            "auth": {"type": "MANUAL"},
+                            "spreadsheetId": {"type": "MANUAL"},
+                            "sheetId": {"type": "MANUAL"},
+                            "input_type": {"type": "MANUAL"},
+                            "values": {"type": "MANUAL", "schema": {"values": {"type": "ARRAY", "items": {"type": "ARRAY"}}}}
+                          },
+                          "errorHandlingOptions": {
+                            "retryOnFailure": {"value": true},
+                            "continueOnFailure": {"value": false}
+                          }
                         }
                       }
                     }

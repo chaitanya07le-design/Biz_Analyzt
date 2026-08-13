@@ -24,12 +24,12 @@ const OutstandingList = ({
 
   const getStatusColor = (party) => {
     if (party.notDue > 0 && party.totalOutstanding === party.notDue) {
-      return 'bg-gray-50 border-gray-200';
+      return 'bg-ink-50 border-ink-200';
     }
-    if (party.over90 > 0) return 'bg-red-50 border-red-200';
-    if (party.overdue61to90 > 0) return 'bg-orange-50 border-orange-200';
-    if (party.overdue31to60 > 0) return 'bg-amber-50 border-amber-200';
-    if (party.overdue0to30 > 0) return 'bg-yellow-50 border-yellow-200';
+    if (party.over90 > 0) return 'bg-rose-light border-rose-200';
+    if (party.overdue61to90 > 0) return 'bg-rose-100 border-rose-200';
+    if (party.overdue31to60 > 0) return 'bg-amber-100 border-amber-200';
+    if (party.overdue0to30 > 0) return 'bg-amber-light border-amber-200';
     return 'bg-white border-canvas-faint';
   };
 
@@ -81,13 +81,13 @@ const OutstandingList = ({
                 <td className="px-4 py-3 text-sm font-mono text-amber-600">
                   {party.overdue0to30 > 0 ? `₹${party.overdue0to30.toLocaleString('en-IN')}` : '—'}
                 </td>
-                <td className="px-4 py-3 text-sm font-mono text-orange-600">
+                <td className="px-4 py-3 text-sm font-mono text-amber-700">
                   {party.overdue31to60 > 0 ? `₹${party.overdue31to60.toLocaleString('en-IN')}` : '—'}
                 </td>
-                <td className="px-4 py-3 text-sm font-mono text-red-600">
+                <td className="px-4 py-3 text-sm font-mono text-rose-600">
                   {party.overdue61to90 > 0 ? `₹${party.overdue61to90.toLocaleString('en-IN')}` : '—'}
                 </td>
-                <td className="px-4 py-3 text-sm font-mono text-red-700 font-medium">
+                <td className="px-4 py-3 text-sm font-mono text-rose-700 font-medium">
                   {party.over90 > 0 ? `₹${party.over90.toLocaleString('en-IN')}` : '—'}
                 </td>
                 <td className="px-4 py-3 text-sm text-right font-semibold text-ink-default font-mono">
@@ -101,7 +101,7 @@ const OutstandingList = ({
                           e.stopPropagation();
                           onSendReminder(party);
                         }}
-                        className="px-2 py-1 text-xs text-amber-700 bg-amber-50 hover:bg-amber-100 rounded transition-colors"
+                        className="px-2 py-1 text-xs text-amber-700 bg-amber-light hover:bg-amber-100 rounded transition-colors"
                         title="Send Reminder"
                       >
                         📧
@@ -112,7 +112,7 @@ const OutstandingList = ({
                         e.stopPropagation();
                         onRecordPayment(party);
                       }}
-                      className="px-2 py-1 text-xs text-green-700 bg-green-50 hover:bg-green-100 rounded transition-colors"
+                      className="px-2 py-1 text-xs text-teal-700 bg-teal-light hover:bg-teal-100 rounded transition-colors"
                       title="Record Payment"
                     >
                         ₹
@@ -148,7 +148,7 @@ const OutstandingList = ({
                   ₹{party.totalOutstanding.toLocaleString('en-IN')}
                 </p>
                 {party.totalOutstanding > party.notDue && (
-                  <p className="text-xs text-red-600 font-mono mt-1">
+                  <p className="text-xs text-rose-600 font-mono mt-1">
                     Overdue: ₹{(party.totalOutstanding - party.notDue).toLocaleString('en-IN')}
                   </p>
                 )}
@@ -158,14 +158,14 @@ const OutstandingList = ({
               {activeTab === 'receivable' && onSendReminder && (
                 <button
                   onClick={() => onSendReminder(party)}
-                  className="flex-1 px-3 py-1.5 text-xs font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-lg transition-colors"
+                  className="flex-1 px-3 py-1.5 text-xs font-medium text-amber-700 bg-amber-light hover:bg-amber-100 rounded-lg transition-colors"
                 >
                   📧 Remind
                 </button>
               )}
               <button
                 onClick={() => onRecordPayment(party)}
-                className="flex-1 px-3 py-1.5 text-xs font-medium text-green-700 bg-green-50 hover:bg-green-100 rounded-lg transition-colors"
+                className="flex-1 px-3 py-1.5 text-xs font-medium text-teal-700 bg-teal-light hover:bg-teal-100 rounded-lg transition-colors"
               >
                 ₹ Record Payment
               </button>

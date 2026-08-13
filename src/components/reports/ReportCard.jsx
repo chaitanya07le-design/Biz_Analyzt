@@ -59,7 +59,7 @@ const ReportCard = ({ title, description, icon, onClick, disabled }) => {
       }`}
     >
       <div className="flex items-start justify-between mb-3">
-        <div className="w-14 h-14 rounded-lg bg-brand-primary/10 text-brand-primary flex items-center justify-center">
+        <div className="w-14 h-14 rounded-lg bg-indigo-light text-indigo-600 flex items-center justify-center">
           {iconMap[icon] || iconMap['ledger']}
         </div>
         {disabled && (

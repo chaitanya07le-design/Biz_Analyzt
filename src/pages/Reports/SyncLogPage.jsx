@@ -90,7 +90,7 @@ const SyncLogPage = () => {
             className="bg-white rounded-xl p-4 border border-canvas-faint"
           >
             <div className="flex items-center gap-2 mb-2">
-              <Clock className="w-4 h-4 text-blue-600" />
+              <Clock className="w-4 h-4 text-indigo-600" />
               <span className="text-xs text-ink-muted">Last Sync</span>
             </div>
             <div className="text-sm font-medium text-ink-default">
@@ -102,13 +102,13 @@ const SyncLogPage = () => {
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.15 }}
-            className="bg-white rounded-xl p-4 border border-green-200 bg-green-50"
+            className="bg-white rounded-xl p-4 border border-teal-200 bg-teal-light"
           >
             <div className="flex items-center gap-2 mb-2">
-              <CheckCircle className="w-4 h-4 text-green-600" />
+              <CheckCircle className="w-4 h-4 text-teal-600" />
               <span className="text-xs text-ink-muted">Success Rate</span>
             </div>
-            <div className="text-lg font-bold text-green-700">{syncStats.successRate}%</div>
+            <div className="text-lg font-bold text-teal-700">{syncStats.successRate}%</div>
           </motion.div>
 
           <motion.div
@@ -118,7 +118,7 @@ const SyncLogPage = () => {
             className="bg-white rounded-xl p-4 border border-canvas-faint"
           >
             <div className="flex items-center gap-2 mb-2">
-              <RefreshCw className="w-4 h-4 text-blue-600" />
+              <RefreshCw className="w-4 h-4 text-indigo-600" />
               <span className="text-xs text-ink-muted">Total Runs</span>
             </div>
             <div className="text-lg font-bold text-ink-default">{syncStats.totalRuns}</div>
@@ -128,13 +128,13 @@ const SyncLogPage = () => {
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.25 }}
-            className="bg-white rounded-xl p-4 border border-red-200 bg-red-50"
+            className="bg-white rounded-xl p-4 border border-rose-200 bg-rose-light"
           >
             <div className="flex items-center gap-2 mb-2">
-              <XCircle className="w-4 h-4 text-red-600" />
+              <XCircle className="w-4 h-4 text-rose-600" />
               <span className="text-xs text-ink-muted">Failed</span>
             </div>
-            <div className="text-lg font-bold text-red-700">{syncStats.failedRuns}</div>
+            <div className="text-lg font-bold text-rose-700">{syncStats.failedRuns}</div>
           </motion.div>
         </div>
 
@@ -161,13 +161,13 @@ const SyncLogPage = () => {
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       {log.Status === 'Success' ? (
-                        <CheckCircle className="w-4 h-4 text-green-600" />
+                        <CheckCircle className="w-4 h-4 text-teal-600" />
                       ) : (
-                        <XCircle className="w-4 h-4 text-red-600" />
+                        <XCircle className="w-4 h-4 text-rose-600" />
                       )}
                       <span className="font-medium text-ink-default">{log.WorkflowName}</span>
                       <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                        log.Status === 'Success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                        log.Status === 'Success' ? 'bg-teal-light text-teal-700' : 'bg-rose-light text-rose-700'
                       }`}>
                         {log.Status}
                       </span>
@@ -178,7 +178,7 @@ const SyncLogPage = () => {
                       <span>Records: {log.RecordsProcessed || 0}</span>
                     </div>
                     {log.ErrorMessage && (
-                      <div className="mt-1 text-xs text-red-600">
+                      <div className="mt-1 text-xs text-rose-600">
                         Error: {log.ErrorMessage}
                       </div>
                     )}

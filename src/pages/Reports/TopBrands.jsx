@@ -189,7 +189,7 @@ const TopBrands = () => {
             className="bg-white rounded-xl p-4 border border-canvas-faint"
           >
             <div className="flex items-center gap-2 mb-2">
-              <DollarSign className="w-4 h-4 text-green-600" />
+              <DollarSign className="w-4 h-4 text-teal-600" />
               <span className="text-xs text-ink-muted">Total Sales</span>
             </div>
             <div className="text-lg font-bold text-ink-default">
@@ -204,7 +204,7 @@ const TopBrands = () => {
             className="bg-white rounded-xl p-4 border border-canvas-faint"
           >
             <div className="flex items-center gap-2 mb-2">
-              <Package className="w-4 h-4 text-blue-600" />
+              <Package className="w-4 h-4 text-indigo-600" />
               <span className="text-xs text-ink-muted">Total Items</span>
             </div>
             <div className="text-lg font-bold text-ink-default">
@@ -234,7 +234,7 @@ const TopBrands = () => {
             className="bg-white rounded-xl p-4 border border-canvas-faint"
           >
             <div className="flex items-center gap-2 mb-2">
-              <TrendingUp className="w-4 h-4 text-orange-600" />
+              <TrendingUp className="w-4 h-4 text-amber-600" />
               <span className="text-xs text-ink-muted">Avg Sales/Brand</span>
             </div>
             <div className="text-lg font-bold text-ink-default">
@@ -317,7 +317,7 @@ const TopBrands = () => {
                       <div className="flex items-center gap-4 mt-1 text-sm text-ink-muted">
                         <span>Sales: {formatCurrency(brand.salesValue)}</span>
                         <span>Stock: {formatCurrency(brand.stockValue)}</span>
-                        <span className={margin >= 0 ? 'text-green-600' : 'text-red-600'}>
+                        <span className={margin >= 0 ? 'text-teal-600' : 'text-rose-600'}>
                           Margin: {margin.toFixed(1)}%
                         </span>
                       </div>

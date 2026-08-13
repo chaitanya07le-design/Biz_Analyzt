@@ -126,11 +126,11 @@ const StockAging = () => {
   };
 
   const bucketColors = {
-    '0-30': 'bg-green-100 text-green-700',
-    '31-60': 'bg-yellow-100 text-yellow-700',
-    '61-90': 'bg-orange-100 text-orange-700',
-    '91-180': 'bg-red-100 text-red-700',
-    '180+': 'bg-red-200 text-red-800',
+    '0-30': 'bg-teal-light text-teal-700',
+    '31-60': 'bg-amber-light text-amber-700',
+    '61-90': 'bg-amber-100 text-amber-800',
+    '91-180': 'bg-rose-light text-rose-700',
+    '180+': 'bg-rose-100 text-rose-800',
   };
 
   if (loading) {
@@ -159,7 +159,7 @@ const StockAging = () => {
           <h1 className="text-xl md:text-2xl font-semibold text-ink-default">Stock Aging Report</h1>
           <p className="text-sm text-ink-muted mt-1">FIFO batch-wise aging analysis with dead stock identification</p>
           {batchTrackedItems > 0 && (
-            <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 text-xs">
+            <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-light text-indigo-700 text-xs">
               <Package className="w-3.5 h-3.5" />
               Showing batch-tracked items only ({batchTrackedItems} of {totalItems})
             </div>
@@ -174,7 +174,7 @@ const StockAging = () => {
             className="bg-white rounded-xl p-4 border border-canvas-faint"
           >
             <div className="flex items-center gap-2 mb-2">
-              <Package className="w-4 h-4 text-blue-600" />
+              <Package className="w-4 h-4 text-indigo-600" />
               <span className="text-xs text-ink-muted">Total Batches</span>
             </div>
             <div className="text-lg font-bold text-ink-default">{summaryStats.total}</div>
@@ -184,27 +184,27 @@ const StockAging = () => {
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.15 }}
-            className="bg-white rounded-xl p-4 border border-red-200 bg-red-50"
+            className="bg-white rounded-xl p-4 border border-rose-200 bg-rose-light"
           >
             <div className="flex items-center gap-2 mb-2">
-              <AlertTriangle className="w-4 h-4 text-red-600" />
+              <AlertTriangle className="w-4 h-4 text-rose-600" />
               <span className="text-xs text-ink-muted">Dead Stock</span>
             </div>
-            <div className="text-lg font-bold text-red-700">{summaryStats.deadStock}</div>
-            <div className="text-xs text-red-600">{summaryStats.deadQty} units</div>
+            <div className="text-lg font-bold text-rose-700">{summaryStats.deadStock}</div>
+            <div className="text-xs text-rose-600">{summaryStats.deadQty} units</div>
           </motion.div>
 
           <motion.div
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="bg-white rounded-xl p-4 border border-red-200 bg-red-50"
+            className="bg-white rounded-xl p-4 border border-rose-200 bg-rose-light"
           >
             <div className="flex items-center gap-2 mb-2">
-              <TrendingDown className="w-4 h-4 text-red-600" />
+              <TrendingDown className="w-4 h-4 text-rose-600" />
               <span className="text-xs text-ink-muted">Dead Stock Value</span>
             </div>
-            <div className="text-lg font-bold text-red-700">{formatCurrency(summaryStats.deadValue)}</div>
+            <div className="text-lg font-bold text-rose-700">{formatCurrency(summaryStats.deadValue)}</div>
           </motion.div>
 
           <motion.div
@@ -214,7 +214,7 @@ const StockAging = () => {
             className="bg-white rounded-xl p-4 border border-canvas-faint"
           >
             <div className="flex items-center gap-2 mb-2">
-              <Clock className="w-4 h-4 text-green-600" />
+              <Clock className="w-4 h-4 text-teal-600" />
               <span className="text-xs text-ink-muted">Fresh (0-30)</span>
             </div>
             <div className="text-lg font-bold text-ink-default">{summaryStats.buckets['0-30'].count}</div>
@@ -228,7 +228,7 @@ const StockAging = () => {
             className="bg-white rounded-xl p-4 border border-canvas-faint"
           >
             <div className="flex items-center gap-2 mb-2">
-              <Clock className="w-4 h-4 text-orange-600" />
+              <Clock className="w-4 h-4 text-amber-600" />
               <span className="text-xs text-ink-muted">Aging (31-90)</span>
             </div>
             <div className="text-lg font-bold text-ink-default">
@@ -270,7 +270,7 @@ const StockAging = () => {
               }}
               className={`text-sm px-3 py-1.5 rounded-lg border transition-all ${
                 showDeadOnly
-                  ? 'bg-red-100 border-red-300 text-red-700'
+                  ? 'bg-rose-light border-rose-300 text-rose-700'
                   : 'border-canvas-faint text-ink-muted hover:bg-canvas-subtle'
               }`}
             >
@@ -301,7 +301,7 @@ const StockAging = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: idx * 0.02 }}
-                    className={`hover:bg-canvas-subtle cursor-pointer ${row.isDeadStock ? 'bg-red-50' : ''}`}
+                    className={`hover:bg-canvas-subtle cursor-pointer ${row.isDeadStock ? 'bg-rose-light' : ''}`}
                     onClick={() => navigate(`/items/${row.itemId}`)}
                   >
                     <td className="px-4 py-3 font-medium text-ink-default">{row.itemName}</td>
@@ -318,7 +318,7 @@ const StockAging = () => {
                     <td className="px-4 py-3 text-ink-muted">{formatDate(row.lastSaleDate)}</td>
                     <td className="px-4 py-3">
                       {row.isDeadStock && (
-                        <span className="px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">
+                        <span className="px-2 py-1 rounded-full text-xs font-medium bg-rose-light text-rose-700">
                           DEAD
                         </span>
                       )}

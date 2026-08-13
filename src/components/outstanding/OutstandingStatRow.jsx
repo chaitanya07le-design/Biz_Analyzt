@@ -2,11 +2,11 @@ import React from 'react';
 
 const OutstandingStatRow = ({ stats }) => {
   const buckets = [
-    { key: 'notDue', label: 'Not Due', color: 'bg-gray-400' },
+    { key: 'notDue', label: 'Not Due', color: 'bg-indigo-400' },
     { key: 'overdue0to30', label: '0-30', color: 'bg-amber-500' },
-    { key: 'overdue31to60', label: '31-60', color: 'bg-orange-500' },
-    { key: 'overdue61to90', label: '61-90', color: 'bg-red-500' },
-    { key: 'over90', label: '>90', color: 'bg-red-700' },
+    { key: 'overdue31to60', label: '31-60', color: 'bg-amber-600' },
+    { key: 'overdue61to90', label: '61-90', color: 'bg-rose-500' },
+    { key: 'over90', label: '>90', color: 'bg-rose-700' },
   ];
 
   const total = buckets.reduce((sum, b) => sum + stats[b.key], 0);

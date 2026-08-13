@@ -220,7 +220,7 @@ const ByItem = () => {
                       <span className="text-sm font-medium text-ink-default">{formatCurrency(item.salesValue)}</span>
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <span className={`text-sm font-medium ${item.item.closingQty >= 0 ? 'text-ink-default' : 'text-red-600'}`}>
+                      <span className={`text-sm font-medium ${item.item.closingQty >= 0 ? 'text-ink-default' : 'text-rose-600'}`}>
                         {formatNumber(item.item.closingQty)} {item.item.unit}
                       </span>
                     </td>

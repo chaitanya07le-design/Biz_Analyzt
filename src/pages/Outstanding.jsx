@@ -134,7 +134,7 @@ const Outstanding = () => {
               </div>
               <div className="text-right">
                 <p className="text-sm text-ink-muted">Total Outstanding</p>
-                <p className={`text-xl font-semibold ${activeTab === 'receivable' ? 'text-green-600' : 'text-red-600'}`}>
+                <p className={`text-xl font-semibold ${activeTab === 'receivable' ? 'text-teal-600' : 'text-rose-600'}`}>
                   {formatCurrency(grandTotal)}
                 </p>
               </div>
@@ -146,7 +146,7 @@ const Outstanding = () => {
                 onClick={() => setActiveTab('receivable')}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   activeTab === 'receivable' 
-                    ? 'bg-green-50 text-green-700 ring-1 ring-green-200' 
+                    ? 'bg-teal-light text-teal-700 ring-1 ring-teal-200' 
                     : 'bg-ink-50 text-ink-600 hover:bg-ink-100'
                 }`}
               >
@@ -157,7 +157,7 @@ const Outstanding = () => {
                 onClick={() => setActiveTab('payable')}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   activeTab === 'payable' 
-                    ? 'bg-red-50 text-red-700 ring-1 ring-red-200' 
+                    ? 'bg-rose-light text-rose-700 ring-1 ring-rose-200' 
                     : 'bg-ink-50 text-ink-600 hover:bg-ink-100'
                 }`}
               >
@@ -175,11 +175,11 @@ const Outstanding = () => {
             Aging Analysis
           </h3>
           <div className="grid grid-cols-5 gap-2">
-            <AgingBucket label="Not Due" amount={totals.notDue} color="bg-blue-50" />
-            <AgingBucket label="0-30 days" amount={totals.overdue0to30} color="bg-amber-50" isOverdue />
-            <AgingBucket label="31-60 days" amount={totals.overdue31to60} color="bg-orange-50" isOverdue />
-            <AgingBucket label="61-90 days" amount={totals.overdue61to90} color="bg-red-50" isOverdue />
-            <AgingBucket label="90+ days" amount={totals.over90} color="bg-red-100" isOverdue />
+            <AgingBucket label="Not Due" amount={totals.notDue} color="bg-indigo-light" />
+            <AgingBucket label="0-30 days" amount={totals.overdue0to30} color="bg-amber-light" isOverdue />
+            <AgingBucket label="31-60 days" amount={totals.overdue31to60} color="bg-amber-100" isOverdue />
+            <AgingBucket label="61-90 days" amount={totals.overdue61to90} color="bg-rose-light" isOverdue />
+            <AgingBucket label="90+ days" amount={totals.over90} color="bg-rose-100" isOverdue />
           </div>
         </div>
       </div>
@@ -227,7 +227,7 @@ const Outstanding = () => {
                         {formatCurrency(party.totalOutstanding)}
                       </p>
                       {(party.aging?.overdue61to90 > 0 || party.aging?.over90 > 0) && (
-                        <p className="text-xs text-red-500">
+                        <p className="text-xs text-rose-600">
                           {formatCurrency((party.aging?.overdue61to90 || 0) + (party.aging?.over90 || 0))} 60+ days overdue
                         </p>
                       )}
@@ -237,19 +237,19 @@ const Outstanding = () => {
                   {/* Mini Aging Bar */}
                   <div className="mt-3 flex gap-1 h-2 rounded-full overflow-hidden bg-canvas-faint">
                     {party.aging?.notDue > 0 && (
-                      <div className="bg-blue-400" style={{ width: `${(party.aging.notDue / party.totalOutstanding) * 100}%` }} />
+                      <div className="bg-indigo-400" style={{ width: `${(party.aging.notDue / party.totalOutstanding) * 100}%` }} />
                     )}
                     {party.aging?.overdue0to30 > 0 && (
                       <div className="bg-amber-400" style={{ width: `${(party.aging.overdue0to30 / party.totalOutstanding) * 100}%` }} />
                     )}
                     {party.aging?.overdue31to60 > 0 && (
-                      <div className="bg-orange-400" style={{ width: `${(party.aging.overdue31to60 / party.totalOutstanding) * 100}%` }} />
+                      <div className="bg-amber-500" style={{ width: `${(party.aging.overdue31to60 / party.totalOutstanding) * 100}%` }} />
                     )}
                     {party.aging?.overdue61to90 > 0 && (
-                      <div className="bg-red-400" style={{ width: `${(party.aging.overdue61to90 / party.totalOutstanding) * 100}%` }} />
+                      <div className="bg-rose-400" style={{ width: `${(party.aging.overdue61to90 / party.totalOutstanding) * 100}%` }} />
                     )}
                     {party.aging?.over90 > 0 && (
-                      <div className="bg-red-600" style={{ width: `${(party.aging.over90 / party.totalOutstanding) * 100}%` }} />
+                      <div className="bg-rose-600" style={{ width: `${(party.aging.over90 / party.totalOutstanding) * 100}%` }} />
                     )}
                   </div>
                 </div>
@@ -288,7 +288,7 @@ const Outstanding = () => {
                           <div className="text-right">
                             <p className="font-semibold text-ink-900">{formatCurrency(inv.outstanding)}</p>
                             {inv.daysOverdue > 0 && (
-                              <p className={`text-xs ${inv.daysOverdue > 60 ? 'text-red-500' : 'text-amber-500'}`}>
+                              <p className={`text-xs ${inv.daysOverdue > 60 ? 'text-rose-600' : 'text-amber-600'}`}>
                                 {inv.daysOverdue} days overdue
                               </p>
                             )}

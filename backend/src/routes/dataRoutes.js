@@ -162,10 +162,11 @@ router.get('/vouchers/:voucherId', async (req, res) => {
     const { voucherId } = req.params;
     const { companyId } = req.query;
 
-    const [vouchers, voucherLines, items] = await Promise.all([
+    const [vouchers, voucherLines, items, ledgers] = await Promise.all([
       fetchSheetData('Vouchers'),
       fetchSheetData('VoucherLines'),
       fetchSheetData('Items'),
+      fetchSheetData('Ledgers'),
     ]);
 
     const voucher = vouchers.find(v => v.VoucherID === voucherId);
@@ -183,11 +184,15 @@ router.get('/vouchers/:voucherId', async (req, res) => {
       });
     }
 
-    const lines = voucherLines.filter(
+    const itemLines = voucherLines.filter(
       line => line.VoucherID === voucherId && line.LineType === 'Item'
     );
 
-    const voucherItems = lines.map(line => {
+    const ledgerLines = voucherLines.filter(
+      line => line.VoucherID === voucherId && line.LineType === 'Ledger'
+    );
+
+    const voucherItems = itemLines.map(line => {
       const item = items.find(i => i.ItemID === line.ItemID) || {};
       const gstPercent = parseFloat(item.GST) || 0;
       const lineAmount = parseFloat(line.Amount) || 0;
@@ -204,11 +209,38 @@ router.get('/vouchers/:voucherId', async (req, res) => {
       };
     });
 
+    const entries = ledgerLines.map(line => {
+      const ledger = ledgers.find(lg => lg.LedgerID === line.LedgerID);
+      return {
+        ledgerName: ledger?.LedgerName || line.LedgerID,
+        debit: parseFloat(line.LedgerDebit || 0),
+        credit: parseFloat(line.LedgerCredit || 0),
+      };
+    });
+
+    const paymentDetails = {};
+    if (voucher.VoucherType === 'Receipt' || voucher.VoucherType === 'Payment') {
+      const bankLine = ledgerLines.find(l => 
+        parseFloat(l.LedgerDebit || 0) > 0 || parseFloat(l.LedgerCredit || 0) > 0
+      );
+      if (bankLine) {
+        const bankLedger = ledgers.find(lg => lg.LedgerID === bankLine.LedgerID);
+        if (bankLedger) {
+          paymentDetails.ledgerName = bankLedger.LedgerName;
+          paymentDetails.mode = bankLedger.LedgerName.toLowerCase().includes('bank') ? 'Bank' : 
+                                bankLedger.LedgerName.toLowerCase().includes('cash') ? 'Cash' : 'Transfer';
+          paymentDetails.refNo = bankLine.Narration || '';
+        }
+      }
+    }
+
     res.json({
       success: true,
       data: {
         ...voucher,
         Items: voucherItems,
+        Entries: entries,
+        PaymentDetails: Object.keys(paymentDetails).length > 0 ? paymentDetails : undefined,
       }
     });
   } catch (error) {

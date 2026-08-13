@@ -157,7 +157,7 @@ const DayBook = () => {
                     className="hover:bg-canvas-faint cursor-pointer transition-colors"
                   >
                     <td className="px-4 py-3 text-sm text-ink-default whitespace-nowrap">
-                      {formatDate(voucher.date)}
+                      {formatDate(voucher.VoucherDate || voucher.date)}
                     </td>
                     <td className="px-4 py-3">
                       <span className={`inline-flex px-2 py-1 rounded text-xs font-medium ${getCategoryColor(voucher.category)}`}>
@@ -168,7 +168,7 @@ const DayBook = () => {
                       {voucher.voucherNo || 'Draft'}
                     </td>
                     <td className="px-4 py-3 text-sm text-ink-default">
-                      {voucher.partyName || '-'}
+                      {voucher.PartyName || voucher.partyName || '-'}
                     </td>
                     <td className="px-4 py-3 text-sm text-ink-default text-right font-medium whitespace-nowrap">
                       {formatCurrency(voucher.netAmount || voucher.grossTotal || 0)}

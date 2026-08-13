@@ -165,12 +165,12 @@ const ExpensesReport = () => {
         >
           <div className="bg-white rounded-lg border border-canvas-faint p-3 text-center">
             <p className="text-xs text-ink-muted mb-1">Direct Expenses</p>
-            <p className="text-lg font-semibold text-orange-600">{formatCurrency(expenseData.totalDirect)}</p>
+            <p className="text-lg font-semibold text-amber-600">{formatCurrency(expenseData.totalDirect)}</p>
             <p className="text-xs text-ink-muted mt-1">{expenseData.directExpenses.length} items</p>
           </div>
           <div className="bg-white rounded-lg border border-canvas-faint p-3 text-center">
             <p className="text-xs text-ink-muted mb-1">Indirect Expenses</p>
-            <p className="text-lg font-semibold text-red-600">{formatCurrency(expenseData.totalIndirect)}</p>
+            <p className="text-lg font-semibold text-rose-600">{formatCurrency(expenseData.totalIndirect)}</p>
             <p className="text-xs text-ink-muted mt-1">{expenseData.indirectExpenses.length} items</p>
           </div>
           <div className="bg-white rounded-lg border border-canvas-faint p-3 text-center">
@@ -186,7 +186,7 @@ const ExpensesReport = () => {
           className="grid grid-cols-1 md:grid-cols-2 gap-4"
         >
           <div className="bg-white rounded-lg border border-canvas-faint overflow-hidden">
-            <div className="px-4 py-3 bg-gradient-to-r from-orange-50 to-amber-50 border-b border-canvas-faint">
+            <div className="px-4 py-3 bg-gradient-to-r from-amber-light to-amber-100 border-b border-canvas-faint">
               <h2 className="font-semibold text-ink-default">Direct Expenses</h2>
               <p className="text-xs text-ink-muted">Cost of goods/services sold</p>
             </div>
@@ -208,7 +208,7 @@ const ExpensesReport = () => {
                   </div>
                   <div className="mt-2 h-1 bg-canvas-faint rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-orange-500 rounded-full"
+                      className="h-full bg-amber-500 rounded-full"
                       style={{ width: `${getPercentage(item.amount, expenseData.totalDirect)}%` }}
                     />
                   </div>
@@ -221,7 +221,7 @@ const ExpensesReport = () => {
           </div>
 
           <div className="bg-white rounded-lg border border-canvas-faint overflow-hidden">
-            <div className="px-4 py-3 bg-gradient-to-r from-red-50 to-rose-50 border-b border-canvas-faint">
+            <div className="px-4 py-3 bg-gradient-to-r from-rose-light to-rose-100 border-b border-canvas-faint">
               <h2 className="font-semibold text-ink-default">Indirect Expenses</h2>
               <p className="text-xs text-ink-muted">Operating & administrative costs</p>
             </div>
@@ -243,7 +243,7 @@ const ExpensesReport = () => {
                   </div>
                   <div className="mt-2 h-1 bg-canvas-faint rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-red-500 rounded-full"
+                      className="h-full bg-rose-500 rounded-full"
                       style={{ width: `${getPercentage(item.amount, expenseData.totalIndirect)}%` }}
                     />
                   </div>

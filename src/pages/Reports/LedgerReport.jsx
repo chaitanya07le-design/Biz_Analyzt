@@ -67,13 +67,13 @@ const LedgerReport = () => {
 
   const getLedgerTypeColor = (type) => {
     const colors = {
-      'asset': 'text-green-600 bg-green-50',
-      'liability': 'text-red-600 bg-red-50',
-      'revenue': 'text-blue-600 bg-blue-50',
-      'expense': 'text-orange-600 bg-orange-50',
+      'asset': 'text-teal-600 bg-teal-light',
+      'liability': 'text-rose-600 bg-rose-light',
+      'revenue': 'text-indigo-600 bg-indigo-light',
+      'expense': 'text-amber-600 bg-amber-light',
       'equity': 'text-purple-600 bg-purple-50'
     };
-    return colors[type] || 'text-gray-600 bg-gray-50';
+    return colors[type] || 'text-ink-muted bg-ink-50';
   };
 
   const handleLedgerClick = (ledger) => {

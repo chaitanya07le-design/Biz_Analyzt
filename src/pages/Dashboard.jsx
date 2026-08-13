@@ -175,21 +175,21 @@ const Dashboard = () => {
     { 
       title: 'Cash in Hand', 
       value: metrics.cashInHand, 
-      color: 'green', 
+      color: 'teal', 
       onClick: () => navigate('/cash-bank'),
       subtitle: `${metrics.cashAccountCount || 0} accounts`
     },
     { 
       title: 'Bank Balance', 
       value: metrics.bankBalance, 
-      color: 'blue', 
+      color: 'indigo', 
       onClick: () => navigate('/cash-bank'),
       subtitle: `${metrics.bankAccountCount || 0} accounts`
     },
     { 
       title: 'Total Sales', 
       value: metrics.totalSales, 
-      color: 'purple', 
+      color: 'teal', 
       onClick: () => navigate('/vouchers/sales'),
       subtitle: `${filteredVouchers.filter(v => v.VoucherType === 'Sales').length} vouchers`
     },
@@ -203,33 +203,33 @@ const Dashboard = () => {
     { 
       title: 'Receivables', 
       value: metrics.totalReceivables, 
-      color: 'red', 
+      color: 'teal', 
       onClick: () => navigate('/outstanding?type=receivable'),
       subtitle: `${(parties || []).filter(p => p.PartyType === 'Sundry Debtors' || p.PartyType === 'Customer').length} parties`
     },
     { 
       title: 'Payables', 
       value: metrics.totalPayables, 
-      color: 'teal', 
+      color: 'rose', 
       onClick: () => navigate('/outstanding?type=payable'),
       subtitle: `${(parties || []).filter(p => p.PartyType === 'Sundry Creditors' || p.PartyType === 'Supplier').length} parties`
     },
     { 
       title: 'Gross Profit', 
       value: metrics.grossProfit, 
-      color: metrics.grossProfit >= 0 ? 'green' : 'red', 
+      color: metrics.grossProfit >= 0 ? 'teal' : 'rose', 
       onClick: () => navigate('/reports/profit-loss#trading')
     },
     { 
       title: 'Net Profit', 
       value: metrics.netProfit, 
-      color: metrics.netProfit >= 0 ? 'green' : 'red', 
+      color: metrics.netProfit >= 0 ? 'teal' : 'rose', 
       onClick: () => navigate('/reports/profit-loss#pl')
     },
     { 
       title: 'Stock Value', 
       value: metrics.stockValue, 
-      color: 'purple', 
+      color: 'amber', 
       onClick: () => navigate('/items'),
       subtitle: `${items?.length || 0} items`
     },
@@ -242,7 +242,7 @@ const Dashboard = () => {
     const total = receivables.reduce((sum, p) => sum + Math.abs(parseFloat(p.OpeningBalance || 0) || 0), 0);
     if (total === 0) return [{ name: 'No Data', value: 1, color: '#E5E7EB' }];
     return [
-      { name: 'Outstanding', value: total, color: '#6B7280' },
+      { name: 'Outstanding', value: total, color: '#0D9488' },
     ];
   }, [parties]);
 
@@ -253,7 +253,7 @@ const Dashboard = () => {
     const total = payables.reduce((sum, p) => sum + Math.abs(parseFloat(p.OpeningBalance || 0) || 0), 0);
     if (total === 0) return [{ name: 'No Data', value: 1, color: '#E5E7EB' }];
     return [
-      { name: 'Outstanding', value: total, color: '#6B7280' },
+      { name: 'Outstanding', value: total, color: '#E11D48' },
     ];
   }, [parties]);
 
@@ -360,7 +360,7 @@ const Dashboard = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
-      className="min-h-screen bg-canvas-default pb-20 md:pb-6"
+      className="min-h-screen bg-gradient-to-br from-canvas-default via-canvas-soft to-indigo-light/20 pb-20 md:pb-6"
     >
       <div className="px-4 py-4 md:px-6 md:py-6 space-y-4">
         <div className="flex items-start justify-between">
@@ -369,14 +369,14 @@ const Dashboard = () => {
               <h1 className="text-xl md:text-2xl font-semibold text-ink-default">Dashboard</h1>
               <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${
                 connectionStatus === 'connected' 
-                  ? 'bg-green-100 text-green-700' 
+                  ? 'bg-teal-light text-teal-DEFAULT' 
                   : connectionStatus === 'disconnected'
-                  ? 'bg-yellow-100 text-yellow-700'
-                  : 'bg-gray-100 text-gray-700'
+                  ? 'bg-amber-light text-amber-DEFAULT'
+                  : 'bg-slate-100 text-slate-600'
               }`}>
-                {connectionStatus === 'connected' && '🟢 Live'}
-                {connectionStatus === 'disconnected' && '🟡 Demo'}
-                {connectionStatus === 'checking' && '⚪ Checking...'}
+                {connectionStatus === 'connected' && '● Live'}
+                {connectionStatus === 'disconnected' && '● Demo'}
+                {connectionStatus === 'checking' && '● Checking...'}
               </span>
             </div>
             <p className="text-sm text-ink-muted mt-1">
@@ -393,25 +393,26 @@ const Dashboard = () => {
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.3 }}
-            className="bg-gradient-to-r from-brand-primary to-brand-secondary rounded-lg p-4 text-white relative"
+            className="relative overflow-hidden bg-gradient-to-r from-indigo-light to-indigo-light/50 border-l-4 border-indigo-DEFAULT rounded-lg p-4"
           >
+            <div className="absolute -top-6 -right-6 w-20 h-20 bg-indigo-DEFAULT/10 rounded-full blur-xl pointer-events-none" />
             <button
               onClick={dismissPromoBanner}
-              className="absolute top-2 right-2 text-white/80 hover:text-white"
+              className="absolute top-2 right-2 text-ink-muted hover:text-ink-DEFAULT z-10"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 relative z-10">
               <div className="flex-shrink-0">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-indigo-DEFAULT" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
               <div>
-                <p className="font-semibold">Live Data Connected</p>
-                <p className="text-sm text-white/90 mt-1">
+                <p className="font-semibold text-ink-DEFAULT">Live Data Connected</p>
+                <p className="text-sm text-ink-muted mt-1">
                   Dashboard now shows real-time data from Google Sheets.
                 </p>
               </div>
@@ -443,30 +444,38 @@ const Dashboard = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <div className="bg-white rounded-lg border border-canvas-faint p-4">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-ink-default">Receivables</h3>
-              <button
-                onClick={() => navigate('/outstanding?type=receivable')}
-                className="text-sm text-brand-primary hover:underline"
-              >
-                View All
-              </button>
+          <div className="bg-surface border border-border rounded-lg overflow-hidden">
+            <div className="bg-gradient-to-r from-teal-light/50 to-teal-light/20 px-4 py-3 border-b border-border">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-teal-DEFAULT">Receivables</h3>
+                <button
+                  onClick={() => navigate('/outstanding?type=receivable')}
+                  className="text-sm text-teal-DEFAULT hover:text-teal-dark hover:underline"
+                >
+                  View All
+                </button>
+              </div>
             </div>
-            <DonutChart data={receivableChartData} />
+            <div className="p-4">
+              <DonutChart data={receivableChartData} />
+            </div>
           </div>
 
-          <div className="bg-white rounded-lg border border-canvas-faint p-4">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-ink-default">Payables</h3>
-              <button
-                onClick={() => navigate('/outstanding?type=payable')}
-                className="text-sm text-brand-primary hover:underline"
-              >
-                View All
-              </button>
+          <div className="bg-surface border border-border rounded-lg overflow-hidden">
+            <div className="bg-gradient-to-r from-rose-light/50 to-rose-light/20 px-4 py-3 border-b border-border">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-rose-DEFAULT">Payables</h3>
+                <button
+                  onClick={() => navigate('/outstanding?type=payable')}
+                  className="text-sm text-rose-DEFAULT hover:text-rose-dark hover:underline"
+                >
+                  View All
+                </button>
+              </div>
             </div>
-            <DonutChart data={payableChartData} />
+            <div className="p-4">
+              <DonutChart data={payableChartData} />
+            </div>
           </div>
         </motion.div>
 
@@ -476,62 +485,69 @@ const Dashboard = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <div className="bg-white rounded-lg border border-canvas-faint p-4">
+          <div className="bg-surface border border-border rounded-lg p-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-ink-default">Top Selling Items</h3>
+              <h3 className="font-semibold text-ink-DEFAULT">Top Selling Items</h3>
               <button
                 onClick={() => navigate('/items')}
-                className="text-sm text-brand-primary hover:underline"
+                className="text-sm text-ink-muted hover:text-ink-DEFAULT hover:underline"
               >
                 View All
               </button>
             </div>
             <div className="space-y-2">
-              {topItems.length > 0 ? topItems.slice(0, 3).map((item, idx) => (
-                <div
-                  key={item.itemId || idx}
-                  className="flex items-center gap-3 p-2 hover:bg-canvas-faint rounded-lg cursor-pointer transition-colors"
-                  onClick={() => navigate('/items')}
-                >
-                  <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-brand-100 to-brand-200 rounded-lg flex items-center justify-center">
-                    <span className="text-brand-700 font-semibold text-sm">{idx + 1}</span>
+              {topItems.length > 0 ? topItems.slice(0, 3).map((item, idx) => {
+                const badgeStyles = [
+                  'bg-gradient-to-br from-amber-light to-amber-DEFAULT/30 border-amber-DEFAULT/30 text-amber-DEFAULT',
+                  'bg-gradient-to-br from-slate-100 to-slate-200/50 border-slate-300/50 text-slate-600',
+                  'bg-gradient-to-br from-orange-light to-orange-DEFAULT/30 border-orange-DEFAULT/30 text-orange-DEFAULT',
+                ];
+                return (
+                  <div
+                    key={item.itemId || idx}
+                    className="flex items-center gap-3 p-2 hover:bg-canvas-default rounded-lg cursor-pointer transition-colors"
+                    onClick={() => navigate('/items')}
+                  >
+                    <div className={`flex-shrink-0 w-10 h-10 ${badgeStyles[idx]} rounded-lg flex items-center justify-center border`}>
+                      <span className="font-semibold text-sm">{idx + 1}</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-ink-DEFAULT truncate">{item.name}</p>
+                      <p className="text-xs text-ink-muted">{item.totalQty} units sold</p>
+                    </div>
+                    <p className="text-sm font-semibold text-ink-DEFAULT">{formatCurrency(item.totalValue)}</p>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-ink-default truncate">{item.name}</p>
-                    <p className="text-xs text-ink-muted">{item.totalQty} units sold</p>
-                  </div>
-                  <p className="text-sm font-semibold text-ink-default">{formatCurrency(item.totalValue)}</p>
-                </div>
-              )) : (
+                );
+              }) : (
                 <p className="text-sm text-ink-muted text-center py-4">No sales data available</p>
               )}
             </div>
           </div>
 
-          <div className="bg-white rounded-lg border border-canvas-faint p-4">
+          <div className="bg-surface border border-border rounded-lg p-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-ink-default">Recent Transactions</h3>
+              <h3 className="font-semibold text-ink-DEFAULT">Recent Transactions</h3>
               <button
                 onClick={() => navigate('/reports/day-book')}
-                className="text-sm text-brand-primary hover:underline"
+                className="text-sm text-ink-muted hover:text-ink-DEFAULT hover:underline"
               >
                 View All
               </button>
             </div>
             <div className="space-y-2">
               {recentTransactions.length > 0 ? recentTransactions.map((trans, idx) => (
-                <div key={idx} className="flex items-center gap-3 p-2 hover:bg-canvas-faint rounded-lg transition-colors">
-                  <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center">
-                    <svg className="w-4 h-4 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div key={idx} className="flex items-center gap-3 p-2 hover:bg-canvas rounded-lg transition-colors">
+                  <div className="flex-shrink-0 w-8 h-8 bg-indigo-light rounded-full flex items-center justify-center border border-border">
+                    <svg className="w-4 h-4 text-indigo-DEFAULT" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-ink-default">{trans.type}</p>
+                    <p className="text-sm font-medium text-ink-DEFAULT">{trans.type}</p>
                     <p className="text-xs text-ink-muted truncate">{trans.party}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-semibold text-ink-default">{formatCurrency(trans.amount)}</p>
+                    <p className="text-sm font-semibold text-ink-DEFAULT">{formatCurrency(trans.amount)}</p>
                     <p className="text-xs text-ink-muted">{formatDate(trans.date)}</p>
                   </div>
                 </div>

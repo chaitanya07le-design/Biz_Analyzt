@@ -160,10 +160,10 @@ const TrendCharts = () => {
             className="bg-white rounded-xl p-4 border border-canvas-faint"
           >
             <div className="flex items-center gap-2 mb-2">
-              <TrendingUp className="w-4 h-4 text-green-600" />
+              <TrendingUp className="w-4 h-4 text-teal-600" />
               <span className="text-xs text-ink-muted">Total Sales</span>
             </div>
-            <div className="text-lg font-bold text-green-700">{formatCurrency(summaryStats.totalSales)}</div>
+            <div className="text-lg font-bold text-teal-700">{formatCurrency(summaryStats.totalSales)}</div>
           </motion.div>
 
           <motion.div
@@ -173,10 +173,10 @@ const TrendCharts = () => {
             className="bg-white rounded-xl p-4 border border-canvas-faint"
           >
             <div className="flex items-center gap-2 mb-2">
-              <TrendingDown className="w-4 h-4 text-red-600" />
+              <TrendingDown className="w-4 h-4 text-rose-600" />
               <span className="text-xs text-ink-muted">Total Purchase</span>
             </div>
-            <div className="text-lg font-bold text-red-700">{formatCurrency(summaryStats.totalPurchase)}</div>
+            <div className="text-lg font-bold text-rose-700">{formatCurrency(summaryStats.totalPurchase)}</div>
           </motion.div>
 
           <motion.div
@@ -186,10 +186,10 @@ const TrendCharts = () => {
             className="bg-white rounded-xl p-4 border border-canvas-faint"
           >
             <div className="flex items-center gap-2 mb-2">
-              <BarChart3 className="w-4 h-4 text-blue-600" />
+              <BarChart3 className="w-4 h-4 text-indigo-600" />
               <span className="text-xs text-ink-muted">Gross Profit</span>
             </div>
-            <div className="text-lg font-bold text-blue-700">{formatCurrency(summaryStats.grossProfit)}</div>
+            <div className="text-lg font-bold text-indigo-700">{formatCurrency(summaryStats.grossProfit)}</div>
           </motion.div>
 
           <motion.div
@@ -251,14 +251,14 @@ const TrendCharts = () => {
                       <div className="relative w-full h-full flex items-end justify-center gap-0.5">
                         {(viewMode === 'sales' || viewMode === 'both') && (
                           <div
-                            className="w-1/2 bg-green-500 rounded-t transition-all duration-300"
+                            className="w-1/2 bg-teal-500 rounded-t transition-all duration-300"
                             style={{ height: `${Math.min(salesHeight, 100)}%` }}
                             title={`Sales: ${formatCurrency(d.sales)}`}
                           />
                         )}
                         {(viewMode === 'purchase' || viewMode === 'both') && (
                           <div
-                            className="w-1/2 bg-red-500 rounded-t transition-all duration-300"
+                            className="w-1/2 bg-rose-500 rounded-t transition-all duration-300"
                             style={{ height: `${Math.min(purchaseHeight, 100)}%` }}
                             title={`Purchase: ${formatCurrency(d.purchase)}`}
                           />
@@ -306,12 +306,12 @@ const TrendCharts = () => {
                       <td className="px-4 py-3 font-medium">
                         {chartType === 'daily' ? formatDay(d.day) : formatMonth(d.month)}
                       </td>
-                      <td className="px-4 py-3 text-right text-green-600">{formatCurrency(d.sales)}</td>
-                      <td className="px-4 py-3 text-right text-red-600">{formatCurrency(d.purchase)}</td>
-                      <td className={`px-4 py-3 text-right font-medium ${profit >= 0 ? 'text-ink-default' : 'text-red-600'}`}>
+                      <td className="px-4 py-3 text-right text-teal-600">{formatCurrency(d.sales)}</td>
+                      <td className="px-4 py-3 text-right text-rose-600">{formatCurrency(d.purchase)}</td>
+                      <td className={`px-4 py-3 text-right font-medium ${profit >= 0 ? 'text-ink-default' : 'text-rose-600'}`}>
                         {formatCurrency(profit)}
                       </td>
-                      <td className={`px-4 py-3 text-right ${margin >= 20 ? 'text-green-600' : margin >= 10 ? 'text-yellow-600' : 'text-red-600'}`}>
+                      <td className={`px-4 py-3 text-right ${margin >= 20 ? 'text-teal-600' : margin >= 10 ? 'text-amber-600' : 'text-rose-600'}`}>
                         {margin.toFixed(1)}%
                       </td>
                     </tr>

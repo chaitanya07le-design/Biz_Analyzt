@@ -207,10 +207,10 @@ const CustomerView = () => {
                       <span className="text-sm font-medium text-ink-default">{formatCurrency(item.totalSales)}</span>
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <span className="text-sm text-green-600">{formatCurrency(item.totalReceipts)}</span>
+                      <span className="text-sm text-teal-600">{formatCurrency(item.totalReceipts)}</span>
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <span className={`text-sm font-semibold ${item.outstanding > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                      <span className={`text-sm font-semibold ${item.outstanding > 0 ? 'text-rose-600' : 'text-teal-600'}`}>
                         {formatCurrency(item.outstanding)}
                       </span>
                     </td>
@@ -251,13 +251,13 @@ const CustomerView = () => {
           </div>
           <div className="bg-white rounded-lg border border-canvas-faint p-3 text-center">
             <p className="text-xs text-ink-muted mb-1">Total Receipts</p>
-            <p className="text-lg font-semibold text-green-600">
+            <p className="text-lg font-semibold text-teal-600">
               {formatCurrency(customerData.reduce((sum, c) => sum + c.totalReceipts, 0))}
             </p>
           </div>
           <div className="bg-white rounded-lg border border-canvas-faint p-3 text-center">
             <p className="text-xs text-ink-muted mb-1">Total Outstanding</p>
-            <p className="text-lg font-semibold text-red-600">
+            <p className="text-lg font-semibold text-rose-600">
               {formatCurrency(customerData.reduce((sum, c) => sum + c.outstanding, 0))}
             </p>
           </div>

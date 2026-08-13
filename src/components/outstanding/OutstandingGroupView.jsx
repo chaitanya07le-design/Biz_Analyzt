@@ -89,7 +89,7 @@ const OutstandingGroupView = ({ activeTab }) => {
               {formatCurrency(node.totalOutstanding)}
             </p>
             {node.totalOverdue > 0 && (
-              <p className="text-xs text-red-600 font-mono">
+              <p className="text-xs text-rose-600 font-mono">
                 Overdue: {formatCurrency(node.totalOverdue)}
               </p>
             )}
@@ -106,7 +106,7 @@ const OutstandingGroupView = ({ activeTab }) => {
             {formatCurrency(node.data?.totalOutstanding || 0)}
           </p>
           {node.data && node.data.totalOutstanding > node.data.notDue && (
-            <p className="text-xs text-red-600 font-mono">
+            <p className="text-xs text-rose-600 font-mono">
               Overdue: {formatCurrency(node.data.totalOutstanding - node.data.notDue)}
             </p>
           )}
