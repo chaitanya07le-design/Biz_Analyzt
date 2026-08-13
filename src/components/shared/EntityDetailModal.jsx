@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, MapPin, Phone, Mail, FileText, Package, Tags, Building2, Wallet, Calculator, TrendingUp, TrendingDown } from 'lucide-react';
+import { X, MapPin, Phone, Mail, FileText, Package, Tags, Building2, Wallet, Calculator, TrendingUp, TrendingDown, FolderOpen } from 'lucide-react';
 import api from '../../services/api';
 import { useCompany } from '../../context/CompanyContext';
 
 const formatCurrency = (amount) => `₹${Math.abs(amount || 0).toLocaleString('en-IN')}`;
 
-const EntityDetailModal = ({ isOpen, onClose, entityType, entityId }) => {
+const EntityDetailModal = ({ isOpen, onClose, entityType, entityId, companyId: propCompanyId }) => {
   const { currentCompany } = useCompany();
-  const companyId = currentCompany?.id || 'COMP-0001';
+  const companyId = propCompanyId || currentCompany?.id || 'COMP-0001';
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -29,7 +29,10 @@ const EntityDetailModal = ({ isOpen, onClose, entityType, entityId }) => {
             result = await api.getItemById(entityId, companyId);
             break;
           case 'category':
-            result = await api.getCategoryById(entityId);
+            result = await api.getCategoryById(entityId, companyId);
+            break;
+          case 'group':
+            result = await api.getLedgersByGroupId(entityId, companyId);
             break;
           case 'bank':
             result = await api.getBankAccountById(entityId, companyId);
@@ -59,6 +62,7 @@ const EntityDetailModal = ({ isOpen, onClose, entityType, entityId }) => {
       case 'party': return data?.PartyName || 'Party Details';
       case 'item': return data?.ItemName || 'Item Details';
       case 'category': return data?.CategoryName || 'Category Details';
+      case 'group': return data?.[0]?.GroupName || data?.GroupName || 'Group Details';
       case 'bank': return data?.BankName || 'Bank Account';
       case 'cash': return data?.AccountName || 'Cash Account';
       default: return 'Details';
@@ -272,6 +276,45 @@ const EntityDetailModal = ({ isOpen, onClose, entityType, entityId }) => {
     </div>
   );
 
+  const renderGroupContent = () => {
+    const ledgers = Array.isArray(data) ? data : [];
+    return (
+      <div className="space-y-4">
+        {ledgers.length > 0 ? (
+          <div>
+            <h3 className="text-sm font-medium text-ink-muted uppercase tracking-wider mb-2 flex items-center gap-2">
+              <FolderOpen className="w-4 h-4" /> Ledgers ({ledgers.length})
+            </h3>
+            <div className="max-h-64 overflow-y-auto rounded-lg border border-canvas-faint">
+              <table className="w-full text-sm">
+                <thead className="bg-canvas-subtle sticky top-0">
+                  <tr>
+                    <th className="px-3 py-2 text-left text-xs font-medium text-ink-muted">Name</th>
+                    <th className="px-3 py-2 text-right text-xs font-medium text-ink-muted">Balance</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-canvas-faint">
+                  {ledgers.map((ledger, idx) => (
+                    <tr key={idx} className="hover:bg-canvas-subtle">
+                      <td className="px-3 py-2 text-ink-default">{ledger.LedgerName || ledger.name || 'Unknown'}</td>
+                      <td className="px-3 py-2 text-right font-mono">
+                        <span className={parseFloat(ledger.OpeningBalance || 0) >= 0 ? 'text-green-700' : 'text-red-600'}>
+                          {formatCurrency(ledger.OpeningBalance || 0)}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ) : (
+          <div className="text-center py-4 text-ink-muted">No ledgers in this group</div>
+        )}
+      </div>
+    );
+  };
+
   const renderBankContent = () => (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
@@ -384,6 +427,7 @@ const EntityDetailModal = ({ isOpen, onClose, entityType, entityId }) => {
       case 'party': return renderPartyContent();
       case 'item': return renderItemContent();
       case 'category': return renderCategoryContent();
+      case 'group': return renderGroupContent();
       case 'bank': return renderBankContent();
       case 'cash': return renderCashContent();
       default: return <div className="text-ink-muted">Unknown entity type</div>;

@@ -336,41 +336,44 @@ router.get('/items/:itemId', async (req, res) => {
   }
 });
 
-router.get('/item-categories/:categoryId', async (req, res) => {
-  try {
-    const { categoryId } = req.params;
+  router.get('/item-categories/:categoryId', async (req, res) => {
+    try {
+      const { categoryId } = req.params;
+      const { companyId } = req.query;
 
-    const [categories, items] = await Promise.all([
-      fetchSheetData('ItemCategories'),
-      fetchSheetData('Items'),
-    ]);
+      const [categories, items] = await Promise.all([
+        fetchSheetData('ItemCategories'),
+        fetchSheetData('Items'),
+      ]);
 
-    const category = categories.find(c => c.CategoryID === categoryId);
-    if (!category) {
-      return res.status(404).json({ success: false, error: 'Category not found' });
-    }
-
-    const categoryItems = items.filter(i => i.CategoryID === categoryId).map(item => ({
-      itemId: item.ItemID,
-      name: item.ItemName,
-      unit: item.Unit,
-      stock: parseFloat(item.OpeningStock || 0),
-      saleRate: parseFloat(item.SaleRate || 0),
-      gst: parseFloat(item.GST || 0),
-    }));
-
-    res.json({
-      success: true,
-      data: {
-        ...category,
-        items: categoryItems,
+      const category = categories.find(c => c.CategoryID === categoryId);
+      if (!category) {
+        return res.status(404).json({ success: false, error: 'Category not found' });
       }
-    });
-  } catch (error) {
-    console.error('Error fetching category detail:', error);
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
+
+      const categoryItems = items
+        .filter(i => i.CategoryID === categoryId && (!companyId || i.CompanyID === companyId))
+        .map(item => ({
+          itemId: item.ItemID,
+          name: item.ItemName,
+          unit: item.Unit,
+          stock: parseFloat(item.OpeningStock || 0),
+          saleRate: parseFloat(item.SaleRate || 0),
+          gst: parseFloat(item.GST || 0),
+        }));
+
+      res.json({
+        success: true,
+        data: {
+          ...category,
+          items: categoryItems,
+        }
+      });
+    } catch (error) {
+      console.error('Error fetching category detail:', error);
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
 
 router.get('/bank-accounts/:accountId', async (req, res) => {
   try {

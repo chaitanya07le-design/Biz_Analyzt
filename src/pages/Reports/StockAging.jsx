@@ -24,6 +24,19 @@ const StockAging = () => {
     return new Map(itemStockStatus.map(s => [s.ItemID, s]));
   }, [itemStockStatus]);
 
+  const totalItems = useMemo(() => {
+    if (!items) return 0;
+    return items.filter(i => i.CompanyID === (currentCompany?.id || 'COMP-0001')).length;
+  }, [items, currentCompany]);
+
+  const batchTrackedItems = useMemo(() => {
+    if (!items) return 0;
+    return items.filter(i => i.CompanyID === (currentCompany?.id || 'COMP-0001') && i.IsBatchTracked === 'TRUE').length;
+  }, [items, currentCompany]);
+
+  // NOTE: Batch tracking (IsBatchTracked) is a material master attribute, not random seed data.
+  // Future WF-13 workflow will implement batch-wise inventory sync from Tally for tracked items.
+  // This badge makes the 5-of-9 split explicit until WF-13 provides real batch data.
   const agingData = useMemo(() => {
     if (!stockBatches) return [];
 
@@ -145,6 +158,12 @@ const StockAging = () => {
         <motion.div className="mb-6" initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
           <h1 className="text-xl md:text-2xl font-semibold text-ink-default">Stock Aging Report</h1>
           <p className="text-sm text-ink-muted mt-1">FIFO batch-wise aging analysis with dead stock identification</p>
+          {batchTrackedItems > 0 && (
+            <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 text-xs">
+              <Package className="w-3.5 h-3.5" />
+              Showing batch-tracked items only ({batchTrackedItems} of {totalItems})
+            </div>
+          )}
         </motion.div>
 
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">

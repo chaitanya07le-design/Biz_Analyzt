@@ -1,0 +1,18 @@
+Workflow_ID,Workflow_Name,Source_Template,Destination_Sheet,Columns_Written,Sync_Mode,Trigger,Status,Issue_Flag,Required_Action
+WF-01,Company Sync,48,Companies,10 cols,Overwrite,Daily 00:00,Active,OK,None
+WF-02,Ledger Sync,8,Groups; Ledgers,8 cols each,Overwrite,Every 4h,Active,OK,None
+WF-03,Party Sync,149; 150,Parties,18 cols,Append,Every 4h,Active,OK,None
+WF-04,Cash/Bank Sync,58,BankAccounts; CashAccounts,14 cols each,Overwrite,Hourly,Active,OK,None
+WF-05,Sales Voucher Sync,133,Vouchers; VoucherLines,14 cols,Append,Hourly,Active,OK,None
+WF-06,Purchase Voucher Sync,137,Vouchers; VoucherLines,14 cols,Append,Hourly,Active,OK,None
+WF-07,Receipt/Payment Sync,93; 92,Vouchers,14 cols,Append,Hourly,Active,OK,None
+WF-08,Adjustment Voucher Sync,88; 59; Journal,Vouchers; VoucherLines,14 cols,Append,Hourly,Active,OK,None
+WF-09,Inventory Sync,46; 144,ItemGroups; Items,17 cols,Overwrite,Daily 02:00,AT RISK,Critical,Schema mismatch - missing Brand/SubCategory/GroupID columns; will WIPE manual data on next run
+WF-10,Outstanding Sync,136; 85,Read-only (cache),N/A,N/A,Hourly,Active,OK,None
+WF-11,Dashboard Refresh,50; 91; 76,Read-only (cache),N/A,N/A,Hourly,Active,OK,None
+WF-12,Reconciliation,48; 90,Read-only (cache),N/A,N/A,Daily 02:30,Active,OK,None
+WF-13,Stock Batch Sync,,StockBatches,,Daily,MISSING,Critical,New workflow required - no sync exists; data seeded once and going stale
+WF-14,Stock Status Computation,Computed,ItemStockStatus,16 cols,Overwrite,Hourly,MISSING,Critical,New workflow required - no sync exists; data seeded once and going stale
+WF-15,Customer Movement Sync,Computed,CustomerMovement,17 cols,Overwrite,Daily,MISSING,Critical,New workflow required - no sync exists; data seeded once and going stale
+WF-16,Geographic Summary Sync,Computed,GeographicSummary,13 cols,Overwrite,Daily,MISSING,Critical,New workflow required - no sync exists; data seeded once and going stale
+WF-17,Sync Log Ingestion,Pucho API,SyncLog,12 cols,Append,Hourly,MISSING,Critical,New workflow required - no sync exists; data seeded once and going stale

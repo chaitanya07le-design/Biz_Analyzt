@@ -12,7 +12,7 @@ FIRST_NAMES = ["Rajesh", "Amit", "Vikram", "Priya", "Neha"]
 LAST_NAMES = ["Sharma", "Patel", "Singh", "Kumar", "Gupta"]
 GROUPS = [("GRP-0001", "Capital Account"), ("GRP-0002", "Bank Accounts"), ("GRP-0003", "Cash-in-Hand"), ("GRP-0004", "Sales Accounts"), ("GRP-0005", "Purchase Accounts"), ("GRP-0006", "Direct Expenses"), ("GRP-0007", "Indirect Expenses")]
 LEDGERS = [("Capital Account", "GRP-0001"), ("Bank of India", "GRP-0002"), ("HDFC Bank", "GRP-0002"), ("Cash", "GRP-0003"), ("Sales Account", "GRP-0004"), ("Purchase Account", "GRP-0005"), ("Salary", "GRP-0006"), ("Rent", "GRP-0006"), ("Telephone", "GRP-0007"), ("Insurance", "GRP-0007")]
-ITEMS = [("ITM-0001", "iPhone 15", 65000), ("ITM-0002", "Samsung S24", 55000), ("ITM-0003", "OnePlus 12", 42000), ("ITM-0004", "Dell XPS 15", 120000), ("ITM-0005", "HP Pavilion", 55000), ("ITM-0006", "Cotton Silk Saree", 3500), ("ITM-0007", "Pure Silk Saree", 10000), ("ITM-0008", "Cotton Shirt", 900), ("ITM-0009", "Jeans Pant", 1500)]
+ITEMS = [("ITM-0001", "iPhone 15", 65000, False), ("ITM-0002", "Samsung S24", 55000, False), ("ITM-0003", "OnePlus 12", 42000, True), ("ITM-0004", "Dell XPS 15", 120000, True), ("ITM-0005", "HP Pavilion", 55000, True), ("ITM-0006", "Cotton Silk Saree", 3500, True), ("ITM-0007", "Pure Silk Saree", 10000, False), ("ITM-0008", "Cotton Shirt", 900, False), ("ITM-0009", "Jeans Pant", 1500, True)]
 
 output_dir = "seed_data_output"
 os.makedirs(output_dir, exist_ok=True)
@@ -55,14 +55,14 @@ for c in COMPANIES:
         party_data[(c, gid("PTY", pid))] = {"sales": [], "purchases": [], "city": ct, "state": st, "name": nm, "type": pt}
         pid += 1
     for it in ITEMS:
-        items.append({"ItemID": f"{it[0]}_{c}", "CompanyID": c, "ItemName": it[1], "CategoryID": "CAT-001", "Unit": "Pcs", "OpeningStock": random.randint(10, 100), "SaleRate": it[2], "PurchaseRate": int(it[2] * 0.7), "MRP": int(it[2] * 1.1), "MinStockLevel": 10, "MaxStockLevel": 50, "ReorderLevel": 15, "Location": f"Warehouse-{random.choice(['A', 'B', 'C'])}", "HSN": "847130", "GST": 18, "IsActive": "TRUE", "CreatedDate": "2024-01-01", "LastModifiedDate": "2024-05-01"})
+        items.append({"ItemID": f"{it[0]}_{c}", "CompanyID": c, "ItemName": it[1], "Brand": "Apple" if "iPhone" in it[1] else "Samsung" if "Samsung" in it[1] else "OnePlus" if "OnePlus" in it[1] else "Dell" if "Dell" in it[1] else "HP" if "HP" in it[1] else "Generic", "CategoryID": "CAT-001" if it[1] in ["iPhone 15", "Samsung S24", "OnePlus 12", "Dell XPS 15", "HP Pavilion"] else "CAT-002", "SubCategory": "Premium" if it[1] in ["iPhone 15", "Samsung S24", "OnePlus 12", "Dell XPS 15", "HP Pavilion", "Pure Silk Saree"] else "Basic" if it[1] in ["Cotton Silk Saree", "Cotton Shirt", "Jeans Pant"] else "Standard", "GroupID": "IGRP-001" if it[1] in ["iPhone 15", "Samsung S24", "OnePlus 12"] else "IGRP-002" if it[1] in ["Dell XPS 15", "HP Pavilion"] else "IGRP-003" if "Saree" in it[1] else "IGRP-004", "Unit": "Pcs", "OpeningStock": random.randint(10, 100), "SaleRate": it[2], "PurchaseRate": int(it[2] * 0.7), "MRP": int(it[2] * 1.1), "MinStockLevel": 10, "MaxStockLevel": 50, "ReorderLevel": 15, "Location": f"Warehouse-{random.choice(['A', 'B', 'C'])}", "HSN": "847130", "GST": 18, "IsActive": "TRUE", "CreatedDate": "2024-01-01", "LastModifiedDate": "2024-05-01", "IsBatchTracked": "TRUE" if it[3] else "FALSE"})
 
 wc("Users.csv", users, ["UserID", "Username", "Email", "PasswordHash", "FullName", "Role", "IsActive", "CreatedAt", "UpdatedAt"])
 wc("UserCompanyMapping.csv", umaps, ["MappingID", "UserID", "CompanyID", "AccessLevel", "CreatedAt", "UpdatedAt"])
 wc("Groups.csv", groups, ["GroupID", "CompanyID", "GroupName", "ParentGroup", "GroupType", "Nature", "CreatedDate", "LastModifiedDate"])
 wc("Ledgers.csv", ledgers, ["LedgerID", "CompanyID", "LedgerName", "GroupID", "OpeningBalance", "ClosingBalance", "IsActive", "CreatedDate", "LastModifiedDate"])
 wc("Parties.csv", parties, ["PartyID", "CompanyID", "PartyName", "PartyType", "Address", "City", "State", "PIN", "Phone", "Email", "GSTIN", "PAN", "CreditLimit", "CreditDays", "OpeningBalance", "SalesPerson", "Status", "CreatedAt", "UpdatedAt"])
-wc("Items.csv", items, ["ItemID", "CompanyID", "ItemName", "CategoryID", "Unit", "OpeningStock", "SaleRate", "PurchaseRate", "MRP", "MinStockLevel", "MaxStockLevel", "ReorderLevel", "Location", "HSN", "GST", "IsActive", "CreatedDate", "LastModifiedDate"])
+wc("Items.csv", items, ["ItemID", "CompanyID", "ItemName", "Brand", "CategoryID", "SubCategory", "GroupID", "Unit", "OpeningStock", "SaleRate", "PurchaseRate", "MRP", "MinStockLevel", "MaxStockLevel", "ReorderLevel", "Location", "HSN", "GST", "IsActive", "CreatedDate", "LastModifiedDate", "IsBatchTracked"])
 print(f"Users: {len(users)}, Groups: {len(groups)}, Ledgers: {len(ledgers)}, Parties: {len(parties)}, Items: {len(items)}")
 
 vouchers, vlines = [], []
@@ -129,7 +129,8 @@ for c in COMPANIES:
         if "Cash" in l["LedgerName"]:
             cas.append({"AccountID": gid("CA", caid), "CompanyID": c, "LedgerID": l["LedgerID"], "AccountName": "Cash Account", "OpeningBalance": random.choice([5000, 10000, 20000]), "CurrentBalance": "", "Location": "Main Counter", "LastSyncDate": "2024-05-01", "IsActive": "TRUE", "CreatedAt": "2024-01-01 10:00:00", "UpdatedAt": "2024-05-01 08:00:00"})
             caid += 1
-    for it in random.sample(cimap[c], min(5, len(cimap[c]))):
+    batch_tracked_items = [it for it in cimap[c] if it.get("IsBatchTracked") == "TRUE"]
+    for it in batch_tracked_items:
         idt = rd(datetime(2024, 3, 1), datetime(2024, 4, 30))
         qty = random.randint(5, 30)
         rate = int(it["PurchaseRate"])

@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 class ApiService {
   async request(endpoint, options = {}) {
@@ -59,8 +59,20 @@ class ApiService {
     return this.get('/item-categories');
   }
 
-  async getCategoryById(categoryId) {
-    return this.get(`/item-categories/${categoryId}`);
+  async getCategoryById(categoryId, companyId) {
+    const endpoint = companyId 
+      ? `/item-categories/${categoryId}?companyId=${companyId}` 
+      : `/item-categories/${categoryId}`;
+    return this.get(endpoint);
+  }
+
+  async getLedgersByGroupId(groupId, companyId) {
+    const endpoint = companyId 
+      ? `/ledgers?companyId=${companyId}` 
+      : '/ledgers';
+    return this.get(endpoint).then(ledgers => 
+      ledgers.filter(l => l.GroupID === groupId)
+    );
   }
 
   async getItemGroups() {

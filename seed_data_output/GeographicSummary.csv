@@ -1,430 +1,430 @@
 GeoID,CompanyID,State,City,PartyCount,TotalSalesValue,TotalPurchaseValue,TotalOutstanding,TopCustomers,TopItems,PeriodStart,PeriodEnd,CreatedAt,UpdatedAt
-GEO-0001,COMP-0001,Maharashtra,Mumbai,1,1213500,10500,63936,Amit Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0002,COMP-0001,Maharashtra,Pune,1,1071500,321000,69101,Priya Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0003,COMP-0001,Gujarat,Ahmedabad,2,172500,715000,72525,Amit Gupta Suppliers;Vikram Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0004,COMP-0001,Gujarat,Surat,3,724700,2717300,38523,Vikram Patel Traders;Rajesh Sharma Traders;Priya Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0005,COMP-0001,Delhi,Delhi,2,405000,507500,36098,Amit Singh Suppliers;Rajesh Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0006,COMP-0001,Karnataka,Bangalore,2,1419000,850000,63689,Amit Gupta Distributors;Priya Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0007,COMP-0001,Karnataka,Mysore,1,516400,223800,83215,Priya Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0008,COMP-0001,Tamil Nadu,Chennai,3,3469500,315000,80505,Amit Kumar Suppliers;Neha Patel Suppliers;Amit Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0009,COMP-0001,Tamil Nadu,Coimbatore,1,53500,771500,4409,Neha Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0010,COMP-0002,Maharashtra,Mumbai,3,1766000,1238000,76507,Priya Sharma Distributors;Neha Sharma Suppliers;Priya Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0011,COMP-0002,Maharashtra,Nagpur,2,1708100,248600,72990,Rajesh Singh Suppliers;Amit Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0012,COMP-0002,Gujarat,Surat,1,181300,732500,50019,Neha Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0013,COMP-0002,Delhi,Delhi,6,4746500,3045900,25388,Rajesh Kumar Suppliers;Amit Patel Distributors;Neha Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0014,COMP-0002,Karnataka,Bangalore,1,195000,0,54563,Priya Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0015,COMP-0002,Karnataka,Mysore,1,0,453500,10865,Vikram Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0016,COMP-0002,Tamil Nadu,Chennai,1,77900,1710000,42779,Priya Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0017,COMP-0002,Tamil Nadu,Coimbatore,1,999900,0,18420,Neha Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0018,COMP-0003,Maharashtra,Nagpur,1,268500,88500,62080,Neha Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0019,COMP-0003,Gujarat,Ahmedabad,3,5400,1088500,51237,Vikram Singh Distributors;Priya Kumar Distributors;Neha Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0020,COMP-0003,Gujarat,Surat,1,452700,0,80150,Vikram Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0021,COMP-0003,Delhi,Delhi,2,2017600,0,42330,Vikram Kumar Suppliers;Neha Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0022,COMP-0003,Karnataka,Bangalore,4,2533300,3022200,72306,Vikram Sharma Distributors;Neha Singh Suppliers;Priya Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0023,COMP-0003,Karnataka,Mysore,3,825700,1186600,36942,Rajesh Gupta Suppliers;Neha Singh Suppliers;Vikram Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0024,COMP-0003,Tamil Nadu,Chennai,1,515600,0,39681,Amit Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0025,COMP-0003,Tamil Nadu,Coimbatore,2,75000,1100000,39705,Neha Kumar Traders;Rajesh Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0026,COMP-0004,Maharashtra,Mumbai,2,1591000,7200,20354,Vikram Kumar Suppliers;Neha Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0027,COMP-0004,Maharashtra,Pune,1,3500,256000,1941,Rajesh Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0028,COMP-0004,Maharashtra,Nagpur,1,973500,393200,18972,Priya Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0029,COMP-0004,Gujarat,Ahmedabad,1,80900,875000,20980,Rajesh Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0030,COMP-0004,Gujarat,Surat,3,465500,545200,34016,Priya Gupta Distributors;Amit Patel Distributors;Vikram Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0031,COMP-0004,Delhi,Delhi,8,2932000,4329700,90974,Neha Sharma Suppliers;Rajesh Kumar Traders;Vikram Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0032,COMP-0004,Karnataka,Bangalore,1,110000,304000,72787,Vikram Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0033,COMP-0004,Karnataka,Mysore,3,1643500,1383500,19552,Vikram Patel Suppliers;Neha Kumar Distributors;Priya Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0034,COMP-0004,Tamil Nadu,Chennai,2,1369700,252000,32907,Rajesh Kumar Distributors;Vikram Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0035,COMP-0004,Tamil Nadu,Coimbatore,1,1035800,0,70345,Amit Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0036,COMP-0005,Maharashtra,Mumbai,4,1150500,2217400,71331,Priya Kumar Distributors;Neha Kumar Suppliers;Amit Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0037,COMP-0005,Maharashtra,Pune,1,0,0,51496,Neha Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0038,COMP-0005,Gujarat,Ahmedabad,2,1281800,985900,25086,Rajesh Sharma Suppliers;Priya Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0039,COMP-0005,Gujarat,Surat,3,1327200,402600,94920,Priya Singh Suppliers;Neha Kumar Suppliers;Neha Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0040,COMP-0005,Delhi,Delhi,5,2047200,2405200,9240,Rajesh Patel Suppliers;Vikram Singh Distributors;Amit Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0041,COMP-0005,Karnataka,Bangalore,1,0,80000,32023,Rajesh Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0042,COMP-0005,Karnataka,Mysore,1,0,3600,60488,Neha Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0043,COMP-0005,Tamil Nadu,Coimbatore,2,978500,960000,30763,Amit Patel Suppliers;Rajesh Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0044,COMP-0006,Maharashtra,Pune,3,3075300,467300,60558,Rajesh Kumar Traders;Amit Kumar Suppliers;Priya Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0045,COMP-0006,Gujarat,Ahmedabad,2,1450500,0,10067,Amit Gupta Traders;Rajesh Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0046,COMP-0006,Gujarat,Surat,4,3796900,2559700,39348,Amit Patel Distributors;Vikram Sharma Distributors;Amit Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0047,COMP-0006,Delhi,Delhi,2,223000,438900,48102,Rajesh Kumar Traders;Priya Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0048,COMP-0006,Karnataka,Bangalore,5,2318600,1405700,5446,Rajesh Singh Suppliers;Vikram Sharma Traders;Amit Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0049,COMP-0006,Karnataka,Mysore,1,69500,621100,29669,Rajesh Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0050,COMP-0006,Tamil Nadu,Coimbatore,3,422900,2194900,9656,Amit Patel Distributors;Vikram Patel Traders;Vikram Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0051,COMP-0007,Maharashtra,Mumbai,1,110000,337600,14401,Neha Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0052,COMP-0007,Maharashtra,Pune,1,0,456800,69863,Priya Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0053,COMP-0007,Gujarat,Ahmedabad,1,168000,763000,4137,Vikram Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0054,COMP-0007,Gujarat,Surat,1,915000,702700,91154,Vikram Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0055,COMP-0007,Delhi,Delhi,3,389400,201600,19988,Vikram Singh Traders;Amit Singh Traders;Neha Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0056,COMP-0007,Karnataka,Bangalore,2,2405900,84000,49841,Vikram Kumar Suppliers;Neha Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0057,COMP-0007,Karnataka,Mysore,3,275000,151000,89003,Vikram Gupta Traders;Vikram Gupta Distributors;Priya Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0058,COMP-0007,Tamil Nadu,Chennai,2,1359500,0,49892,Neha Gupta Distributors;Rajesh Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0059,COMP-0007,Tamil Nadu,Coimbatore,3,1718000,486000,82745,Priya Kumar Suppliers;Amit Gupta Suppliers;Priya Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0060,COMP-0008,Maharashtra,Mumbai,1,0,1133000,76960,Rajesh Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0061,COMP-0008,Maharashtra,Pune,2,180000,1355500,15962,Amit Patel Distributors;Neha Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0062,COMP-0008,Gujarat,Ahmedabad,1,1083000,0,34546,Priya Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0063,COMP-0008,Gujarat,Surat,2,852000,724900,15928,Rajesh Gupta Distributors;Vikram Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0064,COMP-0008,Delhi,Delhi,4,1071200,3836700,79204,Vikram Sharma Distributors;Priya Gupta Suppliers;Rajesh Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0065,COMP-0008,Karnataka,Bangalore,2,1446700,916900,99907,Vikram Sharma Distributors;Rajesh Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0066,COMP-0008,Karnataka,Mysore,1,785000,0,32576,Vikram Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0067,COMP-0008,Tamil Nadu,Chennai,1,841700,350000,87757,Priya Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0068,COMP-0008,Tamil Nadu,Coimbatore,1,634200,0,75202,Neha Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0069,COMP-0009,Maharashtra,Pune,2,0,363500,53577,Vikram Singh Suppliers;Vikram Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0070,COMP-0009,Maharashtra,Nagpur,2,12000,1467000,839,Amit Patel Traders;Vikram Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0071,COMP-0009,Gujarat,Ahmedabad,2,7000,510000,50231,Amit Sharma Traders;Amit Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0072,COMP-0009,Gujarat,Surat,1,1773000,0,11176,Rajesh Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0073,COMP-0009,Delhi,Delhi,2,1143000,30700,3212,Vikram Sharma Distributors;Amit Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0074,COMP-0009,Karnataka,Bangalore,1,1039500,0,34562,Priya Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0075,COMP-0009,Tamil Nadu,Chennai,1,715500,0,59532,Priya Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0076,COMP-0009,Tamil Nadu,Coimbatore,4,891000,2090200,12126,Rajesh Singh Traders;Neha Kumar Traders;Priya Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0077,COMP-0010,Maharashtra,Mumbai,3,2706700,0,65714,Priya Gupta Traders;Neha Singh Suppliers;Neha Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0078,COMP-0010,Maharashtra,Pune,2,486000,865200,74430,Neha Singh Distributors;Neha Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0079,COMP-0010,Gujarat,Ahmedabad,1,240000,0,97564,Rajesh Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0080,COMP-0010,Gujarat,Surat,1,537500,0,16271,Neha Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0081,COMP-0010,Delhi,Delhi,1,623000,826000,13360,Neha Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0082,COMP-0010,Karnataka,Bangalore,1,0,46300,76042,Neha Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0083,COMP-0010,Karnataka,Mysore,5,1694700,2211200,80692,Priya Kumar Suppliers;Rajesh Singh Traders;Neha Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0084,COMP-0010,Tamil Nadu,Chennai,2,207600,840200,16409,Amit Singh Traders;Rajesh Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0085,COMP-0010,Tamil Nadu,Coimbatore,1,112000,0,96159,Rajesh Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0086,COMP-0011,Maharashtra,Mumbai,1,455000,520500,41330,Vikram Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0087,COMP-0011,Maharashtra,Nagpur,1,0,55000,49593,Vikram Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0088,COMP-0011,Gujarat,Ahmedabad,4,2141400,1157700,86216,Vikram Kumar Suppliers;Neha Patel Distributors;Priya Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0089,COMP-0011,Gujarat,Surat,1,1350000,1170000,88675,Amit Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0090,COMP-0011,Delhi,Delhi,3,1922200,641000,78544,Neha Singh Traders;Amit Kumar Distributors;Rajesh Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0091,COMP-0011,Karnataka,Bangalore,2,0,608000,18745,Rajesh Kumar Suppliers;Rajesh Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0092,COMP-0011,Karnataka,Mysore,2,582000,951500,39816,Neha Kumar Suppliers;Vikram Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0093,COMP-0011,Tamil Nadu,Coimbatore,1,0,1062900,95195,Priya Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0094,COMP-0012,Maharashtra,Mumbai,2,260500,941700,63727,Amit Patel Traders;Neha Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0095,COMP-0012,Maharashtra,Pune,1,1192500,440000,53635,Amit Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0096,COMP-0012,Maharashtra,Nagpur,2,1515500,0,73426,Neha Kumar Distributors;Amit Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0097,COMP-0012,Gujarat,Ahmedabad,4,1268800,1944200,72379,Vikram Sharma Suppliers;Priya Kumar Traders;Vikram Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0098,COMP-0012,Gujarat,Surat,3,489200,2520900,87697,Priya Singh Distributors;Priya Kumar Traders;Amit Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0099,COMP-0012,Delhi,Delhi,2,845900,631500,27711,Vikram Patel Distributors;Amit Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0100,COMP-0012,Karnataka,Bangalore,2,137500,711200,37940,Rajesh Singh Distributors;Neha Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0101,COMP-0012,Karnataka,Mysore,2,2899300,977500,8308,Amit Gupta Traders;Vikram Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0102,COMP-0012,Tamil Nadu,Chennai,1,960000,0,5933,Priya Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0103,COMP-0012,Tamil Nadu,Coimbatore,1,1230900,763000,28894,Amit Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0104,COMP-0013,Maharashtra,Mumbai,3,392200,398000,34319,Priya Kumar Distributors;Amit Singh Traders;Neha Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0105,COMP-0013,Maharashtra,Pune,1,14700,0,10288,Rajesh Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0106,COMP-0013,Maharashtra,Nagpur,1,40000,0,36818,Amit Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0107,COMP-0013,Gujarat,Ahmedabad,1,52000,101000,12220,Amit Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0108,COMP-0013,Gujarat,Surat,2,960000,240000,25952,Amit Sharma Distributors;Neha Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0109,COMP-0013,Delhi,Delhi,3,1234800,236900,99040,Neha Singh Traders;Vikram Sharma Traders;Amit Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0110,COMP-0013,Karnataka,Mysore,2,520400,1500000,9143,Amit Gupta Traders;Priya Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0111,COMP-0013,Tamil Nadu,Coimbatore,4,2435500,0,67589,Vikram Sharma Traders;Neha Patel Distributors;Priya Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0112,COMP-0014,Maharashtra,Mumbai,2,2025000,394000,13584,Neha Gupta Distributors;Vikram Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0113,COMP-0014,Maharashtra,Pune,1,1005000,0,14531,Rajesh Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0114,COMP-0014,Maharashtra,Nagpur,2,850500,67500,73710,Priya Kumar Traders;Amit Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0115,COMP-0014,Gujarat,Ahmedabad,2,479500,345400,83032,Rajesh Kumar Distributors;Priya Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0116,COMP-0014,Gujarat,Surat,3,431400,0,13574,Amit Gupta Suppliers;Amit Gupta Traders;Neha Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0117,COMP-0014,Delhi,Delhi,1,275000,340000,40901,Priya Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0118,COMP-0014,Karnataka,Bangalore,2,3600,0,1272,Vikram Singh Suppliers;Priya Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0119,COMP-0014,Karnataka,Mysore,4,2336000,1202300,44801,Vikram Sharma Distributors;Priya Sharma Suppliers;Neha Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0120,COMP-0014,Tamil Nadu,Chennai,2,0,0,11262,Amit Gupta Distributors;Vikram Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0121,COMP-0014,Tamil Nadu,Coimbatore,2,2565000,717000,91410,Priya Patel Suppliers;Rajesh Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0122,COMP-0015,Maharashtra,Mumbai,2,607800,440000,92257,Priya Sharma Suppliers;Vikram Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0123,COMP-0015,Maharashtra,Pune,1,0,0,30337,Amit Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0124,COMP-0015,Maharashtra,Nagpur,1,65000,440000,20522,Neha Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0125,COMP-0015,Gujarat,Ahmedabad,3,723000,728000,41269,Priya Patel Distributors;Rajesh Gupta Suppliers;Vikram Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0126,COMP-0015,Gujarat,Surat,2,1315900,1287400,83385,Priya Singh Traders;Priya Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0127,COMP-0015,Delhi,Delhi,7,2153300,117500,15183,Vikram Gupta Distributors;Rajesh Kumar Suppliers;Vikram Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0128,COMP-0015,Karnataka,Bangalore,1,0,0,58318,Amit Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0129,COMP-0015,Karnataka,Mysore,4,323400,427000,76971,Amit Patel Traders;Rajesh Patel Traders;Vikram Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0130,COMP-0015,Tamil Nadu,Chennai,1,775000,0,87623,Vikram Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0131,COMP-0015,Tamil Nadu,Coimbatore,2,1722000,275000,291,Rajesh Kumar Suppliers;Neha Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0132,COMP-0016,Maharashtra,Mumbai,2,295500,517000,40595,Vikram Gupta Traders;Amit Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0133,COMP-0016,Maharashtra,Pune,1,502900,480000,40870,Amit Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0134,COMP-0016,Maharashtra,Nagpur,1,425000,0,59039,Rajesh Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0135,COMP-0016,Gujarat,Ahmedabad,3,743500,2204100,5053,Neha Kumar Traders;Amit Sharma Traders;Vikram Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0136,COMP-0016,Gujarat,Surat,2,140500,475000,65841,Priya Sharma Traders;Priya Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0137,COMP-0016,Delhi,Delhi,3,139000,1512700,47337,Priya Sharma Distributors;Rajesh Gupta Suppliers;Priya Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0138,COMP-0016,Karnataka,Bangalore,1,62000,0,54273,Rajesh Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0139,COMP-0016,Karnataka,Mysore,2,2421500,10500,178,Vikram Patel Traders;Amit Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0140,COMP-0016,Tamil Nadu,Chennai,2,1768900,980700,75041,Priya Sharma Traders;Neha Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0141,COMP-0016,Tamil Nadu,Coimbatore,1,564900,165000,97627,Rajesh Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0142,COMP-0017,Maharashtra,Mumbai,2,308800,2330500,36030,Rajesh Sharma Traders;Amit Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0143,COMP-0017,Maharashtra,Pune,3,1472900,0,6260,Vikram Sharma Suppliers;Neha Kumar Traders;Priya Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0144,COMP-0017,Maharashtra,Nagpur,1,0,0,50645,Priya Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0145,COMP-0017,Gujarat,Ahmedabad,6,1801300,1228500,59406,Priya Singh Distributors;Vikram Patel Distributors;Vikram Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0146,COMP-0017,Gujarat,Surat,2,1005000,385000,13118,Amit Singh Traders;Priya Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0147,COMP-0017,Delhi,Delhi,1,0,0,38785,Priya Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0148,COMP-0017,Karnataka,Bangalore,4,500500,260000,86583,Rajesh Singh Suppliers;Rajesh Singh Traders;Priya Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0149,COMP-0017,Karnataka,Mysore,3,1314600,337500,65972,Rajesh Sharma Suppliers;Amit Patel Suppliers;Vikram Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0150,COMP-0017,Tamil Nadu,Chennai,1,0,201300,60132,Vikram Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0151,COMP-0017,Tamil Nadu,Coimbatore,1,0,62000,69018,Vikram Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0152,COMP-0018,Maharashtra,Mumbai,1,429900,0,27876,Amit Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0153,COMP-0018,Maharashtra,Pune,2,761500,0,9071,Vikram Singh Suppliers;Rajesh Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0154,COMP-0018,Gujarat,Ahmedabad,2,692200,0,2854,Vikram Patel Distributors;Rajesh Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0155,COMP-0018,Gujarat,Surat,4,640500,2340700,25943,Rajesh Singh Suppliers;Rajesh Kumar Distributors;Amit Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0156,COMP-0018,Delhi,Delhi,5,40000,1927800,13705,Amit Kumar Traders;Neha Singh Traders;Priya Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0157,COMP-0018,Karnataka,Bangalore,1,701300,395000,34429,Amit Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0158,COMP-0018,Karnataka,Mysore,2,1383500,366300,46358,Amit Singh Distributors;Amit Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0159,COMP-0018,Tamil Nadu,Chennai,2,431000,1022300,99998,Amit Gupta Traders;Rajesh Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0160,COMP-0018,Tamil Nadu,Coimbatore,3,115400,410500,51082,Priya Kumar Distributors;Vikram Kumar Suppliers;Amit Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0161,COMP-0019,Maharashtra,Mumbai,3,881000,747500,35620,Rajesh Singh Traders;Vikram Kumar Traders;Rajesh Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0162,COMP-0019,Maharashtra,Pune,2,1599600,260000,41248,Neha Patel Distributors;Priya Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0163,COMP-0019,Maharashtra,Nagpur,2,19200,722000,62102,Rajesh Gupta Distributors;Rajesh Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0164,COMP-0019,Gujarat,Ahmedabad,4,307000,189700,16402,Priya Singh Suppliers;Priya Kumar Distributors;Priya Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0165,COMP-0019,Gujarat,Surat,1,1376900,0,19984,Rajesh Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0166,COMP-0019,Delhi,Delhi,4,1067000,1122200,59994,Priya Gupta Suppliers;Amit Kumar Distributors;Rajesh Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0167,COMP-0019,Karnataka,Bangalore,3,928400,1341700,43007,Priya Gupta Suppliers;Vikram Sharma Distributors;Neha Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0168,COMP-0019,Tamil Nadu,Chennai,2,640000,363500,86690,Neha Gupta Suppliers;Vikram Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0169,COMP-0019,Tamil Nadu,Coimbatore,3,795100,6600,61917,Priya Sharma Distributors;Priya Sharma Distributors;Vikram Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0170,COMP-0020,Maharashtra,Mumbai,3,385000,2507200,78596,Neha Sharma Distributors;Rajesh Sharma Suppliers;Neha Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0171,COMP-0020,Maharashtra,Nagpur,2,1129800,0,35231,Neha Sharma Traders;Rajesh Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0172,COMP-0020,Gujarat,Ahmedabad,3,914600,1520000,7163,Vikram Singh Distributors;Vikram Kumar Suppliers;Neha Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0173,COMP-0020,Gujarat,Surat,2,991900,359000,59636,Neha Kumar Distributors;Priya Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0174,COMP-0020,Delhi,Delhi,3,1395300,578000,95111,Rajesh Patel Distributors;Neha Sharma Distributors;Priya Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0175,COMP-0020,Karnataka,Bangalore,2,112500,252700,35091,Neha Sharma Suppliers;Vikram Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0176,COMP-0020,Karnataka,Mysore,3,793200,1094000,3581,Neha Gupta Traders;Priya Kumar Suppliers;Rajesh Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0177,COMP-0020,Tamil Nadu,Chennai,1,123400,835000,29161,Vikram Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0178,COMP-0020,Tamil Nadu,Coimbatore,5,2123800,585000,28153,Neha Singh Distributors;Priya Gupta Distributors;Amit Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0179,COMP-0021,Maharashtra,Pune,1,635500,0,58947,Priya Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0180,COMP-0021,Maharashtra,Nagpur,1,385000,0,34802,Priya Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0181,COMP-0021,Gujarat,Ahmedabad,5,2641300,742300,33852,Rajesh Singh Distributors;Amit Kumar Distributors;Priya Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0182,COMP-0021,Gujarat,Surat,2,788600,877300,81033,Amit Sharma Distributors;Vikram Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0183,COMP-0021,Delhi,Delhi,1,0,265400,82232,Priya Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0184,COMP-0021,Karnataka,Bangalore,2,2504500,0,76103,Amit Singh Distributors;Rajesh Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0185,COMP-0021,Karnataka,Mysore,2,2415500,387000,80404,Vikram Kumar Suppliers;Rajesh Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0186,COMP-0021,Tamil Nadu,Chennai,3,343500,0,68847,Vikram Patel Distributors;Priya Singh Traders;Neha Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0187,COMP-0021,Tamil Nadu,Coimbatore,3,814000,497000,58953,Rajesh Gupta Traders;Priya Patel Suppliers;Neha Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0188,COMP-0022,Maharashtra,Nagpur,2,131500,998500,486,Amit Singh Distributors;Priya Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0189,COMP-0022,Gujarat,Surat,3,446800,1170400,79202,Neha Kumar Distributors;Amit Sharma Traders;Neha Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0190,COMP-0022,Karnataka,Bangalore,4,1121800,225000,30103,Neha Sharma Suppliers;Rajesh Patel Traders;Amit Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0191,COMP-0022,Karnataka,Mysore,2,6000,655000,32365,Rajesh Singh Suppliers;Amit Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0192,COMP-0022,Tamil Nadu,Chennai,1,1090900,306500,79751,Neha Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0193,COMP-0022,Tamil Nadu,Coimbatore,4,897000,1162200,13964,Vikram Gupta Traders;Vikram Singh Suppliers;Rajesh Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0194,COMP-0023,Maharashtra,Mumbai,1,298000,0,92801,Amit Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0195,COMP-0023,Maharashtra,Pune,3,1008500,415000,29983,Vikram Kumar Suppliers;Rajesh Kumar Distributors;Neha Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0196,COMP-0023,Gujarat,Ahmedabad,2,0,460000,51535,Amit Gupta Suppliers;Vikram Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0197,COMP-0023,Gujarat,Surat,4,584000,252000,98014,Priya Kumar Suppliers;Rajesh Patel Traders;Priya Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0198,COMP-0023,Delhi,Delhi,5,1140000,556000,80592,Vikram Gupta Suppliers;Vikram Kumar Distributors;Vikram Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0199,COMP-0023,Karnataka,Bangalore,2,788600,370000,37870,Vikram Sharma Distributors;Neha Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0200,COMP-0023,Karnataka,Mysore,3,740000,0,11660,Rajesh Gupta Traders;Neha Gupta Traders;Neha Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0201,COMP-0023,Tamil Nadu,Coimbatore,4,1109900,1951900,24356,Vikram Kumar Traders;Amit Sharma Distributors;Neha Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0202,COMP-0024,Maharashtra,Mumbai,1,547200,0,82585,Rajesh Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0203,COMP-0024,Maharashtra,Nagpur,1,0,0,53021,Neha Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0204,COMP-0024,Gujarat,Ahmedabad,2,640000,35000,39381,Rajesh Singh Suppliers;Neha Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0205,COMP-0024,Gujarat,Surat,4,1190700,1870000,9280,Priya Singh Distributors;Neha Kumar Traders;Rajesh Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0206,COMP-0024,Delhi,Delhi,3,608000,456000,564,Priya Kumar Distributors;Rajesh Patel Traders;Neha Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0207,COMP-0024,Karnataka,Bangalore,2,762000,0,50503,Amit Kumar Traders;Vikram Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0208,COMP-0024,Karnataka,Mysore,4,268500,0,2217,Priya Singh Distributors;Amit Sharma Traders;Rajesh Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0209,COMP-0024,Tamil Nadu,Chennai,1,0,0,29379,Amit Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0210,COMP-0024,Tamil Nadu,Coimbatore,2,277500,945300,21997,Priya Sharma Traders;Vikram Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0211,COMP-0025,Maharashtra,Mumbai,1,1063400,0,55918,Priya Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0212,COMP-0025,Maharashtra,Pune,2,2355300,727500,99493,Amit Sharma Traders;Vikram Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0213,COMP-0025,Maharashtra,Nagpur,1,1053000,316800,59103,Priya Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0214,COMP-0025,Gujarat,Ahmedabad,1,1193500,0,45952,Rajesh Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0215,COMP-0025,Gujarat,Surat,4,2896500,2096700,30637,Vikram Patel Distributors;Priya Gupta Distributors;Vikram Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0216,COMP-0025,Delhi,Delhi,1,456000,974700,8567,Amit Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0217,COMP-0025,Karnataka,Bangalore,1,596600,1391800,92120,Amit Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0218,COMP-0025,Tamil Nadu,Chennai,2,62000,668200,84659,Priya Kumar Suppliers;Rajesh Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0219,COMP-0025,Tamil Nadu,Coimbatore,2,2316800,1584500,72944,Vikram Sharma Traders;Neha Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0220,COMP-0026,Maharashtra,Pune,1,306500,172500,5960,Amit Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0221,COMP-0026,Gujarat,Ahmedabad,3,3615000,1488000,45571,Neha Patel Distributors;Vikram Patel Traders;Neha Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0222,COMP-0026,Delhi,Delhi,3,973300,830000,64082,Amit Sharma Distributors;Rajesh Patel Traders;Neha Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0223,COMP-0026,Karnataka,Bangalore,3,2382500,480900,51980,Neha Patel Distributors;Rajesh Singh Distributors;Priya Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0224,COMP-0026,Karnataka,Mysore,2,946500,168000,31645,Priya Patel Traders;Rajesh Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0225,COMP-0026,Tamil Nadu,Chennai,4,562700,394500,11480,Neha Kumar Traders;Priya Gupta Traders;Neha Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0226,COMP-0026,Tamil Nadu,Coimbatore,2,1003000,259500,89842,Priya Sharma Traders;Priya Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0227,COMP-0027,Gujarat,Surat,1,1460200,2790500,4745,Amit Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0228,COMP-0027,Delhi,Delhi,4,683300,1569300,10644,Amit Sharma Traders;Neha Sharma Traders;Amit Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0229,COMP-0027,Karnataka,Bangalore,4,390000,1331900,3507,Priya Kumar Suppliers;Rajesh Sharma Distributors;Neha Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0230,COMP-0027,Karnataka,Mysore,2,574500,151000,69968,Neha Patel Traders;Neha Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0231,COMP-0027,Tamil Nadu,Chennai,3,690000,460000,78978,Priya Sharma Distributors;Amit Patel Distributors;Vikram Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0232,COMP-0027,Tamil Nadu,Coimbatore,1,0,1938000,53221,Rajesh Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0233,COMP-0028,Maharashtra,Mumbai,1,480000,685000,84411,Amit Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0234,COMP-0028,Maharashtra,Pune,2,325000,836000,43553,Priya Sharma Traders;Amit Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0235,COMP-0028,Maharashtra,Nagpur,2,1790900,398500,38708,Neha Kumar Suppliers;Rajesh Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0236,COMP-0028,Gujarat,Ahmedabad,1,770000,1419500,53346,Neha Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0237,COMP-0028,Delhi,Delhi,3,2461500,2959500,12402,Priya Gupta Traders;Amit Gupta Traders;Amit Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0238,COMP-0028,Karnataka,Bangalore,4,276000,2478400,21724,Rajesh Kumar Suppliers;Amit Sharma Suppliers;Rajesh Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0239,COMP-0028,Karnataka,Mysore,1,0,1523800,42220,Neha Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0240,COMP-0028,Tamil Nadu,Chennai,1,0,0,29603,Neha Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0241,COMP-0028,Tamil Nadu,Coimbatore,3,2838800,420900,51926,Vikram Kumar Traders;Rajesh Sharma Distributors;Vikram Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0242,COMP-0029,Maharashtra,Mumbai,5,894700,723000,4908,Amit Patel Traders;Neha Singh Suppliers;Rajesh Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0243,COMP-0029,Maharashtra,Nagpur,2,1446500,102200,50921,Neha Singh Distributors;Rajesh Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0244,COMP-0029,Gujarat,Ahmedabad,1,0,0,37830,Priya Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0245,COMP-0029,Gujarat,Surat,1,13500,0,2794,Amit Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0246,COMP-0029,Delhi,Delhi,4,566500,1675500,8052,Amit Gupta Traders;Priya Gupta Suppliers;Vikram Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0247,COMP-0029,Karnataka,Bangalore,3,495000,449500,36817,Amit Patel Suppliers;Rajesh Singh Distributors;Priya Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0248,COMP-0029,Karnataka,Mysore,2,0,0,57778,Amit Kumar Traders;Priya Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0249,COMP-0029,Tamil Nadu,Chennai,1,0,1140900,38088,Rajesh Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0250,COMP-0029,Tamil Nadu,Coimbatore,2,0,10500,68295,Rajesh Gupta Traders;Neha Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0251,COMP-0030,Maharashtra,Mumbai,2,2328500,1287500,52429,Neha Sharma Distributors;Neha Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0252,COMP-0030,Maharashtra,Pune,1,70000,0,60801,Vikram Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0253,COMP-0030,Maharashtra,Nagpur,4,122300,0,78570,Amit Sharma Suppliers;Priya Singh Distributors;Rajesh Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0254,COMP-0030,Gujarat,Ahmedabad,3,1157200,635000,39362,Rajesh Patel Distributors;Neha Sharma Distributors;Priya Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0255,COMP-0030,Gujarat,Surat,1,924000,0,73587,Rajesh Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0256,COMP-0030,Delhi,Delhi,6,2036900,636400,49620,Rajesh Kumar Traders;Neha Gupta Suppliers;Priya Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0257,COMP-0030,Karnataka,Bangalore,1,52000,0,83306,Vikram Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0258,COMP-0030,Karnataka,Mysore,3,735600,554000,83381,Priya Kumar Traders;Vikram Sharma Traders;Neha Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0259,COMP-0030,Tamil Nadu,Chennai,1,0,0,76530,Neha Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0260,COMP-0031,Maharashtra,Pune,2,564500,338700,68003,Priya Sharma Distributors;Amit Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0261,COMP-0031,Gujarat,Ahmedabad,1,437200,0,77455,Priya Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0262,COMP-0031,Gujarat,Surat,3,2090500,0,35602,Priya Kumar Suppliers;Vikram Sharma Traders;Vikram Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0263,COMP-0031,Delhi,Delhi,4,2739700,3000,66684,Priya Patel Suppliers;Rajesh Gupta Distributors;Neha Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0264,COMP-0031,Karnataka,Bangalore,1,1695500,0,33072,Vikram Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0265,COMP-0031,Karnataka,Mysore,2,1329000,1172500,67733,Rajesh Kumar Suppliers;Neha Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0266,COMP-0031,Tamil Nadu,Chennai,4,2655700,1273700,9088,Amit Gupta Suppliers;Priya Singh Suppliers;Vikram Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0267,COMP-0032,Maharashtra,Mumbai,3,1074000,976900,61249,Vikram Singh Suppliers;Rajesh Kumar Distributors;Amit Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0268,COMP-0032,Maharashtra,Pune,2,2841800,2206900,1588,Vikram Sharma Traders;Neha Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0269,COMP-0032,Maharashtra,Nagpur,1,333000,0,85148,Amit Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0270,COMP-0032,Gujarat,Ahmedabad,3,235900,1582600,32303,Vikram Patel Traders;Vikram Patel Suppliers;Amit Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0271,COMP-0032,Gujarat,Surat,3,887000,1078000,53121,Vikram Kumar Suppliers;Neha Sharma Suppliers;Vikram Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0272,COMP-0032,Delhi,Delhi,4,1107400,2700,13962,Neha Singh Distributors;Vikram Sharma Distributors;Neha Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0273,COMP-0032,Karnataka,Bangalore,1,14000,0,3323,Rajesh Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0274,COMP-0032,Karnataka,Mysore,2,485900,0,7019,Rajesh Sharma Traders;Vikram Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0275,COMP-0032,Tamil Nadu,Chennai,1,782000,0,59768,Priya Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0276,COMP-0032,Tamil Nadu,Coimbatore,2,978000,0,61411,Priya Singh Suppliers;Vikram Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0277,COMP-0033,Maharashtra,Mumbai,1,415000,21000,514,Amit Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0278,COMP-0033,Maharashtra,Pune,1,15300,0,98761,Rajesh Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0279,COMP-0033,Maharashtra,Nagpur,1,0,0,9413,Rajesh Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0280,COMP-0033,Gujarat,Ahmedabad,2,649200,2700,58263,Amit Singh Traders;Neha Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0281,COMP-0033,Gujarat,Surat,1,133600,715000,63738,Neha Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0282,COMP-0033,Delhi,Delhi,2,2093900,370500,29087,Priya Sharma Suppliers;Neha Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0283,COMP-0033,Karnataka,Bangalore,3,2421700,0,85700,Rajesh Singh Suppliers;Vikram Patel Suppliers;Rajesh Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0284,COMP-0033,Karnataka,Mysore,1,990000,407500,62976,Rajesh Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0285,COMP-0033,Tamil Nadu,Chennai,2,455000,702300,41051,Amit Gupta Distributors;Vikram Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0286,COMP-0033,Tamil Nadu,Coimbatore,2,764500,1313500,75251,Priya Singh Suppliers;Rajesh Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0287,COMP-0034,Maharashtra,Mumbai,3,1003000,580500,40624,Priya Kumar Suppliers;Rajesh Kumar Suppliers;Vikram Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0288,COMP-0034,Maharashtra,Pune,2,2211000,340500,78055,Amit Gupta Suppliers;Priya Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0289,COMP-0034,Maharashtra,Nagpur,3,225500,590000,25856,Vikram Sharma Traders;Vikram Gupta Suppliers;Priya Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0290,COMP-0034,Gujarat,Ahmedabad,2,697700,0,26475,Rajesh Kumar Distributors;Amit Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0291,COMP-0034,Gujarat,Surat,1,244500,0,4846,Rajesh Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0292,COMP-0034,Delhi,Delhi,3,1775000,1497000,58215,Vikram Sharma Distributors;Priya Gupta Suppliers;Priya Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0293,COMP-0034,Karnataka,Bangalore,1,680000,582500,69180,Neha Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0294,COMP-0034,Karnataka,Mysore,2,1308500,484500,13534,Priya Sharma Suppliers;Amit Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0295,COMP-0034,Tamil Nadu,Chennai,1,732000,0,14502,Priya Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0296,COMP-0034,Tamil Nadu,Coimbatore,5,1307000,1799700,9684,Priya Kumar Traders;Vikram Patel Suppliers;Vikram Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0297,COMP-0035,Maharashtra,Mumbai,2,0,1364000,57979,Priya Kumar Traders;Neha Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0298,COMP-0035,Maharashtra,Pune,5,3061500,952800,13974,Neha Patel Suppliers;Priya Patel Traders;Priya Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0299,COMP-0035,Maharashtra,Nagpur,1,1187000,741300,75200,Priya Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0300,COMP-0035,Gujarat,Ahmedabad,1,666000,0,92207,Neha Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0301,COMP-0035,Gujarat,Surat,2,1624500,0,99469,Rajesh Gupta Distributors;Neha Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0302,COMP-0035,Delhi,Delhi,5,914500,2455000,55459,Amit Singh Traders;Rajesh Kumar Suppliers;Priya Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0303,COMP-0035,Karnataka,Bangalore,1,0,435000,6825,Priya Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0304,COMP-0035,Karnataka,Mysore,1,678200,450500,4785,Priya Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0305,COMP-0035,Tamil Nadu,Chennai,1,0,0,36442,Neha Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0306,COMP-0035,Tamil Nadu,Coimbatore,1,668000,0,80751,Vikram Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0307,COMP-0036,Maharashtra,Mumbai,2,1302300,65000,3096,Priya Gupta Traders;Rajesh Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0308,COMP-0036,Maharashtra,Pune,1,0,500000,22311,Neha Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0309,COMP-0036,Gujarat,Ahmedabad,1,0,59500,12166,Vikram Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0310,COMP-0036,Delhi,Delhi,6,8033900,1353000,35133,Neha Patel Distributors;Rajesh Kumar Distributors;Neha Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0311,COMP-0036,Karnataka,Bangalore,2,347400,1187700,37567,Neha Gupta Suppliers;Amit Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0312,COMP-0036,Karnataka,Mysore,2,4500,430000,38499,Amit Kumar Distributors;Amit Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0313,COMP-0036,Tamil Nadu,Chennai,2,342000,1935500,11289,Neha Sharma Distributors;Amit Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0314,COMP-0037,Maharashtra,Mumbai,2,480000,1207000,46749,Priya Kumar Suppliers;Priya Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0315,COMP-0037,Maharashtra,Pune,1,483600,0,43802,Neha Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0316,COMP-0037,Maharashtra,Nagpur,1,1049500,1038000,77583,Vikram Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0317,COMP-0037,Gujarat,Ahmedabad,4,2781100,3021900,55426,Vikram Kumar Distributors;Rajesh Gupta Traders;Priya Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0318,COMP-0037,Gujarat,Surat,3,1311300,1191500,58686,Amit Patel Suppliers;Neha Gupta Distributors;Vikram Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0319,COMP-0037,Delhi,Delhi,3,931000,1385000,36610,Priya Kumar Distributors;Rajesh Singh Traders;Vikram Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0320,COMP-0037,Karnataka,Bangalore,1,346000,440000,29812,Priya Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0321,COMP-0037,Karnataka,Mysore,1,30000,40500,30456,Neha Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0322,COMP-0037,Tamil Nadu,Chennai,3,479500,1067700,30578,Amit Gupta Traders;Neha Sharma Traders;Neha Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0323,COMP-0037,Tamil Nadu,Coimbatore,3,1176500,1095400,87239,Rajesh Kumar Distributors;Vikram Kumar Traders;Amit Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0324,COMP-0038,Maharashtra,Mumbai,2,0,1171500,86766,Priya Singh Distributors;Neha Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0325,COMP-0038,Maharashtra,Pune,1,0,188000,68024,Neha Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0326,COMP-0038,Maharashtra,Nagpur,2,1667000,0,39719,Priya Sharma Traders;Priya Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0327,COMP-0038,Gujarat,Ahmedabad,4,1575300,926500,86978,Priya Sharma Suppliers;Neha Sharma Distributors;Vikram Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0328,COMP-0038,Gujarat,Surat,1,0,515000,74009,Neha Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0329,COMP-0038,Delhi,Delhi,5,258000,277500,95736,Rajesh Sharma Distributors;Priya Patel Distributors;Rajesh Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0330,COMP-0038,Karnataka,Bangalore,1,0,0,53366,Neha Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0331,COMP-0038,Karnataka,Mysore,6,3757900,1623000,91924,Priya Singh Distributors;Vikram Patel Suppliers;Neha Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0332,COMP-0038,Tamil Nadu,Coimbatore,1,578000,0,44884,Amit Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0333,COMP-0039,Maharashtra,Mumbai,1,0,1972500,49024,Priya Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0334,COMP-0039,Maharashtra,Pune,1,0,0,21202,Amit Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0335,COMP-0039,Maharashtra,Nagpur,2,396500,0,29990,Neha Patel Distributors;Vikram Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0336,COMP-0039,Gujarat,Ahmedabad,4,2274400,1964500,74389,Rajesh Gupta Distributors;Amit Patel Traders;Neha Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0337,COMP-0039,Delhi,Delhi,5,1679400,1443800,14273,Amit Kumar Suppliers;Priya Sharma Distributors;Amit Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0338,COMP-0039,Karnataka,Bangalore,3,9000,0,62920,Rajesh Patel Traders;Rajesh Kumar Distributors;Rajesh Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0339,COMP-0039,Karnataka,Mysore,2,871600,1380600,89090,Rajesh Singh Traders;Amit Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0340,COMP-0040,Maharashtra,Mumbai,1,620500,329500,3475,Vikram Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0341,COMP-0040,Gujarat,Ahmedabad,2,360000,1724300,27671,Amit Singh Distributors;Rajesh Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0342,COMP-0040,Gujarat,Surat,1,130000,0,95275,Neha Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0343,COMP-0040,Delhi,Delhi,7,4349500,2064500,30688,Rajesh Patel Distributors;Priya Patel Traders;Priya Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0344,COMP-0040,Karnataka,Mysore,1,576400,0,47211,Priya Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0345,COMP-0040,Tamil Nadu,Chennai,1,0,600000,31955,Amit Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0346,COMP-0040,Tamil Nadu,Coimbatore,2,610000,1383000,165,Amit Gupta Distributors;Neha Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0347,COMP-0041,Maharashtra,Mumbai,3,2864000,75000,99238,Priya Singh Distributors;Vikram Gupta Suppliers;Rajesh Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0348,COMP-0041,Maharashtra,Pune,3,440000,1542900,7261,Amit Patel Traders;Priya Sharma Distributors;Rajesh Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0349,COMP-0041,Maharashtra,Nagpur,3,0,0,40778,Vikram Gupta Traders;Priya Sharma Distributors;Priya Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0350,COMP-0041,Gujarat,Ahmedabad,1,0,443000,80896,Rajesh Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0351,COMP-0041,Gujarat,Surat,1,1205000,0,91059,Rajesh Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0352,COMP-0041,Delhi,Delhi,1,240000,2700,76764,Amit Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0353,COMP-0041,Karnataka,Bangalore,2,1395000,523000,76494,Amit Kumar Suppliers;Neha Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0354,COMP-0041,Karnataka,Mysore,3,1061800,960500,23607,Vikram Sharma Traders;Rajesh Singh Distributors;Amit Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0355,COMP-0041,Tamil Nadu,Chennai,3,734000,955400,50426,Neha Singh Distributors;Rajesh Kumar Suppliers;Amit Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0356,COMP-0042,Maharashtra,Pune,2,547600,1724000,82117,Priya Singh Suppliers;Priya Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0357,COMP-0042,Maharashtra,Nagpur,1,0,0,52981,Priya Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0358,COMP-0042,Gujarat,Ahmedabad,2,28000,4500,45610,Neha Sharma Traders;Amit Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0359,COMP-0042,Gujarat,Surat,4,1073000,1264700,28107,Amit Gupta Traders;Rajesh Sharma Distributors;Vikram Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0360,COMP-0042,Delhi,Delhi,8,1477900,966500,94285,Rajesh Gupta Distributors;Priya Sharma Distributors;Rajesh Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0361,COMP-0042,Karnataka,Mysore,3,984000,2050600,50582,Amit Gupta Suppliers;Vikram Kumar Distributors;Rajesh Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0362,COMP-0042,Tamil Nadu,Chennai,1,960000,256000,94061,Neha Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0363,COMP-0042,Tamil Nadu,Coimbatore,2,0,792500,14636,Priya Kumar Suppliers;Vikram Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0364,COMP-0043,Maharashtra,Pune,2,135000,0,96953,Rajesh Kumar Suppliers;Amit Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0365,COMP-0043,Maharashtra,Nagpur,3,3557600,339800,80402,Priya Patel Distributors;Vikram Kumar Distributors;Neha Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0366,COMP-0043,Gujarat,Surat,2,822000,528000,62602,Vikram Kumar Distributors;Priya Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0367,COMP-0043,Delhi,Delhi,5,2407000,590000,84881,Amit Patel Distributors;Rajesh Sharma Distributors;Neha Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0368,COMP-0043,Karnataka,Bangalore,1,250500,802300,59816,Priya Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0369,COMP-0043,Karnataka,Mysore,1,974000,0,30848,Amit Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0370,COMP-0043,Tamil Nadu,Coimbatore,1,253000,165000,13600,Rajesh Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0371,COMP-0044,Maharashtra,Mumbai,3,65000,2274000,59563,Neha Kumar Distributors;Priya Patel Distributors;Amit Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0372,COMP-0044,Maharashtra,Nagpur,5,1265200,847600,28371,Vikram Patel Suppliers;Vikram Gupta Suppliers;Amit Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0373,COMP-0044,Gujarat,Ahmedabad,2,285900,1207700,74439,Priya Gupta Distributors;Vikram Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0374,COMP-0044,Gujarat,Surat,2,24500,106000,39772,Priya Sharma Distributors;Rajesh Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0375,COMP-0044,Delhi,Delhi,3,1102100,1512500,56042,Amit Kumar Suppliers;Priya Kumar Traders;Neha Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0376,COMP-0044,Karnataka,Mysore,5,4679000,1659700,91025,Rajesh Patel Distributors;Neha Patel Traders;Rajesh Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0377,COMP-0044,Tamil Nadu,Chennai,3,3227800,400000,20286,Rajesh Patel Distributors;Priya Patel Distributors;Vikram Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0378,COMP-0044,Tamil Nadu,Coimbatore,1,0,275000,35788,Neha Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0379,COMP-0045,Maharashtra,Mumbai,2,258300,0,66396,Rajesh Patel Traders;Priya Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0380,COMP-0045,Maharashtra,Pune,1,0,237000,64921,Amit Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0381,COMP-0045,Maharashtra,Nagpur,1,1591400,0,94064,Neha Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0382,COMP-0045,Gujarat,Ahmedabad,2,0,349400,94735,Priya Kumar Distributors;Amit Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0383,COMP-0045,Gujarat,Surat,3,1420300,120000,19953,Rajesh Singh Suppliers;Priya Gupta Traders;Priya Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0384,COMP-0045,Delhi,Delhi,2,1893400,270400,25700,Priya Patel Distributors;Vikram Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0385,COMP-0045,Karnataka,Mysore,4,320900,2191000,97812,Neha Patel Distributors;Vikram Patel Suppliers;Rajesh Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0386,COMP-0045,Tamil Nadu,Chennai,2,69000,1234000,73420,Vikram Kumar Suppliers;Priya Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0387,COMP-0045,Tamil Nadu,Coimbatore,2,0,1769500,45743,Neha Sharma Distributors;Vikram Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0388,COMP-0046,Maharashtra,Nagpur,4,2519400,830000,68950,Neha Sharma Traders;Amit Singh Suppliers;Neha Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0389,COMP-0046,Gujarat,Ahmedabad,1,715000,885000,49298,Vikram Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0390,COMP-0046,Gujarat,Surat,1,391000,673400,43197,Neha Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0391,COMP-0046,Delhi,Delhi,5,3530700,2750800,86671,Vikram Sharma Suppliers;Rajesh Sharma Suppliers;Priya Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0392,COMP-0046,Karnataka,Bangalore,1,1018500,0,31929,Vikram Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0393,COMP-0046,Karnataka,Mysore,1,527000,270000,81491,Vikram Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0394,COMP-0046,Tamil Nadu,Chennai,1,65500,12000,20110,Priya Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0395,COMP-0046,Tamil Nadu,Coimbatore,1,1386000,594000,62804,Vikram Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0396,COMP-0047,Maharashtra,Mumbai,1,1438000,1021000,86357,Rajesh Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0397,COMP-0047,Gujarat,Ahmedabad,4,5066500,1372200,50858,Amit Sharma Traders;Rajesh Kumar Traders;Priya Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0398,COMP-0047,Gujarat,Surat,3,414000,945000,72536,Rajesh Patel Suppliers;Rajesh Patel Suppliers;Amit Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0399,COMP-0047,Delhi,Delhi,4,440000,1925600,59406,Amit Sharma Distributors;Rajesh Gupta Traders;Vikram Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0400,COMP-0047,Karnataka,Bangalore,1,3000,521200,87003,Amit Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0401,COMP-0047,Tamil Nadu,Chennai,3,1572500,882900,12122,Amit Sharma Suppliers;Rajesh Sharma Suppliers;Neha Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0402,COMP-0047,Tamil Nadu,Coimbatore,1,1190500,0,34180,Priya Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0403,COMP-0048,Maharashtra,Mumbai,1,936000,0,91920,Vikram Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0404,COMP-0048,Maharashtra,Pune,5,4349000,266800,10255,Rajesh Sharma Suppliers;Amit Gupta Distributors;Rajesh Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0405,COMP-0048,Maharashtra,Nagpur,1,195000,0,31644,Amit Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0406,COMP-0048,Gujarat,Ahmedabad,2,456500,425000,35845,Rajesh Gupta Suppliers;Priya Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0407,COMP-0048,Delhi,Delhi,6,944400,1078000,75563,Neha Gupta Traders;Priya Kumar Traders;Neha Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0408,COMP-0048,Karnataka,Bangalore,1,785800,820000,26313,Rajesh Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0409,COMP-0048,Karnataka,Mysore,1,0,476000,16301,Vikram Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0410,COMP-0048,Tamil Nadu,Chennai,3,927500,0,63124,Amit Kumar Suppliers;Neha Sharma Distributors;Rajesh Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0411,COMP-0048,Tamil Nadu,Coimbatore,3,130000,1011300,79817,Neha Sharma Traders;Amit Gupta Traders;Neha Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0412,COMP-0049,Maharashtra,Pune,1,977900,285000,51185,Rajesh Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0413,COMP-0049,Maharashtra,Nagpur,2,0,76300,57713,Neha Patel Distributors;Priya Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0414,COMP-0049,Gujarat,Ahmedabad,2,0,1415000,4374,Amit Singh Traders;Vikram Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0415,COMP-0049,Gujarat,Surat,2,675000,0,56416,Vikram Sharma Suppliers;Rajesh Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0416,COMP-0049,Delhi,Delhi,8,3159400,1293500,768,Rajesh Singh Suppliers;Priya Gupta Suppliers;Priya Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0417,COMP-0049,Karnataka,Bangalore,2,164000,0,47879,Amit Gupta Traders;Rajesh Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0418,COMP-0049,Karnataka,Mysore,1,71800,534500,47688,Rajesh Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0419,COMP-0049,Tamil Nadu,Chennai,2,0,997800,73297,Priya Gupta Distributors;Rajesh Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0420,COMP-0049,Tamil Nadu,Coimbatore,3,330000,690000,84028,Vikram Gupta Traders;Priya Sharma Distributors;Neha Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0421,COMP-0050,Maharashtra,Mumbai,2,1648000,1643200,13273,Amit Singh Distributors;Vikram Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0422,COMP-0050,Maharashtra,Pune,2,4500,293000,62611,Amit Gupta Distributors;Neha Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0423,COMP-0050,Maharashtra,Nagpur,1,1913000,255500,30014,Priya Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0424,COMP-0050,Gujarat,Ahmedabad,1,50500,0,41868,Priya Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0425,COMP-0050,Gujarat,Surat,1,760400,0,60621,Rajesh Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0426,COMP-0050,Delhi,Delhi,4,392200,492900,79629,Priya Sharma Traders;Neha Sharma Distributors;Priya Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0427,COMP-0050,Karnataka,Bangalore,2,126000,0,16422,Vikram Singh Suppliers;Rajesh Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0428,COMP-0050,Tamil Nadu,Chennai,2,95500,992000,15524,Vikram Singh Suppliers;Rajesh Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
-GEO-0429,COMP-0050,Tamil Nadu,Coimbatore,4,2003400,984000,93991,Priya Sharma Traders;Neha Sharma Suppliers;Amit Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0001,COMP-0001,Maharashtra,Mumbai,1,1213500,10500,70209,Amit Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0002,COMP-0001,Maharashtra,Pune,1,1071500,321000,96188,Priya Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0003,COMP-0001,Gujarat,Ahmedabad,2,172500,715000,46178,Amit Gupta Suppliers;Vikram Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0004,COMP-0001,Gujarat,Surat,3,724700,2717300,11612,Vikram Patel Traders;Rajesh Sharma Traders;Priya Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0005,COMP-0001,Delhi,Delhi,2,405000,507500,69132,Amit Singh Suppliers;Rajesh Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0006,COMP-0001,Karnataka,Bangalore,2,1419000,850000,89791,Amit Gupta Distributors;Priya Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0007,COMP-0001,Karnataka,Mysore,1,516400,223800,46297,Priya Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0008,COMP-0001,Tamil Nadu,Chennai,3,3469500,315000,55111,Amit Kumar Suppliers;Neha Patel Suppliers;Amit Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0009,COMP-0001,Tamil Nadu,Coimbatore,1,53500,771500,78103,Neha Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0010,COMP-0002,Maharashtra,Mumbai,3,1766000,1238000,5996,Priya Sharma Distributors;Neha Sharma Suppliers;Priya Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0011,COMP-0002,Maharashtra,Nagpur,2,1708100,248600,45943,Rajesh Singh Suppliers;Amit Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0012,COMP-0002,Gujarat,Surat,1,181300,732500,82275,Neha Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0013,COMP-0002,Delhi,Delhi,6,4746500,3045900,4611,Rajesh Kumar Suppliers;Amit Patel Distributors;Neha Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0014,COMP-0002,Karnataka,Bangalore,1,195000,0,86617,Priya Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0015,COMP-0002,Karnataka,Mysore,1,0,453500,77491,Vikram Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0016,COMP-0002,Tamil Nadu,Chennai,1,77900,1710000,50044,Priya Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0017,COMP-0002,Tamil Nadu,Coimbatore,1,999900,0,43787,Neha Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0018,COMP-0003,Maharashtra,Nagpur,1,268500,88500,52462,Neha Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0019,COMP-0003,Gujarat,Ahmedabad,3,5400,1088500,99450,Vikram Singh Distributors;Priya Kumar Distributors;Neha Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0020,COMP-0003,Gujarat,Surat,1,452700,0,72981,Vikram Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0021,COMP-0003,Delhi,Delhi,2,2017600,0,70294,Vikram Kumar Suppliers;Neha Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0022,COMP-0003,Karnataka,Bangalore,4,2533300,3022200,99439,Vikram Sharma Distributors;Neha Singh Suppliers;Priya Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0023,COMP-0003,Karnataka,Mysore,3,825700,1186600,21012,Rajesh Gupta Suppliers;Neha Singh Suppliers;Vikram Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0024,COMP-0003,Tamil Nadu,Chennai,1,515600,0,49832,Amit Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0025,COMP-0003,Tamil Nadu,Coimbatore,2,75000,1100000,62735,Neha Kumar Traders;Rajesh Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0026,COMP-0004,Maharashtra,Mumbai,2,1591000,7200,23081,Vikram Kumar Suppliers;Neha Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0027,COMP-0004,Maharashtra,Pune,1,3500,256000,68682,Rajesh Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0028,COMP-0004,Maharashtra,Nagpur,1,973500,393200,4492,Priya Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0029,COMP-0004,Gujarat,Ahmedabad,1,80900,875000,1576,Rajesh Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0030,COMP-0004,Gujarat,Surat,3,465500,545200,62805,Priya Gupta Distributors;Amit Patel Distributors;Vikram Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0031,COMP-0004,Delhi,Delhi,8,2932000,4329700,20458,Neha Sharma Suppliers;Rajesh Kumar Traders;Vikram Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0032,COMP-0004,Karnataka,Bangalore,1,110000,304000,93655,Vikram Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0033,COMP-0004,Karnataka,Mysore,3,1643500,1383500,63999,Vikram Patel Suppliers;Neha Kumar Distributors;Priya Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0034,COMP-0004,Tamil Nadu,Chennai,2,1369700,252000,20524,Rajesh Kumar Distributors;Vikram Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0035,COMP-0004,Tamil Nadu,Coimbatore,1,1035800,0,232,Amit Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0036,COMP-0005,Maharashtra,Mumbai,4,1150500,2217400,94896,Priya Kumar Distributors;Neha Kumar Suppliers;Amit Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0037,COMP-0005,Maharashtra,Pune,1,0,0,83665,Neha Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0038,COMP-0005,Gujarat,Ahmedabad,2,1281800,985900,72610,Rajesh Sharma Suppliers;Priya Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0039,COMP-0005,Gujarat,Surat,3,1327200,402600,14714,Priya Singh Suppliers;Neha Kumar Suppliers;Neha Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0040,COMP-0005,Delhi,Delhi,5,2047200,2405200,88241,Rajesh Patel Suppliers;Vikram Singh Distributors;Amit Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0041,COMP-0005,Karnataka,Bangalore,1,0,80000,87656,Rajesh Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0042,COMP-0005,Karnataka,Mysore,1,0,3600,38061,Neha Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0043,COMP-0005,Tamil Nadu,Coimbatore,2,978500,960000,58645,Amit Patel Suppliers;Rajesh Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0044,COMP-0006,Maharashtra,Pune,3,3075300,467300,20229,Rajesh Kumar Traders;Amit Kumar Suppliers;Priya Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0045,COMP-0006,Gujarat,Ahmedabad,2,1450500,0,82873,Amit Gupta Traders;Rajesh Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0046,COMP-0006,Gujarat,Surat,4,3796900,2559700,25317,Amit Patel Distributors;Vikram Sharma Distributors;Amit Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0047,COMP-0006,Delhi,Delhi,2,223000,438900,60044,Rajesh Kumar Traders;Priya Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0048,COMP-0006,Karnataka,Bangalore,5,2318600,1405700,27627,Rajesh Singh Suppliers;Vikram Sharma Traders;Amit Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0049,COMP-0006,Karnataka,Mysore,1,69500,621100,46098,Rajesh Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0050,COMP-0006,Tamil Nadu,Coimbatore,3,422900,2194900,55046,Amit Patel Distributors;Vikram Patel Traders;Vikram Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0051,COMP-0007,Maharashtra,Mumbai,1,110000,337600,37056,Neha Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0052,COMP-0007,Maharashtra,Pune,1,0,456800,2325,Priya Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0053,COMP-0007,Gujarat,Ahmedabad,1,168000,763000,61093,Vikram Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0054,COMP-0007,Gujarat,Surat,1,915000,702700,67602,Vikram Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0055,COMP-0007,Delhi,Delhi,3,389400,201600,29265,Vikram Singh Traders;Amit Singh Traders;Neha Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0056,COMP-0007,Karnataka,Bangalore,2,2405900,84000,95309,Vikram Kumar Suppliers;Neha Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0057,COMP-0007,Karnataka,Mysore,3,275000,151000,94952,Vikram Gupta Traders;Vikram Gupta Distributors;Priya Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0058,COMP-0007,Tamil Nadu,Chennai,2,1359500,0,93312,Neha Gupta Distributors;Rajesh Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0059,COMP-0007,Tamil Nadu,Coimbatore,3,1718000,486000,3772,Priya Kumar Suppliers;Amit Gupta Suppliers;Priya Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0060,COMP-0008,Maharashtra,Mumbai,1,0,1133000,69922,Rajesh Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0061,COMP-0008,Maharashtra,Pune,2,180000,1355500,29090,Amit Patel Distributors;Neha Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0062,COMP-0008,Gujarat,Ahmedabad,1,1083000,0,6516,Priya Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0063,COMP-0008,Gujarat,Surat,2,852000,724900,52473,Rajesh Gupta Distributors;Vikram Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0064,COMP-0008,Delhi,Delhi,4,1071200,3836700,79122,Vikram Sharma Distributors;Priya Gupta Suppliers;Rajesh Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0065,COMP-0008,Karnataka,Bangalore,2,1446700,916900,58123,Vikram Sharma Distributors;Rajesh Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0066,COMP-0008,Karnataka,Mysore,1,785000,0,68213,Vikram Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0067,COMP-0008,Tamil Nadu,Chennai,1,841700,350000,99645,Priya Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0068,COMP-0008,Tamil Nadu,Coimbatore,1,634200,0,78435,Neha Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0069,COMP-0009,Maharashtra,Pune,2,0,363500,76544,Vikram Singh Suppliers;Vikram Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0070,COMP-0009,Maharashtra,Nagpur,2,12000,1467000,82419,Amit Patel Traders;Vikram Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0071,COMP-0009,Gujarat,Ahmedabad,2,7000,510000,74670,Amit Sharma Traders;Amit Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0072,COMP-0009,Gujarat,Surat,1,1773000,0,48657,Rajesh Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0073,COMP-0009,Delhi,Delhi,2,1143000,30700,13531,Vikram Sharma Distributors;Amit Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0074,COMP-0009,Karnataka,Bangalore,1,1039500,0,84088,Priya Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0075,COMP-0009,Tamil Nadu,Chennai,1,715500,0,33463,Priya Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0076,COMP-0009,Tamil Nadu,Coimbatore,4,891000,2090200,45439,Rajesh Singh Traders;Neha Kumar Traders;Priya Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0077,COMP-0010,Maharashtra,Mumbai,3,2706700,0,37231,Priya Gupta Traders;Neha Singh Suppliers;Neha Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0078,COMP-0010,Maharashtra,Pune,2,486000,865200,79634,Neha Singh Distributors;Neha Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0079,COMP-0010,Gujarat,Ahmedabad,1,240000,0,71909,Rajesh Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0080,COMP-0010,Gujarat,Surat,1,537500,0,26793,Neha Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0081,COMP-0010,Delhi,Delhi,1,623000,826000,53956,Neha Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0082,COMP-0010,Karnataka,Bangalore,1,0,46300,60483,Neha Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0083,COMP-0010,Karnataka,Mysore,5,1694700,2211200,10411,Priya Kumar Suppliers;Rajesh Singh Traders;Neha Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0084,COMP-0010,Tamil Nadu,Chennai,2,207600,840200,34106,Amit Singh Traders;Rajesh Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0085,COMP-0010,Tamil Nadu,Coimbatore,1,112000,0,50794,Rajesh Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0086,COMP-0011,Maharashtra,Mumbai,1,455000,520500,63020,Vikram Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0087,COMP-0011,Maharashtra,Nagpur,1,0,55000,34529,Vikram Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0088,COMP-0011,Gujarat,Ahmedabad,4,2141400,1157700,73963,Vikram Kumar Suppliers;Neha Patel Distributors;Priya Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0089,COMP-0011,Gujarat,Surat,1,1350000,1170000,4629,Amit Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0090,COMP-0011,Delhi,Delhi,3,1922200,641000,56987,Neha Singh Traders;Amit Kumar Distributors;Rajesh Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0091,COMP-0011,Karnataka,Bangalore,2,0,608000,49665,Rajesh Kumar Suppliers;Rajesh Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0092,COMP-0011,Karnataka,Mysore,2,582000,951500,69055,Neha Kumar Suppliers;Vikram Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0093,COMP-0011,Tamil Nadu,Coimbatore,1,0,1062900,67515,Priya Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0094,COMP-0012,Maharashtra,Mumbai,2,260500,941700,94793,Amit Patel Traders;Neha Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0095,COMP-0012,Maharashtra,Pune,1,1192500,440000,54769,Amit Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0096,COMP-0012,Maharashtra,Nagpur,2,1515500,0,58909,Neha Kumar Distributors;Amit Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0097,COMP-0012,Gujarat,Ahmedabad,4,1268800,1944200,48834,Vikram Sharma Suppliers;Priya Kumar Traders;Vikram Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0098,COMP-0012,Gujarat,Surat,3,489200,2520900,8962,Priya Singh Distributors;Priya Kumar Traders;Amit Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0099,COMP-0012,Delhi,Delhi,2,845900,631500,73555,Vikram Patel Distributors;Amit Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0100,COMP-0012,Karnataka,Bangalore,2,137500,711200,44253,Rajesh Singh Distributors;Neha Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0101,COMP-0012,Karnataka,Mysore,2,2899300,977500,99989,Amit Gupta Traders;Vikram Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0102,COMP-0012,Tamil Nadu,Chennai,1,960000,0,64411,Priya Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0103,COMP-0012,Tamil Nadu,Coimbatore,1,1230900,763000,13235,Amit Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0104,COMP-0013,Maharashtra,Mumbai,3,392200,398000,11010,Priya Kumar Distributors;Amit Singh Traders;Neha Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0105,COMP-0013,Maharashtra,Pune,1,14700,0,55703,Rajesh Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0106,COMP-0013,Maharashtra,Nagpur,1,40000,0,39888,Amit Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0107,COMP-0013,Gujarat,Ahmedabad,1,52000,101000,46441,Amit Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0108,COMP-0013,Gujarat,Surat,2,960000,240000,56506,Amit Sharma Distributors;Neha Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0109,COMP-0013,Delhi,Delhi,3,1234800,236900,5955,Neha Singh Traders;Vikram Sharma Traders;Amit Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0110,COMP-0013,Karnataka,Mysore,2,520400,1500000,46018,Amit Gupta Traders;Priya Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0111,COMP-0013,Tamil Nadu,Coimbatore,4,2435500,0,87665,Vikram Sharma Traders;Neha Patel Distributors;Priya Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0112,COMP-0014,Maharashtra,Mumbai,2,2025000,394000,79641,Neha Gupta Distributors;Vikram Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0113,COMP-0014,Maharashtra,Pune,1,1005000,0,47899,Rajesh Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0114,COMP-0014,Maharashtra,Nagpur,2,850500,67500,52713,Priya Kumar Traders;Amit Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0115,COMP-0014,Gujarat,Ahmedabad,2,479500,345400,27161,Rajesh Kumar Distributors;Priya Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0116,COMP-0014,Gujarat,Surat,3,431400,0,39802,Amit Gupta Suppliers;Amit Gupta Traders;Neha Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0117,COMP-0014,Delhi,Delhi,1,275000,340000,32629,Priya Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0118,COMP-0014,Karnataka,Bangalore,2,3600,0,98368,Vikram Singh Suppliers;Priya Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0119,COMP-0014,Karnataka,Mysore,4,2336000,1202300,11718,Vikram Sharma Distributors;Priya Sharma Suppliers;Neha Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0120,COMP-0014,Tamil Nadu,Chennai,2,0,0,66031,Amit Gupta Distributors;Vikram Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0121,COMP-0014,Tamil Nadu,Coimbatore,2,2565000,717000,6398,Priya Patel Suppliers;Rajesh Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0122,COMP-0015,Maharashtra,Mumbai,2,607800,440000,82027,Priya Sharma Suppliers;Vikram Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0123,COMP-0015,Maharashtra,Pune,1,0,0,85959,Amit Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0124,COMP-0015,Maharashtra,Nagpur,1,65000,440000,57526,Neha Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0125,COMP-0015,Gujarat,Ahmedabad,3,723000,728000,27460,Priya Patel Distributors;Rajesh Gupta Suppliers;Vikram Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0126,COMP-0015,Gujarat,Surat,2,1315900,1287400,77145,Priya Singh Traders;Priya Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0127,COMP-0015,Delhi,Delhi,7,2153300,117500,19208,Vikram Gupta Distributors;Rajesh Kumar Suppliers;Vikram Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0128,COMP-0015,Karnataka,Bangalore,1,0,0,2130,Amit Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0129,COMP-0015,Karnataka,Mysore,4,323400,427000,94340,Amit Patel Traders;Rajesh Patel Traders;Vikram Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0130,COMP-0015,Tamil Nadu,Chennai,1,775000,0,4243,Vikram Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0131,COMP-0015,Tamil Nadu,Coimbatore,2,1722000,275000,17655,Rajesh Kumar Suppliers;Neha Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0132,COMP-0016,Maharashtra,Mumbai,2,295500,517000,45808,Vikram Gupta Traders;Amit Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0133,COMP-0016,Maharashtra,Pune,1,502900,480000,69370,Amit Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0134,COMP-0016,Maharashtra,Nagpur,1,425000,0,45364,Rajesh Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0135,COMP-0016,Gujarat,Ahmedabad,3,743500,2204100,56167,Neha Kumar Traders;Amit Sharma Traders;Vikram Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0136,COMP-0016,Gujarat,Surat,2,140500,475000,43421,Priya Sharma Traders;Priya Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0137,COMP-0016,Delhi,Delhi,3,139000,1512700,99407,Priya Sharma Distributors;Rajesh Gupta Suppliers;Priya Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0138,COMP-0016,Karnataka,Bangalore,1,62000,0,28039,Rajesh Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0139,COMP-0016,Karnataka,Mysore,2,2421500,10500,31486,Vikram Patel Traders;Amit Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0140,COMP-0016,Tamil Nadu,Chennai,2,1768900,980700,61567,Priya Sharma Traders;Neha Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0141,COMP-0016,Tamil Nadu,Coimbatore,1,564900,165000,92209,Rajesh Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0142,COMP-0017,Maharashtra,Mumbai,2,308800,2330500,62497,Rajesh Sharma Traders;Amit Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0143,COMP-0017,Maharashtra,Pune,3,1472900,0,63191,Vikram Sharma Suppliers;Neha Kumar Traders;Priya Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0144,COMP-0017,Maharashtra,Nagpur,1,0,0,31713,Priya Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0145,COMP-0017,Gujarat,Ahmedabad,6,1801300,1228500,2415,Priya Singh Distributors;Vikram Patel Distributors;Vikram Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0146,COMP-0017,Gujarat,Surat,2,1005000,385000,88736,Amit Singh Traders;Priya Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0147,COMP-0017,Delhi,Delhi,1,0,0,26222,Priya Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0148,COMP-0017,Karnataka,Bangalore,4,500500,260000,13031,Rajesh Singh Suppliers;Rajesh Singh Traders;Priya Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0149,COMP-0017,Karnataka,Mysore,3,1314600,337500,49614,Rajesh Sharma Suppliers;Amit Patel Suppliers;Vikram Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0150,COMP-0017,Tamil Nadu,Chennai,1,0,201300,64897,Vikram Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0151,COMP-0017,Tamil Nadu,Coimbatore,1,0,62000,90113,Vikram Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0152,COMP-0018,Maharashtra,Mumbai,1,429900,0,73034,Amit Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0153,COMP-0018,Maharashtra,Pune,2,761500,0,63049,Vikram Singh Suppliers;Rajesh Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0154,COMP-0018,Gujarat,Ahmedabad,2,692200,0,14190,Vikram Patel Distributors;Rajesh Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0155,COMP-0018,Gujarat,Surat,4,640500,2340700,77581,Rajesh Singh Suppliers;Rajesh Kumar Distributors;Amit Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0156,COMP-0018,Delhi,Delhi,5,40000,1927800,21087,Amit Kumar Traders;Neha Singh Traders;Priya Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0157,COMP-0018,Karnataka,Bangalore,1,701300,395000,54484,Amit Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0158,COMP-0018,Karnataka,Mysore,2,1383500,366300,14120,Amit Singh Distributors;Amit Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0159,COMP-0018,Tamil Nadu,Chennai,2,431000,1022300,48650,Amit Gupta Traders;Rajesh Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0160,COMP-0018,Tamil Nadu,Coimbatore,3,115400,410500,37115,Priya Kumar Distributors;Vikram Kumar Suppliers;Amit Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0161,COMP-0019,Maharashtra,Mumbai,3,881000,747500,71762,Rajesh Singh Traders;Vikram Kumar Traders;Rajesh Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0162,COMP-0019,Maharashtra,Pune,2,1599600,260000,62978,Neha Patel Distributors;Priya Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0163,COMP-0019,Maharashtra,Nagpur,2,19200,722000,88250,Rajesh Gupta Distributors;Rajesh Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0164,COMP-0019,Gujarat,Ahmedabad,4,307000,189700,20145,Priya Singh Suppliers;Priya Kumar Distributors;Priya Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0165,COMP-0019,Gujarat,Surat,1,1376900,0,1653,Rajesh Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0166,COMP-0019,Delhi,Delhi,4,1067000,1122200,13565,Priya Gupta Suppliers;Amit Kumar Distributors;Rajesh Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0167,COMP-0019,Karnataka,Bangalore,3,928400,1341700,18818,Priya Gupta Suppliers;Vikram Sharma Distributors;Neha Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0168,COMP-0019,Tamil Nadu,Chennai,2,640000,363500,34422,Neha Gupta Suppliers;Vikram Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0169,COMP-0019,Tamil Nadu,Coimbatore,3,795100,6600,87134,Priya Sharma Distributors;Priya Sharma Distributors;Vikram Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0170,COMP-0020,Maharashtra,Mumbai,3,385000,2507200,7546,Neha Sharma Distributors;Rajesh Sharma Suppliers;Neha Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0171,COMP-0020,Maharashtra,Nagpur,2,1129800,0,18152,Neha Sharma Traders;Rajesh Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0172,COMP-0020,Gujarat,Ahmedabad,3,914600,1520000,49145,Vikram Singh Distributors;Vikram Kumar Suppliers;Neha Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0173,COMP-0020,Gujarat,Surat,2,991900,359000,38020,Neha Kumar Distributors;Priya Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0174,COMP-0020,Delhi,Delhi,3,1395300,578000,44173,Rajesh Patel Distributors;Neha Sharma Distributors;Priya Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0175,COMP-0020,Karnataka,Bangalore,2,112500,252700,42106,Neha Sharma Suppliers;Vikram Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0176,COMP-0020,Karnataka,Mysore,3,793200,1094000,3116,Neha Gupta Traders;Priya Kumar Suppliers;Rajesh Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0177,COMP-0020,Tamil Nadu,Chennai,1,123400,835000,86269,Vikram Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0178,COMP-0020,Tamil Nadu,Coimbatore,5,2123800,585000,7576,Neha Singh Distributors;Priya Gupta Distributors;Amit Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0179,COMP-0021,Maharashtra,Pune,1,635500,0,44839,Priya Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0180,COMP-0021,Maharashtra,Nagpur,1,385000,0,38769,Priya Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0181,COMP-0021,Gujarat,Ahmedabad,5,2641300,742300,77313,Rajesh Singh Distributors;Amit Kumar Distributors;Priya Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0182,COMP-0021,Gujarat,Surat,2,788600,877300,4109,Amit Sharma Distributors;Vikram Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0183,COMP-0021,Delhi,Delhi,1,0,265400,66490,Priya Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0184,COMP-0021,Karnataka,Bangalore,2,2504500,0,97566,Amit Singh Distributors;Rajesh Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0185,COMP-0021,Karnataka,Mysore,2,2415500,387000,94361,Vikram Kumar Suppliers;Rajesh Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0186,COMP-0021,Tamil Nadu,Chennai,3,343500,0,4781,Vikram Patel Distributors;Priya Singh Traders;Neha Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0187,COMP-0021,Tamil Nadu,Coimbatore,3,814000,497000,87268,Rajesh Gupta Traders;Priya Patel Suppliers;Neha Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0188,COMP-0022,Maharashtra,Nagpur,2,131500,998500,73870,Amit Singh Distributors;Priya Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0189,COMP-0022,Gujarat,Surat,3,446800,1170400,76827,Neha Kumar Distributors;Amit Sharma Traders;Neha Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0190,COMP-0022,Karnataka,Bangalore,4,1121800,225000,72163,Neha Sharma Suppliers;Rajesh Patel Traders;Amit Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0191,COMP-0022,Karnataka,Mysore,2,6000,655000,27365,Rajesh Singh Suppliers;Amit Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0192,COMP-0022,Tamil Nadu,Chennai,1,1090900,306500,74452,Neha Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0193,COMP-0022,Tamil Nadu,Coimbatore,4,897000,1162200,65008,Vikram Gupta Traders;Vikram Singh Suppliers;Rajesh Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0194,COMP-0023,Maharashtra,Mumbai,1,298000,0,52620,Amit Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0195,COMP-0023,Maharashtra,Pune,3,1008500,415000,82719,Vikram Kumar Suppliers;Rajesh Kumar Distributors;Neha Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0196,COMP-0023,Gujarat,Ahmedabad,2,0,460000,60063,Amit Gupta Suppliers;Vikram Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0197,COMP-0023,Gujarat,Surat,4,584000,252000,31051,Priya Kumar Suppliers;Rajesh Patel Traders;Priya Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0198,COMP-0023,Delhi,Delhi,5,1140000,556000,68213,Vikram Gupta Suppliers;Vikram Kumar Distributors;Vikram Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0199,COMP-0023,Karnataka,Bangalore,2,788600,370000,66846,Vikram Sharma Distributors;Neha Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0200,COMP-0023,Karnataka,Mysore,3,740000,0,62693,Rajesh Gupta Traders;Neha Gupta Traders;Neha Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0201,COMP-0023,Tamil Nadu,Coimbatore,4,1109900,1951900,17708,Vikram Kumar Traders;Amit Sharma Distributors;Neha Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0202,COMP-0024,Maharashtra,Mumbai,1,547200,0,40613,Rajesh Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0203,COMP-0024,Maharashtra,Nagpur,1,0,0,49480,Neha Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0204,COMP-0024,Gujarat,Ahmedabad,2,640000,35000,12765,Rajesh Singh Suppliers;Neha Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0205,COMP-0024,Gujarat,Surat,4,1190700,1870000,51344,Priya Singh Distributors;Neha Kumar Traders;Rajesh Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0206,COMP-0024,Delhi,Delhi,3,608000,456000,28122,Priya Kumar Distributors;Rajesh Patel Traders;Neha Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0207,COMP-0024,Karnataka,Bangalore,2,762000,0,1728,Amit Kumar Traders;Vikram Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0208,COMP-0024,Karnataka,Mysore,4,268500,0,26502,Priya Singh Distributors;Amit Sharma Traders;Rajesh Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0209,COMP-0024,Tamil Nadu,Chennai,1,0,0,36975,Amit Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0210,COMP-0024,Tamil Nadu,Coimbatore,2,277500,945300,32601,Priya Sharma Traders;Vikram Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0211,COMP-0025,Maharashtra,Mumbai,1,1063400,0,68963,Priya Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0212,COMP-0025,Maharashtra,Pune,2,2355300,727500,28804,Amit Sharma Traders;Vikram Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0213,COMP-0025,Maharashtra,Nagpur,1,1053000,316800,87982,Priya Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0214,COMP-0025,Gujarat,Ahmedabad,1,1193500,0,7790,Rajesh Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0215,COMP-0025,Gujarat,Surat,4,2896500,2096700,3604,Vikram Patel Distributors;Priya Gupta Distributors;Vikram Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0216,COMP-0025,Delhi,Delhi,1,456000,974700,3920,Amit Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0217,COMP-0025,Karnataka,Bangalore,1,596600,1391800,76056,Amit Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0218,COMP-0025,Tamil Nadu,Chennai,2,62000,668200,10416,Priya Kumar Suppliers;Rajesh Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0219,COMP-0025,Tamil Nadu,Coimbatore,2,2316800,1584500,38148,Vikram Sharma Traders;Neha Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0220,COMP-0026,Maharashtra,Pune,1,306500,172500,29281,Amit Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0221,COMP-0026,Gujarat,Ahmedabad,3,3615000,1488000,41008,Neha Patel Distributors;Vikram Patel Traders;Neha Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0222,COMP-0026,Delhi,Delhi,3,973300,830000,20629,Amit Sharma Distributors;Rajesh Patel Traders;Neha Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0223,COMP-0026,Karnataka,Bangalore,3,2382500,480900,80620,Neha Patel Distributors;Rajesh Singh Distributors;Priya Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0224,COMP-0026,Karnataka,Mysore,2,946500,168000,40267,Priya Patel Traders;Rajesh Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0225,COMP-0026,Tamil Nadu,Chennai,4,562700,394500,81062,Neha Kumar Traders;Priya Gupta Traders;Neha Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0226,COMP-0026,Tamil Nadu,Coimbatore,2,1003000,259500,29625,Priya Sharma Traders;Priya Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0227,COMP-0027,Gujarat,Surat,1,1460200,2790500,2327,Amit Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0228,COMP-0027,Delhi,Delhi,4,683300,1569300,64450,Amit Sharma Traders;Neha Sharma Traders;Amit Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0229,COMP-0027,Karnataka,Bangalore,4,390000,1331900,90654,Priya Kumar Suppliers;Rajesh Sharma Distributors;Neha Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0230,COMP-0027,Karnataka,Mysore,2,574500,151000,93568,Neha Patel Traders;Neha Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0231,COMP-0027,Tamil Nadu,Chennai,3,690000,460000,36435,Priya Sharma Distributors;Amit Patel Distributors;Vikram Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0232,COMP-0027,Tamil Nadu,Coimbatore,1,0,1938000,13940,Rajesh Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0233,COMP-0028,Maharashtra,Mumbai,1,480000,685000,57367,Amit Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0234,COMP-0028,Maharashtra,Pune,2,325000,836000,74467,Priya Sharma Traders;Amit Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0235,COMP-0028,Maharashtra,Nagpur,2,1790900,398500,74238,Neha Kumar Suppliers;Rajesh Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0236,COMP-0028,Gujarat,Ahmedabad,1,770000,1419500,84386,Neha Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0237,COMP-0028,Delhi,Delhi,3,2461500,2959500,54103,Priya Gupta Traders;Amit Gupta Traders;Amit Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0238,COMP-0028,Karnataka,Bangalore,4,276000,2478400,41168,Rajesh Kumar Suppliers;Amit Sharma Suppliers;Rajesh Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0239,COMP-0028,Karnataka,Mysore,1,0,1523800,35582,Neha Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0240,COMP-0028,Tamil Nadu,Chennai,1,0,0,54173,Neha Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0241,COMP-0028,Tamil Nadu,Coimbatore,3,2838800,420900,98906,Vikram Kumar Traders;Rajesh Sharma Distributors;Vikram Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0242,COMP-0029,Maharashtra,Mumbai,5,894700,723000,50788,Amit Patel Traders;Neha Singh Suppliers;Rajesh Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0243,COMP-0029,Maharashtra,Nagpur,2,1446500,102200,20002,Neha Singh Distributors;Rajesh Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0244,COMP-0029,Gujarat,Ahmedabad,1,0,0,67106,Priya Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0245,COMP-0029,Gujarat,Surat,1,13500,0,81159,Amit Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0246,COMP-0029,Delhi,Delhi,4,566500,1675500,65081,Amit Gupta Traders;Priya Gupta Suppliers;Vikram Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0247,COMP-0029,Karnataka,Bangalore,3,495000,449500,90857,Amit Patel Suppliers;Rajesh Singh Distributors;Priya Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0248,COMP-0029,Karnataka,Mysore,2,0,0,25513,Amit Kumar Traders;Priya Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0249,COMP-0029,Tamil Nadu,Chennai,1,0,1140900,47084,Rajesh Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0250,COMP-0029,Tamil Nadu,Coimbatore,2,0,10500,13077,Rajesh Gupta Traders;Neha Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0251,COMP-0030,Maharashtra,Mumbai,2,2328500,1287500,68402,Neha Sharma Distributors;Neha Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0252,COMP-0030,Maharashtra,Pune,1,70000,0,79381,Vikram Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0253,COMP-0030,Maharashtra,Nagpur,4,122300,0,49491,Amit Sharma Suppliers;Priya Singh Distributors;Rajesh Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0254,COMP-0030,Gujarat,Ahmedabad,3,1157200,635000,20547,Rajesh Patel Distributors;Neha Sharma Distributors;Priya Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0255,COMP-0030,Gujarat,Surat,1,924000,0,19041,Rajesh Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0256,COMP-0030,Delhi,Delhi,6,2036900,636400,44148,Rajesh Kumar Traders;Neha Gupta Suppliers;Priya Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0257,COMP-0030,Karnataka,Bangalore,1,52000,0,20342,Vikram Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0258,COMP-0030,Karnataka,Mysore,3,735600,554000,59289,Priya Kumar Traders;Vikram Sharma Traders;Neha Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0259,COMP-0030,Tamil Nadu,Chennai,1,0,0,42900,Neha Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0260,COMP-0031,Maharashtra,Pune,2,564500,338700,82816,Priya Sharma Distributors;Amit Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0261,COMP-0031,Gujarat,Ahmedabad,1,437200,0,52981,Priya Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0262,COMP-0031,Gujarat,Surat,3,2090500,0,7298,Priya Kumar Suppliers;Vikram Sharma Traders;Vikram Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0263,COMP-0031,Delhi,Delhi,4,2739700,3000,547,Priya Patel Suppliers;Rajesh Gupta Distributors;Neha Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0264,COMP-0031,Karnataka,Bangalore,1,1695500,0,21749,Vikram Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0265,COMP-0031,Karnataka,Mysore,2,1329000,1172500,16697,Rajesh Kumar Suppliers;Neha Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0266,COMP-0031,Tamil Nadu,Chennai,4,2655700,1273700,32743,Amit Gupta Suppliers;Priya Singh Suppliers;Vikram Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0267,COMP-0032,Maharashtra,Mumbai,3,1074000,976900,4896,Vikram Singh Suppliers;Rajesh Kumar Distributors;Amit Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0268,COMP-0032,Maharashtra,Pune,2,2841800,2206900,16992,Vikram Sharma Traders;Neha Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0269,COMP-0032,Maharashtra,Nagpur,1,333000,0,29419,Amit Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0270,COMP-0032,Gujarat,Ahmedabad,3,235900,1582600,37613,Vikram Patel Traders;Vikram Patel Suppliers;Amit Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0271,COMP-0032,Gujarat,Surat,3,887000,1078000,5105,Vikram Kumar Suppliers;Neha Sharma Suppliers;Vikram Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0272,COMP-0032,Delhi,Delhi,4,1107400,2700,48795,Neha Singh Distributors;Vikram Sharma Distributors;Neha Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0273,COMP-0032,Karnataka,Bangalore,1,14000,0,50101,Rajesh Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0274,COMP-0032,Karnataka,Mysore,2,485900,0,97459,Rajesh Sharma Traders;Vikram Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0275,COMP-0032,Tamil Nadu,Chennai,1,782000,0,61354,Priya Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0276,COMP-0032,Tamil Nadu,Coimbatore,2,978000,0,59193,Priya Singh Suppliers;Vikram Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0277,COMP-0033,Maharashtra,Mumbai,1,415000,21000,13380,Amit Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0278,COMP-0033,Maharashtra,Pune,1,15300,0,24176,Rajesh Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0279,COMP-0033,Maharashtra,Nagpur,1,0,0,47110,Rajesh Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0280,COMP-0033,Gujarat,Ahmedabad,2,649200,2700,10330,Amit Singh Traders;Neha Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0281,COMP-0033,Gujarat,Surat,1,133600,715000,86415,Neha Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0282,COMP-0033,Delhi,Delhi,2,2093900,370500,48360,Priya Sharma Suppliers;Neha Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0283,COMP-0033,Karnataka,Bangalore,3,2421700,0,67981,Rajesh Singh Suppliers;Vikram Patel Suppliers;Rajesh Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0284,COMP-0033,Karnataka,Mysore,1,990000,407500,73906,Rajesh Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0285,COMP-0033,Tamil Nadu,Chennai,2,455000,702300,96544,Amit Gupta Distributors;Vikram Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0286,COMP-0033,Tamil Nadu,Coimbatore,2,764500,1313500,5698,Priya Singh Suppliers;Rajesh Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0287,COMP-0034,Maharashtra,Mumbai,3,1003000,580500,34392,Priya Kumar Suppliers;Rajesh Kumar Suppliers;Vikram Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0288,COMP-0034,Maharashtra,Pune,2,2211000,340500,13407,Amit Gupta Suppliers;Priya Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0289,COMP-0034,Maharashtra,Nagpur,3,225500,590000,67709,Vikram Sharma Traders;Vikram Gupta Suppliers;Priya Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0290,COMP-0034,Gujarat,Ahmedabad,2,697700,0,82448,Rajesh Kumar Distributors;Amit Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0291,COMP-0034,Gujarat,Surat,1,244500,0,21758,Rajesh Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0292,COMP-0034,Delhi,Delhi,3,1775000,1497000,66432,Vikram Sharma Distributors;Priya Gupta Suppliers;Priya Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0293,COMP-0034,Karnataka,Bangalore,1,680000,582500,1569,Neha Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0294,COMP-0034,Karnataka,Mysore,2,1308500,484500,44146,Priya Sharma Suppliers;Amit Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0295,COMP-0034,Tamil Nadu,Chennai,1,732000,0,9102,Priya Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0296,COMP-0034,Tamil Nadu,Coimbatore,5,1307000,1799700,54108,Priya Kumar Traders;Vikram Patel Suppliers;Vikram Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0297,COMP-0035,Maharashtra,Mumbai,2,0,1364000,52762,Priya Kumar Traders;Neha Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0298,COMP-0035,Maharashtra,Pune,5,3061500,952800,56538,Neha Patel Suppliers;Priya Patel Traders;Priya Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0299,COMP-0035,Maharashtra,Nagpur,1,1187000,741300,5694,Priya Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0300,COMP-0035,Gujarat,Ahmedabad,1,666000,0,93013,Neha Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0301,COMP-0035,Gujarat,Surat,2,1624500,0,71075,Rajesh Gupta Distributors;Neha Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0302,COMP-0035,Delhi,Delhi,5,914500,2455000,15041,Amit Singh Traders;Rajesh Kumar Suppliers;Priya Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0303,COMP-0035,Karnataka,Bangalore,1,0,435000,23552,Priya Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0304,COMP-0035,Karnataka,Mysore,1,678200,450500,28509,Priya Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0305,COMP-0035,Tamil Nadu,Chennai,1,0,0,75905,Neha Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0306,COMP-0035,Tamil Nadu,Coimbatore,1,668000,0,16657,Vikram Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0307,COMP-0036,Maharashtra,Mumbai,2,1302300,65000,63936,Priya Gupta Traders;Rajesh Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0308,COMP-0036,Maharashtra,Pune,1,0,500000,69101,Neha Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0309,COMP-0036,Gujarat,Ahmedabad,1,0,59500,72525,Vikram Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0310,COMP-0036,Delhi,Delhi,6,8033900,1353000,38523,Neha Patel Distributors;Rajesh Kumar Distributors;Neha Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0311,COMP-0036,Karnataka,Bangalore,2,347400,1187700,36098,Neha Gupta Suppliers;Amit Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0312,COMP-0036,Karnataka,Mysore,2,4500,430000,63689,Amit Kumar Distributors;Amit Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0313,COMP-0036,Tamil Nadu,Chennai,2,342000,1935500,83215,Neha Sharma Distributors;Amit Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0314,COMP-0037,Maharashtra,Mumbai,2,480000,1207000,80505,Priya Kumar Suppliers;Priya Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0315,COMP-0037,Maharashtra,Pune,1,483600,0,4409,Neha Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0316,COMP-0037,Maharashtra,Nagpur,1,1049500,1038000,76507,Vikram Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0317,COMP-0037,Gujarat,Ahmedabad,4,2781100,3021900,72990,Vikram Kumar Distributors;Rajesh Gupta Traders;Priya Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0318,COMP-0037,Gujarat,Surat,3,1311300,1191500,50019,Amit Patel Suppliers;Neha Gupta Distributors;Vikram Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0319,COMP-0037,Delhi,Delhi,3,931000,1385000,25388,Priya Kumar Distributors;Rajesh Singh Traders;Vikram Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0320,COMP-0037,Karnataka,Bangalore,1,346000,440000,54563,Priya Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0321,COMP-0037,Karnataka,Mysore,1,30000,40500,10865,Neha Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0322,COMP-0037,Tamil Nadu,Chennai,3,479500,1067700,42779,Amit Gupta Traders;Neha Sharma Traders;Neha Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0323,COMP-0037,Tamil Nadu,Coimbatore,3,1176500,1095400,18420,Rajesh Kumar Distributors;Vikram Kumar Traders;Amit Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0324,COMP-0038,Maharashtra,Mumbai,2,0,1171500,62080,Priya Singh Distributors;Neha Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0325,COMP-0038,Maharashtra,Pune,1,0,188000,51237,Neha Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0326,COMP-0038,Maharashtra,Nagpur,2,1667000,0,80150,Priya Sharma Traders;Priya Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0327,COMP-0038,Gujarat,Ahmedabad,4,1575300,926500,42330,Priya Sharma Suppliers;Neha Sharma Distributors;Vikram Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0328,COMP-0038,Gujarat,Surat,1,0,515000,72306,Neha Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0329,COMP-0038,Delhi,Delhi,5,258000,277500,36942,Rajesh Sharma Distributors;Priya Patel Distributors;Rajesh Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0330,COMP-0038,Karnataka,Bangalore,1,0,0,39681,Neha Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0331,COMP-0038,Karnataka,Mysore,6,3757900,1623000,39705,Priya Singh Distributors;Vikram Patel Suppliers;Neha Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0332,COMP-0038,Tamil Nadu,Coimbatore,1,578000,0,20354,Amit Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0333,COMP-0039,Maharashtra,Mumbai,1,0,1972500,1941,Priya Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0334,COMP-0039,Maharashtra,Pune,1,0,0,18972,Amit Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0335,COMP-0039,Maharashtra,Nagpur,2,396500,0,20980,Neha Patel Distributors;Vikram Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0336,COMP-0039,Gujarat,Ahmedabad,4,2274400,1964500,34016,Rajesh Gupta Distributors;Amit Patel Traders;Neha Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0337,COMP-0039,Delhi,Delhi,5,1679400,1443800,90974,Amit Kumar Suppliers;Priya Sharma Distributors;Amit Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0338,COMP-0039,Karnataka,Bangalore,3,9000,0,72787,Rajesh Patel Traders;Rajesh Kumar Distributors;Rajesh Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0339,COMP-0039,Karnataka,Mysore,2,871600,1380600,19552,Rajesh Singh Traders;Amit Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0340,COMP-0040,Maharashtra,Mumbai,1,620500,329500,32907,Vikram Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0341,COMP-0040,Gujarat,Ahmedabad,2,360000,1724300,70345,Amit Singh Distributors;Rajesh Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0342,COMP-0040,Gujarat,Surat,1,130000,0,71331,Neha Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0343,COMP-0040,Delhi,Delhi,7,4349500,2064500,51496,Rajesh Patel Distributors;Priya Patel Traders;Priya Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0344,COMP-0040,Karnataka,Mysore,1,576400,0,25086,Priya Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0345,COMP-0040,Tamil Nadu,Chennai,1,0,600000,94920,Amit Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0346,COMP-0040,Tamil Nadu,Coimbatore,2,610000,1383000,9240,Amit Gupta Distributors;Neha Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0347,COMP-0041,Maharashtra,Mumbai,3,2864000,75000,32023,Priya Singh Distributors;Vikram Gupta Suppliers;Rajesh Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0348,COMP-0041,Maharashtra,Pune,3,440000,1542900,60488,Amit Patel Traders;Priya Sharma Distributors;Rajesh Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0349,COMP-0041,Maharashtra,Nagpur,3,0,0,30763,Vikram Gupta Traders;Priya Sharma Distributors;Priya Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0350,COMP-0041,Gujarat,Ahmedabad,1,0,443000,60558,Rajesh Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0351,COMP-0041,Gujarat,Surat,1,1205000,0,10067,Rajesh Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0352,COMP-0041,Delhi,Delhi,1,240000,2700,39348,Amit Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0353,COMP-0041,Karnataka,Bangalore,2,1395000,523000,48102,Amit Kumar Suppliers;Neha Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0354,COMP-0041,Karnataka,Mysore,3,1061800,960500,5446,Vikram Sharma Traders;Rajesh Singh Distributors;Amit Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0355,COMP-0041,Tamil Nadu,Chennai,3,734000,955400,29669,Neha Singh Distributors;Rajesh Kumar Suppliers;Amit Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0356,COMP-0042,Maharashtra,Pune,2,547600,1724000,9656,Priya Singh Suppliers;Priya Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0357,COMP-0042,Maharashtra,Nagpur,1,0,0,14401,Priya Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0358,COMP-0042,Gujarat,Ahmedabad,2,28000,4500,69863,Neha Sharma Traders;Amit Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0359,COMP-0042,Gujarat,Surat,4,1073000,1264700,4137,Amit Gupta Traders;Rajesh Sharma Distributors;Vikram Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0360,COMP-0042,Delhi,Delhi,8,1477900,966500,91154,Rajesh Gupta Distributors;Priya Sharma Distributors;Rajesh Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0361,COMP-0042,Karnataka,Mysore,3,984000,2050600,19988,Amit Gupta Suppliers;Vikram Kumar Distributors;Rajesh Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0362,COMP-0042,Tamil Nadu,Chennai,1,960000,256000,49841,Neha Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0363,COMP-0042,Tamil Nadu,Coimbatore,2,0,792500,89003,Priya Kumar Suppliers;Vikram Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0364,COMP-0043,Maharashtra,Pune,2,135000,0,49892,Rajesh Kumar Suppliers;Amit Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0365,COMP-0043,Maharashtra,Nagpur,3,3557600,339800,82745,Priya Patel Distributors;Vikram Kumar Distributors;Neha Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0366,COMP-0043,Gujarat,Surat,2,822000,528000,76960,Vikram Kumar Distributors;Priya Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0367,COMP-0043,Delhi,Delhi,5,2407000,590000,15962,Amit Patel Distributors;Rajesh Sharma Distributors;Neha Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0368,COMP-0043,Karnataka,Bangalore,1,250500,802300,34546,Priya Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0369,COMP-0043,Karnataka,Mysore,1,974000,0,15928,Amit Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0370,COMP-0043,Tamil Nadu,Coimbatore,1,253000,165000,79204,Rajesh Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0371,COMP-0044,Maharashtra,Mumbai,3,65000,2274000,99907,Neha Kumar Distributors;Priya Patel Distributors;Amit Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0372,COMP-0044,Maharashtra,Nagpur,5,1265200,847600,32576,Vikram Patel Suppliers;Vikram Gupta Suppliers;Amit Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0373,COMP-0044,Gujarat,Ahmedabad,2,285900,1207700,87757,Priya Gupta Distributors;Vikram Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0374,COMP-0044,Gujarat,Surat,2,24500,106000,75202,Priya Sharma Distributors;Rajesh Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0375,COMP-0044,Delhi,Delhi,3,1102100,1512500,53577,Amit Kumar Suppliers;Priya Kumar Traders;Neha Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0376,COMP-0044,Karnataka,Mysore,5,4679000,1659700,839,Rajesh Patel Distributors;Neha Patel Traders;Rajesh Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0377,COMP-0044,Tamil Nadu,Chennai,3,3227800,400000,50231,Rajesh Patel Distributors;Priya Patel Distributors;Vikram Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0378,COMP-0044,Tamil Nadu,Coimbatore,1,0,275000,11176,Neha Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0379,COMP-0045,Maharashtra,Mumbai,2,258300,0,3212,Rajesh Patel Traders;Priya Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0380,COMP-0045,Maharashtra,Pune,1,0,237000,34562,Amit Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0381,COMP-0045,Maharashtra,Nagpur,1,1591400,0,59532,Neha Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0382,COMP-0045,Gujarat,Ahmedabad,2,0,349400,12126,Priya Kumar Distributors;Amit Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0383,COMP-0045,Gujarat,Surat,3,1420300,120000,65714,Rajesh Singh Suppliers;Priya Gupta Traders;Priya Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0384,COMP-0045,Delhi,Delhi,2,1893400,270400,74430,Priya Patel Distributors;Vikram Singh Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0385,COMP-0045,Karnataka,Mysore,4,320900,2191000,97564,Neha Patel Distributors;Vikram Patel Suppliers;Rajesh Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0386,COMP-0045,Tamil Nadu,Chennai,2,69000,1234000,16271,Vikram Kumar Suppliers;Priya Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0387,COMP-0045,Tamil Nadu,Coimbatore,2,0,1769500,13360,Neha Sharma Distributors;Vikram Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0388,COMP-0046,Maharashtra,Nagpur,4,2519400,830000,76042,Neha Sharma Traders;Amit Singh Suppliers;Neha Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0389,COMP-0046,Gujarat,Ahmedabad,1,715000,885000,80692,Vikram Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0390,COMP-0046,Gujarat,Surat,1,391000,673400,16409,Neha Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0391,COMP-0046,Delhi,Delhi,5,3530700,2750800,96159,Vikram Sharma Suppliers;Rajesh Sharma Suppliers;Priya Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0392,COMP-0046,Karnataka,Bangalore,1,1018500,0,41330,Vikram Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0393,COMP-0046,Karnataka,Mysore,1,527000,270000,49593,Vikram Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0394,COMP-0046,Tamil Nadu,Chennai,1,65500,12000,86216,Priya Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0395,COMP-0046,Tamil Nadu,Coimbatore,1,1386000,594000,88675,Vikram Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0396,COMP-0047,Maharashtra,Mumbai,1,1438000,1021000,78544,Rajesh Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0397,COMP-0047,Gujarat,Ahmedabad,4,5066500,1372200,18745,Amit Sharma Traders;Rajesh Kumar Traders;Priya Singh Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0398,COMP-0047,Gujarat,Surat,3,414000,945000,39816,Rajesh Patel Suppliers;Rajesh Patel Suppliers;Amit Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0399,COMP-0047,Delhi,Delhi,4,440000,1925600,95195,Amit Sharma Distributors;Rajesh Gupta Traders;Vikram Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0400,COMP-0047,Karnataka,Bangalore,1,3000,521200,63727,Amit Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0401,COMP-0047,Tamil Nadu,Chennai,3,1572500,882900,53635,Amit Sharma Suppliers;Rajesh Sharma Suppliers;Neha Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0402,COMP-0047,Tamil Nadu,Coimbatore,1,1190500,0,73426,Priya Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0403,COMP-0048,Maharashtra,Mumbai,1,936000,0,72379,Vikram Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0404,COMP-0048,Maharashtra,Pune,5,4349000,266800,87697,Rajesh Sharma Suppliers;Amit Gupta Distributors;Rajesh Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0405,COMP-0048,Maharashtra,Nagpur,1,195000,0,27711,Amit Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0406,COMP-0048,Gujarat,Ahmedabad,2,456500,425000,37940,Rajesh Gupta Suppliers;Priya Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0407,COMP-0048,Delhi,Delhi,6,944400,1078000,8308,Neha Gupta Traders;Priya Kumar Traders;Neha Patel Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0408,COMP-0048,Karnataka,Bangalore,1,785800,820000,5933,Rajesh Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0409,COMP-0048,Karnataka,Mysore,1,0,476000,28894,Vikram Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0410,COMP-0048,Tamil Nadu,Chennai,3,927500,0,34319,Amit Kumar Suppliers;Neha Sharma Distributors;Rajesh Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0411,COMP-0048,Tamil Nadu,Coimbatore,3,130000,1011300,10288,Neha Sharma Traders;Amit Gupta Traders;Neha Sharma Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0412,COMP-0049,Maharashtra,Pune,1,977900,285000,36818,Rajesh Kumar Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0413,COMP-0049,Maharashtra,Nagpur,2,0,76300,12220,Neha Patel Distributors;Priya Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0414,COMP-0049,Gujarat,Ahmedabad,2,0,1415000,25952,Amit Singh Traders;Vikram Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0415,COMP-0049,Gujarat,Surat,2,675000,0,99040,Vikram Sharma Suppliers;Rajesh Kumar Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0416,COMP-0049,Delhi,Delhi,8,3159400,1293500,9143,Rajesh Singh Suppliers;Priya Gupta Suppliers;Priya Kumar Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0417,COMP-0049,Karnataka,Bangalore,2,164000,0,67589,Amit Gupta Traders;Rajesh Gupta Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0418,COMP-0049,Karnataka,Mysore,1,71800,534500,13584,Rajesh Singh Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0419,COMP-0049,Tamil Nadu,Chennai,2,0,997800,14531,Priya Gupta Distributors;Rajesh Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0420,COMP-0049,Tamil Nadu,Coimbatore,3,330000,690000,73710,Vikram Gupta Traders;Priya Sharma Distributors;Neha Sharma Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0421,COMP-0050,Maharashtra,Mumbai,2,1648000,1643200,83032,Amit Singh Distributors;Vikram Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0422,COMP-0050,Maharashtra,Pune,2,4500,293000,13574,Amit Gupta Distributors;Neha Gupta Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0423,COMP-0050,Maharashtra,Nagpur,1,1913000,255500,40901,Priya Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0424,COMP-0050,Gujarat,Ahmedabad,1,50500,0,1272,Priya Patel Distributors,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0425,COMP-0050,Gujarat,Surat,1,760400,0,44801,Rajesh Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0426,COMP-0050,Delhi,Delhi,4,392200,492900,11262,Priya Sharma Traders;Neha Sharma Distributors;Priya Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0427,COMP-0050,Karnataka,Bangalore,2,126000,0,91410,Vikram Singh Suppliers;Rajesh Sharma Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0428,COMP-0050,Tamil Nadu,Chennai,2,95500,992000,92257,Vikram Singh Suppliers;Rajesh Gupta Suppliers,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00
+GEO-0429,COMP-0050,Tamil Nadu,Coimbatore,4,2003400,984000,30337,Priya Sharma Traders;Neha Sharma Suppliers;Amit Patel Traders,iPhone 15;Samsung S24,2024-04-01,2024-04-30,2024-05-01 08:00:00,2024-05-01 08:00:00

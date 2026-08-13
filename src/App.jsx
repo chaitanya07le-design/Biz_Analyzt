@@ -7,7 +7,8 @@ import CompanySelection from './pages/CompanySelection';
 import DashboardLayout from './components/Layout/DashboardLayout';
 import Dashboard from './pages/Dashboard';
 import VoucherDetail from './pages/VoucherDetail';
-import LedgerDetail from './pages/LedgerDetail';
+import PartyStatement from './pages/PartyStatement';
+import LedgerDetail from './pages/Masters/LedgerDetail';
 import ReportPage from './pages/ReportPage';
 import CashBankPage from './pages/CashBankPage';
 import Outstanding from './pages/Outstanding';
@@ -126,11 +127,11 @@ function AppRoutes() {
           <Route path="masters/accounts" element={<Accounts />} />
           <Route path="ledger/:ledgerId" element={<LedgerDetail />} />
           <Route path=":module" element={<ReportPage />} />
-          <Route path=":module/:partyId" element={<LedgerDetail />} />
+          <Route path=":module/:partyId" element={<PartyStatement />} />
           <Route path="cash-bank" element={<CashBankPage />} />
           <Route path="cash-bank/:ledgerId" element={<LedgerDetail />} />
           <Route path="outstanding" element={<Outstanding />} />
-          <Route path="outstanding/:partyId" element={<LedgerDetail />} />
+          <Route path="outstanding/:partyId" element={<PartyStatement />} />
           <Route path="items" element={<ItemsPage />} />
           <Route path="items/:itemId" element={<ComingSoon />} />
           <Route path="reports" element={<ReportsPage />} />

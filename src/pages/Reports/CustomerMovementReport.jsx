@@ -230,7 +230,7 @@ const CustomerMovementReport = () => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: idx * 0.01 }}
                     className="hover:bg-canvas-subtle cursor-pointer"
-                    onClick={() => navigate(`/ledger/${row.partyId}`)}
+                    onClick={() => navigate(`/outstanding/${row.partyId}`)}
                   >
                     <td className="px-4 py-3 font-medium text-ink-default">{row.partyName}</td>
                     <td className="px-4 py-3 text-ink-muted">{row.city}, {row.state}</td>

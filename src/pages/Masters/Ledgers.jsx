@@ -10,23 +10,46 @@ const formatCurrency = (amount) => {
 };
 
 export default function Ledgers() {
-  const { ledgers, loading } = useGoogleSheetsData();
+  const { ledgers, groups, loading } = useGoogleSheetsData();
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
 
   const ledgersList = ledgers || [];
+  const groupsList = groups || [];
+
+  const groupsById = useMemo(() => {
+    const map = {};
+    groupsList.forEach(g => {
+      const id = g.GroupID || g.id;
+      if (id) map[id] = g;
+    });
+    return map;
+  }, [groupsList]);
 
   const normalizedLedgers = useMemo(() => {
-    return ledgersList.map(l => ({
-      id: l.LedgerID || l.id,
-      name: l.LedgerName || l.name || '',
-      group: l.Group || l.group || '',
-      groupId: l.GroupID || l.groupId || '',
-      type: l.LedgerType || l.type || '',
-      balance: parseFloat(l.OpeningBalance || l.balance || 0),
-    }));
-  }, [ledgersList]);
+    return ledgersList.map(l => {
+      const groupId = l.GroupID || l.groupId || '';
+      const group = groupsById[groupId] || {};
+      const nature = (group.Nature || '').toLowerCase();
+      
+      let type = nature;
+      if (nature === 'income') {
+        type = 'revenue';
+      } else if (nature === 'equity') {
+        type = 'liability';
+      }
+      
+      return {
+        id: l.LedgerID || l.id,
+        name: l.LedgerName || l.name || '',
+        group: group.GroupName || l.Group || l.group || '',
+        groupId: groupId,
+        type: type,
+        balance: parseFloat(l.OpeningBalance || l.balance || 0),
+      };
+    });
+  }, [ledgersList, groupsById]);
 
   const filtered = normalizedLedgers.filter(l => {
     const matchesSearch = l.name.toLowerCase().includes(search.toLowerCase()) ||

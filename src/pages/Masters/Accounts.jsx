@@ -1,6 +1,7 @@
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import EntityDetailModal from '../../components/shared/EntityDetailModal';
 import { Plus, Search, Building2, Wallet } from 'lucide-react';
 import { useState, useMemo } from 'react';
 
@@ -12,27 +13,29 @@ export default function Accounts() {
   const { bankAccounts, cashAccounts, loading } = useGoogleSheetsData();
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
+  const [selectedAccount, setSelectedAccount] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const bankAccountsList = bankAccounts || [];
   const cashAccountsList = cashAccounts || [];
 
   const normalizedAccounts = useMemo(() => {
     const bankAccs = bankAccountsList.map(b => ({
-      id: b.BankID || b.id,
-      name: b.BankName || b.name || '',
+      id: b.AccountID,
+      name: b.BankName || '',
       type: 'Bank',
-      accountNo: b.AccountNo || b.accountNo || '',
-      branch: b.BranchName || b.branch || '',
-      balance: parseFloat(b.OpeningBalance || b.balance || 0),
+      accountNo: b.AccountNumber || '',
+      branch: b.BranchName || '',
+      balance: parseFloat(b.OpeningBalance || 0),
     }));
     
     const cashAccs = cashAccountsList.map(c => ({
-      id: c.CashID || c.id,
-      name: c.CashType || c.name || 'Cash',
+      id: c.AccountID,
+      name: c.AccountName || 'Cash',
       type: 'Cash',
       accountNo: '',
       branch: '',
-      balance: parseFloat(c.OpeningBalance || c.balance || 0),
+      balance: parseFloat(c.OpeningBalance || 0),
     }));
     
     return [...bankAccs, ...cashAccs];
@@ -46,6 +49,11 @@ export default function Accounts() {
   });
 
   const totalBalance = filtered.reduce((sum, a) => sum + a.balance, 0);
+
+  const handleAccountClick = (account) => {
+    setSelectedAccount(account);
+    setModalOpen(true);
+  };
 
   return (
     <div className="space-y-6">
@@ -97,6 +105,7 @@ export default function Accounts() {
           {filtered.map((account) => (
             <div
               key={account.id}
+              onClick={() => handleAccountClick(account)}
               className="p-4 rounded-xl border border-line hover:border-brand-300 hover:bg-brand-50/30 transition-all cursor-pointer"
             >
               <div className="flex items-start gap-3">
@@ -148,6 +157,13 @@ export default function Accounts() {
           </span>
         </div>
       </Card>
+
+      <EntityDetailModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        entityType={selectedAccount?.type?.toLowerCase() || 'bank'}
+        entityId={selectedAccount?.id}
+      />
     </div>
   );
 }

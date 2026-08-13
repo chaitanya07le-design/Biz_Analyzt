@@ -26,6 +26,7 @@ import {
   ArrowRightLeft,
   Percent,
   IndianRupee,
+  Map,
 } from 'lucide-react'
 
 export const NAV_ITEMS = [
@@ -80,6 +81,13 @@ export const NAV_ITEMS = [
       { path: '/reports/top', label: 'Top Report', icon: TrendingUp },
       { path: '/reports/expenses', label: 'Expenses', icon: Receipt },
       { path: '/reports/customer', label: 'Customer Report', icon: Users },
+      { path: '/reports/stock-aging', label: 'Stock Aging', icon: Package },
+      { path: '/reports/stock-status', label: 'Stock Status', icon: Package },
+      { path: '/reports/customer-movement', label: 'Customer Movement', icon: Users },
+      { path: '/reports/sync-log', label: 'Sync Log', icon: RefreshCw },
+      { path: '/reports/trends', label: 'Trend Charts', icon: TrendingUp },
+      { path: '/reports/geographic', label: 'Geographic Report', icon: Map },
+      { path: '/reports/brands', label: 'Top Brands', icon: Tags },
     ],
   },
   {

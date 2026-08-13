@@ -1,6 +1,7 @@
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import EntityDetailModal from '../../components/shared/EntityDetailModal';
 import { Plus, Search, FolderOpen, ChevronRight } from 'lucide-react';
 import { useState, useMemo } from 'react';
 
@@ -8,6 +9,8 @@ export default function Groups() {
   const { groups, loading } = useGoogleSheetsData();
   const [search, setSearch] = useState('');
   const [expandedGroups, setExpandedGroups] = useState(new Set());
+  const [selectedGroupId, setSelectedGroupId] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const groupsList = groups || [];
 
@@ -49,6 +52,11 @@ export default function Groups() {
     return colors[type] || 'bg-gray-50 text-gray-700';
   };
 
+  const handleGroupClick = (group) => {
+    setSelectedGroupId(group.id);
+    setModalOpen(true);
+  };
+
   const renderGroup = (group, level = 0) => {
     const children = childGroups(group.id);
     const hasChildren = children.length > 0;
@@ -58,7 +66,12 @@ export default function Groups() {
       <div key={group.id}>
         <div 
           className={`flex items-center justify-between px-4 py-3 hover:bg-ink-50 cursor-pointer transition-colors ${level > 0 ? 'ml-6 border-l-2 border-canvas-faint' : ''}`}
-          onClick={() => hasChildren && toggleGroup(group.id)}
+          onClick={(e) => {
+            if (hasChildren && !e.detail || e.detail === 1) {
+              toggleGroup(group.id);
+            }
+          }}
+          onDoubleClick={() => handleGroupClick(group)}
         >
           <div className="flex items-center gap-3">
             {hasChildren ? (
@@ -79,6 +92,15 @@ export default function Groups() {
             <span className={`text-xs font-medium px-2 py-1 rounded ${getGroupTypeColor(group.type)}`}>
               {group.type}
             </span>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleGroupClick(group);
+              }}
+              className="text-xs text-brand-600 hover:underline"
+            >
+              View Ledgers
+            </button>
           </div>
         </div>
         {hasChildren && isExpanded && (
@@ -124,6 +146,13 @@ export default function Groups() {
           </span>
         </div>
       </Card>
+
+      <EntityDetailModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        entityType="group"
+        entityId={selectedGroupId}
+      />
     </div>
   );
 }
