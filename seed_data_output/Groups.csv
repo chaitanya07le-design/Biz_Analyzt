@@ -1,0 +1,351 @@
+GroupID,CompanyID,GroupName,ParentGroup,GroupType,Nature,StatementType,CreatedDate,LastModifiedDate
+GRP-0001_COMP-0001,COMP-0001,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0001,COMP-0001,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0001,COMP-0001,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0001,COMP-0001,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0001,COMP-0001,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0001,COMP-0001,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0001,COMP-0001,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0002,COMP-0002,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0002,COMP-0002,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0002,COMP-0002,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0002,COMP-0002,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0002,COMP-0002,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0002,COMP-0002,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0002,COMP-0002,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0003,COMP-0003,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0003,COMP-0003,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0003,COMP-0003,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0003,COMP-0003,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0003,COMP-0003,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0003,COMP-0003,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0003,COMP-0003,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0004,COMP-0004,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0004,COMP-0004,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0004,COMP-0004,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0004,COMP-0004,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0004,COMP-0004,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0004,COMP-0004,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0004,COMP-0004,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0005,COMP-0005,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0005,COMP-0005,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0005,COMP-0005,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0005,COMP-0005,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0005,COMP-0005,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0005,COMP-0005,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0005,COMP-0005,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0006,COMP-0006,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0006,COMP-0006,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0006,COMP-0006,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0006,COMP-0006,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0006,COMP-0006,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0006,COMP-0006,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0006,COMP-0006,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0007,COMP-0007,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0007,COMP-0007,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0007,COMP-0007,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0007,COMP-0007,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0007,COMP-0007,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0007,COMP-0007,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0007,COMP-0007,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0008,COMP-0008,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0008,COMP-0008,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0008,COMP-0008,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0008,COMP-0008,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0008,COMP-0008,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0008,COMP-0008,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0008,COMP-0008,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0009,COMP-0009,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0009,COMP-0009,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0009,COMP-0009,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0009,COMP-0009,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0009,COMP-0009,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0009,COMP-0009,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0009,COMP-0009,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0010,COMP-0010,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0010,COMP-0010,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0010,COMP-0010,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0010,COMP-0010,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0010,COMP-0010,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0010,COMP-0010,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0010,COMP-0010,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0011,COMP-0011,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0011,COMP-0011,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0011,COMP-0011,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0011,COMP-0011,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0011,COMP-0011,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0011,COMP-0011,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0011,COMP-0011,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0012,COMP-0012,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0012,COMP-0012,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0012,COMP-0012,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0012,COMP-0012,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0012,COMP-0012,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0012,COMP-0012,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0012,COMP-0012,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0013,COMP-0013,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0013,COMP-0013,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0013,COMP-0013,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0013,COMP-0013,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0013,COMP-0013,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0013,COMP-0013,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0013,COMP-0013,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0014,COMP-0014,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0014,COMP-0014,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0014,COMP-0014,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0014,COMP-0014,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0014,COMP-0014,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0014,COMP-0014,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0014,COMP-0014,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0015,COMP-0015,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0015,COMP-0015,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0015,COMP-0015,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0015,COMP-0015,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0015,COMP-0015,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0015,COMP-0015,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0015,COMP-0015,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0016,COMP-0016,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0016,COMP-0016,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0016,COMP-0016,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0016,COMP-0016,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0016,COMP-0016,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0016,COMP-0016,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0016,COMP-0016,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0017,COMP-0017,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0017,COMP-0017,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0017,COMP-0017,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0017,COMP-0017,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0017,COMP-0017,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0017,COMP-0017,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0017,COMP-0017,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0018,COMP-0018,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0018,COMP-0018,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0018,COMP-0018,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0018,COMP-0018,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0018,COMP-0018,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0018,COMP-0018,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0018,COMP-0018,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0019,COMP-0019,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0019,COMP-0019,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0019,COMP-0019,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0019,COMP-0019,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0019,COMP-0019,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0019,COMP-0019,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0019,COMP-0019,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0020,COMP-0020,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0020,COMP-0020,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0020,COMP-0020,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0020,COMP-0020,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0020,COMP-0020,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0020,COMP-0020,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0020,COMP-0020,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0021,COMP-0021,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0021,COMP-0021,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0021,COMP-0021,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0021,COMP-0021,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0021,COMP-0021,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0021,COMP-0021,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0021,COMP-0021,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0022,COMP-0022,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0022,COMP-0022,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0022,COMP-0022,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0022,COMP-0022,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0022,COMP-0022,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0022,COMP-0022,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0022,COMP-0022,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0023,COMP-0023,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0023,COMP-0023,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0023,COMP-0023,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0023,COMP-0023,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0023,COMP-0023,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0023,COMP-0023,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0023,COMP-0023,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0024,COMP-0024,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0024,COMP-0024,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0024,COMP-0024,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0024,COMP-0024,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0024,COMP-0024,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0024,COMP-0024,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0024,COMP-0024,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0025,COMP-0025,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0025,COMP-0025,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0025,COMP-0025,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0025,COMP-0025,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0025,COMP-0025,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0025,COMP-0025,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0025,COMP-0025,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0026,COMP-0026,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0026,COMP-0026,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0026,COMP-0026,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0026,COMP-0026,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0026,COMP-0026,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0026,COMP-0026,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0026,COMP-0026,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0027,COMP-0027,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0027,COMP-0027,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0027,COMP-0027,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0027,COMP-0027,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0027,COMP-0027,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0027,COMP-0027,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0027,COMP-0027,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0028,COMP-0028,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0028,COMP-0028,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0028,COMP-0028,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0028,COMP-0028,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0028,COMP-0028,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0028,COMP-0028,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0028,COMP-0028,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0029,COMP-0029,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0029,COMP-0029,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0029,COMP-0029,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0029,COMP-0029,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0029,COMP-0029,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0029,COMP-0029,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0029,COMP-0029,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0030,COMP-0030,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0030,COMP-0030,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0030,COMP-0030,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0030,COMP-0030,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0030,COMP-0030,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0030,COMP-0030,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0030,COMP-0030,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0031,COMP-0031,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0031,COMP-0031,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0031,COMP-0031,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0031,COMP-0031,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0031,COMP-0031,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0031,COMP-0031,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0031,COMP-0031,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0032,COMP-0032,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0032,COMP-0032,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0032,COMP-0032,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0032,COMP-0032,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0032,COMP-0032,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0032,COMP-0032,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0032,COMP-0032,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0033,COMP-0033,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0033,COMP-0033,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0033,COMP-0033,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0033,COMP-0033,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0033,COMP-0033,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0033,COMP-0033,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0033,COMP-0033,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0034,COMP-0034,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0034,COMP-0034,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0034,COMP-0034,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0034,COMP-0034,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0034,COMP-0034,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0034,COMP-0034,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0034,COMP-0034,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0035,COMP-0035,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0035,COMP-0035,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0035,COMP-0035,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0035,COMP-0035,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0035,COMP-0035,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0035,COMP-0035,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0035,COMP-0035,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0036,COMP-0036,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0036,COMP-0036,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0036,COMP-0036,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0036,COMP-0036,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0036,COMP-0036,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0036,COMP-0036,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0036,COMP-0036,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0037,COMP-0037,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0037,COMP-0037,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0037,COMP-0037,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0037,COMP-0037,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0037,COMP-0037,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0037,COMP-0037,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0037,COMP-0037,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0038,COMP-0038,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0038,COMP-0038,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0038,COMP-0038,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0038,COMP-0038,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0038,COMP-0038,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0038,COMP-0038,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0038,COMP-0038,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0039,COMP-0039,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0039,COMP-0039,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0039,COMP-0039,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0039,COMP-0039,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0039,COMP-0039,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0039,COMP-0039,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0039,COMP-0039,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0040,COMP-0040,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0040,COMP-0040,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0040,COMP-0040,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0040,COMP-0040,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0040,COMP-0040,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0040,COMP-0040,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0040,COMP-0040,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0041,COMP-0041,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0041,COMP-0041,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0041,COMP-0041,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0041,COMP-0041,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0041,COMP-0041,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0041,COMP-0041,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0041,COMP-0041,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0042,COMP-0042,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0042,COMP-0042,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0042,COMP-0042,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0042,COMP-0042,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0042,COMP-0042,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0042,COMP-0042,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0042,COMP-0042,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0043,COMP-0043,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0043,COMP-0043,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0043,COMP-0043,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0043,COMP-0043,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0043,COMP-0043,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0043,COMP-0043,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0043,COMP-0043,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0044,COMP-0044,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0044,COMP-0044,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0044,COMP-0044,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0044,COMP-0044,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0044,COMP-0044,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0044,COMP-0044,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0044,COMP-0044,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0045,COMP-0045,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0045,COMP-0045,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0045,COMP-0045,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0045,COMP-0045,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0045,COMP-0045,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0045,COMP-0045,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0045,COMP-0045,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0046,COMP-0046,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0046,COMP-0046,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0046,COMP-0046,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0046,COMP-0046,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0046,COMP-0046,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0046,COMP-0046,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0046,COMP-0046,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0047,COMP-0047,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0047,COMP-0047,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0047,COMP-0047,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0047,COMP-0047,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0047,COMP-0047,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0047,COMP-0047,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0047,COMP-0047,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0048,COMP-0048,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0048,COMP-0048,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0048,COMP-0048,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0048,COMP-0048,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0048,COMP-0048,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0048,COMP-0048,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0048,COMP-0048,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0049,COMP-0049,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0049,COMP-0049,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0049,COMP-0049,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0049,COMP-0049,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0049,COMP-0049,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0049,COMP-0049,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0049,COMP-0049,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0001_COMP-0050,COMP-0050,Capital Account,,Account,Equity,BalanceSheet,2024-01-01,2024-05-01
+GRP-0002_COMP-0050,COMP-0050,Bank Accounts,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0003_COMP-0050,COMP-0050,Cash-in-Hand,,Account,Asset,BalanceSheet,2024-01-01,2024-05-01
+GRP-0004_COMP-0050,COMP-0050,Sales Accounts,,Account,Income,P&L,2024-01-01,2024-05-01
+GRP-0005_COMP-0050,COMP-0050,Purchase Accounts,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0006_COMP-0050,COMP-0050,Direct Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01
+GRP-0007_COMP-0050,COMP-0050,Indirect Expenses,,Account,Expense,P&L,2024-01-01,2024-05-01

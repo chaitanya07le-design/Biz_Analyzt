@@ -1,0 +1,562 @@
+{
+  "created": "1783422455541",
+  "updated": "1783422455541",
+  "name": "Gmail Auto Replier",
+  "description": "",
+  "tags": [],
+  "pieces": [
+    "@puchoaistudio/tool-webhook",
+    "@puchoaistudio/tool-llm-ai"
+  ],
+  "template": {
+    "displayName": "Gmail Auto Replier",
+    "trigger": {
+      "name": "trigger",
+      "valid": true,
+      "displayName": "Catch Webhook",
+      "type": "TOOL_TRIGGER",
+      "settings": {
+        "pieceName": "@puchoaistudio/tool-webhook",
+        "pieceVersion": "2.0.4",
+        "input": {
+          "authType": "none",
+          "authFields": {}
+        },
+        "sampleData": {},
+        "propertySettings": {
+          "authType": {
+            "type": "MANUAL"
+          },
+          "authFields": {
+            "type": "MANUAL",
+            "schema": {}
+          },
+          "liveMarkdown": {
+            "type": "MANUAL"
+          },
+          "syncMarkdown": {
+            "type": "MANUAL"
+          },
+          "testMarkdown": {
+            "type": "MANUAL"
+          }
+        },
+        "triggerName": "catch_webhook"
+      },
+      "nextAction": {
+        "name": "step_3",
+        "skip": false,
+        "type": "ROUTER",
+        "valid": true,
+        "children": [
+          {
+            "name": "step_4",
+            "skip": false,
+            "type": "PIECE",
+            "valid": true,
+            "settings": {
+              "input": {
+                "model": "{\"modelValue\":\"openai/gpt-4o\",\"providerName\":\"OpenRouter\"}",
+                "query": "You are an advanced executive email assistant. Your task is to analyze the provided email thread and generate a highly accurate, structured summary.\nYou will receive a JSON object containing the email thread data. You must respond with a STRICT JSON object representing your analysis. Do NOT wrap your response in markdown code blocks. Output raw JSON only.\nYour output must follow this exact schema:\n{\n  \"tldr\": \"A 1-2 sentence high-level summary of the entire thread.\",\n  \"action_items\": [\"Action item 1\", \"Action item 2\"],\n  \"sentiment\": \"Positive | Neutral | Negative\"\n}\n### Instructions:\n1. **tldr**: Write a concise, 1-2 sentence executive summary of what the conversation is about and its current status.\n2. **action_items**: Extract any direct requests, questions that need answering, or tasks assigned to any party in the thread. If there are no action items, return an empty array `[]`.\n3. **sentiment**: Determine the overall tone of the thread. You must choose exactly one of: \"Positive\", \"Neutral\", or \"Negative\".\n### Input Data Format:\nYou will receive data looking like this:\n{\n  \"subject\": \"Email Subject\",\n  \"thread\": [\n    { \"from\": \"Sender Name <email>\", \"date\": \"...\", \"body\": \"Message content...\" }\n  ]\n}\nEnsure your response is valid JSON that can be parsed programmatically.\n\n\nInput:\n{{trigger['body']}}",
+                "temperature": 0.7,
+                "puchoModelKey": "openai/gpt-4o",
+                "puchoProviderName": "OpenRouter"
+              },
+              "pieceName": "@puchoaistudio/tool-llm-ai",
+              "actionName": "askLlm",
+              "sampleData": {},
+              "pieceVersion": "2.1.1",
+              "propertySettings": {
+                "model": {
+                  "type": "MANUAL"
+                },
+                "query": {
+                  "type": "MANUAL"
+                },
+                "maxTokens": {
+                  "type": "MANUAL"
+                },
+                "temperature": {
+                  "type": "MANUAL"
+                },
+                "maxTokensNote": {
+                  "type": "MANUAL"
+                },
+                "puchoModelKey": {
+                  "type": "MANUAL"
+                },
+                "puchoProviderName": {
+                  "type": "MANUAL"
+                }
+              },
+              "errorHandlingOptions": {
+                "retryOnFailure": {
+                  "value": false
+                },
+                "continueOnFailure": {
+                  "value": false
+                }
+              }
+            },
+            "nextAction": {
+              "name": "step_5",
+              "skip": false,
+              "type": "PIECE",
+              "valid": true,
+              "settings": {
+                "input": {
+                  "fields": {
+                    "body": {
+                      "response": "{{step_4['data']['response']}}"
+                    },
+                    "status": 200,
+                    "headers": {}
+                  },
+                  "respond": "stop",
+                  "responseType": "json"
+                },
+                "pieceName": "@puchoaistudio/tool-webhook",
+                "actionName": "return_response",
+                "sampleData": {},
+                "pieceVersion": "2.0.4",
+                "propertySettings": {
+                  "fields": {
+                    "type": "MANUAL",
+                    "schema": {
+                      "body": {
+                        "type": "JSON",
+                        "required": true,
+                        "displayName": "JSON Body"
+                      },
+                      "status": {
+                        "type": "NUMBER",
+                        "required": false,
+                        "displayName": "Status",
+                        "defaultValue": 200
+                      },
+                      "headers": {
+                        "type": "OBJECT",
+                        "required": false,
+                        "displayName": "Headers"
+                      }
+                    }
+                  },
+                  "respond": {
+                    "type": "MANUAL"
+                  },
+                  "responseType": {
+                    "type": "MANUAL"
+                  }
+                },
+                "errorHandlingOptions": {
+                  "retryOnFailure": {
+                    "value": false
+                  },
+                  "continueOnFailure": {
+                    "value": false
+                  }
+                }
+              },
+              "displayName": "Return Response Copy"
+            },
+            "displayName": "Ask LLM Copy"
+          },
+          {
+            "name": "step_6",
+            "skip": false,
+            "type": "PIECE",
+            "valid": true,
+            "settings": {
+              "input": {
+                "model": "{\"modelValue\":\"openai/gpt-4o\",\"providerName\":\"OpenRouter\"}",
+                "query": "You are an elite executive assistant responsible for reviewing a batch of incoming emails from the last 24 hours and generating a concise, actionable Daily Brief.\nINPUT FORMAT:\nYou will receive a JSON array of emails, each containing a \"subject\" and a \"body\" (which may be a snippet or a full thread).\nYOUR TASK:\n1. Synthesize the key updates, decisions, and overall themes across all the provided emails into a single, cohesive high-level summary (TL;DR).\n2. Extract all explicit requests, deadlines, and action items that the user needs to address into a bulleted checklist.\n3. Determine the overall sentiment or urgency of the inbox (e.g., \"Urgent\", \"Positive\", \"Neutral\", \"Action Required\").\nOUTPUT FORMAT:\nYou MUST respond with ONLY a valid, raw JSON object exactly matching this schema. Do not use markdown blocks (```json). Do not add any conversational text before or after the JSON.\n{\n  \"tldr\": \"A 2-3 sentence executive summary of the most important updates from the emails.\",\n  \"action_items\": [\n    \"Follow up with John regarding the Q3 budget.\",\n    \"Approve the latest Figma designs by 5 PM.\",\n    \"Confirm meeting time for Friday.\"\n  ],\n  \"sentiment\": \"Action Required\"\n}\nIf there are no action items in the emails, return an empty array [] for \"action_items\".\n\n\n\nInput:\n{{trigger['body']['emails']}}",
+                "temperature": 0.7,
+                "puchoModelKey": "openai/gpt-4o",
+                "puchoProviderName": "OpenRouter"
+              },
+              "pieceName": "@puchoaistudio/tool-llm-ai",
+              "actionName": "askLlm",
+              "sampleData": {},
+              "pieceVersion": "2.1.1",
+              "propertySettings": {
+                "model": {
+                  "type": "MANUAL"
+                },
+                "query": {
+                  "type": "MANUAL"
+                },
+                "maxTokens": {
+                  "type": "MANUAL"
+                },
+                "temperature": {
+                  "type": "MANUAL"
+                },
+                "maxTokensNote": {
+                  "type": "MANUAL"
+                },
+                "puchoModelKey": {
+                  "type": "MANUAL"
+                },
+                "puchoProviderName": {
+                  "type": "MANUAL"
+                }
+              },
+              "errorHandlingOptions": {
+                "retryOnFailure": {
+                  "value": false
+                },
+                "continueOnFailure": {
+                  "value": false
+                }
+              }
+            },
+            "nextAction": {
+              "name": "step_7",
+              "skip": false,
+              "type": "PIECE",
+              "valid": true,
+              "settings": {
+                "input": {
+                  "fields": {
+                    "body": {
+                      "response": "{{step_6['data']['response']}}"
+                    },
+                    "status": 200,
+                    "headers": {}
+                  },
+                  "respond": "stop",
+                  "responseType": "json"
+                },
+                "pieceName": "@puchoaistudio/tool-webhook",
+                "actionName": "return_response",
+                "sampleData": {},
+                "pieceVersion": "2.0.4",
+                "propertySettings": {
+                  "fields": {
+                    "type": "MANUAL",
+                    "schema": {
+                      "body": {
+                        "type": "JSON",
+                        "required": true,
+                        "displayName": "JSON Body"
+                      },
+                      "status": {
+                        "type": "NUMBER",
+                        "required": false,
+                        "displayName": "Status",
+                        "defaultValue": 200
+                      },
+                      "headers": {
+                        "type": "OBJECT",
+                        "required": false,
+                        "displayName": "Headers"
+                      }
+                    }
+                  },
+                  "respond": {
+                    "type": "MANUAL"
+                  },
+                  "responseType": {
+                    "type": "MANUAL"
+                  }
+                },
+                "errorHandlingOptions": {
+                  "retryOnFailure": {
+                    "value": false
+                  },
+                  "continueOnFailure": {
+                    "value": false
+                  }
+                }
+              },
+              "displayName": "Return Response Copy Copy"
+            },
+            "displayName": "Ask LLM Copy Copy"
+          },
+          {
+            "name": "step_8",
+            "skip": false,
+            "type": "PIECE",
+            "valid": true,
+            "settings": {
+              "input": {
+                "model": "{\"modelValue\":\"openai/gpt-4o\",\"providerName\":\"OpenRouter\"}",
+                "query": "You are an expert AI email copywriter. The user wants you to draft a brand new email based on their raw instructions. \nUSER DETAILS:\nReceiver Name: {{receiver}}\nDesignation/Company: {{designation}}\nUSER'S INSTRUCTION:\n{{prompt}}\nTASK:\nWrite the email based on the instruction above in 7 different tonal variations.\nThe email should be ready to send, including a subject line at the very top (e.g. \"Subject: \\n\\nBody\").\nYou MUST return a raw JSON object (and nothing else) with exactly this structure:\n{\n  \"replies\": {\n    \"professional\": \"\",\n    \"polite\": \"\",\n    \"short\": \"\",\n    \"direct\": \"\",\n    \"friendly\": \"\",\n    \"persuasive\": \"\",\n    \"creative\": \"\"\n  }\n}\n\nInput:\n{{trigger['body']}}",
+                "temperature": 0.7,
+                "puchoModelKey": "openai/gpt-4o",
+                "puchoProviderName": "OpenRouter"
+              },
+              "pieceName": "@puchoaistudio/tool-llm-ai",
+              "actionName": "askLlm",
+              "sampleData": {},
+              "pieceVersion": "2.1.1",
+              "propertySettings": {
+                "model": {
+                  "type": "MANUAL"
+                },
+                "query": {
+                  "type": "MANUAL"
+                },
+                "maxTokens": {
+                  "type": "MANUAL"
+                },
+                "temperature": {
+                  "type": "MANUAL"
+                },
+                "maxTokensNote": {
+                  "type": "MANUAL"
+                },
+                "puchoModelKey": {
+                  "type": "MANUAL"
+                },
+                "puchoProviderName": {
+                  "type": "MANUAL"
+                }
+              },
+              "errorHandlingOptions": {
+                "retryOnFailure": {
+                  "value": false
+                },
+                "continueOnFailure": {
+                  "value": false
+                }
+              }
+            },
+            "nextAction": {
+              "name": "step_9",
+              "skip": false,
+              "type": "PIECE",
+              "valid": true,
+              "settings": {
+                "input": {
+                  "fields": {
+                    "body": {
+                      "response": "{{step_8['data']['response']}}"
+                    },
+                    "status": 200,
+                    "headers": {}
+                  },
+                  "respond": "stop",
+                  "responseType": "json"
+                },
+                "pieceName": "@puchoaistudio/tool-webhook",
+                "actionName": "return_response",
+                "sampleData": {},
+                "pieceVersion": "2.0.4",
+                "propertySettings": {
+                  "fields": {
+                    "type": "MANUAL",
+                    "schema": {
+                      "body": {
+                        "type": "JSON",
+                        "required": true,
+                        "displayName": "JSON Body"
+                      },
+                      "status": {
+                        "type": "NUMBER",
+                        "required": false,
+                        "displayName": "Status",
+                        "defaultValue": 200
+                      },
+                      "headers": {
+                        "type": "OBJECT",
+                        "required": false,
+                        "displayName": "Headers"
+                      }
+                    }
+                  },
+                  "respond": {
+                    "type": "MANUAL"
+                  },
+                  "responseType": {
+                    "type": "MANUAL"
+                  }
+                },
+                "errorHandlingOptions": {
+                  "retryOnFailure": {
+                    "value": false
+                  },
+                  "continueOnFailure": {
+                    "value": false
+                  }
+                }
+              },
+              "displayName": "Return Response Copy Copy Copy"
+            },
+            "displayName": "Ask LLM Copy Copy Copy"
+          },
+          {
+            "name": "step_1",
+            "skip": false,
+            "type": "PIECE",
+            "valid": true,
+            "settings": {
+              "input": {
+                "model": "{\"modelValue\":\"openai/gpt-4o\",\"providerName\":\"OpenRouter\"}",
+                "query": "You are an intelligent email reply assistant. Your job is to read an incoming email thread and generate three potential replies based on the user's requested Tone and Language.\nYou will receive a JSON payload containing the following:\n- `subject`: The subject line of the email.\n- `thread`: An array of previous messages in the conversation for context.\n- `latest_message`: The most recent email that requires a reply.\n- `tone`: The desired tone of the reply (e.g., Professional, Friendly, Short, Firm, Follow-up).\n- `language`: The language the reply must be written in (e.g., English, Hindi, Gujarati).\n- `context_type`: How much of the thread was sent (e.g., full_thread, latest_only).\n- `regenerate`: A boolean indicating if the user is asking for a new set of replies.\nYour task is to analyze the context and provide exactly this JSON structure in your response (do not wrap it in markdown blocks, return ONLY raw JSON):\n{\n  \"summary\": \"A brief 1-2 sentence summary of what the latest email is about.\",\n  \"replies\": {\n    \"short\": \"A very brief, direct, and concise reply addressing the email.\",\n    \"balanced\": \"A well-rounded, standard-length reply that addresses the email thoughtfully.\",\n    \"detailed\": \"A comprehensive reply that includes extra pleasantries, covers all points, and provides complete context.\"\n  }\n}\nRules:\n1. You MUST apply the requested `tone` across all three reply variations.\n2. You MUST write all three replies in the requested `language`.\n3. If `regenerate` is true, try to provide a different angle or variation than a typical first-pass response.\n4. Output strictly valid JSON. Do not include introductory or concluding text outside of the JSON object.\n\nData:\n{{trigger['body']}}",
+                "temperature": 0.7,
+                "puchoModelKey": "openai/gpt-4o",
+                "puchoProviderName": "OpenRouter"
+              },
+              "pieceName": "@puchoaistudio/tool-llm-ai",
+              "actionName": "askLlm",
+              "sampleData": {},
+              "pieceVersion": "2.1.1",
+              "propertySettings": {
+                "model": {
+                  "type": "MANUAL"
+                },
+                "query": {
+                  "type": "MANUAL"
+                },
+                "maxTokens": {
+                  "type": "MANUAL"
+                },
+                "temperature": {
+                  "type": "MANUAL"
+                },
+                "maxTokensNote": {
+                  "type": "MANUAL"
+                },
+                "puchoModelKey": {
+                  "type": "MANUAL"
+                },
+                "puchoProviderName": {
+                  "type": "MANUAL"
+                }
+              },
+              "errorHandlingOptions": {
+                "retryOnFailure": {
+                  "value": false
+                },
+                "continueOnFailure": {
+                  "value": false
+                }
+              }
+            },
+            "nextAction": {
+              "name": "step_2",
+              "skip": false,
+              "type": "PIECE",
+              "valid": true,
+              "settings": {
+                "input": {
+                  "fields": {
+                    "body": {
+                      "response": "{{step_1['data']['response']}}"
+                    },
+                    "status": 200,
+                    "headers": {}
+                  },
+                  "respond": "stop",
+                  "responseType": "json"
+                },
+                "pieceName": "@puchoaistudio/tool-webhook",
+                "actionName": "return_response",
+                "sampleData": {},
+                "pieceVersion": "2.0.4",
+                "propertySettings": {
+                  "fields": {
+                    "type": "MANUAL",
+                    "schema": {
+                      "body": {
+                        "type": "JSON",
+                        "required": true,
+                        "displayName": "JSON Body"
+                      },
+                      "status": {
+                        "type": "NUMBER",
+                        "required": false,
+                        "displayName": "Status",
+                        "defaultValue": 200
+                      },
+                      "headers": {
+                        "type": "OBJECT",
+                        "required": false,
+                        "displayName": "Headers"
+                      }
+                    }
+                  },
+                  "respond": {
+                    "type": "MANUAL"
+                  },
+                  "responseType": {
+                    "type": "MANUAL"
+                  }
+                },
+                "errorHandlingOptions": {
+                  "retryOnFailure": {
+                    "value": false
+                  },
+                  "continueOnFailure": {
+                    "value": false
+                  }
+                }
+              },
+              "displayName": "Return Response"
+            },
+            "displayName": "Ask LLM"
+          }
+        ],
+        "settings": {
+          "branches": [
+            {
+              "branchName": "Branch 1",
+              "branchType": "CONDITION",
+              "conditions": [
+                [
+                  {
+                    "operator": "TEXT_EXACTLY_MATCHES",
+                    "firstValue": "{{trigger['body']['action_type']}}",
+                    "secondValue": "summarize",
+                    "caseSensitive": false
+                  }
+                ]
+              ]
+            },
+            {
+              "branchName": "Branch 2",
+              "branchType": "CONDITION",
+              "conditions": [
+                [
+                  {
+                    "operator": "TEXT_CONTAINS",
+                    "firstValue": "{{trigger['body']['action_type']}}",
+                    "secondValue": "daily_brief",
+                    "caseSensitive": false
+                  }
+                ]
+              ]
+            },
+            {
+              "branchName": "Branch 3",
+              "branchType": "CONDITION",
+              "conditions": [
+                [
+                  {
+                    "operator": "TEXT_CONTAINS",
+                    "firstValue": "{{trigger['body']['action_type']}}",
+                    "secondValue": "compose",
+                    "caseSensitive": false
+                  }
+                ]
+              ]
+            },
+            {
+              "branchName": "Otherwise",
+              "branchType": "FALLBACK"
+            }
+          ],
+          "sampleData": {},
+          "executionType": "EXECUTE_FIRST_MATCH"
+        },
+        "displayName": "Router"
+      }
+    },
+    "valid": true,
+    "agentIds": [],
+    "connectionIds": [],
+    "schemaVersion": "7"
+  },
+  "blogUrl": ""
+}

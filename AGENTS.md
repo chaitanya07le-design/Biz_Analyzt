@@ -120,3 +120,31 @@ After all fixes, dashboard should show real data:
 - Total Purchases: ₹87,65,630
 - Receivables: ₹21,95,361
 - Payables: ₹7,23,529
+
+## Reports Module Fixes (2026-08-13)
+
+### Root Cause: Data Field Mismatches
+
+The Reports module had data-flow bugs where code expected fields that didn't exist in the actual data:
+
+| Entity | Code Expected | Actual Field | Fix |
+|--------|---------------|--------------|-----|
+| Ledgers | `ledger.type` | `GroupID` (FK) | Join via groups, use `Nature` |
+| Vouchers | `voucher.ItemID` | Items in `voucherLines` | Use voucherLines joined to vouchers |
+| Parties | `PartyType === 'Sundry Debtors'` | `PartyType === 'Customer'` | Changed filter |
+
+### Files Modified
+
+1. **Groups.csv** - Added `StatementType` column, corrected `Nature` values
+2. **BalanceSheet.jsx** - Uses parties aggregation, ledger classification via groups
+3. **ProfitLoss.jsx** - Aggregates from actual vouchers via shared utility
+4. **ByItem.jsx** - Uses voucherLines joined with Sales vouchers
+5. **ByLedger.jsx** - Uses voucherLines.LedgerID matching
+6. **ExpensesReport.jsx** - Uses voucherLines + groups join for Journal expenses
+7. **CustomerView.jsx** - Changed filter from 'Sundry Debtors' to 'Customer'
+8. **LedgerStatement.jsx** (NEW) - Drill-down component for ledger transactions
+9. **App.jsx** - Added route for `/reports/ledger/:ledgerId`
+
+### Shared Utility
+
+Created `src/utils/profitLoss.js` - single source of truth for P&L calculation used by both ProfitLoss.jsx and BalanceSheet.jsx.

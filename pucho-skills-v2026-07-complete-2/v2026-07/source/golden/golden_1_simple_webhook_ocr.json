@@ -1,0 +1,152 @@
+{
+  "created": "1783422455566",
+  "updated": "1783422455566",
+  "name": "Invoice OCR with JSON output",
+  "description": "",
+  "tags": [],
+  "pieces": [
+    "@puchoaistudio/tool-forms",
+    "@puchoaistudio/tool-ocr-analytics",
+    "@puchoaistudio/tool-json"
+  ],
+  "template": {
+    "displayName": "Invoice OCR with JSON output",
+    "trigger": {
+      "name": "trigger",
+      "valid": true,
+      "displayName": "Chat UI",
+      "type": "TOOL_TRIGGER",
+      "settings": {
+        "pieceName": "@puchoaistudio/tool-forms",
+        "pieceVersion": "2.0.1",
+        "input": {
+          "botName": "OCR Test"
+        },
+        "sampleData": {},
+        "propertySettings": {
+          "about": {
+            "type": "MANUAL"
+          },
+          "botName": {
+            "type": "MANUAL"
+          },
+          "responseMarkdown": {
+            "type": "MANUAL"
+          }
+        },
+        "triggerName": "chat_submission"
+      },
+      "nextAction": {
+        "name": "step_1",
+        "skip": false,
+        "type": "PIECE",
+        "valid": true,
+        "settings": {
+          "input": {
+            "url": "{{trigger['files'][0]}}",
+            "model": "openrouter/anthropic/claude-sonnet-4.5",
+            "query": "Extract the Invoice",
+            "puchoModelKey": "openrouter/anthropic/claude-sonnet-4.5",
+            "puchoProviderName": "OpenRouter"
+          },
+          "pieceName": "@puchoaistudio/tool-ocr-analytics",
+          "actionName": "askImage/PDF",
+          "sampleData": {},
+          "pieceVersion": "2.1.1",
+          "propertySettings": {
+            "url": {
+              "type": "MANUAL"
+            },
+            "model": {
+              "type": "MANUAL"
+            },
+            "query": {
+              "type": "MANUAL"
+            },
+            "puchoModelKey": {
+              "type": "MANUAL"
+            },
+            "puchoProviderName": {
+              "type": "MANUAL"
+            }
+          },
+          "errorHandlingOptions": {
+            "retryOnFailure": {
+              "value": false
+            },
+            "continueOnFailure": {
+              "value": false
+            }
+          }
+        },
+        "nextAction": {
+          "name": "step_3",
+          "skip": false,
+          "type": "PIECE",
+          "valid": true,
+          "settings": {
+            "input": {
+              "text": "{{step_1['data']}}"
+            },
+            "pieceName": "@puchoaistudio/tool-json",
+            "actionName": "convert_text_to_json",
+            "sampleData": {},
+            "pieceVersion": "2.0.0",
+            "propertySettings": {
+              "text": {
+                "type": "MANUAL"
+              }
+            },
+            "errorHandlingOptions": {
+              "retryOnFailure": {
+                "value": false
+              },
+              "continueOnFailure": {
+                "value": false
+              }
+            }
+          },
+          "nextAction": {
+            "name": "step_2",
+            "skip": false,
+            "type": "PIECE",
+            "valid": true,
+            "settings": {
+              "input": {
+                "markdown": "{{step_3['response']}}"
+              },
+              "pieceName": "@puchoaistudio/tool-forms",
+              "actionName": "return_response",
+              "sampleData": {},
+              "pieceVersion": "2.0.1",
+              "propertySettings": {
+                "file": {
+                  "type": "MANUAL"
+                },
+                "markdown": {
+                  "type": "MANUAL"
+                }
+              },
+              "errorHandlingOptions": {
+                "retryOnFailure": {
+                  "value": false
+                },
+                "continueOnFailure": {
+                  "value": false
+                }
+              }
+            },
+            "displayName": "Respond on UI"
+          },
+          "displayName": "Convert Text to Json"
+        },
+        "displayName": "OCR Analytics - Ask Image/PDF"
+      }
+    },
+    "valid": true,
+    "agentIds": [],
+    "connectionIds": [],
+    "schemaVersion": "7"
+  },
+  "blogUrl": ""
+}

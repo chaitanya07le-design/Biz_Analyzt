@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 import useGoogleSheetsData from '../hooks/useGoogleSheetsData';
 import { useCompany } from '../context/CompanyContext';
 import { useDateRange } from '../context/DateRangeContext';
+import { calculateProfitLoss } from '../utils/profitLoss';
 
 const formatCurrency = (value) => '₹' + (value || 0).toLocaleString('en-IN');
 const formatDate = (dateStr) => {
@@ -24,6 +25,7 @@ const Dashboard = () => {
   
   const {
     ledgers,
+    groups,
     parties,
     items,
     vouchers,
@@ -84,17 +86,21 @@ const Dashboard = () => {
   }, [voucherLines, filteredVouchers]);
 
   const metrics = useMemo(() => {
+    const plData = calculateProfitLoss(filteredVouchers, voucherLines, ledgers, groups);
+    
     if (dashboardSummary) {
       return {
         cashInHand: dashboardSummary.cashInHand || 0,
         bankBalance: dashboardSummary.bankBalance || 0,
-        totalSales: dashboardSummary.totalSales || 0,
-        totalPurchases: dashboardSummary.totalPurchases || 0,
+        totalSales: plData.income.total,
+        totalPurchases: plData.expenses.purchase,
         totalReceivables: dashboardSummary.totalReceivables || 0,
         totalPayables: dashboardSummary.totalPayables || 0,
-        grossProfit: (dashboardSummary.totalSales || 0) - (dashboardSummary.totalPurchases || 0),
-        netProfit: (dashboardSummary.totalSales || 0) - (dashboardSummary.totalPurchases || 0),
-        stockValue: dashboardSummary.stockValue || 0,
+        grossProfit: plData.grossProfit,
+        netProfit: plData.netProfit,
+        stockValue: (itemStockStatus || []).reduce((sum, item) => 
+          sum + (parseFloat(item.StockValue || 0) || 0), 0
+        ),
         partyCount: dashboardSummary.partyCount || parties?.length || 0,
         itemCount: dashboardSummary.itemCount || items?.length || 0,
         voucherCount: dashboardSummary.voucherCount || filteredVouchers.length,
@@ -102,56 +108,6 @@ const Dashboard = () => {
         bankAccountCount: dashboardSummary.bankAccountCount || 1,
       };
     }
-
-    const salesVouchers = filteredVouchers.filter(v => 
-      v.VoucherType === 'Sales' || v.type === 'Sales'
-    );
-    const purchaseVouchers = filteredVouchers.filter(v => 
-      v.VoucherType === 'Purchase' || v.type === 'Purchase'
-    );
-
-    const totalSales = salesVouchers.reduce((sum, v) => 
-      sum + (parseFloat(v.GrandTotal || v.NetAmount || v.amount) || 0), 0
-    );
-    
-    const totalPurchases = purchaseVouchers.reduce((sum, v) => 
-      sum + (parseFloat(v.GrandTotal || v.NetAmount || v.amount) || 0), 0
-    );
-
-    const salesCost = salesVouchers.reduce((sum, v) => {
-      const vLines = filteredVoucherLines.filter(vl => 
-        (vl.VoucherID || vl.voucherId) === (v.VoucherID || v.id) &&
-        (vl.LineType === 'Item' || !vl.LineType)
-      );
-      return sum + vLines.reduce((lineSum, vl) => {
-        const item = (items || []).find(i => i.ItemID === (vl.ItemID || vl.itemId));
-        const purchaseRate = parseFloat(item?.PurchaseRate || 0) || 0;
-        const qty = parseFloat(vl.Quantity || vl.Qty || 0) || 0;
-        return lineSum + (qty * purchaseRate);
-      }, 0);
-    }, 0);
-
-    const grossProfit = totalSales - (salesCost > 0 ? salesCost : totalPurchases);
-
-    const EXPENSE_GROUP_IDS = ['GRP-0012', 'GRP-0013'];
-    
-    const journalVouchers = filteredVouchers.filter(v => 
-      v.VoucherType === 'Journal' || v.type === 'Journal'
-    );
-    
-    const journalVoucherIds = new Set(journalVouchers.map(v => v.VoucherID || v.id));
-    
-    const expenseLines = (voucherLines || []).filter(vl => 
-      journalVoucherIds.has(vl.VoucherID || vl.voucherId) &&
-      vl.LineType === 'Ledger'
-    );
-    
-    const totalExpenses = expenseLines.reduce((sum, line) => {
-      const debit = parseFloat(line.LedgerDebit || 0) || 0;
-      return sum + debit;
-    }, 0);
-    
-    const netProfit = grossProfit - totalExpenses;
 
     const receivables = (parties || [])
       .filter(p => p.PartyType === 'Sundry Debtors' || p.PartyType === 'Customer' || p.PartyType === 'Both')
@@ -200,12 +156,12 @@ const Dashboard = () => {
     return {
       cashInHand,
       bankBalance,
-      totalSales,
-      totalPurchases,
+      totalSales: plData.income.total,
+      totalPurchases: plData.expenses.purchase,
       totalReceivables: receivables,
       totalPayables: payables,
-      grossProfit,
-      netProfit,
+      grossProfit: plData.grossProfit,
+      netProfit: plData.netProfit,
       stockValue,
       partyCount: parties?.length || 0,
       itemCount: items?.length || 0,
@@ -213,7 +169,7 @@ const Dashboard = () => {
       cashAccountCount,
       bankAccountCount,
     };
-  }, [filteredVouchers, filteredVoucherLines, voucherLines, ledgers, parties, items, itemStockStatus, stockBatches, bankAccounts, cashAccounts, dashboardSummary]);
+  }, [filteredVouchers, filteredVoucherLines, voucherLines, ledgers, groups, parties, items, itemStockStatus, stockBatches, bankAccounts, cashAccounts, dashboardSummary]);
 
   const kpis = [
     { 
@@ -234,14 +190,14 @@ const Dashboard = () => {
       title: 'Total Sales', 
       value: metrics.totalSales, 
       color: 'purple', 
-      onClick: () => navigate('/sales'),
+      onClick: () => navigate('/vouchers/sales'),
       subtitle: `${filteredVouchers.filter(v => v.VoucherType === 'Sales').length} vouchers`
     },
     { 
       title: 'Total Purchases', 
       value: metrics.totalPurchases, 
       color: 'amber', 
-      onClick: () => navigate('/purchase'),
+      onClick: () => navigate('/vouchers/purchase'),
       subtitle: `${filteredVouchers.filter(v => v.VoucherType === 'Purchase').length} vouchers`
     },
     { 
@@ -262,13 +218,13 @@ const Dashboard = () => {
       title: 'Gross Profit', 
       value: metrics.grossProfit, 
       color: metrics.grossProfit >= 0 ? 'green' : 'red', 
-      onClick: () => navigate('/reports')
+      onClick: () => navigate('/reports/profit-loss#trading')
     },
     { 
       title: 'Net Profit', 
       value: metrics.netProfit, 
       color: metrics.netProfit >= 0 ? 'green' : 'red', 
-      onClick: () => navigate('/reports')
+      onClick: () => navigate('/reports/profit-loss#pl')
     },
     { 
       title: 'Stock Value', 

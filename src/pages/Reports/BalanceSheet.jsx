@@ -4,24 +4,52 @@ import { useNavigate } from 'react-router-dom';
 import Skeleton from '../../components/shared/Skeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import { useCompany } from '../../context/CompanyContext';
+import { calculateProfitLoss } from '../../utils/profitLoss';
 
 const BalanceSheet = () => {
   const navigate = useNavigate();
   const { currentCompany } = useCompany();
   const [asOfDate, setAsOfDate] = useState(new Date().toISOString().split('T')[0]);
   
-  const { ledgers, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { ledgers, parties, groups, vouchers, voucherLines, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
 
   const normalizedLedgers = useMemo(() => {
     if (!ledgers || ledgers.length === 0) return [];
     return ledgers.map(l => ({
       id: l.LedgerID || l.id,
       name: l.LedgerName || l.name || '',
-      group: l.Group || l.group || '',
-      type: l.LedgerType || l.type || '',
+      groupId: l.GroupID || l.groupId || '',
       balance: parseFloat(l.OpeningBalance || l.balance || 0),
     }));
   }, [ledgers]);
+
+  const partyBalances = useMemo(() => {
+    if (!parties) return { debtors: 0, creditors: 0 };
+    const debtors = parties
+      .filter(p => p.PartyType === 'Customer')
+      .reduce((sum, p) => sum + Math.max(0, parseFloat(p.OpeningBalance || 0)), 0);
+    const creditors = parties
+      .filter(p => p.PartyType === 'Supplier')
+      .reduce((sum, p) => sum + Math.abs(Math.min(0, parseFloat(p.OpeningBalance || 0))), 0);
+    return { debtors, creditors };
+  }, [parties]);
+
+  const ledgerWithGroups = useMemo(() => {
+    if (!normalizedLedgers || !groups) return [];
+    const groupMap = new Map();
+    groups.forEach(g => {
+      groupMap.set(g.GroupID, g);
+    });
+    return normalizedLedgers.map(ledger => {
+      const group = groupMap.get(ledger.groupId) || {};
+      return {
+        ...ledger,
+        groupName: group.GroupName || '',
+        groupNature: group.Nature || '',
+        statementType: group.StatementType || ''
+      };
+    });
+  }, [normalizedLedgers, groups]);
 
   const reportData = useMemo(() => {
     const assets = {
@@ -36,21 +64,19 @@ const BalanceSheet = () => {
     };
 
     const groupMap = {};
-    normalizedLedgers.forEach(ledger => {
-      if (!groupMap[ledger.group]) {
-        groupMap[ledger.group] = {
-          name: ledger.group,
+    ledgerWithGroups.forEach(ledger => {
+      if (ledger.statementType !== 'BalanceSheet') return;
+      
+      if (!groupMap[ledger.groupName]) {
+        groupMap[ledger.groupName] = {
+          name: ledger.groupName,
           ledgers: [],
           total: 0
         };
       }
-      groupMap[ledger.group].ledgers.push(ledger);
-      groupMap[ledger.group].total += ledger.balance;
+      groupMap[ledger.groupName].ledgers.push(ledger);
+      groupMap[ledger.groupName].total += ledger.balance;
     });
-
-    const assetGroups = ['Stock-in-Hand', 'Sundry Debtors', 'Bank Accounts', 'Cash-in-Hand'];
-    const liabilityCurrentGroups = ['Sundry Creditors', 'Duties & Taxes'];
-    const liabilityCapitalGroups = ['Capital Account'];
 
     Object.values(groupMap).forEach(group => {
       const item = {
@@ -59,13 +85,10 @@ const BalanceSheet = () => {
         ledgers: group.ledgers
       };
 
-      if (assetGroups.includes(group.name)) {
+      if (group.name === 'Bank Accounts' || group.name === 'Cash-in-Hand') {
         assets.current.push(item);
         assets.total += group.total;
-      } else if (liabilityCurrentGroups.includes(group.name)) {
-        liabilities.current.push(item);
-        liabilities.total += Math.abs(group.total);
-      } else if (liabilityCapitalGroups.includes(group.name)) {
+      } else if (group.name === 'Capital Account') {
         liabilities.capital.push(item);
         liabilities.total += Math.abs(group.total);
       } else if (group.total > 0) {
@@ -77,8 +100,29 @@ const BalanceSheet = () => {
       }
     });
 
-    return { assets, liabilities };
-  }, [normalizedLedgers]);
+    if (partyBalances.debtors > 0) {
+      assets.current.push({ name: 'Sundry Debtors', amount: partyBalances.debtors, ledgers: [] });
+      assets.total += partyBalances.debtors;
+    }
+
+    if (partyBalances.creditors > 0) {
+      liabilities.current.push({ name: 'Sundry Creditors', amount: partyBalances.creditors, ledgers: [] });
+      liabilities.total += partyBalances.creditors;
+    }
+
+    const profitData = calculateProfitLoss(vouchers, voucherLines, ledgers, groups);
+    if (profitData.netProfit !== 0) {
+      const profitItem = {
+        name: profitData.netProfit >= 0 ? 'Net Profit' : 'Net Loss',
+        amount: Math.abs(profitData.netProfit),
+        ledgers: []
+      };
+      liabilities.capital.push(profitItem);
+      liabilities.total += Math.abs(profitData.netProfit);
+    }
+
+    return { assets, liabilities, netProfit: profitData.netProfit };
+  }, [ledgerWithGroups, partyBalances, vouchers, voucherLines, ledgers, groups]);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {

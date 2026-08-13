@@ -1,0 +1,131 @@
+{
+  "version": "1.0",
+  "description": "Twelve Pucho.ai Tally workflows for Biz Analyzt. Select the Tally connection in every Ask Tally action before enabling a schedule.",
+  "workflows": [
+    {
+      "id": "tally_company_sync",
+      "name": "01 - Sync Tally Company and Trial Balance",
+      "trigger": { "type": "schedule", "cron": "0 0 * * *" },
+      "steps": [
+        { "id": "ask_trial_balance", "type": "action", "tool": "ask_tally_template", "props": { "tallyconnection": "", "template": "48", "variables": {} } },
+        { "id": "sync_companies", "type": "action", "tool": "http_request", "props": { "method": "POST", "url": "http://localhost:5001/api/sync/Companies", "body": { "mode": "overwrite", "data": "{{step_ask_trial_balance['output']['companies']}}" } } }
+      ]
+    },
+    {
+      "id": "tally_ledger_sync",
+      "name": "02 - Sync Tally Ledgers and Groups",
+      "trigger": { "type": "schedule", "cron": "10 */4 * * *" },
+      "steps": [
+        { "id": "ask_ledger_balances", "type": "action", "tool": "ask_tally_template", "props": { "tallyconnection": "", "template": "8", "variables": {} } },
+        { "id": "sync_groups", "type": "action", "tool": "http_request", "props": { "method": "POST", "url": "http://localhost:5001/api/sync/Groups", "body": { "mode": "overwrite", "data": "{{step_ask_ledger_balances['output']['groups']}}" } } },
+        { "id": "sync_ledgers", "type": "action", "tool": "http_request", "props": { "method": "POST", "url": "http://localhost:5001/api/sync/Ledgers", "body": { "mode": "overwrite", "data": "{{step_ask_ledger_balances['output']['ledgers']}}" } } }
+      ]
+    },
+    {
+      "id": "tally_party_sync",
+      "name": "03 - Sync Tally Customers and Suppliers",
+      "trigger": { "type": "schedule", "cron": "20 */4 * * *" },
+      "steps": [
+        { "id": "ask_customers", "type": "action", "tool": "ask_tally_template", "props": { "tallyconnection": "", "template": "149", "variables": {} } },
+        { "id": "ask_suppliers", "type": "action", "tool": "ask_tally_template", "props": { "tallyconnection": "", "template": "150", "variables": {} } },
+        { "id": "sync_parties", "type": "action", "tool": "http_request", "props": { "method": "POST", "url": "http://localhost:5001/api/sync/Parties", "body": { "mode": "overwrite", "data": "{{step_ask_customers['output']['parties']}}" } } },
+        { "id": "append_suppliers", "type": "action", "tool": "http_request", "props": { "method": "POST", "url": "http://localhost:5001/api/sync/Parties", "body": { "mode": "append", "data": "{{step_ask_suppliers['output']['parties']}}" } } }
+      ]
+    },
+    {
+      "id": "tally_cash_bank_sync",
+      "name": "04 - Sync Tally Cash and Bank Accounts",
+      "trigger": { "type": "schedule", "cron": "30 * * * *" },
+      "steps": [
+        { "id": "ask_cash_bank_balances", "type": "action", "tool": "ask_tally_template", "props": { "tallyconnection": "", "template": "58", "variables": {} } },
+        { "id": "sync_bank_accounts", "type": "action", "tool": "http_request", "props": { "method": "POST", "url": "http://localhost:5001/api/sync/BankAccounts", "body": { "mode": "overwrite", "data": "{{step_ask_cash_bank_balances['output']['bankAccounts']}}" } } },
+        { "id": "sync_cash_accounts", "type": "action", "tool": "http_request", "props": { "method": "POST", "url": "http://localhost:5001/api/sync/CashAccounts", "body": { "mode": "overwrite", "data": "{{step_ask_cash_bank_balances['output']['cashAccounts']}}" } } }
+      ]
+    },
+    {
+      "id": "tally_sales_voucher_sync",
+      "name": "05 - Sync Tally Sales Vouchers and Lines",
+      "trigger": { "type": "schedule", "cron": "0 * * * *" },
+      "steps": [
+        { "id": "ask_sales_vouchers", "type": "action", "tool": "ask_tally_template", "props": { "tallyconnection": "", "template": "133", "variables": {} } },
+        { "id": "sync_sales_vouchers", "type": "action", "tool": "http_request", "props": { "method": "POST", "url": "http://localhost:5001/api/sync/Vouchers", "body": { "mode": "append", "data": "{{step_ask_sales_vouchers['output']['vouchers']}}" } } },
+        { "id": "sync_sales_voucher_lines", "type": "action", "tool": "http_request", "props": { "method": "POST", "url": "http://localhost:5001/api/sync/VoucherLines", "body": { "mode": "append", "data": "{{step_ask_sales_vouchers['output']['voucherLines']}}" } } }
+      ]
+    },
+    {
+      "id": "tally_purchase_voucher_sync",
+      "name": "06 - Sync Tally Purchase Vouchers and Lines",
+      "trigger": { "type": "schedule", "cron": "5 * * * *" },
+      "steps": [
+        { "id": "ask_purchase_vouchers", "type": "action", "tool": "ask_tally_template", "props": { "tallyconnection": "", "template": "137", "variables": {} } },
+        { "id": "sync_purchase_vouchers", "type": "action", "tool": "http_request", "props": { "method": "POST", "url": "http://localhost:5001/api/sync/Vouchers", "body": { "mode": "append", "data": "{{step_ask_purchase_vouchers['output']['vouchers']}}" } } },
+        { "id": "sync_purchase_voucher_lines", "type": "action", "tool": "http_request", "props": { "method": "POST", "url": "http://localhost:5001/api/sync/VoucherLines", "body": { "mode": "append", "data": "{{step_ask_purchase_vouchers['output']['voucherLines']}}" } } }
+      ]
+    },
+    {
+      "id": "tally_receipt_payment_sync",
+      "name": "07 - Sync Tally Receipt and Payment Vouchers",
+      "trigger": { "type": "schedule", "cron": "10 * * * *" },
+      "steps": [
+        { "id": "ask_receipts", "type": "action", "tool": "ask_tally_template", "props": { "tallyconnection": "", "template": "93", "variables": {} } },
+        { "id": "ask_payments", "type": "action", "tool": "ask_tally_template", "props": { "tallyconnection": "", "template": "92", "variables": {} } },
+        { "id": "sync_receipts", "type": "action", "tool": "http_request", "props": { "method": "POST", "url": "http://localhost:5001/api/sync/Vouchers", "body": { "mode": "append", "data": "{{step_ask_receipts['output']['vouchers']}}" } } },
+        { "id": "sync_payments", "type": "action", "tool": "http_request", "props": { "method": "POST", "url": "http://localhost:5001/api/sync/Vouchers", "body": { "mode": "append", "data": "{{step_ask_payments['output']['vouchers']}}" } } }
+      ]
+    },
+    {
+      "id": "tally_adjustment_voucher_sync",
+      "name": "08 - Sync Tally Journal, Debit Note and Credit Note Vouchers",
+      "trigger": { "type": "schedule", "cron": "15 * * * *" },
+      "steps": [
+        { "id": "ask_debit_notes", "type": "action", "tool": "ask_tally_template", "props": { "tallyconnection": "", "template": "88", "variables": {} } },
+        { "id": "ask_credit_notes", "type": "action", "tool": "ask_tally_template", "props": { "tallyconnection": "", "template": "59", "variables": {} } },
+        { "id": "ask_journals", "type": "action", "tool": "askTally", "props": { "tallyconnection": "", "query": "Return all journal vouchers for the current financial year as a JSON array with voucher header fields and debit/credit ledger lines." } },
+        { "id": "sync_adjustment_vouchers", "type": "action", "tool": "http_request", "props": { "method": "POST", "url": "http://localhost:5001/api/sync/Vouchers", "body": { "mode": "append", "data": "{{step_ask_journals['output']['vouchers']}}" } } },
+        { "id": "sync_adjustment_lines", "type": "action", "tool": "http_request", "props": { "method": "POST", "url": "http://localhost:5001/api/sync/VoucherLines", "body": { "mode": "append", "data": "{{step_ask_journals['output']['voucherLines']}}" } } }
+      ]
+    },
+    {
+      "id": "tally_inventory_sync",
+      "name": "09 - Sync Tally Inventory and Stock Valuation",
+      "trigger": { "type": "schedule", "cron": "0 2 * * *" },
+      "steps": [
+        { "id": "ask_stock_balances", "type": "action", "tool": "ask_tally_template", "props": { "tallyconnection": "", "template": "46", "variables": {} } },
+        { "id": "ask_closing_stock", "type": "action", "tool": "ask_tally_template", "props": { "tallyconnection": "", "template": "144", "variables": {} } },
+        { "id": "sync_item_groups", "type": "action", "tool": "http_request", "props": { "method": "POST", "url": "http://localhost:5001/api/sync/ItemGroups", "body": { "mode": "overwrite", "data": "{{step_ask_stock_balances['output']['itemGroups']}}" } } },
+        { "id": "sync_items", "type": "action", "tool": "http_request", "props": { "method": "POST", "url": "http://localhost:5001/api/sync/Items", "body": { "mode": "overwrite", "data": "{{step_ask_closing_stock['output']['items']}}" } } }
+      ]
+    },
+    {
+      "id": "tally_outstanding_sync",
+      "name": "10 - Refresh Tally Receivables and Payables Aging",
+      "trigger": { "type": "schedule", "cron": "25 * * * *" },
+      "steps": [
+        { "id": "ask_receivable_aging", "type": "action", "tool": "ask_tally_template", "props": { "tallyconnection": "", "template": "136", "variables": {} } },
+        { "id": "ask_payable_aging", "type": "action", "tool": "ask_tally_template", "props": { "tallyconnection": "", "template": "85", "variables": {} } },
+        { "id": "refresh_backend_cache", "type": "action", "tool": "http_request", "props": { "method": "DELETE", "url": "http://localhost:5001/api/cache?sheet=Vouchers", "body": {} } }
+      ]
+    },
+    {
+      "id": "tally_dashboard_refresh",
+      "name": "11 - Refresh Tally Dashboard and Financial Reports",
+      "trigger": { "type": "schedule", "cron": "35 * * * *" },
+      "steps": [
+        { "id": "ask_cash_bank_position", "type": "action", "tool": "ask_tally_template", "props": { "tallyconnection": "", "template": "50", "variables": {} } },
+        { "id": "ask_profit_loss", "type": "action", "tool": "ask_tally_template", "props": { "tallyconnection": "", "template": "91", "variables": {} } },
+        { "id": "ask_stock_value", "type": "action", "tool": "ask_tally_template", "props": { "tallyconnection": "", "template": "76", "variables": {} } },
+        { "id": "clear_dashboard_cache", "type": "action", "tool": "http_request", "props": { "method": "DELETE", "url": "http://localhost:5001/api/cache", "body": {} } }
+      ]
+    },
+    {
+      "id": "tally_reconciliation",
+      "name": "12 - Reconcile Tally Balances and Sync Status",
+      "trigger": { "type": "schedule", "cron": "30 2 * * *" },
+      "steps": [
+        { "id": "ask_reconciliation_trial_balance", "type": "action", "tool": "ask_tally_template", "props": { "tallyconnection": "", "template": "48", "variables": {} } },
+        { "id": "ask_bank_statement", "type": "action", "tool": "ask_tally_template", "props": { "tallyconnection": "", "template": "90", "variables": {} } },
+        { "id": "refresh_all_backend_data", "type": "action", "tool": "http_request", "props": { "method": "DELETE", "url": "http://localhost:5001/api/cache", "body": {} } }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,236 @@
+{
+  "created": "1786095018298",
+  "updated": "1786095018298",
+  "name": "02 - Sync Tally Groups and Ledgers",
+  "description": "Syncs Tally ledger groups and ledgers to Google Sheets every 4 hours. Clears existing data and inserts fresh records.",
+  "tags": ["tally", "sync", "groups", "ledgers", "google-sheets"],
+  "pieces": [
+    "@puchoaistudio/tool-schedule",
+    "@puchoaistudio/tool-tallyconnection",
+    "@puchoaistudio/tool-google-sheets",
+    "@puchoaistudio/tool-code"
+  ],
+  "template": {
+    "displayName": "02 - Sync Tally Groups and Ledgers",
+    "trigger": {
+      "name": "trigger",
+      "valid": true,
+      "displayName": "Every 4 Hours",
+      "type": "TOOL_TRIGGER",
+      "settings": {
+        "pieceName": "@puchoaistudio/tool-schedule",
+        "pieceVersion": "^2.0.0",
+        "input": {
+          "timezone": "Asia/Kolkata",
+          "cron": "10 */4 * * *"
+        },
+        "sampleData": {},
+        "propertySettings": {
+          "timezone": {"type": "MANUAL"},
+          "cron": {"type": "MANUAL"}
+        },
+        "triggerName": "scheduled_trigger"
+      },
+      "nextAction": {
+        "name": "step_1",
+        "skip": false,
+        "type": "PIECE",
+        "valid": true,
+        "displayName": "Ask Ledger Balances",
+        "settings": {
+          "input": {
+            "template": "8",
+            "variables": {},
+            "tallyconnection": ""
+          },
+          "pieceName": "@puchoaistudio/tool-tallyconnection",
+          "actionName": "ask_tally_template",
+          "sampleData": {},
+          "pieceVersion": "^2.3.4",
+          "propertySettings": {
+            "template": {"type": "MANUAL"},
+            "variables": {"type": "MANUAL", "schema": {}},
+            "tallyconnection": {"type": "MANUAL"}
+          },
+          "errorHandlingOptions": {
+            "retryOnFailure": {"value": false},
+            "continueOnFailure": {"value": false}
+          }
+        },
+        "nextAction": {
+          "name": "step_2",
+          "skip": false,
+          "type": "CODE",
+          "valid": true,
+          "displayName": "Transform Groups",
+          "settings": {
+            "input": {
+              "tally_data": "{{step_1['output']}}"
+            },
+            "sampleData": {},
+            "sourceCode": {
+              "code": "export const code = async (inputs) => {\n  const tallyData = inputs.tally_data || {};\n  const groups = tallyData.groups || [];\n  const now = new Date().toISOString().replace('T', ' ').substring(0, 19);\n  \n  const rows = groups.map((item, index) => {\n    const groupID = `GRP-${String(index + 1).padStart(4, '0')}`;\n    return [\n      groupID,\n      'COMP-0001',\n      item.name || '',\n      item.groupType || 'Assets',\n      item.parentGuid || '',\n      item.isSystem ? 'TRUE' : 'FALSE',\n      now,\n      now,\n      1\n    ];\n  });\n  \n  return { rows, count: rows.length };\n};",
+              "packageJson": "{}",
+              "language": "typescript"
+            },
+            "errorHandlingOptions": {
+              "retryOnFailure": {"value": false},
+              "continueOnFailure": {"value": false}
+            }
+          },
+          "nextAction": {
+            "name": "step_3",
+            "skip": false,
+            "type": "PIECE",
+            "valid": true,
+            "displayName": "Clear Groups Sheet",
+            "settings": {
+              "input": {
+                "auth": "",
+                "spreadsheetId": "",
+                "sheetId": 580064534,
+                "is_first_row_headers": true
+              },
+              "pieceName": "@puchoaistudio/tool-google-sheets",
+              "actionName": "clear_sheet",
+              "sampleData": {},
+              "pieceVersion": "^2.0.9",
+              "propertySettings": {
+                "auth": {"type": "MANUAL"},
+                "spreadsheetId": {"type": "MANUAL"},
+                "sheetId": {"type": "MANUAL"},
+                "is_first_row_headers": {"type": "MANUAL"}
+              },
+              "errorHandlingOptions": {
+                "retryOnFailure": {"value": true},
+                "continueOnFailure": {"value": false}
+              }
+            },
+            "nextAction": {
+              "name": "step_4",
+              "skip": false,
+              "type": "PIECE",
+              "valid": true,
+              "displayName": "Insert Groups",
+              "settings": {
+                "input": {
+                  "auth": "",
+                  "spreadsheetId": "",
+                  "sheetId": 580064534,
+                  "input_type": "json",
+                  "values": {
+                    "values": "{{step_2['rows']}}"
+                  }
+                },
+                "pieceName": "@puchoaistudio/tool-google-sheets",
+                "actionName": "google-sheets-insert-multiple-rows",
+                "sampleData": {},
+                "pieceVersion": "^2.0.9",
+                "propertySettings": {
+                  "auth": {"type": "MANUAL"},
+                  "spreadsheetId": {"type": "MANUAL"},
+                  "sheetId": {"type": "MANUAL"},
+                  "input_type": {"type": "MANUAL"},
+                  "values": {"type": "MANUAL", "schema": {"values": {"type": "ARRAY", "items": {"type": "ARRAY"}}}}
+                },
+                "errorHandlingOptions": {
+                  "retryOnFailure": {"value": true},
+                  "continueOnFailure": {"value": false}
+                }
+              },
+              "nextAction": {
+                "name": "step_5",
+                "skip": false,
+                "type": "CODE",
+                "valid": true,
+                "displayName": "Transform Ledgers",
+                "settings": {
+                  "input": {
+                    "tally_data": "{{step_1['output']}}"
+                  },
+                  "sampleData": {},
+                  "sourceCode": {
+                    "code": "export const code = async (inputs) => {\n  const tallyData = inputs.tally_data || {};\n  const ledgers = tallyData.ledgers || [];\n  const now = new Date().toISOString().replace('T', ' ').substring(0, 19);\n  \n  const rows = ledgers.map((item, index) => {\n    const ledgerID = `LDG-${String(index + 1).padStart(4, '0')}`;\n    return [\n      ledgerID,\n      'COMP-0001',\n      item.name || '',\n      item.groupGuid || '',\n      item.openingBalance || 0,\n      item.isSystem ? 'TRUE' : 'FALSE',\n      now,\n      now,\n      1\n    ];\n  });\n  \n  return { rows, count: rows.length };\n};",
+                    "packageJson": "{}",
+                    "language": "typescript"
+                  },
+                  "errorHandlingOptions": {
+                    "retryOnFailure": {"value": false},
+                    "continueOnFailure": {"value": false}
+                  }
+                },
+                "nextAction": {
+                  "name": "step_6",
+                  "skip": false,
+                  "type": "PIECE",
+                  "valid": true,
+                  "displayName": "Clear Ledgers Sheet",
+                  "settings": {
+                    "input": {
+                      "auth": "",
+                      "spreadsheetId": "",
+                      "sheetId": 97230470,
+                      "is_first_row_headers": true
+                    },
+                    "pieceName": "@puchoaistudio/tool-google-sheets",
+                    "actionName": "clear_sheet",
+                    "sampleData": {},
+                    "pieceVersion": "^2.0.9",
+                    "propertySettings": {
+                      "auth": {"type": "MANUAL"},
+                      "spreadsheetId": {"type": "MANUAL"},
+                      "sheetId": {"type": "MANUAL"},
+                      "is_first_row_headers": {"type": "MANUAL"}
+                    },
+                    "errorHandlingOptions": {
+                      "retryOnFailure": {"value": true},
+                      "continueOnFailure": {"value": false}
+                    }
+                  },
+                  "nextAction": {
+                    "name": "step_7",
+                    "skip": false,
+                    "type": "PIECE",
+                    "valid": true,
+                    "displayName": "Insert Ledgers",
+                    "settings": {
+                      "input": {
+                        "auth": "",
+                        "spreadsheetId": "",
+                        "sheetId": 97230470,
+                        "input_type": "json",
+                        "values": {
+                          "values": "{{step_5['rows']}}"
+                        }
+                      },
+                      "pieceName": "@puchoaistudio/tool-google-sheets",
+                      "actionName": "google-sheets-insert-multiple-rows",
+                      "sampleData": {},
+                      "pieceVersion": "^2.0.9",
+                      "propertySettings": {
+                        "auth": {"type": "MANUAL"},
+                        "spreadsheetId": {"type": "MANUAL"},
+                        "sheetId": {"type": "MANUAL"},
+                        "input_type": {"type": "MANUAL"},
+                        "values": {"type": "MANUAL", "schema": {"values": {"type": "ARRAY", "items": {"type": "ARRAY"}}}}
+                      },
+                      "errorHandlingOptions": {
+                        "retryOnFailure": {"value": true},
+                        "continueOnFailure": {"value": false}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "valid": true,
+    "agentIds": [],
+    "connectionIds": [],
+    "schemaVersion": "7"
+  },
+  "blogUrl": ""
+}

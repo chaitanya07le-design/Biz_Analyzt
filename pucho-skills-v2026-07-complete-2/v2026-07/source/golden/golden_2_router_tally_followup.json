@@ -1,0 +1,437 @@
+{
+  "created": "1783422498312",
+  "updated": "1783422498312",
+  "name": "W04 — Smart Debtor Follow-Up",
+  "description": "",
+  "tags": [],
+  "pieces": [
+    "@puchoaistudio/tool-schedule",
+    "@puchoaistudio/tool-tallyconnection",
+    "@puchoaistudio/tool-llm-ai",
+    "@puchoaistudio/tool-gmail",
+    "@puchoaistudio/tool-google-sheets"
+  ],
+  "template": {
+    "displayName": "W04 — Smart Debtor Follow-Up",
+    "trigger": {
+      "name": "trigger",
+      "valid": true,
+      "displayName": "Every Week",
+      "type": "TOOL_TRIGGER",
+      "settings": {
+        "pieceName": "@puchoaistudio/tool-schedule",
+        "pieceVersion": "^2.0.0",
+        "input": {
+          "timezone": "UTC",
+          "day_of_the_week": 1,
+          "hour_of_the_day": 9
+        },
+        "sampleData": {},
+        "propertySettings": {
+          "timezone": {
+            "type": "MANUAL"
+          },
+          "day_of_the_week": {
+            "type": "MANUAL"
+          },
+          "hour_of_the_day": {
+            "type": "MANUAL"
+          }
+        },
+        "triggerName": "every_week"
+      },
+      "nextAction": {
+        "name": "step_1",
+        "type": "PIECE",
+        "valid": true,
+        "settings": {
+          "input": {
+            "template": 136,
+            "variables": {},
+            "tallyconnection": "c36ab6c4-2bac-403d-b1e8-2a48905afa63"
+          },
+          "pieceName": "@puchoaistudio/tool-tallyconnection",
+          "actionName": "ask_tally_template",
+          "sampleData": {},
+          "pieceVersion": "^2.1.2",
+          "propertySettings": {
+            "template": {
+              "type": "MANUAL"
+            },
+            "variables": {
+              "type": "MANUAL",
+              "schema": {}
+            },
+            "tallyconnection": {
+              "type": "MANUAL"
+            }
+          },
+          "errorHandlingOptions": {
+            "retryOnFailure": {
+              "value": false
+            },
+            "continueOnFailure": {
+              "value": false
+            }
+          }
+        },
+        "nextAction": {
+          "name": "step_2",
+          "skip": false,
+          "type": "CODE",
+          "valid": true,
+          "settings": {
+            "input": {
+              "tally_data": "{{step_1['content']}}"
+            },
+            "sampleData": {},
+            "sourceCode": {
+              "code": "export const code = async (inputs) => {\n  let rawData = typeof inputs.tally_data === 'string' ? JSON.parse(inputs.tally_data || '[]') : (inputs.tally_data || []);\n  let data = [];\n  \n  if (Array.isArray(rawData) && rawData.length > 0 && rawData[0]['Json Agg']) {\n    try { data = JSON.parse(rawData[0]['Json Agg']); } catch(e) { data = []; }\n  } else { data = rawData; }\n  \n  if (!Array.isArray(data)) data = [];\n  \n  const today = new Date();\n  const current_date = `${String(today.getDate()).padStart(2, \"0\")}/${String(today.getMonth() + 1).padStart(2, \"0\")}/${today.getFullYear()}`;\n  \n  const getNum = (v) => parseFloat(String(v || '0').replace(/[^0-9.-]/g, '')) || 0;\n  \n  const rows = [];\n  let urgentCount = 0, reminderCount = 0, skipCount = 0;\n  let urgentAmt = 0, reminderAmt = 0, totalAmt = 0;\n  \n  // Sorted by fallback fields tracking 'total_pending_amount' first to match your uploaded data schema\n  const sortedData = data.sort((a,b) => getNum(b.total_pending_amount || b.total_outstanding_inr || b.amount) - getNum(a.total_pending_amount || a.total_outstanding_inr || a.amount));\n  \n  sortedData.forEach(d => {\n    // Check fallback for amount field names\n    const amt = getNum(d.total_pending_amount || d.total_outstanding_inr || d.amount);\n    \n    // Check fallback for days overdue field names\n    const days = parseInt(d.max_overdue_days || d.days_overdue || d.days || '0');\n    \n    let tier = 'SKIP';\n    if (days > 45) { \n      tier = 'URGENT'; \n      urgentCount++; \n      urgentAmt += amt; \n    } else if (days >= 15) { \n      tier = 'REMINDER'; \n      reminderCount++; \n      reminderAmt += amt; \n    } else { \n      tier = 'SAFE'; \n      skipCount++; \n    }\n    \n    totalAmt += amt;\n    \n    rows.push({\n      party_name: String(d.party_name || d.party || 'Unknown'),\n      amount: String(amt),\n      days_overdue: String(days),\n      tier: tier,\n      phone: String(d.mobile || d.contact_phone || d.phone || ''), // Added 'mobile' fallback to parse phone numbers correctly\n      message: tier === 'URGENT' ? 'Immediate payment required' : (tier === 'REMINDER' ? 'Payment reminder sent' : ''),\n      current_date: current_date\n    });\n  });\n  \n  const topUrgent = rows.filter(r => r.tier === 'URGENT').slice(0, 5).map(r => `${r.party_name} (₹${r.amount}, ${r.days_overdue} days)`).join('; ');\n  \n  const llmSummary = `\\n    Total Outstanding: ₹${totalAmt.toFixed(2)}\\n    URGENT (>45 days): ${urgentCount} parties, Total: ₹${urgentAmt.toFixed(2)}. Top defaulters: ${topUrgent || 'None'}\\n    REMINDER (15-45 days): ${reminderCount} parties, Total: ₹${reminderAmt.toFixed(2)}\\n    SAFE (<15 days): ${skipCount} parties\\n  `;\n  \n  return { \n    success: true, \n    sheet_rows: rows, \n    llmSummary, \n    has_urgent: urgentCount > 0 ? \"true\" : \"false\", \n    urgentCount, \n    urgentAmt, \n    reminderCount, \n    reminderAmt, \n    totalAmt, \n    topUrgentText: topUrgent || 'None' \n  };\n};",
+              "packageJson": "{}"
+            },
+            "errorHandlingOptions": {
+              "retryOnFailure": {
+                "value": false
+              },
+              "continueOnFailure": {
+                "value": false
+              }
+            }
+          },
+          "nextAction": {
+            "name": "step_3",
+            "skip": false,
+            "type": "PIECE",
+            "valid": true,
+            "settings": {
+              "input": {
+                "model": "{\"modelValue\":\"anthropic/claude-opus-4.1\",\"providerName\":\"OpenRouter\"}",
+                "query": "You are a Chief Financial Officer AI. Review this Accounts Receivable summary:\n{{step_2['llmSummary']}}\n\nProvide:\n1. 'prediction': Estimate how much cash might be collected this week (e.g. 20-30% of reminders, 10% of urgent).\n2. 'strategy': A concise 2-sentence recommendation for handling the top urgent debtors to maximize recovery.\n\nOutput STRICTLY as JSON: {\"prediction\": \"...\", \"strategy\": \"...\"}",
+                "temperature": 0.4,
+                "puchoModelKey": "anthropic/claude-opus-4.1",
+                "puchoProviderName": "OpenRouter"
+              },
+              "pieceName": "@puchoaistudio/tool-llm-ai",
+              "actionName": "askLlm",
+              "sampleData": {},
+              "pieceVersion": "^2.1.1",
+              "propertySettings": {
+                "auth": {
+                  "type": "MANUAL"
+                },
+                "model": {
+                  "type": "MANUAL"
+                },
+                "query": {
+                  "type": "MANUAL"
+                },
+                "maxTokens": {
+                  "type": "MANUAL"
+                },
+                "temperature": {
+                  "type": "MANUAL"
+                },
+                "maxTokensNote": {
+                  "type": "MANUAL"
+                },
+                "puchoModelKey": {
+                  "type": "MANUAL"
+                },
+                "puchoProviderName": {
+                  "type": "MANUAL"
+                }
+              },
+              "errorHandlingOptions": {
+                "retryOnFailure": {
+                  "value": true
+                },
+                "continueOnFailure": {
+                  "value": false
+                }
+              }
+            },
+            "nextAction": {
+              "name": "step_4",
+              "skip": false,
+              "type": "CODE",
+              "valid": true,
+              "settings": {
+                "input": {
+                  "ai_output": "{{step_3['data']['response']}}"
+                },
+                "sampleData": {},
+                "sourceCode": {
+                  "code": "export const code = async (inputs) => {\n  let parsed = { prediction: \"AI prediction unavailable.\", strategy: \"Please review manually.\" };\n  try {\n    const clean = String(inputs.ai_output).replace(/```json\\s*/g, '').replace(/```\\s*/g, '').trim();\n    parsed = JSON.parse(clean);\n  } catch (e) {}\n  return { prediction: parsed.prediction, strategy: parsed.strategy };\n};",
+                  "packageJson": "{}"
+                },
+                "errorHandlingOptions": {
+                  "retryOnFailure": {
+                    "value": false
+                  },
+                  "continueOnFailure": {
+                    "value": false
+                  }
+                }
+              },
+              "nextAction": {
+                "name": "step_router",
+                "skip": false,
+                "type": "ROUTER",
+                "valid": true,
+                "children": [
+                  {
+                    "name": "step_gmail_urgent",
+                    "skip": true,
+                    "type": "PIECE",
+                    "valid": true,
+                    "settings": {
+                      "input": {
+                        "cc": [],
+                        "bcc": [],
+                        "auth": "{{connections['k0PVujjIQB2splxgupBDI']}}",
+                        "body": "<h2>Accounts Receivable Summary</h2><ul><li><strong>Total Outstanding:</strong> ₹{{step_2['totalAmt']}}</li><li><strong>Urgent (>45 days):</strong> ₹{{step_2['urgentAmt']}} ({{step_2['urgentCount']}} parties)</li><li><strong>Reminder (15-45 days):</strong> ₹{{step_2['reminderAmt']}} ({{step_2['reminderCount']}} parties)</li></ul><h3>Top Defaulters</h3><p>{{step_2['topUrgentText']}}</p><h3>🤖 AI Cash Prediction</h3><p>{{step_4['prediction']}}</p><h3>💡 Recommended Collection Strategy</h3><p>{{step_4['strategy']}}</p><p><em>Generated by Pucho.ai Smart Debtor Follow-up</em></p>",
+                        "draft": false,
+                        "subject": "🚨 AR Collection Strategy & Prediction",
+                        "receiver": [
+                          "chintan@pucho.ai"
+                        ],
+                        "reply_to": [],
+                        "body_type": "html"
+                      },
+                      "pieceName": "@puchoaistudio/tool-gmail",
+                      "actionName": "send_email",
+                      "sampleData": {},
+                      "pieceVersion": "^2.0.4",
+                      "propertySettings": {
+                        "cc": {
+                          "type": "MANUAL"
+                        },
+                        "bcc": {
+                          "type": "MANUAL"
+                        },
+                        "auth": {
+                          "type": "MANUAL"
+                        },
+                        "body": {
+                          "type": "MANUAL"
+                        },
+                        "from": {
+                          "type": "MANUAL"
+                        },
+                        "draft": {
+                          "type": "MANUAL"
+                        },
+                        "subject": {
+                          "type": "MANUAL"
+                        },
+                        "receiver": {
+                          "type": "MANUAL"
+                        },
+                        "reply_to": {
+                          "type": "MANUAL"
+                        },
+                        "body_type": {
+                          "type": "MANUAL"
+                        },
+                        "attachment": {
+                          "type": "MANUAL"
+                        },
+                        "sender_name": {
+                          "type": "MANUAL"
+                        },
+                        "attachment_name": {
+                          "type": "MANUAL"
+                        }
+                      },
+                      "errorHandlingOptions": {
+                        "retryOnFailure": {
+                          "value": false
+                        },
+                        "continueOnFailure": {
+                          "value": true
+                        }
+                      }
+                    },
+                    "displayName": "Gmail: CFO Report"
+                  },
+                  null
+                ],
+                "settings": {
+                  "branches": [
+                    {
+                      "branchName": "Urgent Exists",
+                      "branchType": "CONDITION",
+                      "conditions": [
+                        [
+                          {
+                            "operator": "TEXT_CONTAINS",
+                            "firstValue": "{{step_2['has_urgent']}}",
+                            "secondValue": "true",
+                            "caseSensitive": false
+                          }
+                        ]
+                      ]
+                    },
+                    {
+                      "branchName": "All Safe",
+                      "branchType": "FALLBACK"
+                    }
+                  ],
+                  "sampleData": {},
+                  "executionType": "EXECUTE_FIRST_MATCH"
+                },
+                "nextAction": {
+                  "name": "step_sheet_clear",
+                  "skip": false,
+                  "type": "PIECE",
+                  "valid": true,
+                  "settings": {
+                    "input": {
+                      "auth": "{{connections['a8tQavjpFV9n7600r2c2E']}}",
+                      "sheetId": 1343359642,
+                      "spreadsheetId": "14hvM9J_bkv_7cgYsm5qTZ9ARhGa8gsFkzokqRRQAAzM",
+                      "includeTeamDrives": false,
+                      "is_first_row_headers": true
+                    },
+                    "pieceName": "@puchoaistudio/tool-google-sheets",
+                    "actionName": "clear_sheet",
+                    "sampleData": {},
+                    "pieceVersion": "^2.0.9",
+                    "propertySettings": {
+                      "auth": {
+                        "type": "MANUAL"
+                      },
+                      "sheetId": {
+                        "type": "MANUAL"
+                      },
+                      "spreadsheetId": {
+                        "type": "MANUAL"
+                      },
+                      "is_first_row_headers": {
+                        "type": "MANUAL"
+                      }
+                    },
+                    "errorHandlingOptions": {
+                      "retryOnFailure": {
+                        "value": true
+                      },
+                      "continueOnFailure": {
+                        "value": false
+                      }
+                    }
+                  },
+                  "nextAction": {
+                    "name": "step_5",
+                    "skip": false,
+                    "type": "PIECE",
+                    "valid": true,
+                    "settings": {
+                      "input": {
+                        "auth": "{{connections['a8tQavjpFV9n7600r2c2E']}}",
+                        "values": {
+                          "values": "{{step_2['sheet_rows']}}"
+                        },
+                        "sheetId": 1343359642,
+                        "as_string": false,
+                        "overwrite": false,
+                        "input_type": "json",
+                        "spreadsheetId": "14hvM9J_bkv_7cgYsm5qTZ9ARhGa8gsFkzokqRRQAAzM",
+                        "includeTeamDrives": false,
+                        "check_for_duplicate": false,
+                        "check_for_duplicate_column": {}
+                      },
+                      "pieceName": "@puchoaistudio/tool-google-sheets",
+                      "actionName": "google-sheets-insert-multiple-rows",
+                      "sampleData": {},
+                      "pieceVersion": "^2.0.9",
+                      "propertySettings": {
+                        "auth": {
+                          "type": "MANUAL"
+                        },
+                        "values": {
+                          "type": "MANUAL",
+                          "schema": {
+                            "values": {
+                              "type": "JSON",
+                              "required": true,
+                              "displayName": "JSON",
+                              "defaultValue": [
+                                {
+                                  "column1": "value1",
+                                  "column2": "value2"
+                                },
+                                {
+                                  "column1": "value3",
+                                  "column2": "value4"
+                                }
+                              ]
+                            },
+                            "markdown": {
+                              "type": "MARKDOWN",
+                              "variant": "INFO",
+                              "required": false,
+                              "description": "Provide values in JSON format. Ensure the column names match the sheet's header.",
+                              "displayName": "Markdown"
+                            }
+                          }
+                        },
+                        "sheetId": {
+                          "type": "MANUAL"
+                        },
+                        "as_string": {
+                          "type": "MANUAL"
+                        },
+                        "overwrite": {
+                          "type": "MANUAL"
+                        },
+                        "input_type": {
+                          "type": "MANUAL"
+                        },
+                        "spreadsheetId": {
+                          "type": "MANUAL"
+                        },
+                        "includeTeamDrives": {
+                          "type": "MANUAL"
+                        },
+                        "check_for_duplicate": {
+                          "type": "MANUAL"
+                        },
+                        "check_for_duplicate_column": {
+                          "type": "MANUAL",
+                          "schema": {}
+                        }
+                      },
+                      "errorHandlingOptions": {
+                        "retryOnFailure": {
+                          "value": false
+                        },
+                        "continueOnFailure": {
+                          "value": false
+                        }
+                      }
+                    },
+                    "displayName": "Insert Multiple Rows"
+                  },
+                  "displayName": "Clear Sheet"
+                },
+                "displayName": "Branch on Urgency"
+              },
+              "displayName": "Parse AI Output"
+            },
+            "displayName": "AI: Cash Prediction & Strategy"
+          },
+          "displayName": "Process Large AR Data & Summarize"
+        },
+        "displayName": "Ask Tally Template"
+      }
+    },
+    "valid": true,
+    "agentIds": [],
+    "connectionIds": [
+      "k0PVujjIQB2splxgupBDI",
+      "a8tQavjpFV9n7600r2c2E"
+    ],
+    "schemaVersion": "7"
+  },
+  "blogUrl": ""
+}

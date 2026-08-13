@@ -11,7 +11,7 @@ const ByLedger = () => {
   const { currentCompany } = useCompany();
   const { dateRange } = useDateRange();
   
-  const { ledgers: apiLedgers, vouchers, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { ledgers: apiLedgers, vouchers, voucherLines, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
 
   const normalizedLedgers = useMemo(() => {
     if (!apiLedgers || apiLedgers.length === 0) return [];
@@ -37,28 +37,44 @@ const ByLedger = () => {
       };
     });
 
-    if (!vouchers || vouchers.length === 0) {
+    if (!vouchers || !voucherLines) {
       return Object.values(transactions).filter(t => t.count > 0).sort((a, b) => b.count - a.count);
     }
-    
-    let filteredVouchers = vouchers;
-    if (dateRange.startDate && dateRange.endDate) {
-      filteredVouchers = vouchers.filter(v => {
-        const voucherDate = new Date(v.VoucherDate || v.date);
-        return voucherDate >= new Date(dateRange.startDate) && voucherDate <= new Date(dateRange.endDate);
-      });
-    }
 
-    filteredVouchers.forEach(voucher => {
-      const ledgerName = voucher.partyName || voucher.PartyName;
-      const ledger = normalizedLedgers.find(l => l.name === ledgerName);
-      if (ledger) {
-        transactions[ledger.id].count++;
-        transactions[ledger.id].vouchers.push({
-          id: voucher.id || voucher.VoucherID,
-          date: voucher.date || voucher.VoucherDate,
-          voucherNo: voucher.voucherNo || voucher.VoucherNo,
-          amount: voucher.netAmount || voucher.NetAmount || voucher.grossTotal || 0
+    const voucherMap = new Map();
+    vouchers.forEach(v => {
+      voucherMap.set(v.VoucherID, v);
+    });
+
+    const dateStart = dateRange.startDate ? new Date(dateRange.startDate) : null;
+    const dateEnd = dateRange.endDate ? new Date(dateRange.endDate) : null;
+
+    voucherLines.forEach(line => {
+      if (line.LineType !== 'Ledger') return;
+      if (!line.LedgerID) return;
+
+      const parentVoucher = voucherMap.get(line.VoucherID);
+      if (!parentVoucher) return;
+
+      const voucherDate = new Date(parentVoucher.VoucherDate);
+      if (dateStart && dateEnd) {
+        if (voucherDate < dateStart || voucherDate > dateEnd) return;
+      }
+
+      const ledgerId = line.LedgerID;
+      if (transactions[ledgerId]) {
+        const debit = parseFloat(line.LedgerDebit || 0);
+        const credit = parseFloat(line.LedgerCredit || 0);
+        
+        transactions[ledgerId].debits += debit;
+        transactions[ledgerId].credits += credit;
+        transactions[ledgerId].count++;
+        transactions[ledgerId].vouchers.push({
+          id: line.VoucherID,
+          date: parentVoucher.VoucherDate,
+          voucherNo: parentVoucher.VoucherNo,
+          type: parentVoucher.VoucherType,
+          amount: parseFloat(line.Amount || 0)
         });
       }
     });
@@ -66,7 +82,7 @@ const ByLedger = () => {
     return Object.values(transactions)
       .filter(t => t.count > 0)
       .sort((a, b) => b.count - a.count);
-  }, [normalizedLedgers, vouchers, dateRange]);
+  }, [normalizedLedgers, vouchers, voucherLines, dateRange]);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {
@@ -149,7 +165,8 @@ const ByLedger = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.03 }}
-                className="px-4 py-3 hover:bg-canvas-faint transition-colors"
+                onClick={() => navigate(`/reports/ledger/${item.ledger.id}`)}
+                className="px-4 py-3 hover:bg-canvas-faint transition-colors cursor-pointer"
               >
                 <div className="flex items-center justify-between">
                   <div>

@@ -1,0 +1,6549 @@
+{
+ "webhook": {
+  "version": "2.0.4",
+  "auth": "None",
+  "actions": [
+   "return_response",
+   "return_response_and_wait_for_next_webhook"
+  ],
+  "triggers": [
+   "catch_webhook"
+  ]
+ },
+ "schedule": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [],
+  "triggers": [
+   "every_x_minutes",
+   "every_hour",
+   "every_day",
+   "every_week",
+   "every_month",
+   "cron_expression"
+  ]
+ },
+ "http": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "send_request"
+  ],
+  "triggers": []
+ },
+ "http-oauth2": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "send-oauth2-request"
+  ],
+  "triggers": []
+ },
+ "delay": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "delayFor",
+   "delay_until"
+  ],
+  "triggers": []
+ },
+ "store": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "get",
+   "put",
+   "append",
+   "remove_value",
+   "add_to_list",
+   "remove_from_list"
+  ],
+  "triggers": []
+ },
+ "subflows": {
+  "version": "2.0.1",
+  "auth": "None",
+  "actions": [
+   "callFlow",
+   "returnResponse"
+  ],
+  "triggers": [
+   "callableFlow"
+  ]
+ },
+ "flow-helper": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "getRunId",
+   "failFlow",
+   "stopFlow"
+  ],
+  "triggers": []
+ },
+ "tables": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "tables-create-records",
+   "tables-delete-record",
+   "tables-update-record",
+   "tables-get-record",
+   "tables-find-records"
+  ],
+  "triggers": [
+   "newRecord",
+   "updatedRecord",
+   "deletedRecord"
+  ]
+ },
+ "tags": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "add_tag"
+  ],
+  "triggers": []
+ },
+ "connections": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "read_connection"
+  ],
+  "triggers": []
+ },
+ "forms": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "return_response"
+  ],
+  "triggers": [
+   "form_submission",
+   "chat_submission"
+  ]
+ },
+ "approval": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "wait_for_approval",
+   "create_approval_links"
+  ],
+  "triggers": []
+ },
+ "todos": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "createTodo",
+   "wait_for_approval",
+   "createTodoAndWait"
+  ],
+  "triggers": []
+ },
+ "mcp": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "reply_to_mcp_client"
+  ],
+  "triggers": [
+   "mcp_tool"
+  ]
+ },
+ "queue": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "push-to-queue",
+   "pull-from-queue",
+   "clear-queue"
+  ],
+  "triggers": []
+ },
+ "llm-ai": {
+  "version": "2.1.1",
+  "auth": "None",
+  "actions": [
+   "askLlm"
+  ],
+  "triggers": []
+ },
+ "image-ai": {
+  "version": "2.1.1",
+  "auth": "None",
+  "actions": [
+   "generateImage"
+  ],
+  "triggers": []
+ },
+ "text-ai": {
+  "version": "2.1.1",
+  "auth": "None",
+  "actions": [
+   "askTextAI"
+  ],
+  "triggers": []
+ },
+ "video-ai": {
+  "version": "2.2.1",
+  "auth": "None",
+  "actions": [
+   "generateVideoJobId",
+   "checkVideoStatus"
+  ],
+  "triggers": []
+ },
+ "ai-voice-call": {
+  "version": "2.1.2",
+  "auth": "None",
+  "actions": [
+   "voiceCall",
+   "getCallDetails"
+  ],
+  "triggers": []
+ },
+ "web-search": {
+  "version": "2.1.1",
+  "auth": "None",
+  "actions": [
+   "webSearch"
+  ],
+  "triggers": []
+ },
+ "ocr-analytics": {
+  "version": "2.1.1",
+  "auth": "None",
+  "actions": [
+   "askImage/PDF"
+  ],
+  "triggers": []
+ },
+ "speech-intelligence": {
+  "version": "2.1.1",
+  "auth": "None",
+  "actions": [
+   "textToSpeech",
+   "speechToText"
+  ],
+  "triggers": []
+ },
+ "utility-ai": {
+  "version": "2.1.1",
+  "auth": "None",
+  "actions": [
+   "checkModeration",
+   "classifyText",
+   "extractStructuredData"
+  ],
+  "triggers": []
+ },
+ "scrape-fusion": {
+  "version": "2.1.1",
+  "auth": "None",
+  "actions": [
+   "single_page_scraping",
+   "whole_website_scraping"
+  ],
+  "triggers": []
+ },
+ "tallyconnection": {
+  "version": "2.1.5",
+  "auth": "None",
+  "actions": [
+   "askTally",
+   "ask_tally_template"
+  ],
+  "triggers": []
+ },
+ "crypto": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "hash-text",
+   "hmac-signature",
+   "generate-password",
+   "base64-decode",
+   "base64-encode",
+   "openpgpEncrypt"
+  ],
+  "triggers": []
+ },
+ "csv": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "convert_csv_to_json",
+   "convert_json_to_csv"
+  ],
+  "triggers": []
+ },
+ "xml": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "convert-json-to-xml"
+  ],
+  "triggers": []
+ },
+ "json": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "convert_json_to_text",
+   "convert_text_to_json"
+  ],
+  "triggers": []
+ },
+ "file-helper": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "read_file",
+   "createFile",
+   "change_file_encoding",
+   "checkFileType",
+   "zipFiles",
+   "unzipFile"
+  ],
+  "triggers": []
+ },
+ "image-helper": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "image_to_base64",
+   "get_meta_data",
+   "crop_image",
+   "rotate_image",
+   "resize_image",
+   "compress_image"
+  ],
+  "triggers": []
+ },
+ "text-helper": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "concat",
+   "replace",
+   "split",
+   "find",
+   "markdown_to_html",
+   "html_to_markdown",
+   "stripHtml",
+   "slugify",
+   "defaultValue"
+  ],
+  "triggers": []
+ },
+ "math-helper": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "addition_math",
+   "subtraction_math",
+   "multiplication_math",
+   "division_math",
+   "modulo_math",
+   "generateRandom_math"
+  ],
+  "triggers": []
+ },
+ "date-helper": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "get_current_date",
+   "format_date",
+   "extract_date_parts",
+   "date_difference",
+   "add_subtract_date",
+   "next_day_of_week",
+   "next_day_of_year"
+  ],
+  "triggers": []
+ },
+ "data-mapper": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "advanced_mapping"
+  ],
+  "triggers": []
+ },
+ "data-summarizer": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "calculateAverage",
+   "calculateSum",
+   "countUniques",
+   "getMinMax"
+  ],
+  "triggers": []
+ },
+ "graphql": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "send_request"
+  ],
+  "triggers": []
+ },
+ "pdf": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "extractText",
+   "convertToImage",
+   "textToPdf",
+   "imageToPdf",
+   "pdfPageCount",
+   "extractPdfPages"
+  ],
+  "triggers": []
+ },
+ "soap": {
+  "version": "2.0.0",
+  "auth": "Custom(type,username,password,customHeader)",
+  "actions": [
+   "call_method"
+  ],
+  "triggers": []
+ },
+ "base64-image": {
+  "version": "2.0.3",
+  "auth": "None",
+  "actions": [
+   "convert_base64_to_file"
+  ],
+  "triggers": []
+ },
+ "hugging-face": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "document_question_answering",
+   "language_translation",
+   "text_classification",
+   "text_summarization",
+   "chat_completion",
+   "create_image",
+   "object_detection",
+   "image_classification"
+  ],
+  "triggers": []
+ },
+ "deepgram": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_summary",
+   "create_transcription_callback",
+   "list_projects",
+   "text_to_speech",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "cometapi": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "ask-cometapi",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "agent": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "run_agent"
+  ],
+  "triggers": []
+ },
+ "docsbot": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "askQuestion",
+   "createSource",
+   "uploadSourceFile",
+   "createBot",
+   "findBot",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "copy-ai": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "run_workflow",
+   "get_workflow_run_status",
+   "get_workflow_run_outputs"
+  ],
+  "triggers": [
+   "workflow_run_completed"
+  ]
+ },
+ "dappier": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "real_time_web_search",
+   "stock_market_data_search",
+   "sports_news_search",
+   "lifestyle_news_search"
+  ],
+  "triggers": []
+ },
+ "firecrawl": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "scrape",
+   "startCrawl",
+   "crawlResults",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "apify": {
+  "version": "2.0.0",
+  "auth": "Custom(apikey)",
+  "actions": [
+   "getDatasetItems",
+   "getActors",
+   "getLastRun",
+   "startActor"
+  ],
+  "triggers": []
+ },
+ "browserless": {
+  "version": "2.0.0",
+  "auth": "Custom(apiToken,region,customBaseUrl)",
+  "actions": [
+   "capture_screenshot",
+   "generate_pdf",
+   "scrape_url",
+   "run_bql_query",
+   "get_website_performance"
+  ],
+  "triggers": []
+ },
+ "cody": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_document_from_text",
+   "upload_file",
+   "send_message",
+   "create_conversation",
+   "find_bot",
+   "find_conversation",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "fireflies-ai": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "find-meeting-by-id",
+   "find_recent_meeting",
+   "find_meeting_by_query",
+   "upload_audio",
+   "get-user-details"
+  ],
+  "triggers": [
+   "new_transcription_completed"
+  ]
+ },
+ "avoma": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_call",
+   "get_meeting_recording",
+   "get_meeting_transcription"
+  ],
+  "triggers": [
+   "new_note",
+   "new_meeting_scheduled",
+   "meeting_rescheduled",
+   "meeting_cancelled"
+  ]
+ },
+ "bumpups": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "generateCreatorDescription",
+   "generateCreatorHashtags",
+   "generateCreatorTakeaways",
+   "generateCreatorTitles",
+   "generateTimestamps",
+   "send_chat",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "pinecone": {
+  "version": "2.0.0",
+  "auth": "Custom(apiKey)",
+  "actions": [
+   "create_index",
+   "upsert_vector",
+   "update_vector",
+   "get_vector",
+   "delete_vector",
+   "search_vector",
+   "search_index"
+  ],
+  "triggers": []
+ },
+ "qdrant": {
+  "version": "2.0.0",
+  "auth": "Custom(serverAddress,key)",
+  "actions": [
+   "add_points_to_collection",
+   "collection_list",
+   "collection_infos",
+   "delete_collection",
+   "delete_points",
+   "get_points",
+   "search_points"
+  ],
+  "triggers": []
+ },
+ "personal-ai": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_memory",
+   "create_message",
+   "create_chatgpt_instruction",
+   "create_custom_training",
+   "get_conversation",
+   "upload_document",
+   "upload_file",
+   "upload_url",
+   "update_document",
+   "get_document"
+  ],
+  "triggers": []
+ },
+ "comfyicu": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "get-run-output",
+   "get-run-status",
+   "list-workflows",
+   "submit-workflow-run"
+  ],
+  "triggers": [
+   "new-workflow-created",
+   "run-completed",
+   "run-failed"
+  ]
+ },
+ "gistly": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "get_transcript"
+  ],
+  "triggers": []
+ },
+ "mindee": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "mindee_predict_document",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "vlm-run": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "analyzeAudio",
+   "analyzeImage",
+   "analyzeDocument",
+   "analyzeVideo",
+   "getFile",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "scrapeless": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "google_search_api",
+   "crawl_scrape",
+   "crawl_crawl",
+   "google_trends_api",
+   "universal_scraping_api",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "straico": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "prompt_completion",
+   "image_generation",
+   "file_upload",
+   "create_rag",
+   "list_rags",
+   "get_rag_by_id",
+   "update_rag",
+   "delete_rag",
+   "rag_prompt_completion",
+   "agent-create",
+   "agent-add-rag",
+   "agent-list",
+   "agent_delete",
+   "agent_update",
+   "agent_get",
+   "agent_prompt_completion",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "prompthub": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "list_projects",
+   "get_project_head",
+   "run_prompt",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "pdf-co": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "add_barcode_to_pdf",
+   "add_image_to_pdf",
+   "add_text_to_pdf",
+   "convert_html_to_pdf",
+   "convert_pdf_to_structured_format",
+   "extract_tables_from_pdf",
+   "extract_text_from_pdf",
+   "search_and_replace_text"
+  ],
+  "triggers": []
+ },
+ "pdfmonkey": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "generateDocument",
+   "deleteDocument",
+   "findDocument",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "documentGenerated"
+  ]
+ },
+ "peekshot": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "captureScreenshot",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "placid": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_image",
+   "create_pdf",
+   "create_video",
+   "convert_file_to_url",
+   "get_image",
+   "get_pdf",
+   "get_video",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "bannerbear": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "bannerbear_create_image",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "generatebanners": {
+  "version": "2.0.0",
+  "auth": "Basic Auth",
+  "actions": [
+   "render_template"
+  ],
+  "triggers": []
+ },
+ "apitemplate-io": {
+  "version": "2.0.0",
+  "auth": "Custom(region,apiKey)",
+  "actions": [
+   "createImage",
+   "createPdfFromHtml",
+   "createPdfFromUrl",
+   "createPdf",
+   "deleteObject",
+   "getAccountInformation",
+   "listObjects",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "gamma": {
+  "version": "2.0.1",
+  "auth": "Custom(apiKey)",
+  "actions": [
+   "generateGamma",
+   "getGeneration"
+  ],
+  "triggers": []
+ },
+ "magicslides": {
+  "version": "2.0.0",
+  "auth": "Custom(accessId,email)",
+  "actions": [
+   "createPptFromTopic",
+   "createPptFromText",
+   "createPptFromYoutube"
+  ],
+  "triggers": []
+ },
+ "slidespeak": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create-presentation",
+   "edit-presentation",
+   "get-task-status",
+   "upload-docuemnt",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new-presentation"
+  ]
+ },
+ "photoroom": {
+  "version": "2.0.0",
+  "auth": "Custom(apiKey)",
+  "actions": [
+   "removeBackground"
+  ],
+  "triggers": []
+ },
+ "supadata": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "get_transcript"
+  ],
+  "triggers": []
+ },
+ "serp-api": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "google_search",
+   "google_news_search",
+   "youtube_search",
+   "google_trends_search"
+  ],
+  "triggers": []
+ },
+ "serpstat": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "get_keywords",
+   "get_suggestions",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "webscraping-ai": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "askAQuestionAboutTheWebPage",
+   "getPageHtml",
+   "scrapeWebsiteText",
+   "extractStructuredData",
+   "getAccountInformation"
+  ],
+  "triggers": []
+ },
+ "aircall": {
+  "version": "2.0.0",
+  "auth": "Basic Auth",
+  "actions": [
+   "commentACall",
+   "createAContact",
+   "findCalls",
+   "findContact",
+   "getCall",
+   "tagACall",
+   "updateContact",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "callEnded",
+   "newContact",
+   "newNote",
+   "newNumberCreated",
+   "newSms"
+  ]
+ },
+ "krisp-call": {
+  "version": "2.0.0",
+  "auth": "Custom(apiKey)",
+  "actions": [
+   "addContact",
+   "deleteContacts",
+   "sendSms",
+   "sendMms"
+  ],
+  "triggers": [
+   "newVoicemail",
+   "newMms",
+   "newContact",
+   "newCallLog",
+   "OutboundSMS/MMS"
+  ]
+ },
+ "open-phone": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "send_message",
+   "create_contact",
+   "update_contact",
+   "get_call_summary"
+  ],
+  "triggers": [
+   "call_recording_completed",
+   "outgoing_message_delivered",
+   "outgoing_call_completed",
+   "incoming_call_completed",
+   "incoming_message_received"
+  ]
+ },
+ "timelines-ai": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "sendMessageToExistingChat",
+   "sendUploadedFileToExistingChat",
+   "sendFileToExistingChat",
+   "sendMessageToNewChat",
+   "closeChat",
+   "findChat",
+   "findMessage",
+   "findUploadedFile",
+   "findMessageStatus",
+   "findWhatsappAccount",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "chatClosed",
+   "newOutgoingChat",
+   "newIncomingChat",
+   "newSentMessage",
+   "newReceivedMessage",
+   "newUploadedFile",
+   "newWhatsappAccount"
+  ]
+ },
+ "rounded-studio": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "gmail": {
+  "version": "2.0.4",
+  "auth": "OAuth2",
+  "actions": [
+   "send_email",
+   "gmail_get_mail",
+   "gmail_search_mail",
+   "gmail_get_thread",
+   "create_draft",
+   "add_label_to_email",
+   "reply_to_email",
+   "create_draft_reply",
+   "create_label",
+   "remove_label_from_email",
+   "remove_label_from_thread",
+   "gmail_find_email",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "gmail_new_email_received",
+   "new_labeled_email",
+   "gmail_new_attachment",
+   "gmail_new_thread",
+   "gmail_new_email_matching",
+   "gmail_new_starred_email"
+  ]
+ },
+ "google-sheets": {
+  "version": "2.0.9",
+  "auth": "OAuth2",
+  "actions": [
+   "insert_row",
+   "google-sheets-insert-multiple-rows",
+   "delete_row",
+   "update_row",
+   "find_rows",
+   "create-spreadsheet",
+   "create-worksheet",
+   "clear_sheet",
+   "find_row_by_num",
+   "get_next_rows",
+   "get_all_rows",
+   "find_spreadsheets",
+   "find-worksheet",
+   "copy-worksheet",
+   "update-multiple-rows",
+   "create-column",
+   "export_sheet",
+   "find-or-create-worksheet",
+   "find-or-create-row",
+   "insert_row_at_top",
+   "clear_rows",
+   "lookup_spreadsheet_rows",
+   "delete-worksheet",
+   "rename-worksheet",
+   "get_cell_value",
+   "update_cell_value",
+   "count_rows",
+   "list-worksheets",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "googlesheets_new_row_added",
+   "google-sheets-new-or-updated-row",
+   "new-spreadsheet",
+   "new-worksheet",
+   "googlesheets_new_row_added_team_drive",
+   "google-sheets-new-or-updated-row-team-drive"
+  ]
+ },
+ "google-drive": {
+  "version": "2.0.4",
+  "auth": "OAuth2",
+  "actions": [
+   "create_new_gdrive_folder",
+   "create_new_gdrive_file",
+   "upload_gdrive_file",
+   "read-file",
+   "get-file-or-folder-by-id",
+   "list-files",
+   "search-folder",
+   "duplicate_file",
+   "save_file_as_pdf",
+   "update_permissions",
+   "delete_permissions",
+   "set_public_access",
+   "google-drive-move-file",
+   "delete_gdrive_file",
+   "trash_gdrive_file",
+   "copy_file",
+   "create_file_from_text",
+   "replace_file",
+   "add_file_sharing_preference",
+   "create_shortcut",
+   "update_file_folder_name",
+   "api_request",
+   "retrieve_files",
+   "find_file",
+   "retrieve_file_by_id",
+   "find_folder",
+   "find_multiple_files",
+   "find_or_create_folder",
+   "find_or_create_file",
+   "get_storage_info",
+   "list_shared_drives",
+   "get_file_sharing_info",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_file",
+   "new_folder",
+   "new_file_in_folder",
+   "updated_file"
+  ]
+ },
+ "google-docs": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "create_document",
+   "create_document_based_on_template",
+   "create_document_from_template",
+   "create_document_from_text",
+   "upload_document",
+   "read_document",
+   "google-docs-find-document",
+   "api_request",
+   "custom_api_call",
+   "append_text"
+  ],
+  "triggers": [
+   "new-document",
+   "new_document_in_folder"
+  ]
+ },
+ "google-calendar": {
+  "version": "2.0.3",
+  "auth": "OAuth2",
+  "actions": [
+   "google-calendar-add-attendees",
+   "create_google_calendar",
+   "create_quick_event",
+   "create_google_calendar_event",
+   "create_detailed_google_calendar_event",
+   "retrieve_event_by_id",
+   "find_event",
+   "find_multiple_events",
+   "find_or_create_event",
+   "google_calendar_get_events",
+   "update_event",
+   "delete_event",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "event_calendar",
+   "new_calendar",
+   "event_ended",
+   "event_started",
+   "new_event",
+   "updated_event",
+   "new_event_matching_search"
+  ]
+ },
+ "google-contacts": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "create_contact",
+   "update_contact",
+   "search_contact",
+   "add_contact_to_group",
+   "remove_contact_from_group",
+   "create_group",
+   "upload_contact_photo",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_contact_only",
+   "new_group",
+   "new_or_updated_contact"
+  ]
+ },
+ "google-forms": {
+  "version": "2.0.1",
+  "auth": "OAuth2",
+  "actions": [
+   "list_forms",
+   "get_form",
+   "get_form_responses",
+   "get_form_response",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_response",
+   "new_or_updated_response"
+  ]
+ },
+ "google-slides": {
+  "version": "2.0.4",
+  "auth": "OAuth2",
+  "actions": [
+   "search_presentations",
+   "get_presentation",
+   "create_presentation",
+   "generate_from_template",
+   "add_slide",
+   "update_text_in_presentation",
+   "refresh_sheets_charts",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "google-meet": {
+  "version": "2.0.1",
+  "auth": "OAuth2",
+  "actions": [
+   "schedule_google_meet_meeting",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "google-tasks": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "add_task",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_task"
+  ]
+ },
+ "google-my-business": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "create-reply",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_review"
+  ]
+ },
+ "google-search-console": {
+  "version": "2.0.1",
+  "auth": "OAuth2",
+  "actions": [
+   "search_analytics",
+   "list_sitemaps",
+   "submit_sitemap",
+   "list_sites",
+   "add_site",
+   "delete_site",
+   "urlInspection",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "googlechat": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "sendAMessage",
+   "getDirectMessageDetails",
+   "addASpaceMember",
+   "getMessageDetails",
+   "searchMessages",
+   "findMember"
+  ],
+  "triggers": [
+   "newMessage",
+   "newMention"
+  ]
+ },
+ "microsoft-teams": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "microsoft_teams_create_channel",
+   "microsoft_teams_send_channel_message",
+   "microsoft_teams_send_chat_message",
+   "microsoft_teams_reply_to_channel_message",
+   "microsoft_teams_create_chat_and_send_message",
+   "microsoft_teams_create_private_channel",
+   "microsoft_teams_get_chat_message",
+   "microsoft_teams_get_channel_message",
+   "microsoft_teams_find_channel",
+   "microsoft_teams_find_team_member",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new-channel-message",
+   "new-channel",
+   "new-chat",
+   "new-chat-message"
+  ]
+ },
+ "microsoft-outlook": {
+  "version": "2.0.2",
+  "auth": "OAuth2",
+  "actions": [
+   "send-email",
+   "downloadAttachment",
+   "reply-email",
+   "createDraftEmail",
+   "addLabelToEmail",
+   "removeLabelFromEmail",
+   "moveEmailToFolder",
+   "sendDraftEmail",
+   "forwardEmail",
+   "findEmail",
+   "delete_email",
+   "copy_email",
+   "flag_email",
+   "mark_email_read_unread",
+   "set_email_importance",
+   "create_folder",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "newEmail",
+   "newEmailInFolder",
+   "newAttachment",
+   "newEmailMatchingSearch",
+   "newEmailInSharedMailbox",
+   "newFlaggedEmail"
+  ]
+ },
+ "microsoft-outlook-calendar": {
+  "version": "2.0.2",
+  "auth": "OAuth2",
+  "actions": [
+   "create_event",
+   "delete_event",
+   "list_events",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "outlook_new_calendar_event",
+   "outlook_updated_calendar_event"
+  ]
+ },
+ "microsoft-onedrive": {
+  "version": "2.0.2",
+  "auth": "OAuth2",
+  "actions": [
+   "create_root_folder",
+   "create_child_folder",
+   "create_text_file",
+   "get_file_by_id",
+   "find_file",
+   "find_folder",
+   "download_file",
+   "list_files",
+   "list_folders",
+   "create_sharing_link",
+   "new_activity",
+   "delete_file",
+   "delete_folder",
+   "export_file",
+   "move_file",
+   "move_folder",
+   "rename_file",
+   "rename_folder",
+   "remove_item_permission",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_file",
+   "new_folder",
+   "new_activity_trigger"
+  ]
+ },
+ "microsoft-excel-365": {
+  "version": "2.0.1",
+  "auth": "OAuth2",
+  "actions": [
+   "append_row",
+   "get_worksheets",
+   "get_worksheet_rows",
+   "update_row",
+   "update_table_row",
+   "clear_worksheet",
+   "delete_worksheet",
+   "get_workbooks",
+   "delete_workbook",
+   "add_worksheet",
+   "get_table_rows",
+   "get_table_columns",
+   "create_table",
+   "delete_table",
+   "lookup_table_column",
+   "append_table_rows",
+   "convert_to_range",
+   "createWorkbook",
+   "clear_column",
+   "clear_range",
+   "clear_row",
+   "create_worksheet",
+   "find_row",
+   "get_range",
+   "getRowById",
+   "get_row_item_at",
+   "get_worksheet",
+   "rename_worksheet",
+   "count_if_column",
+   "search_files",
+   "search_shared_files",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_row",
+   "new_row_in_table",
+   "new_worksheet",
+   "updated_row"
+  ]
+ },
+ "microsoft-365-people": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "createContact",
+   "deleteContact",
+   "updateContact",
+   "createContactFolder",
+   "getContactFolder",
+   "searchContacts",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "newOrUpdatedContact"
+  ]
+ },
+ "microsoft-onenote": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "create_notebook",
+   "create_section",
+   "create_note_in_section",
+   "create_page",
+   "create_image_note",
+   "append_note"
+  ],
+  "triggers": [
+   "new_note_in_section"
+  ]
+ },
+ "microsoft-sharepoint": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "microsoft_sharepoint_create_folder",
+   "microsoft_sharepoint_create_list",
+   "microsoft_sharepoint_create_list_item",
+   "microsoft_sharepoint_update_list_item",
+   "microsoft_sharepoint_delete_list_item",
+   "microsoft_sharepoint_search_list_item",
+   "microsoft_sharepoint_upload_file",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "microsoft-power-bi": {
+  "version": "2.0.1",
+  "auth": "OAuth2",
+  "actions": [
+   "list_workspaces",
+   "list_datasets",
+   "list_reports",
+   "list_dashboards",
+   "get_dashboard_tiles",
+   "get_report_pages",
+   "create_dataset",
+   "push_rows_to_dataset_table",
+   "delete_rows_from_table",
+   "refresh_dataset",
+   "get_refresh_history",
+   "clone_report",
+   "add_dashboard_in_group",
+   "add_dashboard_in_my_workspace",
+   "add_rows_in_my_workspace_dataset",
+   "get_dashboard_tile_from_my_workspace",
+   "get_dashboard_tile_from_group",
+   "get_dashboard",
+   "get_datasets_from_my_workspace",
+   "get_report_from_my_workspace",
+   "get_report_from_group",
+   "get_specific_dataset_from_my_workspace",
+   "get_specific_dataset_from_group",
+   "refresh_dataset_in_my_workspace",
+   "delete_dataset_in_my_workspace",
+   "delete_dataset_in_group",
+   "get_dataset_users_from_my_workspace",
+   "get_dataset_users_from_group",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_dataset_refresh"
+  ]
+ },
+ "microsoft-todo": {
+  "version": "2.0.1",
+  "auth": "OAuth2",
+  "actions": [
+   "create_task",
+   "create_task_list",
+   "update_task",
+   "find_task_list_by_name",
+   "find_task_by_title",
+   "complete_task",
+   "get_task",
+   "create_category",
+   "delete_category",
+   "list_time_zones",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_task_created",
+   "new_or_updated_task",
+   "task_completed",
+   "new_list",
+   "task_status_changes_to",
+   "deleted_task"
+  ]
+ },
+ "microsoft-dynamics-365-business-central": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "create-record",
+   "delete-record",
+   "get-record",
+   "update-record",
+   "search-records",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new-or-updated-record"
+  ]
+ },
+ "microsoft-dynamics-crm": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "dynamics_crm_create_record",
+   "dynamics_crm_delete_record",
+   "dynamics_crm_get_record",
+   "dynamics_crm_update_record",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "slack": {
+  "version": "2.0.3",
+  "auth": "OAuth2",
+  "actions": [
+   "slack-add-reaction-to-message",
+   "send_direct_message",
+   "send_channel_message",
+   "request_approval_direct_message",
+   "request_approval_message",
+   "request_action_direct_message",
+   "request_action_message",
+   "uploadFile",
+   "get-file",
+   "searchMessages",
+   "slack-find-user-by-email",
+   "slack-find-user-by-handle",
+   "find-user-by-id",
+   "updateMessage",
+   "slack-create-channel",
+   "slack-update-profile",
+   "getChannelHistory",
+   "slack-set-user-status",
+   "markdownToSlackFormat",
+   "retrieveThreadMessages",
+   "set-channel-topic",
+   "get-message",
+   "invite-user-to-channel",
+   "send-private-channel-message",
+   "delete-message",
+   "remove-user-from-channel",
+   "create-private-channel",
+   "add-reminder",
+   "find-public-channel",
+   "edit-message",
+   "find-user-by-name",
+   "find-user-by-username",
+   "find-message",
+   "test_private_channel_access",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new-message",
+   "new-message-in-channel",
+   "new-direct-message",
+   "new_mention",
+   "new-mention-in-direct-message",
+   "new_reaction_added",
+   "channel_created",
+   "new_command",
+   "new-command-in-direct-message",
+   "new-user",
+   "new-saved-message",
+   "new-team-custom-emoji",
+   "new-file",
+   "new-message-from-query",
+   "new-message-in-private-channel",
+   "new-pushed-message"
+  ]
+ },
+ "whatsapp": {
+  "version": "2.1.1",
+  "auth": "Custom(access_token,businessAccountId)",
+  "actions": [
+   "sendMessage",
+   "sendMedia",
+   "send-template-message",
+   "send-template-message-variable"
+  ],
+  "triggers": []
+ },
+ "telegram-bot": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "send_text_message",
+   "send_media",
+   "get_chat_member",
+   "create_invite_link",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_telegram_message"
+  ]
+ },
+ "discord": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "sendMessageWithBot",
+   "send_message_webhook",
+   "request_approval_message",
+   "add_role_to_member",
+   "remove_role_from_member",
+   "remove_member_from_guild",
+   "list_guild_members",
+   "rename_channel",
+   "create_channel",
+   "delete_channel",
+   "find_channel",
+   "remove_ban_from_user",
+   "createGuildRole",
+   "deleteGuildRole",
+   "ban_guild_member",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_message",
+   "new_member"
+  ]
+ },
+ "twilio": {
+  "version": "2.0.0",
+  "auth": "Basic Auth",
+  "actions": [
+   "send_sms",
+   "call_phone",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_incoming_sms"
+  ]
+ },
+ "smtp": {
+  "version": "2.0.0",
+  "auth": "Custom(host,email,password,port,TLS)",
+  "actions": [
+   "send-email"
+  ],
+  "triggers": []
+ },
+ "sendgrid": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "send_email",
+   "send_dynamic_template",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "imap": {
+  "version": "2.0.0",
+  "auth": "Custom(host,username,password,port,tls)",
+  "actions": [],
+  "triggers": [
+   "new_email"
+  ]
+ },
+ "ntfy": {
+  "version": "2.0.0",
+  "auth": "Custom(base_url,access_token)",
+  "actions": [
+   "send_notification",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "pushover": {
+  "version": "2.0.0",
+  "auth": "Custom(api_token,user_key)",
+  "actions": [
+   "send_notification"
+  ],
+  "triggers": []
+ },
+ "line": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "push_message",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new-message"
+  ]
+ },
+ "messagebird": {
+  "version": "2.0.0",
+  "auth": "Custom(apiKey,workspaceId,channelId)",
+  "actions": [
+   "send-sms",
+   "listMessages",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "clicksend": {
+  "version": "2.0.0",
+  "auth": "Basic Auth",
+  "actions": [
+   "send_sms",
+   "send_mms",
+   "create_contact",
+   "update_contact",
+   "delete_contact",
+   "create_contact_list",
+   "find_contact_by_email",
+   "find_contact_by_phone",
+   "find_contact_lists",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_incoming_sms"
+  ]
+ },
+ "mattermost": {
+  "version": "2.0.1",
+  "auth": "Custom(workspace_url,token)",
+  "actions": [
+   "send_message",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "bluesky": {
+  "version": "2.0.0",
+  "auth": "Custom(pdsHost,identifier,password)",
+  "actions": [
+   "createPost",
+   "likePost",
+   "repostPost",
+   "findPost",
+   "findThread"
+  ],
+  "triggers": [
+   "newPostsByAuthor",
+   "newFollowerOnAccount",
+   "newTimelinePosts",
+   "newPost"
+  ]
+ },
+ "twitter": {
+  "version": "2.0.0",
+  "auth": "Custom(consumerKey,consumerSecret,accessToken,accessTokenSecret)",
+  "actions": [
+   "create-tweet",
+   "create-reply"
+  ],
+  "triggers": []
+ },
+ "linkedin": {
+  "version": "2.0.2",
+  "auth": "OAuth2",
+  "actions": [
+   "create_share_update",
+   "create_company_update",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "facebook-pages": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "create_post",
+   "create_photo_post",
+   "create_video_post"
+  ],
+  "triggers": []
+ },
+ "facebook-leads": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [],
+  "triggers": [
+   "new_lead"
+  ]
+ },
+ "instagram-business": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "upload_photo",
+   "upload_reel"
+  ],
+  "triggers": []
+ },
+ "zoom": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "zoom_create_meeting",
+   "zoom_create_meeting_registrant",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "azure-communication-services": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "send_email"
+  ],
+  "triggers": []
+ },
+ "instasent": {
+  "version": "2.0.0",
+  "auth": "Custom(projectId,datasourceId,apiKey)",
+  "actions": [
+   "add_or_update_contact",
+   "delete_contact",
+   "add_event"
+  ],
+  "triggers": []
+ },
+ "heartbeat": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "heartbeat_create_user",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "contiguity": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "send_text",
+   "send_imessage",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "seven": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "send-sms",
+   "send-voice-call",
+   "lookup"
+  ],
+  "triggers": [
+   "new_incoming_sms"
+  ]
+ },
+ "gotify": {
+  "version": "2.0.0",
+  "auth": "Custom(base_url,app_token)",
+  "actions": [
+   "send_notification"
+  ],
+  "triggers": []
+ },
+ "mastodon": {
+  "version": "2.0.0",
+  "auth": "Custom(base_url,access_token)",
+  "actions": [
+   "post_status",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "matrix": {
+  "version": "2.0.0",
+  "auth": "Custom(base_url,access_token)",
+  "actions": [
+   "send_message",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "missive": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_contact",
+   "update_contact",
+   "create_draft_post",
+   "create_task",
+   "find_contact",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_message",
+   "new_comment",
+   "new_contact",
+   "new_contact_book",
+   "new_contact_group"
+  ]
+ },
+ "manychat": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "addTagToUser",
+   "createSubscriber",
+   "findUserByCustomField",
+   "findUserByName",
+   "removeTagFromUser",
+   "sendContentToUser",
+   "setCustomField"
+  ],
+  "triggers": []
+ },
+ "bonjoro": {
+  "version": "2.0.0",
+  "auth": "Custom(apiKey)",
+  "actions": [
+   "add_greet",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "respond-io": {
+  "version": "2.0.0",
+  "auth": "Custom(token)",
+  "actions": [
+   "add_comment_to_conversation",
+   "add_tag_to_contact",
+   "assign_or_unassign_conversation",
+   "create_contact",
+   "create_or_update_contact",
+   "delete_contact",
+   "find_contact",
+   "open_conversation",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "contact_tag_updated",
+   "contact_updated",
+   "conversation_closed",
+   "conversation_opened",
+   "new_contact",
+   "new_incoming_message",
+   "new_outgoing_message"
+  ]
+ },
+ "zoho-cliq": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "send_channel_message",
+   "send_direct_message",
+   "send_card_to_channel",
+   "send_card_to_chat",
+   "send_card_to_user",
+   "send_message_to_chat",
+   "send_thread_message",
+   "get_channel",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "hubspot": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "add_contact_to_list",
+   "add-contact-to-workflow",
+   "create-associations",
+   "create-company",
+   "create-contact",
+   "create-blog-post",
+   "create-custome-object",
+   "create-deal",
+   "create-line-item",
+   "create-page",
+   "create-or-update-contact",
+   "create-product",
+   "create-ticket",
+   "get-company",
+   "get-contact",
+   "get-custom-object",
+   "get-deal",
+   "get-line-item",
+   "get-product",
+   "get-page",
+   "get-ticket",
+   "delete-page",
+   "remove-associations",
+   "remove-contact-from-list",
+   "remove-email-subscription",
+   "update-company",
+   "update-contact",
+   "update-custome-object",
+   "update-deal",
+   "update-line-item",
+   "update-product",
+   "update-ticket",
+   "upload-file",
+   "find-associations",
+   "find-company",
+   "find-contact",
+   "find-custom-object",
+   "find-deal",
+   "find-line-item",
+   "find-product",
+   "find-ticket",
+   "get-owner-by-email",
+   "get-owner-by-id",
+   "get-pipeline-stage-details",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new-or-updated-company",
+   "new-or-updated-contact",
+   "new-deal-property-change",
+   "new-email-subscriptions-timeline",
+   "new-or-updated-line-item",
+   "new-company",
+   "new-company-property-change",
+   "new-contact",
+   "new-contact-in-list",
+   "new-contact-property-change",
+   "new-blog-article",
+   "new-custom-object",
+   "new-custom-object-property-change",
+   "new-deal",
+   "new-email-event",
+   "new-engagement",
+   "new-form-submission",
+   "new-line-item",
+   "new-product",
+   "new-ticket",
+   "new-ticket-property-change",
+   "new-or-updated-product",
+   "new-task",
+   "deal-stage-updated"
+  ]
+ },
+ "pipedrive": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "add-follower",
+   "get-note",
+   "create-note",
+   "add-labels-to-person",
+   "add-product-to-deal",
+   "attach-file",
+   "create-activity",
+   "update-activity",
+   "create-deal",
+   "update-deal",
+   "create-lead",
+   "update-lead",
+   "create-organization",
+   "update-organization",
+   "create-person",
+   "update-person",
+   "create-product",
+   "find-deals-associated-with-person",
+   "find-product",
+   "find-products",
+   "find-notes",
+   "get-product",
+   "find-organization",
+   "find-person",
+   "find-deal",
+   "find-activity",
+   "find-user",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_person",
+   "new_deal",
+   "new_activity",
+   "new-note",
+   "updated_person",
+   "updated_deal",
+   "updated-deal-stage",
+   "new-lead",
+   "new-organization",
+   "updated-organization",
+   "activity-matching-filter",
+   "deal-matching-filter",
+   "person-matching-filter",
+   "organization-matching-filter"
+  ]
+ },
+ "zoho-crm": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "read-file",
+   "add_attachment",
+   "add_tag",
+   "convert_lead",
+   "create_module_entry",
+   "update_module_entry",
+   "update_related_module_entry",
+   "create_update_module_entry",
+   "find_module_entry",
+   "find_module_entries",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_contact",
+   "new_lead",
+   "new_module_entry",
+   "new_or_updated_contact",
+   "new_or_updated_lead",
+   "new_or_updated_module_entry",
+   "new_user",
+   "updated_module_entry"
+  ]
+ },
+ "attio": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_record",
+   "update_record",
+   "find_record",
+   "create_entry",
+   "update_entry",
+   "find_list_entry",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "record_created",
+   "record_updated",
+   "list_entry_created",
+   "list_entry_updated"
+  ]
+ },
+ "intercom": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "add-note-to-user",
+   "addNoteToConversation",
+   "add-or-remove-tag-on-contact",
+   "add-or-remove-tag-on-company",
+   "add-or-remove-tag-on-conversation",
+   "create-article",
+   "create-conversation",
+   "create-ticket",
+   "create-user",
+   "create-or-update-lead",
+   "create-or-update-user",
+   "replyToConversation",
+   "send_message",
+   "update-ticket",
+   "find-company",
+   "find-conversation",
+   "find-lead",
+   "find-user",
+   "list-all-tags",
+   "get-conversation",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "contactReplied",
+   "lead-added-email",
+   "lead-converted-to-user",
+   "conversationClosed",
+   "conversationAssigned",
+   "conversationSnoozed",
+   "conversationUnsnoozed",
+   "new-company",
+   "newConversationFromUser",
+   "conversationRated",
+   "new-lead",
+   "new-ticket",
+   "new-user",
+   "conversationPartTagged",
+   "tag-added-to-lead",
+   "tag-added-to-user",
+   "contact-updated",
+   "replyFromUser",
+   "replyFromAdmin",
+   "noteAddedToConversation"
+  ]
+ },
+ "activecampaign": {
+  "version": "2.0.0",
+  "auth": "Custom(apiUrl,apiKey)",
+  "actions": [
+   "activecampaign_add_contact_to_account",
+   "activecampaign_add_tag_to_contact",
+   "activecampaign_create_account",
+   "activecampaign_create_contact",
+   "activecampaign_update_account",
+   "activecampaign_update_contact",
+   "activecampaign_subscribe_or_unsubscribe_contact_from_list"
+  ],
+  "triggers": [
+   "activecampaign_deal_task_completed",
+   "activecampaign_new_contact_note",
+   "activecampaign_new_contact_task",
+   "activecampaign_new_deal_added_or_updated",
+   "activecampaign_new_or_updated_account",
+   "activecampaign_new_deal_note",
+   "activecampaign_new_deal_task",
+   "activecampaign_new_tag_added_or_removed_from_contact",
+   "activecampaign_updated_contact"
+  ]
+ },
+ "copper": {
+  "version": "2.0.0",
+  "auth": "Custom(email,apiKey)",
+  "actions": [
+   "createPerson",
+   "updatePerson",
+   "createLead",
+   "updateLead",
+   "convertLead",
+   "createCompany",
+   "updateCompany",
+   "createOpportunity",
+   "updateOpportunity",
+   "createProject",
+   "updateProject",
+   "createTask",
+   "createActivity",
+   "searchForAnActivity",
+   "searchForAPerson",
+   "searchForALead",
+   "searchForACompany",
+   "searchForAnOpportunity",
+   "searchForAProject",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "newActivity",
+   "newPerson",
+   "newLead",
+   "newTask",
+   "updatedLead",
+   "updatedTask",
+   "updatedOpportunity",
+   "updatedOpportunityStage",
+   "updatedOpportunityStatus",
+   "updatedProject",
+   "updatedLeadStatus"
+  ]
+ },
+ "freshsales": {
+  "version": "2.0.0",
+  "auth": "Basic Auth",
+  "actions": [
+   "freshsales_create_contact",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "lead-connector": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "create_contact",
+   "update_contact",
+   "add_contact_to_campaign",
+   "add_contact_to_workflow",
+   "add_note_to_contact",
+   "search_contacts",
+   "create_opportunity",
+   "update_opportunity",
+   "create_task",
+   "update_task",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_contact",
+   "contact_updated",
+   "new_form_submission",
+   "new_opportunity"
+  ]
+ },
+ "bigin-by-zoho": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "createCompany",
+   "updateCompany",
+   "createContact",
+   "updateContact",
+   "createTask",
+   "updateTask",
+   "createCall",
+   "createEvent",
+   "updateEvent",
+   "createPipeline",
+   "updatePipeline",
+   "searchPipelineRecord",
+   "searchCompanyRecord",
+   "searchContactRecord",
+   "searchProductRecord",
+   "searchUser"
+  ],
+  "triggers": [
+   "newContactCreated",
+   "contactUpdated",
+   "newCompanyCreated",
+   "companyUpdated",
+   "newCallCreated",
+   "newTaskCreated",
+   "newEventCreated",
+   "newPipelineRecordCreated",
+   "pipelineRecordUpdated"
+  ]
+ },
+ "capsule-crm": {
+  "version": "2.0.1",
+  "auth": "OAuth2",
+  "actions": [
+   "create_contact",
+   "update_contact",
+   "create_opportunity",
+   "create_project",
+   "create_task",
+   "update_opportunity",
+   "add_note_to_entity",
+   "find_contact",
+   "find_project",
+   "find_opportunity"
+  ],
+  "triggers": [
+   "new_case",
+   "new_opportunity",
+   "new_task",
+   "new_project"
+  ]
+ },
+ "close": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_lead",
+   "create_contact",
+   "find_lead",
+   "create_opportunity",
+   "find_contact",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_lead_created",
+   "new_contact_added",
+   "new_opportunity_added"
+  ]
+ },
+ "kommo": {
+  "version": "2.0.0",
+  "auth": "Custom(subdomain,apiToken)",
+  "actions": [
+   "find_lead",
+   "update_contact",
+   "create_lead",
+   "update_lead",
+   "create_contact",
+   "find_contact",
+   "find_company",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "lead_status_changed",
+   "new_contact_added",
+   "new_lead_created",
+   "new_task_created"
+  ]
+ },
+ "fireberry": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_record",
+   "update_record",
+   "delete_record",
+   "find_record"
+  ],
+  "triggers": [
+   "record_created_or_updated"
+  ]
+ },
+ "instantly-ai": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_campaign",
+   "create_lead_list",
+   "add_lead_to_campaign",
+   "search_campaigns",
+   "search_leads",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "campaign_status_changed",
+   "new_lead_added"
+  ]
+ },
+ "hunter": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "add-recipients",
+   "count-emails",
+   "create-lead",
+   "delete-lead",
+   "find-email",
+   "get-lead",
+   "search-leads",
+   "update-lead",
+   "verify-email"
+  ],
+  "triggers": [
+   "new-lead"
+  ]
+ },
+ "apollo": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "matchPerson",
+   "enrichCompany"
+  ],
+  "triggers": []
+ },
+ "freshdesk": {
+  "version": "2.0.0",
+  "auth": "Custom(base_url,access_token)",
+  "actions": [
+   "get_tickets",
+   "get_contact_from_id",
+   "get_ticket_status",
+   "get_contacts",
+   "get_all_tickets_by_status",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "crisp": {
+  "version": "2.0.0",
+  "auth": "Custom(identifier,token)",
+  "actions": [
+   "add_note",
+   "create_conversation",
+   "create_update_contact",
+   "change_state",
+   "find_conversation",
+   "find_user_profile",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_contact",
+   "new_conversation"
+  ]
+ },
+ "help-scout": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "create_conversation",
+   "send_reply",
+   "add_note",
+   "create_customer",
+   "update_customer_properties",
+   "find_conversation",
+   "find_customer",
+   "find_user",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "conversation_created",
+   "conversation_assigned",
+   "new_customer",
+   "tags_updated"
+  ]
+ },
+ "zendesk": {
+  "version": "2.0.1",
+  "auth": "Custom(email,token,subdomain)",
+  "actions": [
+   "create-ticket",
+   "update-ticket",
+   "add-tag-to-ticket",
+   "add-comment-to-ticket",
+   "create-organization",
+   "update-organization",
+   "create-user",
+   "delete-user",
+   "find-organization",
+   "find-tickets",
+   "find-user",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_ticket_in_view",
+   "new_ticket",
+   "updated_ticket",
+   "tag_added_to_ticket",
+   "new_organization",
+   "new_user",
+   "new_suspended_ticket",
+   "new_action_on_ticket"
+  ]
+ },
+ "front": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "addComment",
+   "addContactHandle",
+   "addConversationLinks",
+   "addConversationTags",
+   "assignUnassignConversation",
+   "createAccount",
+   "createContact",
+   "createDraft",
+   "createDraftReply",
+   "createLink",
+   "findAccount",
+   "findContact",
+   "findConversation",
+   "removeContactHandle",
+   "removeConversationLinks",
+   "sendMessage",
+   "sendReply",
+   "updateAccount",
+   "updateContact",
+   "updateConversation",
+   "updateLink"
+  ],
+  "triggers": [
+   "newComment",
+   "newInboundMessage",
+   "newOutboundMessage",
+   "newTagAddedToMessage",
+   "newConversationStateChange"
+  ]
+ },
+ "zoho-desk": {
+  "version": "2.0.1",
+  "auth": "OAuth2",
+  "actions": [
+   "add_attachment",
+   "add_comment",
+   "create_account",
+   "create_article",
+   "create_contact",
+   "create_ticket",
+   "custom_api_request_beta",
+   "draft_email_reply",
+   "find_contact",
+   "get_ticket",
+   "list_all_threads",
+   "list_tickets",
+   "move_ticket",
+   "search_ticket",
+   "send_email_reply",
+   "update_contact",
+   "update_ticket",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_account",
+   "new_agent",
+   "new_article",
+   "new_attachment",
+   "new_comment",
+   "new_contact",
+   "new_message",
+   "new_status_change",
+   "new_ticket",
+   "updated_ticket"
+  ]
+ },
+ "moxie-crm": {
+  "version": "2.0.0",
+  "auth": "Custom(apiKey,baseUrl)",
+  "actions": [
+   "moxie_create_client",
+   "moxie_create_task",
+   "moxie_create_project",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "moxie_trigger_client_created",
+   "moxie_trigger_client_updated",
+   "moxie_trigger_client_deleted",
+   "moxie_trigger_project_created",
+   "moxie_trigger_project_updated",
+   "moxie_trigger_project_completed",
+   "moxie_trigger_task_created",
+   "moxie_trigger_task_updated",
+   "moxie_trigger_task_deleted",
+   "moxie_trigger_client_task_approval",
+   "moxie_trigger_form_submitted",
+   "moxie_trigger_time_entry_created",
+   "moxie_trigger_time_entry_updated",
+   "moxie_trigger_time_entry_deleted",
+   "moxie_trigger_meeting_scheduled",
+   "moxie_trigger_meeting_updated",
+   "moxie_trigger_meeting_cancelled",
+   "moxie_trigger_opportunity_created",
+   "moxie_trigger_opportunity_updated",
+   "moxie_trigger_opportunity_deleted",
+   "moxie_trigger_invoice_sent",
+   "moxie_trigger_payment_received"
+  ]
+ },
+ "vtiger": {
+  "version": "2.0.0",
+  "auth": "Custom(instance_url,username,password)",
+  "actions": [
+   "create_record",
+   "get_record",
+   "update_record",
+   "delete_record",
+   "query_records",
+   "search_records",
+   "make_api_call",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_or_updated_record"
+  ]
+ },
+ "wealthbox": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_contact",
+   "create_note",
+   "create_project",
+   "add_household_member",
+   "create_household",
+   "create_event",
+   "create_opportunity",
+   "create_task",
+   "start_workflow",
+   "find_contact",
+   "find_task"
+  ],
+  "triggers": [
+   "new_task",
+   "new_contact",
+   "new_event",
+   "new_opportunity"
+  ]
+ },
+ "flowlu": {
+  "version": "2.0.0",
+  "auth": "Custom(domain,apiKey)",
+  "actions": [
+   "flowlu_create_contact",
+   "flowlu_update_contact",
+   "flowlu_delete_contact",
+   "flowlu_create_organization",
+   "flowlu_create_opportunity",
+   "flowlu_update_opportunity",
+   "flowlu_delete_opportunity",
+   "flowlu_create_task",
+   "flowlu_update_task",
+   "flowlu_get_task",
+   "flowlu_delete_task"
+  ],
+  "triggers": []
+ },
+ "linka": {
+  "version": "2.0.0",
+  "auth": "Custom(base_url,api_key)",
+  "actions": [
+   "addOrUpdateContact",
+   "addOrUpdateContactExtended",
+   "addOrUpdateSubscription",
+   "createInvoice",
+   "createProduct",
+   "getContactDetails"
+  ],
+  "triggers": [
+   "newLead",
+   "newPayment",
+   "newSubscription"
+  ]
+ },
+ "lemlist": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "markLeadFromOneCampaignAsInterested",
+   "markLeadFromOneCampaignAsNotInterested",
+   "markLeadFromAllCampaignAsInterested",
+   "markLeadFromAllCampaignsAsNotInterested",
+   "pauseLeadFromAllOrSpecificCampaigns",
+   "resumeLeadFromAllOrSpecificCampaigns",
+   "removeLeadFromUnsubscribeList",
+   "removeLeadFromACampaign",
+   "unsubscribeALead",
+   "addLeadToACampaign",
+   "updateLeadFromCampaign",
+   "searchLead"
+  ],
+  "triggers": [
+   "newActivity",
+   "unsubscribedRecipient"
+  ]
+ },
+ "reachinbox": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "addLeads",
+   "addBlocklist",
+   "addEmail",
+   "enableWarmup",
+   "getCampaignAnalytics",
+   "getSummary",
+   "pauseCampaign",
+   "pauseWarmup",
+   "removeEmail",
+   "setSchedule",
+   "startCampaign",
+   "updateLead",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "campaignCompleted",
+   "emailBounced",
+   "emailOpened",
+   "emailSent",
+   "leadInterested",
+   "leadNotInterested",
+   "replyReceived"
+  ]
+ },
+ "teamleader": {
+  "version": "2.0.1",
+  "auth": "OAuth2",
+  "actions": [
+   "create_contact",
+   "update_contact",
+   "create_company",
+   "update_company",
+   "link_contact_to_company",
+   "unlink_contact_from_company",
+   "create_deal",
+   "update_deal",
+   "search_companies",
+   "search_contacts",
+   "search_deals",
+   "search_invoices",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_contact",
+   "new_company",
+   "new_deal",
+   "deal_accepted",
+   "new_invoice"
+  ]
+ },
+ "quickzu": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "quickzu_add_product",
+   "quickzu_update_product",
+   "quickzu_delete_product",
+   "quickzu_list_products",
+   "quickzu_create_category",
+   "quickzu_update_category",
+   "quickzu_delete_category",
+   "quickzu_list_categories",
+   "quickzu_get_order_details",
+   "quickzu_list_orders",
+   "quickzu_list_live_orders",
+   "quickzu_update_order_status",
+   "quickzu_create_product_discount",
+   "quickzu_create_promo_code",
+   "quickzu_update_business_time"
+  ],
+  "triggers": [
+   "quickzu_order_created_trigger"
+  ]
+ },
+ "sperse": {
+  "version": "2.0.0",
+  "auth": "Custom(base_url,api_key)",
+  "actions": [
+   "addOrUpdateContact",
+   "addOrUpdateContactExtended",
+   "addOrUpdateSubscription",
+   "createInvoice",
+   "createProduct",
+   "getContactDetails"
+  ],
+  "triggers": [
+   "new_lead",
+   "new_payment",
+   "new_subscription"
+  ]
+ },
+ "village": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "getPersonPaths",
+   "sortPeople",
+   "enrichEmail",
+   "enrichPersonBasic",
+   "enrichPersonBasicBulk",
+   "enrichEmailsBulk",
+   "getCompanyPaths",
+   "sortCompanies",
+   "enrichCompanyBasic",
+   "enrichCompanyBasicBulk"
+  ],
+  "triggers": []
+ },
+ "clearout": {
+  "version": "2.0.0",
+  "auth": "Custom(apiKey)",
+  "actions": [
+   "instant_verify",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "reoon-verifier": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "verifyEmail",
+   "bulkEmailVerificationTask",
+   "bulkVerificationResult"
+  ],
+  "triggers": []
+ },
+ "zerobounce": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "validateEmail"
+  ],
+  "triggers": []
+ },
+ "lusha": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "search_companies",
+   "enrich_companies",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "magical-api": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "parse_resume",
+   "review_resume",
+   "get_profile_data",
+   "get_company_data",
+   "score_resume",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "predict-leads": {
+  "version": "2.0.0",
+  "auth": "Custom(apiKey,apiToken)",
+  "actions": [
+   "predict-leads_find_companies",
+   "predict-leads_find_company_by_domain",
+   "predict-leads_find_job_openings",
+   "predict-leads_find_company_job_openings",
+   "predict-leads_get_a_job_opening_by_id",
+   "predict-leads_find_technologies_by_domain",
+   "predict-leads_find_companies_by_technology_id",
+   "predict-leads_find_news_by_domain",
+   "predict-leads_find_news_event_by_id",
+   "predict-leads_find_connections",
+   "predict-leads_find_connections_by_domain",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "captain-data": {
+  "version": "2.0.0",
+  "auth": "Custom(apiKey,projectId)",
+  "actions": [
+   "launchWorkflow",
+   "getJobResults",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "saastic": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_customer",
+   "create_charge",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "returning-ai": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "sendMessage",
+   "replyMessage",
+   "reactMessage"
+  ],
+  "triggers": []
+ },
+ "wootric": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "trigger_wootric_survey"
+  ],
+  "triggers": []
+ },
+ "pylon": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "talkable": {
+  "version": "2.0.0",
+  "auth": "Custom(site,api_key)",
+  "actions": [
+   "find_person",
+   "find_coupon",
+   "update_person",
+   "anonymize_person",
+   "unsubscribe_person",
+   "create_purchase",
+   "create_purchases_batch",
+   "create_event",
+   "create_events_batch",
+   "refund",
+   "get_loyalty_redeem_actions",
+   "update-referral-status",
+   "claim-offer",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "gameball": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "sendEvent"
+  ],
+  "triggers": []
+ },
+ "upgradechat": {
+  "version": "2.0.0",
+  "auth": "Custom(base_url,api_key)",
+  "actions": [
+   "addOrUpdateContact",
+   "addOrUpdateContactExtended",
+   "addOrUpdateSubscription",
+   "createInvoice",
+   "createProduct",
+   "getContactDetails"
+  ],
+  "triggers": [
+   "newLead",
+   "newPayment",
+   "newSubscription"
+  ]
+ },
+ "clickup": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "create_task",
+   "create_task_from_template",
+   "create_folderless_list",
+   "create_task_comments",
+   "create_subtask",
+   "create_channel",
+   "create_channel_in_space_folder_list",
+   "create_message",
+   "create_message_reaction",
+   "create_message_reply",
+   "get_list",
+   "get_list_task",
+   "get_task_by_name",
+   "get_space",
+   "get_spaces",
+   "get_task_comments",
+   "get_channel",
+   "get_channels",
+   "get_channel_messages",
+   "get_message_reactions",
+   "get_message_replies",
+   "list_workspace_tasks",
+   "list_workspace_time_entries",
+   "update_task",
+   "update_message",
+   "delete_message",
+   "delete_message_reaction",
+   "delete_task",
+   "get_accessible_custom_fields",
+   "set_custom_fields_value",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "clickup_trigger_task_created",
+   "clickup_trigger_task_updated",
+   "clickup_trigger_task_deleted",
+   "clickup_trigger_task_priority_updated",
+   "clickup_trigger_task_status_updated",
+   "clickup_trigger_task_assignee_updated",
+   "clickup_trigger_task_due_date_updated",
+   "clickup_trigger_task_tag_updated",
+   "clickup_trigger_task_moved",
+   "clickup_trigger_task_comment_posted",
+   "clickup_trigger_task_comment_updated",
+   "clickup_trigger_task_time_estimate_updated",
+   "clickup_trigger_task_time_tracked_updated",
+   "clickup_trigger_list_created",
+   "clickup_trigger_list_updated",
+   "clickup_trigger_list_deleted",
+   "clickup_trigger_folder_created",
+   "clickup_trigger_folder_updated",
+   "clickup_trigger_folder_deleted",
+   "clickup_trigger_space_created",
+   "clickup_trigger_space_updated",
+   "clickup_trigger_space_deleted",
+   "clickup_trigger_automation_created",
+   "clickup_trigger_goal_created",
+   "clickup_trigger_goal_updated",
+   "clickup_trigger_goal_deleted",
+   "clickup_trigger_key_result_created",
+   "clickup_trigger_key_result_updated",
+   "clickup_trigger_key_result_deleted",
+   "task_tag_updated"
+  ]
+ },
+ "asana": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "create_task",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "jira-cloud": {
+  "version": "2.0.0",
+  "auth": "Custom(instanceUrl,email,apiToken)",
+  "actions": [
+   "create_issue",
+   "update_issue",
+   "find-user",
+   "search_issues",
+   "assign_issue",
+   "add_issue_attachment",
+   "get-issue-attachment",
+   "add-watcher-to-issue",
+   "add_issue_comment",
+   "update_issue_comment",
+   "link-issues",
+   "list_issue_comments",
+   "delete_issue_comment",
+   "markdownToJiraFormat",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_issue",
+   "updated_issue",
+   "updated_issue_status"
+  ]
+ },
+ "monday": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "monday_create_column",
+   "monday_create_group",
+   "monday_create_item",
+   "monday_create_update",
+   "monday_get_board_values",
+   "monday_get_item_column_values",
+   "monday_update_column_values_of_item",
+   "monday_update_item_name",
+   "monday_upload_file_to_column"
+  ],
+  "triggers": [
+   "monday_new_item_in_board",
+   "monday_specific_column_updated"
+  ]
+ },
+ "trello": {
+  "version": "2.0.0",
+  "auth": "Basic Auth",
+  "actions": [
+   "create_card",
+   "get_card"
+  ],
+  "triggers": [
+   "card_moved_to_list",
+   "new_card",
+   "deadline"
+  ]
+ },
+ "linear": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "linear_create_issue",
+   "linear_update_issue",
+   "linear_create_project",
+   "linear_update_project",
+   "linear_create_comment",
+   "rawGraphqlQuery"
+  ],
+  "triggers": [
+   "new_issue",
+   "updated_issue",
+   "removed_issue"
+  ]
+ },
+ "todoist": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "create_task",
+   "update_task",
+   "find_task",
+   "mark_task_completed",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "task_completed"
+  ]
+ },
+ "github": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "github_create_issue",
+   "getIssueInformation",
+   "createCommentOnAIssue",
+   "lockIssue",
+   "unlockIssue",
+   "rawGraphqlQuery",
+   "github_create_pull_request_review_comment",
+   "github_create_commit_comment",
+   "github_create_discussion_comment",
+   "add_labels_to_issue",
+   "create_branch",
+   "delete_branch",
+   "update_issue",
+   "find_branch",
+   "find_issue",
+   "find_user",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "trigger_pull_request",
+   "trigger_star",
+   "trigger_issues",
+   "trigger_push",
+   "trigger_discussion",
+   "trigger_discussion_comment",
+   "new_branch",
+   "new_collaborator",
+   "new_label",
+   "new_milestone",
+   "new_release"
+  ]
+ },
+ "gitlab": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "create_issue",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "project_issue_event"
+  ]
+ },
+ "teamwork": {
+  "version": "2.0.0",
+  "auth": "Custom(username,password,subdomain)",
+  "actions": [
+   "create_project",
+   "create_task_list",
+   "create_task",
+   "mark_task_complete",
+   "create_company",
+   "create_person",
+   "update_task",
+   "create_task_comment",
+   "create_time_entry_on_task",
+   "create_expense",
+   "upload_file_to_project",
+   "create_message_reply",
+   "create_milestone",
+   "add_people_to_project",
+   "find_task",
+   "find_company",
+   "find_milestone",
+   "find_notebook_or_comment"
+  ],
+  "triggers": [
+   "new_task",
+   "new_person",
+   "new_comment",
+   "new_message",
+   "new_file",
+   "new_expense",
+   "new_invoice"
+  ]
+ },
+ "nifty": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "create_task",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "motion": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create-task",
+   "update-task",
+   "create-project",
+   "get-task",
+   "moveTask",
+   "find-task",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "task-created"
+  ]
+ },
+ "podio": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "create_item",
+   "update_item",
+   "create_task",
+   "update_task",
+   "attach_file",
+   "create_comment",
+   "create_status",
+   "find_item",
+   "find_task",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_item",
+   "new_task",
+   "new_activity",
+   "item_updated",
+   "new_app",
+   "member_added"
+  ]
+ },
+ "smartsheet": {
+  "version": "2.0.1",
+  "auth": "API Key",
+  "actions": [
+   "add_row_to_sheet",
+   "update_row",
+   "attach_file_to_row",
+   "find_rows_by_query",
+   "find_attachment_by_row_id",
+   "find_sheet_by_name"
+  ],
+  "triggers": [
+   "new_row_added",
+   "updated_row",
+   "new_attachment_",
+   "new_comment_webhook"
+  ]
+ },
+ "smartsuite": {
+  "version": "2.0.0",
+  "auth": "Custom(apiKey,accountId)",
+  "actions": [
+   "create_record",
+   "update_record",
+   "delete_record",
+   "upload_file",
+   "find_records",
+   "get_record",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_record",
+   "updated_record"
+  ]
+ },
+ "notion": {
+  "version": "2.0.1",
+  "auth": "OAuth2",
+  "actions": [
+   "create_database_item",
+   "update_database_item",
+   "notion-find-database-item",
+   "createPage",
+   "append_to_page",
+   "getPageOrBlockChildren",
+   "archive_database_item",
+   "restore_database_item",
+   "add_comment",
+   "retrieve_database",
+   "get_page_comments",
+   "find_page",
+   "retrieve_block_children",
+   "find_or_create_comment",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_database_item",
+   "updated_database_item",
+   "new_comment",
+   "updated_page",
+   "new_page_created",
+   "page_locked",
+   "page_unlocked",
+   "page_deleted",
+   "updated_comment",
+   "deleted_comment",
+   "database_deleted",
+   "database_schema_updated",
+   "new_database",
+   "database_moved"
+  ]
+ },
+ "coda": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create-row",
+   "update-row",
+   "upsert-row",
+   "find-row",
+   "get-row",
+   "list-tables",
+   "get-table",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new-row-created"
+  ]
+ },
+ "confluence": {
+  "version": "2.0.0",
+  "auth": "Custom(username,password,confluenceDomain)",
+  "actions": [
+   "getPageContent",
+   "create-page-from-template",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new-page"
+  ]
+ },
+ "mem": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_mem",
+   "create_note",
+   "delete_note",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "taskade": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "taskade-create-task",
+   "taskade-complete-task",
+   "taskade-delete-task",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "ticktick": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "create_task",
+   "update_task",
+   "get_task",
+   "delete_task",
+   "complete_task",
+   "find_task",
+   "get_project",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_task_created"
+  ]
+ },
+ "toggl-track": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_client",
+   "create_project",
+   "create_task",
+   "create_tag",
+   "create_time_entry",
+   "start_time_entry",
+   "stop_time_entry",
+   "find_user",
+   "find_project",
+   "find_task",
+   "find_client",
+   "find_tag",
+   "find_time_entry"
+  ],
+  "triggers": [
+   "new_client",
+   "new_workspace",
+   "new_project",
+   "new_task",
+   "new_time_entry",
+   "new_time_entry_started",
+   "new_tag"
+  ]
+ },
+ "harvest": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "get_clients",
+   "get_estimates",
+   "get_expenses",
+   "get_invoices",
+   "get_projects",
+   "get_roles",
+   "get_tasks",
+   "get_time_entries",
+   "get_users",
+   "reports-uninvoiced",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "clockify": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create-task",
+   "create-time-entry",
+   "start-timer",
+   "stop-timer",
+   "find-task",
+   "find-time-entry",
+   "find-running-timer",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new-task",
+   "new-time-entry",
+   "new-timer-started"
+  ]
+ },
+ "clockodo": {
+  "version": "2.0.0",
+  "auth": "Custom(email,token,company_name,company_email)",
+  "actions": [
+   "create_entry",
+   "get_entry",
+   "list_entries",
+   "update_entry",
+   "delete_entry",
+   "create_customer",
+   "get_customer",
+   "update_customer",
+   "list_customers",
+   "delete_customer",
+   "create_project",
+   "get_project",
+   "list_projects",
+   "update_project",
+   "delete_project",
+   "create_service",
+   "get_service",
+   "update_service",
+   "list_services",
+   "delete_service",
+   "get_team",
+   "list_teams",
+   "get_user",
+   "list_users",
+   "create_user",
+   "update_user",
+   "delete_user",
+   "create_absence",
+   "get_absence",
+   "update_absence",
+   "list_absences",
+   "delete_absence",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_entry",
+   "new_absence_enquiry"
+  ]
+ },
+ "kimai": {
+  "version": "2.0.0",
+  "auth": "Custom(base_url,user,api_password)",
+  "actions": [
+   "create_timesheet",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "assembled": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "custom_api_call",
+   "custom_graphql",
+   "OOO",
+   "add_shift",
+   "update_OOO",
+   "delete_OOO"
+  ],
+  "triggers": [
+   "new_OOO_request",
+   "OOO_status_changed",
+   "schedule_updated"
+  ]
+ },
+ "bamboohr": {
+  "version": "2.0.0",
+  "auth": "Custom(companyDomain,apiKey)",
+  "actions": [
+   "custom_api_call"
+  ],
+  "triggers": [
+   "reportFieldChanged"
+  ]
+ },
+ "lever": {
+  "version": "2.0.0",
+  "auth": "Custom(apiKey)",
+  "actions": [
+   "getOpportunity",
+   "updateOpportunityStage",
+   "listOpportunityForms",
+   "listOpportunityFeedback",
+   "addFeedbackToOpportunity",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "netlify": {
+  "version": "2.0.1",
+  "auth": "OAuth2",
+  "actions": [
+   "start_deploy",
+   "get_site",
+   "list_site_deploys",
+   "list_files"
+  ],
+  "triggers": [
+   "new_deploy_started",
+   "new_deploy_succeeded",
+   "new_deploy_failed",
+   "new_form_submission"
+  ]
+ },
+ "medullar": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "createSpace",
+   "listSpaces",
+   "addSpaceRecord",
+   "askSpace",
+   "deleteSpace",
+   "renameSpace"
+  ],
+  "triggers": []
+ },
+ "beamer": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_beamer_post",
+   "create_new_feature_request",
+   "create_new_comment",
+   "create_vote",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_post_on_beamer"
+  ]
+ },
+ "shopify": {
+  "version": "2.0.1",
+  "auth": "Custom(shopName,adminToken)",
+  "actions": [
+   "adjust_inventory_level",
+   "cancel_order",
+   "close_order",
+   "create_collect",
+   "create_customer",
+   "create_draft_order",
+   "create_fulfillment_event",
+   "create_order",
+   "create_product",
+   "create_transaction",
+   "get_asset",
+   "get_customer",
+   "get_customers",
+   "get_customer_orders",
+   "get_fulfillment",
+   "get_fulfillments",
+   "get_locations",
+   "get_product",
+   "get_product_variant",
+   "get_products",
+   "get_transaction",
+   "get_transactions",
+   "update_customer",
+   "update_order",
+   "update_product",
+   "upload_product_image",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_abandoned_checkout",
+   "new_cancelled_order",
+   "new_customer",
+   "new_order",
+   "new_cart",
+   "new_checkout",
+   "new_collection",
+   "new_draft_order",
+   "new_inventory_item",
+   "new_product",
+   "new_refund",
+   "order_fulfillment",
+   "order_payment",
+   "checkout_creation",
+   "updated_product",
+   "new_paid_order"
+  ]
+ },
+ "woocommerce": {
+  "version": "2.0.0",
+  "auth": "Custom(baseUrl,consumerKey,consumerSecret)",
+  "actions": [
+   "Create Customer",
+   "Create Coupon",
+   "Create Product",
+   "Find Customer",
+   "Find Product",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "$woocommerce_trigger_product_created",
+   "$woocommerce_trigger_product_updated",
+   "$woocommerce_trigger_product_deleted",
+   "$woocommerce_trigger_order_created",
+   "$woocommerce_trigger_order_updated",
+   "$woocommerce_trigger_order_deleted",
+   "$woocommerce_trigger_coupon_created",
+   "$woocommerce_trigger_coupon_updated",
+   "$woocommerce_trigger_coupon_deleted",
+   "$woocommerce_trigger_customer_created",
+   "$woocommerce_trigger_customer_updated",
+   "$woocommerce_trigger_customer_deleted"
+  ]
+ },
+ "stripe": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_customer",
+   "create_invoice",
+   "search_customer",
+   "search_subscriptions",
+   "retrieve_customer",
+   "update_customer",
+   "create_payment_intent",
+   "create_product",
+   "create_price",
+   "create_subscription",
+   "cancel_subscription",
+   "retrieve_invoice",
+   "retrieve_payout",
+   "create_refund",
+   "create_payment_link",
+   "deactivate_payment_link",
+   "retrieve_payment_intent",
+   "find_invoice",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_payment",
+   "new_customer",
+   "payment_failed",
+   "new_subscription",
+   "new_charge",
+   "new_invoice",
+   "invoice_payment_failed",
+   "canceled_subscription",
+   "new_refund",
+   "new_dispute",
+   "new_payment_link",
+   "updated_subscription",
+   "checkout_session_completed"
+  ]
+ },
+ "xero": {
+  "version": "2.0.1",
+  "auth": "OAuth2",
+  "actions": [
+   "xero_create_contact",
+   "xero_create_invoice",
+   "xero_allocate_credit_note_to_invoice",
+   "xero_create_bank_transfer",
+   "xero_create_quote_draft",
+   "xero_send_invoice_email",
+   "xero_create_bill",
+   "xero_create_payment",
+   "xero_create_purchase_order",
+   "xero_update_purchase_order",
+   "xero_upload_attachment",
+   "xero_add_items_to_sales_invoice",
+   "xero_create_credit_note",
+   "xero_create_inventory_item",
+   "xero_create_project",
+   "xero_update_sales_invoice",
+   "xero_create_repeating_sales_invoice",
+   "xero_create_account",
+   "xero_create_bank_transaction",
+   "xero_create_employee",
+   "xero_add_note_to_invoice",
+   "xero_add_or_update_stock_items",
+   "xero_delete_credit_note_allocation",
+   "xero_update_contact",
+   "xero_update_quote",
+   "xero_update_employee",
+   "xero_delete_invoice",
+   "xero_void_invoice",
+   "xero_delete_purchase_order",
+   "xero_get_contact_by_id",
+   "xero_get_item_by_id",
+   "xero_get_invoices",
+   "xero_get_invoice_url",
+   "xero_get_tax_rates",
+   "xero_get_tracking_categories",
+   "xero_get_invoice_history",
+   "xero_find_contact",
+   "xero_find_invoice",
+   "xero_find_invoice_by_id",
+   "xero_find_invoice_by_contact_id",
+   "xero_find_credit_note",
+   "xero_find_item",
+   "xero_find_employee",
+   "xero_find_payment",
+   "xero_find_purchase_order",
+   "xero_find_quote",
+   "xero_search_bank_transactions",
+   "xero_search_invoice",
+   "xero_search_contact_by_email",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "xero_new_contact",
+   "xero_contact_updated",
+   "xero_new_sales_invoice",
+   "xero_updated_sales_invoice",
+   "xero_bill_created",
+   "xero_bill_updated",
+   "xero_invoice_created",
+   "xero_invoice_updated",
+   "xero_new_or_updated_contact",
+   "xero_new_bank_transaction",
+   "xero_new_payment",
+   "xero_new_purchase_order",
+   "xero_new_reconciled_payment",
+   "xero_updated_quote",
+   "xero_new_bill",
+   "xero_new_credit_note",
+   "xero_new_project",
+   "xero_new_quote",
+   "xero_new_employee",
+   "xero_updated_employee",
+   "xero_new_payslip",
+   "xero_overdue_sales_invoice"
+  ]
+ },
+ "quickbooks": {
+  "version": "2.0.1",
+  "auth": "OAuth2",
+  "actions": [
+   "find_invoice",
+   "find_customer",
+   "find_payment",
+   "create_invoice",
+   "create_expense",
+   "create_customer",
+   "create_bill_account_based",
+   "create_bill_item_based",
+   "create_payment",
+   "create_sales_receipt",
+   "create_estimate",
+   "create_vendor",
+   "create_purchase_order",
+   "create_credit_memo",
+   "create_deposit",
+   "create_employee",
+   "create_journal_entry",
+   "create_refund_receipt",
+   "create_time_activity",
+   "create_vendor_credit",
+   "create_account",
+   "create_product_service",
+   "create_class",
+   "update_invoice",
+   "update_customer",
+   "update_estimate",
+   "update_vendor",
+   "update_bill",
+   "update_sales_receipt",
+   "update_product",
+   "update_purchase_expense",
+   "send_invoice",
+   "send_estimate",
+   "send_sales_receipt",
+   "void_invoice",
+   "delete_invoice",
+   "find_bill",
+   "find_class",
+   "find_estimate",
+   "find_employee",
+   "find_vendor",
+   "find_product",
+   "find_purchase_expense",
+   "find_sales_receipt",
+   "find_account",
+   "get_invoice",
+   "get_bill",
+   "get_sales_receipt",
+   "get_vendor_by_id",
+   "get_all_taxes",
+   "get_all_sales_terms",
+   "list_items",
+   "list_estimates",
+   "get_attachments",
+   "get_access_token",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_invoice",
+   "new_expense",
+   "new_customer",
+   "new_deposit",
+   "new_transfer",
+   "new_account",
+   "new_bill",
+   "new_bill_payment",
+   "new_bank_transaction",
+   "new_credit_memo",
+   "new_estimate",
+   "new_invoice_due",
+   "new_journal_entry",
+   "new_paid_invoice",
+   "new_payment",
+   "new_product",
+   "new_purchase_order",
+   "new_refund_receipt",
+   "new_sales_receipt",
+   "new_supplier_credit",
+   "new_time_entry",
+   "new_vendor",
+   "new_project",
+   "updated_bill",
+   "updated_credit_memo",
+   "updated_customer",
+   "updated_estimate",
+   "updated_invoice",
+   "estimate_emailed",
+   "invoice_emailed"
+  ]
+ },
+ "square": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [],
+  "triggers": [
+   "new_order",
+   "order_updated",
+   "new_customer",
+   "customer_updated",
+   "new_appointment",
+   "new_payment",
+   "new_invoice"
+  ]
+ },
+ "invoiceninja": {
+  "version": "2.0.0",
+  "auth": "Custom(base_url,access_token)",
+  "actions": [
+   "create_task",
+   "exists_task",
+   "getclient_task",
+   "getinvoices_task",
+   "getreport_task",
+   "create_invoice",
+   "create_client",
+   "create_recurring_invoice",
+   "action_recurring_invoice",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "zoho-books": {
+  "version": "2.0.3",
+  "auth": "OAuth2",
+  "actions": [
+   "create_sales_customer",
+   "create_item",
+   "create_estimate",
+   "create_sales_invoice",
+   "create_contact",
+   "create_contact_person",
+   "create_sales_order",
+   "create_expense",
+   "create_employee",
+   "create_credit_note",
+   "create_payment",
+   "create_bill",
+   "create_purchase_order",
+   "create_vendor_payment",
+   "get_contact_by_id",
+   "get_contact_person",
+   "get_estimate",
+   "get_contact_person_by_contact_id",
+   "get_employee",
+   "get_item_by_name",
+   "get_invoice",
+   "update_contact_person",
+   "update_contact",
+   "update_sales_invoice",
+   "update_item",
+   "update_sales_order",
+   "update_purchase_order",
+   "update_payment",
+   "update_expense",
+   "update_estimate",
+   "update_bill",
+   "update_vendor_payment",
+   "delete_contact",
+   "delete_invoice",
+   "delete_item",
+   "delete_estimate",
+   "delete_employee",
+   "add_attachment_to_invoice",
+   "email_invoice",
+   "find_invoice",
+   "find_bill",
+   "list_currencies",
+   "list_active_accounts",
+   "list_contacts",
+   "list_bill_field_details",
+   "list_contact_persons",
+   "list_bill_payments",
+   "list_all_locations",
+   "custom_api_request_beta",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_customer",
+   "new_estimate",
+   "new_expense",
+   "new_sales_invoice",
+   "new_item",
+   "new_bill",
+   "new_vendor",
+   "new_credit_note",
+   "new_customer_payment",
+   "new_project",
+   "new_timesheet",
+   "new_recurring_expense",
+   "new_recurring_invoice"
+  ]
+ },
+ "zoho-invoice": {
+  "version": "2.0.3",
+  "auth": "OAuth2",
+  "actions": [
+   "create_invoice",
+   "get_invoice",
+   "update_invoice",
+   "find_invoice",
+   "mark_invoice_as_sent",
+   "mark_invoice_as_draft",
+   "void_invoice",
+   "email_invoice",
+   "create_contact",
+   "get_contact",
+   "update_contact",
+   "find_contact",
+   "find_contact_email",
+   "create_contact_person",
+   "get_contact_person",
+   "update_contact_person",
+   "create_estimate",
+   "get_estimate",
+   "update_estimate",
+   "create_expense",
+   "get_expense",
+   "update_expense",
+   "find_expense",
+   "create_item",
+   "get_item",
+   "update_item",
+   "get_item_by_name",
+   "create_payment",
+   "get_payment",
+   "update_payment",
+   "find_customer_payment",
+   "create_credit_note",
+   "get_credit_note",
+   "update_credit_note",
+   "find_credit_note",
+   "email_credit_note",
+   "create_project",
+   "get_project",
+   "update_project",
+   "create_task",
+   "get_task",
+   "create_user",
+   "update_user",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "customer_payment",
+   "invoice_status_change",
+   "new_contact",
+   "new_contact_person",
+   "new_credit_note",
+   "new_estimate",
+   "new_expense",
+   "new_invoice",
+   "new_item",
+   "new_project",
+   "update_invoice"
+  ]
+ },
+ "mollie": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_order",
+   "create_payment_link",
+   "create_payment",
+   "create_customer",
+   "create_payment_refund",
+   "search_order",
+   "search_payment",
+   "search_customer"
+  ],
+  "triggers": [
+   "new_customer",
+   "new_order",
+   "new_settlement",
+   "new_invoice",
+   "new_payment",
+   "new_refund",
+   "new_chargeback"
+  ]
+ },
+ "razorpay": {
+  "version": "2.0.0",
+  "auth": "Custom(keyID,keySecret)",
+  "actions": [
+   "custom_api_call",
+   "create-payment-link"
+  ],
+  "triggers": []
+ },
+ "chargekeep": {
+  "version": "2.0.0",
+  "auth": "Custom(base_url,api_key)",
+  "actions": [
+   "addOrUpdateContact",
+   "addOrUpdateContact(extended)",
+   "addOrUpdateSubscription",
+   "createInvoice",
+   "createProduct",
+   "getContactDetails"
+  ],
+  "triggers": [
+   "new_lead",
+   "new_payment",
+   "new_subscription"
+  ]
+ },
+ "checkout": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_customer",
+   "update_customer",
+   "create_payment_link",
+   "create_payment",
+   "refund_payment",
+   "get_payment_details",
+   "get_payment_actions"
+  ],
+  "triggers": [
+   "payment_events",
+   "dispute_events"
+  ]
+ },
+ "amazon-seller": {
+  "version": "2.0.1",
+  "auth": "Custom(lwaClientId,lwaClientSecret,refreshToken,marketplaceId,sellerId,awsRegion,awsAccessKeyId,awsSecretAccessKey)",
+  "actions": [
+   "list_orders",
+   "get_order",
+   "get_order_items",
+   "get_order_address",
+   "get_order_buyer_info",
+   "get_order_items_buyer_info",
+   "get_order_regulated_info",
+   "search_orders",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_order_placed"
+  ]
+ },
+ "cartloom": {
+  "version": "2.0.0",
+  "auth": "Custom(domain,apiKey)",
+  "actions": [
+   "get_products",
+   "get_order",
+   "create_discount",
+   "get_discount",
+   "get_all_discounts",
+   "get_orders_by_date",
+   "get_orders_by_email",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "pandadoc": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "createDocumentFromTemplate",
+   "createAttachment",
+   "createOrUpdateContact",
+   "findDocument",
+   "getDocumentAttachments",
+   "getDocumentDetails",
+   "downloadDocument",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "documentCompleted",
+   "documentStateChanged",
+   "documentUpdated"
+  ]
+ },
+ "docusign": {
+  "version": "2.0.0",
+  "auth": "Custom(clientId,privateKey,environment,impersonatedUserId,scopes)",
+  "actions": [
+   "listEnvelopes",
+   "getEnvelope",
+   "getDocument",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "saleor": {
+  "version": "2.0.0",
+  "auth": "Custom(apiUrl,token)",
+  "actions": [
+   "rawGraphqlQuery",
+   "getOrder",
+   "addOrderNote"
+  ],
+  "triggers": []
+ },
+ "vtex": {
+  "version": "2.0.0",
+  "auth": "Custom(hostUrl,appKey,appToken)",
+  "actions": [
+   "get-product-by-id",
+   "create-product",
+   "Update-product",
+   "get-brand-list",
+   "get-brand-by-id",
+   "create-brand",
+   "update-brand",
+   "delete-brand",
+   "get-category-by-id",
+   "get-sku-by-product-id",
+   "create-sku",
+   "create-sku-file",
+   "get-client-list",
+   "get-client-by-id",
+   "get-order-by-id",
+   "get-order-list",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "webflow": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "create_collection_item",
+   "delete_collection_item",
+   "update_collection_item",
+   "find_collection_item",
+   "get_collection_item",
+   "fulfill_order",
+   "unfulfill_order",
+   "refund_order",
+   "find_order",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_submission"
+  ]
+ },
+ "wordpress": {
+  "version": "2.0.0",
+  "auth": "Custom(username,password,website_url)",
+  "actions": [
+   "create_post",
+   "create_page",
+   "update_post",
+   "get_post",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_post"
+  ]
+ },
+ "bubble": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "bubble_create_thing",
+   "bubble_delete_thing",
+   "bubble_update_thing",
+   "bubble_get_thing",
+   "bubble_list_things"
+  ],
+  "triggers": []
+ },
+ "onfleet": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_recipient",
+   "update_recipient",
+   "get_recipient",
+   "create_task",
+   "delete_task",
+   "complete_task",
+   "clone_task",
+   "update_task",
+   "get_task",
+   "get_tasks",
+   "create_destination",
+   "get_destination",
+   "get_hubs",
+   "create_hub",
+   "update_hub",
+   "get_organization",
+   "get_delegatee_details",
+   "create_admin",
+   "update_admin",
+   "get_admins",
+   "delete_admin",
+   "create_worker",
+   "delete_worker",
+   "get_worker",
+   "get_worker_schedule",
+   "update_worker",
+   "create_team",
+   "delete_team",
+   "get_team",
+   "get_teams",
+   "update_team",
+   "get_container",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "task_arrival",
+   "task_assigned",
+   "task_cloned",
+   "task_completed",
+   "task_created",
+   "task_delayed",
+   "task_deleted",
+   "task_eta",
+   "task_failed",
+   "task_started",
+   "task_unassigned",
+   "task_updated",
+   "worker_created",
+   "worker_deleted",
+   "worker_duty_change",
+   "auto_dispatch_completed",
+   "sms_recipient_opt_out",
+   "sms_recipient_response_missed"
+  ]
+ },
+ "simpliroute": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "get_me",
+   "get_clients",
+   "create_clients",
+   "bulk_delete_clients",
+   "create_client_property",
+   "get_vehicles",
+   "create_vehicle",
+   "get_vehicle",
+   "delete_vehicle",
+   "get_visits",
+   "create_visits",
+   "get_visit",
+   "update_visit_partial",
+   "update_visit",
+   "delete_visit",
+   "add_visit_items",
+   "get_routes",
+   "create_route",
+   "get_route",
+   "delete_route",
+   "get_plans",
+   "create_plan",
+   "get_plan_vehicles",
+   "get_visit_detail",
+   "get_drivers",
+   "create_users",
+   "get_user",
+   "update_user",
+   "get_skills",
+   "get_observations",
+   "get_tags",
+   "get_zones",
+   "get_fleets",
+   "get_sellers",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "netsuite": {
+  "version": "2.0.0",
+  "auth": "Custom(accountId,consumerKey,consumerSecret,tokenId,tokenSecret)",
+  "actions": [
+   "getVendor",
+   "getCustomer",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "zuora": {
+  "version": "2.0.0",
+  "auth": "Custom(clientId,clientSecret,environment)",
+  "actions": [
+   "create-invoice",
+   "find-account",
+   "find-product-rate-plan",
+   "find-product"
+  ],
+  "triggers": []
+ },
+ "truelayer": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "create-payout",
+   "get-payout",
+   "start-payout-authorization-flow",
+   "submit-payments-provider-return-parameters",
+   "create-mandate",
+   "list-mandate",
+   "get-mandate",
+   "start-mandate-authorization-flow",
+   "submit-consent-mandate",
+   "submit-mandate-provider-selection",
+   "revoke-mandate",
+   "confirm-mandate-funds",
+   "get-constraints",
+   "list-operating-accounts",
+   "get-operating-account",
+   "merchant-account-get-transactions",
+   "merchant-account-setup-sweeping",
+   "merchant-account-disable-sweeping",
+   "merchant-account-get-sweeping",
+   "get-merchant-account-payment-sources",
+   "create-payment-link",
+   "get-payment-link",
+   "get-payment-link-payments",
+   "create-payment",
+   "start-payment-authorization-flow",
+   "submit-provider-selection",
+   "submit-scheme-selection",
+   "submit-form",
+   "submit-consent",
+   "submit-user-account-selection",
+   "cancel-payment",
+   "save-user-account-payment",
+   "get-payment",
+   "create-payment-refund",
+   "get-payment-refunds",
+   "get-payment-refund",
+   "search-payment-providers",
+   "get-payment-provider",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "wedof": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "listPartnerStats",
+   "getRegistrationFolder",
+   "listRegistrationFolders",
+   "updateRegistrationFolder",
+   "validateRegistrationFolder",
+   "declareRegistrationFolderTerminated",
+   "declareRegistrationFolderServicedone",
+   "declareRegistrationFolderIntraining",
+   "billRegistrationFolder",
+   "cancelRegistrationFolder",
+   "refuseRegistrationFolder",
+   "getMinimalSessionsDates",
+   "getRegistrationFolderDocuments",
+   "updateCompletionRate",
+   "createRegistrationFolder",
+   "getCertificationFolder",
+   "searchCertificationFolder",
+   "declareCertificationFolderRegistred",
+   "declareCertificationFolderToTake",
+   "declareCertificationFolderToControl",
+   "declareCertificationFolderSuccess",
+   "declareCertificationFolderToRetake",
+   "declareCertificationFolderFailed",
+   "refuseCertificationFolder",
+   "abortCertificationFolder",
+   "getCertificationFolderDocuments",
+   "updateCertificationFolder",
+   "createCertificationFolder",
+   "listActivitiesAndTasks",
+   "createTask",
+   "createActivitie",
+   "sendFile",
+   "me",
+   "myOrganism",
+   "addExecutionTag",
+   "getCertificationFolderSurvey",
+   "listCertificationFolderSurveys",
+   "createCertificationPartnerAudit",
+   "createGeneralAudit",
+   "getPartnership",
+   "updatePartnership",
+   "deletePartnership",
+   "listPartnerships",
+   "createPartnership",
+   "resetPartnership"
+  ],
+  "triggers": [
+   "newRegistrationFolderNotProcessed",
+   "registrationFolderUpdated",
+   "registrationFolderAccepted",
+   "registrationFolderInTraining",
+   "registrationFolderTerminated",
+   "registrationFolderPaid",
+   "registrationFolderSelected",
+   "registrationFolderTobill",
+   "newCertificationFolderCreated",
+   "certificationFolderUpdated",
+   "certificationFolderRegistred",
+   "certificationFolderTotake",
+   "certificationFolderToControl",
+   "certificationfolderSuccess",
+   "certificationFolderToretake",
+   "certificationFolderSelected",
+   "certificationFolderSurveyInitialExperienceAvailable",
+   "certificationFolderSurveyInitialExperienceAnswered",
+   "certificationFolderSurveyLongTermExperienceAnswered",
+   "certificationFolderSurveyLongTermExperienceAvailable",
+   "certificationFolderSurveySixMonthExperienceAnswered",
+   "certificationFolderSurveySixMonthExperienceAvailable",
+   "certificationPartnerAborted",
+   "certificationPartnerProcessing",
+   "certificationPartnerActive",
+   "certificationPartnerRefused",
+   "certificationPartnerRevoked",
+   "certificationPartnerSuspended"
+  ]
+ },
+ "respaid": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_new_campaign",
+   "stop_collection_client_paid_directly",
+   "stop_collection_for_direct_partial_payment",
+   "stop_collection_for_direct_instalment_payment"
+  ],
+  "triggers": [
+   "new_campaign_creation",
+   "new_cancelled_case",
+   "new_disputed_case",
+   "new_payout",
+   "new_successful_collection_paid_to_creditor",
+   "new_successful_installment_payment_via_respaid",
+   "new_successful_collection_via_legal_officer",
+   "new_successful_partial_payment_to_creditor",
+   "new_successful_partial_payment_via_respaid",
+   "new_successful_collection_via_respaid"
+  ]
+ },
+ "mailchimp": {
+  "version": "2.0.2",
+  "auth": "OAuth2",
+  "actions": [
+   "add_member_to_list",
+   "add_new_member_with_custom_fields",
+   "add_note_to_subscriber",
+   "add_subscriber_to_tag",
+   "add_member_to_segment",
+   "remove_subscriber_from_tag",
+   "remove_member_from_segment",
+   "remove_member_tags_list",
+   "update_member_in_list",
+   "update_member_with_custom_fields",
+   "create_campaign",
+   "send_campaign",
+   "get_campaign_report",
+   "click_report",
+   "search_campaigns",
+   "create_audience",
+   "create_tag",
+   "create_custom_event",
+   "archive_subscriber",
+   "permanently_delete_member",
+   "delete_list_member",
+   "unsubscribe_email",
+   "get_all_members",
+   "get_list_segments",
+   "get_list_tags",
+   "get_interests_information",
+   "find_campaign",
+   "find_customer",
+   "find_tag",
+   "find_subscriber"
+  ],
+  "triggers": [
+   "subscribe",
+   "unsubscribe",
+   "subscriber_updated",
+   "new_campaign",
+   "email_opened",
+   "link_clicked",
+   "cleaned_emails",
+   "email_address_changes",
+   "new_audience",
+   "new_customer",
+   "new_order",
+   "new_segment_tag_subscriber"
+  ]
+ },
+ "convertkit": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "subscribers_get_subscriber_by_id",
+   "subscribers_get_subscriber_by_email",
+   "subscribers_list_subscribers",
+   "subscribers_update_subscriber",
+   "subscribers_unsubscribe_subscriber",
+   "subscribers_list_tags_by_email",
+   "subscribers_list_tags_by_subscriber_id",
+   "create_webhook",
+   "destroy_webhook",
+   "custom_fields_list_fields",
+   "custom_fields_create_field",
+   "custom_fields_update_field",
+   "custom_fields_delete_field",
+   "broadcasts_list_broadcasts",
+   "broadcasts_create_broadcast",
+   "broadcasts_get_broadcast",
+   "broadcasts_update_broadcast",
+   "broadcasts_delete_broadcast",
+   "broadcasts_broadcast_stats",
+   "forms_list_forms",
+   "forms_add_subscriber_to_form",
+   "forms_list_form_subscriptions",
+   "sequences_list_sequences",
+   "sequences_add_subscriber_to_sequence",
+   "sequences_list_subscriptions_to_sequence",
+   "tags_list_tags",
+   "tags_create_tag",
+   "tags_tag_subscriber",
+   "tags_remove_tag_from_subscriber_by_email",
+   "tags_remove_tag_from_subscriber_by_id",
+   "tags_list_subscriptions_to_tag",
+   "purchases_list_purchases",
+   "purchases_get_purchase_by_id",
+   "purchases_create_purchase",
+   "purchases_create_multiple_purchases"
+  ],
+  "triggers": [
+   "webhook_subscriber_tag_add",
+   "webhook_subscriber_tag_remove",
+   "webhook_subscriber_activated",
+   "webhook_subscriber_unsubscribed",
+   "webhook_subscriber_bounced",
+   "webhook_subscriber_complained",
+   "webhook_form_subscribed",
+   "webhook_sequence_subscribed",
+   "webhook_sequence_completed",
+   "webhook_link_clicked",
+   "webhook_product_purchased",
+   "webhook_purchase_created"
+  ]
+ },
+ "mailer-lite": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "add_subscriber_to_group",
+   "add_or_update_subscriber",
+   "find_subscriber",
+   "remove_subscriber_from_group",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "subscriber.created",
+   "subscriber.updated",
+   "subscriber.unsubscribed",
+   "subscriber.added_to_group"
+  ]
+ },
+ "emailoctopus": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "add_or_update_contact",
+   "unsubscribe_contact",
+   "update_contact_email",
+   "add_tag_to_contact",
+   "remove_tag_from_contact",
+   "create_list",
+   "find_contact",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "email_bounced",
+   "email_opened",
+   "emailClicked",
+   "newContact",
+   "contactUnsubscribes"
+  ]
+ },
+ "campaign-monitor": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "add_subscriber_to_list",
+   "update_subscriber_details",
+   "unsubscribe_subscriber",
+   "find_subscriber"
+  ],
+  "triggers": [
+   "new_subscriber_added",
+   "subscriber_unsubscribed",
+   "new_client"
+  ]
+ },
+ "sendinblue": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_or_update_contact",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "drip": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "apply_tag_to_subscriber",
+   "add_subscriber_to_campaign",
+   "upsert_subscriber",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_subscriber",
+   "tag_applied_to_subscribers"
+  ]
+ },
+ "beehiiv": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_subscription",
+   "update_subscription",
+   "add_subscription_to_automation",
+   "list_automations",
+   "list_posts",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "beehiiv_new_post_sent",
+   "beehiiv_user_unsubscribes",
+   "beehiiv_new_subscription_confirmed"
+  ]
+ },
+ "ghostcms": {
+  "version": "2.0.0",
+  "auth": "Custom(baseUrl,apiKey)",
+  "actions": [
+   "create_member",
+   "update_member",
+   "create_post",
+   "find_member",
+   "find_user",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "member_added",
+   "member_edited",
+   "member_deleted",
+   "post_published",
+   "post_scheduled",
+   "page_published"
+  ]
+ },
+ "constant-contact": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "create_or_update_contact",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "customer-io": {
+  "version": "2.0.0",
+  "auth": "Custom(region,track_site_id,track_api_key,api_bearer_token)",
+  "actions": [
+   "create_event",
+   "custom_track_api_call",
+   "custom_app_api_call"
+  ],
+  "triggers": []
+ },
+ "mautic": {
+  "version": "2.0.0",
+  "auth": "Custom(base_url,username,password)",
+  "actions": [
+   "create_mautic_contact",
+   "search_mautic_contact",
+   "update_mautic_contact",
+   "create_mautic_company",
+   "search_mautic_company",
+   "update_mautic_company",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "mautic_lead_post_save_update_trigger",
+   "mautic_lead_company_change_trigger",
+   "mautic_lead_channel_subscription_changed_trigger",
+   "mautic_lead_post_save_new_trigger"
+  ]
+ },
+ "sendpulse": {
+  "version": "2.0.0",
+  "auth": "Custom(clientId,clientSecret)",
+  "actions": [
+   "add-subscriber",
+   "change-variable-for-subscriber",
+   "delete-contact",
+   "unsubscribe-user",
+   "update-subscriber",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_subscriber",
+   "new_unsubscriber",
+   "updated_subscriber"
+  ]
+ },
+ "mailjet": {
+  "version": "2.0.0",
+  "auth": "Basic Auth",
+  "actions": [
+   "send_email"
+  ],
+  "triggers": []
+ },
+ "maileroo": {
+  "version": "2.0.0",
+  "auth": "Custom(keyType,apiKey)",
+  "actions": [
+   "sendEmail",
+   "sendFromTemplate",
+   "verifyEmail"
+  ],
+  "triggers": []
+ },
+ "resend": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "send_email",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "sendfox": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create-list",
+   "unsubscribe",
+   "create-contact",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "smaily": {
+  "version": "2.0.0",
+  "auth": "Custom(domain,username,password)",
+  "actions": [
+   "create-or-update-subscriber",
+   "get-subscriber",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "zagomail": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "createSubscriber",
+   "tagSubscriber",
+   "updateSubscriber",
+   "searchSubscriberByEmail",
+   "getSubscriberDetails",
+   "getCampaignDetails"
+  ],
+  "triggers": [
+   "addedSubscriber",
+   "unsubscribedSubscriber",
+   "taggedSubscriber"
+  ]
+ },
+ "tarvent": {
+  "version": "2.0.0",
+  "auth": "Custom(accountId,apiKey)",
+  "actions": [
+   "tarvent_create_contact",
+   "tarvent_update_contact_tag",
+   "tarvent_update_contact_group",
+   "tarvent_create_contact_note",
+   "tarvent_update_contact_journey",
+   "tarvent_update_contact_status",
+   "tarvent_create_audience_group",
+   "tarvent_update_journey_status",
+   "tarvent_create_transaction",
+   "tarvent_send_campaign",
+   "tarvent_generate_custom_event",
+   "tarvent_get_audiences",
+   "tarvent_get_audience_groups",
+   "tarvent_create_suppression_filter",
+   "tarvent_get_campaigns",
+   "tarvent_get_contact",
+   "tarvent_get_custom_event",
+   "tarvent_get_journey"
+  ],
+  "triggers": [
+   "tarvent_contact_added",
+   "tarvent_contact_group_updated",
+   "tarvent_contact_updated",
+   "tarvent_contact_status_updated",
+   "tarvent_contact_tag_updated",
+   "tarvent_contact_note_added",
+   "tarvent_contact_unsubscribed",
+   "tarvent_form_submitted",
+   "tarvent_page_performed",
+   "tarvent_survey_submitted",
+   "tarvent_contact_clicked",
+   "tarvent_contact_opened",
+   "tarvent_contact_replied",
+   "tarvent_contact_bounced",
+   "tarvent_campaign_send_finished",
+   "tarvent_transaction_created",
+   "tarvent_transaction_sent"
+  ]
+ },
+ "sendy": {
+  "version": "2.0.0",
+  "auth": "Custom(domain,apiKey,brandId)",
+  "actions": [
+   "count_subscribers",
+   "create_campaign",
+   "delete_subscriber",
+   "get_brands",
+   "get_brand_lists",
+   "get_subscription_status",
+   "subscribe",
+   "subscribe_multiple_lists",
+   "unsubscribe",
+   "unsubscribe_multiple"
+  ],
+  "triggers": []
+ },
+ "vbout": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "vbout_add_contact",
+   "vbout_add_tag",
+   "vbout_create_email_list",
+   "vbout_add_email_marketing_campaign",
+   "vbout_create_social_media_message",
+   "vbout_get_contact_by_email",
+   "vbout_get_email_list",
+   "vbout_remove_tag",
+   "vbout_unsubscribe_contact",
+   "vbout_update_contact"
+  ],
+  "triggers": []
+ },
+ "smoove": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "addOrUpdateSubscriber",
+   "createAList",
+   "findSubscriber",
+   "unsubscribe"
+  ],
+  "triggers": [
+   "newListCreated",
+   "newSubscriber",
+   "newFormCreated",
+   "newLeadSubmitted"
+  ]
+ },
+ "acumbamail": {
+  "version": "2.0.1",
+  "auth": "API Key",
+  "actions": [
+   "acumbamail_add_update_subscriber",
+   "acumbamail_create_subscriber_list",
+   "acumbamail_unsubscribe_subscriber",
+   "acumbamail_delete_subscriber_list",
+   "acumbamail_search_subscriber",
+   "acumbamail_remove_subscriber"
+  ],
+  "triggers": []
+ },
+ "clickfunnels": {
+  "version": "2.0.0",
+  "auth": "Custom(subdomain,apiKey)",
+  "actions": [
+   "createOpportunity",
+   "applyTagToContact",
+   "removeTagFromContact",
+   "enrollAContactIntoACourse",
+   "updateOrCreateContact",
+   "searchContacts",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "scheduledAppointmentEventCreated",
+   "courseEnrollmentCreatedForContact",
+   "contactSubmittedForm",
+   "OneTimeOrderPaid",
+   "subscriptionInvoicePaid",
+   "contactCompletedCourse",
+   "contactIdentified",
+   "contactSuspendedFromCourse"
+  ]
+ },
+ "foreplay-co": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "getAdById",
+   "getAdsByPage",
+   "findBrands",
+   "findAds",
+   "findBoards"
+  ],
+  "triggers": [
+   "newAdInSpyder",
+   "newAdInBoard",
+   "newSwipefileAd"
+  ]
+ },
+ "dittofeed": {
+  "version": "2.0.0",
+  "auth": "Custom(apiKey,baseUrl)",
+  "actions": [
+   "identify",
+   "track",
+   "screen"
+  ],
+  "triggers": []
+ },
+ "contentful": {
+  "version": "2.0.0",
+  "auth": "Custom(apiKey,space,environment)",
+  "actions": [
+   "contentful_record_search",
+   "contentful_record_get",
+   "contentful_record_create",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "datocms": {
+  "version": "2.0.0",
+  "auth": "Custom(apiKey,environment)",
+  "actions": [
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "posthog": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_event",
+   "create_project",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "mixpanel": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "track_event",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "segment": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "identifyUser"
+  ],
+  "triggers": []
+ },
+ "cloutly": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "sendReviewInvite",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "circle": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_post",
+   "create_comment",
+   "add_member_to_space",
+   "find_member_by_email",
+   "get_post_details",
+   "get_member_details",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_post_created",
+   "new_member_added"
+  ]
+ },
+ "bettermode": {
+  "version": "2.0.0",
+  "auth": "Custom(region,domain,email,password)",
+  "actions": [
+   "create_discussion",
+   "create_question",
+   "assign_badge",
+   "revoke_badge",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "bitly": {
+  "version": "2.0.0",
+  "auth": "Custom(accessToken)",
+  "actions": [
+   "archive_bitlink",
+   "create_bitlink",
+   "create_qr_code",
+   "get_bitlink_details",
+   "update_bitlink",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_bitlink_created"
+  ]
+ },
+ "short-io": {
+  "version": "2.0.0",
+  "auth": "Custom(apiKey)",
+  "actions": [
+   "create-country-targeting-rule",
+   "create-short-link",
+   "delete-short-link",
+   "expire-short-link",
+   "get-domain-statistics",
+   "get-short-link-info-by-path",
+   "get-link-clicks",
+   "list-short-links",
+   "update-short-link",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_link_created"
+  ]
+ },
+ "zoho-campaigns": {
+  "version": "2.0.1",
+  "auth": "OAuth2",
+  "actions": [
+   "createCampaign",
+   "cloneCampaign",
+   "sendCampaign",
+   "addUpdateContact",
+   "addTagToContact",
+   "removeTag",
+   "unsubscribeContact",
+   "addContactToMailingList",
+   "create_tag",
+   "create_topic",
+   "move_to_do_not_mail",
+   "findContact",
+   "findCampaign",
+   "get_all_tags",
+   "list_custom_fields"
+  ],
+  "triggers": [
+   "newContact",
+   "unsubscribe",
+   "newCampaign"
+  ]
+ },
+ "systeme-io": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "createContact",
+   "addTagToContact",
+   "removeTagFromContact",
+   "findContactByEmail",
+   "updateContact"
+  ],
+  "triggers": [
+   "newContact",
+   "newSale",
+   "newTagAddedToContact"
+  ]
+ },
+ "acuity-scheduling": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "add_blocked_time",
+   "create_appointment",
+   "create_client",
+   "reschedule_appointment",
+   "update_client",
+   "find_appointment",
+   "find_client",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "appointment_canceled",
+   "new_appointment"
+  ]
+ },
+ "sessions-us": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_session",
+   "create_event",
+   "publish_event",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "booking_created",
+   "booking_started",
+   "booking_ended",
+   "event_created",
+   "event_published",
+   "event_started",
+   "event_ended",
+   "event_new_registration",
+   "session_created",
+   "session_started",
+   "session_ended",
+   "takeaway_ready",
+   "transcript_ready"
+  ]
+ },
+ "frame": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "custom_api_call"
+  ],
+  "triggers": [
+   "frame_trigger_project_created",
+   "frame_trigger_asset_created",
+   "frame_trigger_comment_created"
+  ]
+ },
+ "pinterest": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "createPin",
+   "createBoard",
+   "deletePin",
+   "findBoardByName",
+   "findPin",
+   "updateBoard"
+  ],
+  "triggers": [
+   "newBoard",
+   "newFollower",
+   "newPinOnBoard"
+  ]
+ },
+ "reddit": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "retrieveRedditPost",
+   "getRedditPostDetails",
+   "createRedditPost",
+   "createRedditComment",
+   "fetchPostComments",
+   "editRedditPost",
+   "editRedditComment",
+   "deleteRedditPost",
+   "deleteRedditComment",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "typeform": {
+  "version": "2.0.1",
+  "auth": "OAuth2",
+  "actions": [
+   "create_form",
+   "create_workspace",
+   "duplicate_form",
+   "update_choice_options",
+   "lookup_responses",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_submission",
+   "new_entry_legacy"
+  ]
+ },
+ "tally": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [],
+  "triggers": [
+   "new-submission"
+  ]
+ },
+ "jotform": {
+  "version": "2.0.0",
+  "auth": "Custom(apiKey,region)",
+  "actions": [
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_submission"
+  ]
+ },
+ "fillout-forms": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "getFormResponses",
+   "getSingleResponse",
+   "findFormByTitle",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new-form-response"
+  ]
+ },
+ "cognito-forms": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_entry",
+   "update_entry",
+   "delete_entry",
+   "get_entry",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_entry",
+   "entry_updated"
+  ]
+ },
+ "kizeo-forms": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "get_data_definition",
+   "push_data",
+   "download_standard_pdf",
+   "download_custom_export_in_its_original_format",
+   "get_list_definition",
+   "get_list_item",
+   "get_all_list_items",
+   "create_list_item",
+   "edit_list_item",
+   "delete_list_item",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "event_on_data",
+   "event_on_data_deleted",
+   "event_on_data_finished",
+   "event_on_data_pushed",
+   "event_on_data_received",
+   "event_on_data_updated"
+  ]
+ },
+ "paperform": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "deleteFormSubmission",
+   "deletePartialFormSubmission",
+   "createFormCoupon",
+   "updateFormCoupon",
+   "deleteFormCoupon",
+   "createFormProduct",
+   "updateFormProduct",
+   "deleteFormProduct",
+   "createSpace",
+   "updateSpace",
+   "findFormProduct",
+   "findForm",
+   "findSpace",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_form_submission",
+   "new_partial_form_submission"
+  ]
+ },
+ "formstack": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "createSubmission",
+   "findFormByNameOrId",
+   "getSubmissionDetails",
+   "findSubmissionByFieldValue",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "newSubmission",
+   "newForm"
+  ]
+ },
+ "gravityforms": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [],
+  "triggers": [
+   "new-submission"
+  ]
+ },
+ "formbricks": {
+  "version": "2.0.0",
+  "auth": "Custom(appUrl,apiKey)",
+  "actions": [
+   "custom_api_call"
+  ],
+  "triggers": [
+   "formbricks_trigger_response_created",
+   "formbricks_trigger_response_updated",
+   "formbricks_trigger_response_finished"
+  ]
+ },
+ "wufoo": {
+  "version": "2.0.0",
+  "auth": "Custom(apiKey,subdomain)",
+  "actions": [
+   "create-form-entry",
+   "find-form",
+   "find-submission-by-field",
+   "get-entry-details",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_form_entry",
+   "new_form_created"
+  ]
+ },
+ "zoho-forms": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "get_all_forms",
+   "get_form_details",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_form_created",
+   "new_form_submission"
+  ]
+ },
+ "airtable": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "airtable_create_record",
+   "airtable_find_record",
+   "airtable_update_record",
+   "airtable_delete_record",
+   "airtable_upload_file_to_column",
+   "airtable_add_comment_to_record",
+   "airtable_create_base",
+   "airtable_create_table",
+   "airtable_find_base",
+   "airtable_find_table_by_id",
+   "airtable_get_record_by_id",
+   "airtable_find_table",
+   "airtable_get_base_schema",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_record",
+   "updated_record"
+  ]
+ },
+ "apitable": {
+  "version": "2.0.0",
+  "auth": "Custom(token,apiTableUrl)",
+  "actions": [
+   "apitable_create_record",
+   "apitable_update_record",
+   "apitable_find_record",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_record"
+  ]
+ },
+ "bika": {
+  "version": "2.0.0",
+  "auth": "Custom(token)",
+  "actions": [
+   "bika_create_record",
+   "bika_find_records",
+   "bika_find_record",
+   "bika_update_record",
+   "bika_delete_record",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "grist": {
+  "version": "2.0.0",
+  "auth": "Custom(apiKey,domain)",
+  "actions": [
+   "grist-create-record",
+   "grist-search-record",
+   "grist-update-record",
+   "grist-upload-attachments-to-document",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "grist-new-record",
+   "grist-updated-record"
+  ]
+ },
+ "retable": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "retable_create_record",
+   "retable_get_workspaces",
+   "retable_get_projects",
+   "retable_get_retables",
+   "retable_create_workspace",
+   "retable_create_project",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "ninox": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "createRecord",
+   "updateRecord",
+   "deleteRecord",
+   "uploadFile",
+   "downloadFileFromRecord",
+   "findRecord",
+   "listFilesFromRecord",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "newRecord"
+  ]
+ },
+ "knack": {
+  "version": "2.0.0",
+  "auth": "Custom(apiKey,applicationId)",
+  "actions": [
+   "create_record",
+   "delete_record",
+   "find_record",
+   "update_record",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "dropbox": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "search_dropbox",
+   "create_new_dropbox_text_file",
+   "upload_dropbox_file",
+   "downloadFile",
+   "get_dropbox_file_link",
+   "delete_dropbox_file",
+   "move_dropbox_file",
+   "copy_dropbox_file",
+   "create_new_dropbox_folder",
+   "delete_dropbox_folder",
+   "move_dropbox_folder",
+   "copy_dropbox_folder",
+   "list_dropbox_folder",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "amazon-s3": {
+  "version": "2.0.0",
+  "auth": "Custom(accessKeyId,secretAccessKey,bucket,endpoint,region)",
+  "actions": [
+   "upload-file",
+   "read-file",
+   "generate-signed-url",
+   "moveFile",
+   "deleteFile",
+   "list-files"
+  ],
+  "triggers": [
+   "new_file"
+  ]
+ },
+ "box": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_file",
+   "new_folder",
+   "new_comment"
+  ]
+ },
+ "sftp": {
+  "version": "2.0.0",
+  "auth": "Custom(protocol,allow_unauthorized_certificates,host,port,username,password,privateKey,algorithm)",
+  "actions": [
+   "create_file",
+   "upload_file",
+   "read_file_content",
+   "deleteFile",
+   "createFolder",
+   "deleteFolder",
+   "listFolderContents",
+   "renameFileOrFolder"
+  ],
+  "triggers": [
+   "new_file"
+  ]
+ },
+ "cloudinary": {
+  "version": "2.0.0",
+  "auth": "Custom(api_key,api_secret,cloud_name)",
+  "actions": [
+   "uploadResource",
+   "deleteResource",
+   "createUsageReport",
+   "findResourceByPublicId",
+   "transformResource"
+  ],
+  "triggers": [
+   "new_resource",
+   "new_tag_added_to_asset"
+  ]
+ },
+ "backblaze": {
+  "version": "2.0.0",
+  "auth": "Custom(accessKeyId,secretAccessKey,bucket,endpoint,region)",
+  "actions": [
+   "upload-backblaze-file",
+   "read-backblaze-file"
+  ],
+  "triggers": [
+   "new_backblaze_file"
+  ]
+ },
+ "cloudconvert": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "convert_file",
+   "capture_website",
+   "merge_pdf",
+   "download_file",
+   "archive_file",
+   "optimize_file",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_job",
+   "job_finished",
+   "job_failed"
+  ]
+ },
+ "gcloud-pubsub": {
+  "version": "2.0.0",
+  "auth": "Custom(json)",
+  "actions": [
+   "publish_to_topic"
+  ],
+  "triggers": [
+   "new_message_in_topic"
+  ]
+ },
+ "amazon-sns": {
+  "version": "2.0.0",
+  "auth": "Custom(accessKeyId,secretAccessKey,region,endpoint)",
+  "actions": [
+   "send-message"
+  ],
+  "triggers": []
+ },
+ "amazon-sqs": {
+  "version": "2.0.0",
+  "auth": "Custom(accessKeyId,secretAccessKey,region)",
+  "actions": [
+   "sendMessage"
+  ],
+  "triggers": []
+ },
+ "figma": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "get_file",
+   "get_comments",
+   "post_comment",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_comment"
+  ]
+ },
+ "rabbitmq": {
+  "version": "2.0.0",
+  "auth": "Custom(host,username,password,port,vhost)",
+  "actions": [
+   "sendMessageToExchange",
+   "sendMessageToQueue"
+  ],
+  "triggers": [
+   "messageReceived"
+  ]
+ },
+ "rss": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [],
+  "triggers": [
+   "new-item",
+   "new-item-list"
+  ]
+ },
+ "anyhook-graphql": {
+  "version": "2.0.0",
+  "auth": "Custom(proxyBaseUrl)",
+  "actions": [],
+  "triggers": [
+   "graphql_subscription_trigger"
+  ]
+ },
+ "anyhook-websocket": {
+  "version": "2.0.0",
+  "auth": "Custom(proxyBaseUrl)",
+  "actions": [],
+  "triggers": [
+   "websocket_subscription_trigger"
+  ]
+ },
+ "supabase": {
+  "version": "2.0.0",
+  "auth": "Custom(url,apiKey)",
+  "actions": [
+   "upload-file",
+   "create_row",
+   "update_row",
+   "upsert_row",
+   "delete_rows",
+   "search_rows",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_row"
+  ]
+ },
+ "postgres": {
+  "version": "2.0.0",
+  "auth": "Custom(host,port,user,password,database,enable_ssl,reject_unauthorized,certificate)",
+  "actions": [
+   "run-query"
+  ],
+  "triggers": [
+   "new-row"
+  ]
+ },
+ "mysql": {
+  "version": "2.0.0",
+  "auth": "Custom(host,port,user,password,database)",
+  "actions": [
+   "find_rows",
+   "insert_row",
+   "update_row",
+   "delete_row",
+   "get_tables",
+   "execute_query"
+  ],
+  "triggers": []
+ },
+ "mongodb": {
+  "version": "2.0.0",
+  "auth": "Custom(host,useAtlasUrl,database,username,password,authSource)",
+  "actions": [
+   "find_documents",
+   "insert_documents",
+   "update_documents",
+   "delete_documents",
+   "find_and_update_documents",
+   "find_and_replace_documents",
+   "aggregate_documents"
+  ],
+  "triggers": []
+ },
+ "snowflake": {
+  "version": "2.0.1",
+  "auth": "Custom(account,username,password,privateKey,database,role,warehouse)",
+  "actions": [
+   "runQuery",
+   "runMultipleQueries",
+   "insert-row"
+  ],
+  "triggers": []
+ },
+ "baserow": {
+  "version": "2.0.0",
+  "auth": "Custom(apiUrl,token)",
+  "actions": [
+   "baserow_create_row",
+   "baserow_delete_row",
+   "baserow_get_row",
+   "baserow_list_rows",
+   "baserow_update_row",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "nocodb": {
+  "version": "2.0.0",
+  "auth": "Custom(baseUrl,apiToken,version)",
+  "actions": [
+   "nocodb-create-record",
+   "nocodb-delete-record",
+   "nocodb-update-record",
+   "nocodb-get-record",
+   "nocodb-search-records"
+  ],
+  "triggers": []
+ },
+ "surrealdb": {
+  "version": "2.0.0",
+  "auth": "Custom(url,database,namespace,username,password)",
+  "actions": [
+   "run-query"
+  ],
+  "triggers": [
+   "new-row"
+  ]
+ },
+ "actualbudget": {
+  "version": "2.0.0",
+  "auth": "Custom(server_url,password,sync_id,encryption_password)",
+  "actions": [
+   "get_budget",
+   "import_transaction",
+   "import_transactions",
+   "get_categories",
+   "get_accounts"
+  ],
+  "triggers": []
+ },
+ "odoo": {
+  "version": "2.0.0",
+  "auth": "Custom(base_url,database,username,api_key)",
+  "actions": [
+   "get_contacts",
+   "create_contact",
+   "create_company",
+   "get_records",
+   "create_record",
+   "update_record",
+   "custom_odoo_api_call"
+  ],
+  "triggers": []
+ },
+ "zoho-mail": {
+  "version": "2.0.2",
+  "auth": "OAuth2",
+  "actions": [
+   "get_email_details",
+   "mark_email_as_read",
+   "mark_email_as_unread",
+   "move_email",
+   "send_email",
+   "create_draft",
+   "create_folder",
+   "create_task",
+   "create_tag",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_email_received",
+   "new_email_matching_search",
+   "new_tagged_email"
+  ]
+ },
+ "calendly": {
+  "version": "2.0.1",
+  "auth": "API Key",
+  "actions": [
+   "book_meeting_for_invitee",
+   "cancel_event",
+   "create_event",
+   "create_one_off_meeting_link",
+   "mark_invitee_no_show",
+   "find_event",
+   "find_meeting_recap",
+   "find_meeting_recap_transcript",
+   "find_user",
+   "get_event",
+   "get_event_type",
+   "get_invitee",
+   "get_user",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "invitee_created",
+   "invitee_canceled",
+   "invitee_no_show_created",
+   "routing_form_submission",
+   "meeting_recap_created",
+   "event_canceled_polling"
+  ]
+ },
+ "cal-com": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [],
+  "triggers": [
+   "BOOKING_CANCELLED",
+   "BOOKING_CREATED",
+   "BOOKING_RESCHEDULED"
+  ]
+ },
+ "tidycal": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "custom_api_call"
+  ],
+  "triggers": [
+   "booking_canceled",
+   "new_booking",
+   "new_contact"
+  ]
+ },
+ "aminos": {
+  "version": "2.0.0",
+  "auth": "Custom(base_url,access_token)",
+  "actions": [
+   "createUser"
+  ],
+  "triggers": []
+ },
+ "ashby": {
+  "version": "2.0.0",
+  "auth": "Custom(apiKey)",
+  "actions": [
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "binance": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "fetch_crypto_pair_price"
+  ],
+  "triggers": []
+ },
+ "blockscout": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "search",
+   "check_redirect",
+   "get_blocks",
+   "get_main_page_blocks",
+   "get_block_by_hash",
+   "get_block_transactions",
+   "get_block_withdrawals",
+   "get_transactions",
+   "get_main_page_transactions",
+   "get_transaction_by_hash",
+   "get_transaction_token_transfers",
+   "get_transaction_internal_transactions",
+   "get_transaction_logs",
+   "get_transaction_raw_trace",
+   "get_transaction_state_changes",
+   "get_transaction_summary",
+   "get_addresses",
+   "get_address_by_hash",
+   "get_address_counters",
+   "get_address_transactions",
+   "get_address_token_transfers",
+   "get_address_logs",
+   "get_address_blocks_validated",
+   "get_address_token_balances",
+   "get_address_tokens",
+   "get_address_withdrawals",
+   "get_address_coin_balance_history",
+   "get_address_coin_balance_history_by_day",
+   "get_tokens",
+   "get_token_by_address",
+   "get_token_transfers",
+   "get_token_holders",
+   "get_token_counters",
+   "get_token_instances"
+  ],
+  "triggers": []
+ },
+ "brilliant-directories": {
+  "version": "2.0.0",
+  "auth": "Custom(api_key,site_url)",
+  "actions": [
+   "create_new_user",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "certopus": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "create_credential",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "chainalysis-api": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "checkAddressSanction"
+  ],
+  "triggers": []
+ },
+ "deepl": {
+  "version": "2.0.0",
+  "auth": "Custom(key,type)",
+  "actions": [
+   "translate_text",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "dimo": {
+  "version": "2.0.0",
+  "auth": "Custom(clientId,redirectUri,apiKey)",
+  "actions": [
+   "attestation-create-vin-vc",
+   "device-definitions-decode-vin",
+   "device-definitions-lookup-device-definitions",
+   "token-exchange-get-vehicle-jwt",
+   "identity-custom-query",
+   "identity-total-vehicle-count",
+   "identity-get-developer-license-info",
+   "identity-get-vehicle-by-dev-license",
+   "identity-get-total-vehicle-count-for-owner",
+   "identity-get-vehicle-mmy-by-owner",
+   "identity-get-vehicle-mmy-by-tokenid",
+   "identity-get-sacd-for-vehicle",
+   "identity-get-rewards-by-owner",
+   "identity-get-reward-history-by-owner",
+   "identity-get-device-definition-by-tokenid",
+   "identity-get-device-definition-by-definitionid",
+   "identity-get-owner-vehicles",
+   "identity-get-developer-shared-vehicles-from-owner",
+   "identity-get-dcns-by-owner",
+   "telemetry-custom-query",
+   "telemetry-available-signals",
+   "telemetry-signals",
+   "telemetry-daily-avg-speed",
+   "telemetry-event",
+   "telemetry-max-speed",
+   "telemetry-vin-vc-latest",
+   "vehicle-events-list-webhooks-action",
+   "vehicle-events-upsert-webhook-numeric-action",
+   "vehicle-events-upsert-webhook-boolean-action",
+   "vehicle-events-delete-webhook-action",
+   "vehicle-events-list-signals-action",
+   "vehicle-events-list-subscribed-vehicles-action",
+   "vehicle-events-list-vehicle-subscriptions-action",
+   "vehicle-events-subscribe-vehicle-action",
+   "vehicle-events-subscribe-all-vehicles-action",
+   "vehicle-events-unsubscribe-vehicle-action",
+   "vehicle-events-unsubscribe-all-vehicles-action"
+  ],
+  "triggers": [
+   "battery-is-charging-trigger",
+   "battery-power-trigger",
+   "charge-level-trigger",
+   "fuel-absolute-level-trigger",
+   "fuel-relative-level-trigger",
+   "ignition-trigger",
+   "odometer-trigger",
+   "speed-trigger",
+   "tire-pressure-trigger"
+  ]
+ },
+ "discourse": {
+  "version": "2.0.0",
+  "auth": "Custom(api_key,api_username,website_url)",
+  "actions": [
+   "create_post",
+   "create_topic",
+   "change_user_trust_level",
+   "add_users_to_group",
+   "send_private_message",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "eth-name-service": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "listEnsDomains"
+  ],
+  "triggers": []
+ },
+ "hackernews": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "fetch_top_stories"
+  ],
+  "triggers": []
+ },
+ "mailchain": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "getAuthenticatedUser",
+   "sendEmail"
+  ],
+  "triggers": []
+ },
+ "matomo": {
+  "version": "2.0.0",
+  "auth": "Custom(domain,tokenAuth,siteId)",
+  "actions": [
+   "add_annotation",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "mempool-space": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "get_difficulty_adjustment",
+   "get_price",
+   "get_historical_price",
+   "get_address_details",
+   "get_address_transactions",
+   "get_address_transactions_chain",
+   "get_address_transactions_mempool",
+   "get_address_utxo",
+   "validate_address",
+   "get_mempool_blocks_fees",
+   "get_recommended_fees",
+   "get_block",
+   "get_block_header",
+   "get_block_height",
+   "get_block_timestamp",
+   "get_block_raw",
+   "get_block_status",
+   "get_block_tip_height",
+   "get_block_tip_hash",
+   "get_block_transaction_id",
+   "get_block_transaction_ids",
+   "get_block_transactions",
+   "get_blocks_bulk",
+   "get_transaction",
+   "get_transaction_hex",
+   "get_transaction_merkleblock_proof",
+   "get_transaction_merkle_proof",
+   "get_transaction_outspend",
+   "get_transaction_outspends",
+   "get_transaction_raw",
+   "get_transaction_rbf_timeline",
+   "get_transaction_status",
+   "get_transaction_times",
+   "post_transaction",
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "metabase": {
+  "version": "2.0.0",
+  "auth": "Custom(baseUrl,apiKey)",
+  "actions": [
+   "getQuestion",
+   "getQuestionPngPreview",
+   "getDashboardQuestions",
+   "embedQuestion"
+  ],
+  "triggers": []
+ },
+ "pastebin": {
+  "version": "2.0.0",
+  "auth": "Custom(token,username,password)",
+  "actions": [
+   "create_paste",
+   "get_paste_content"
+  ],
+  "triggers": []
+ },
+ "pastefy": {
+  "version": "2.0.0",
+  "auth": "Custom(instance_url,token)",
+  "actions": [
+   "create_paste",
+   "get_paste",
+   "edit_paste",
+   "delete_paste",
+   "create_folder",
+   "get_folder",
+   "get_folder_hierarchy",
+   "delete_folder",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "paste_changed"
+  ]
+ },
+ "poper": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [],
+  "triggers": [
+   "newLead"
+  ]
+ },
+ "qrcode": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [
+   "text_to_qrcode"
+  ],
+  "triggers": []
+ },
+ "scenario": {
+  "version": "2.0.0",
+  "auth": "Basic Auth",
+  "actions": [
+   "custom_api_call"
+  ],
+  "triggers": []
+ },
+ "simplepdf": {
+  "version": "2.0.0",
+  "auth": "None",
+  "actions": [],
+  "triggers": [
+   "new-submission"
+  ]
+ },
+ "sitespeakai": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "sendQuery",
+   "create_finetune",
+   "delete_finetune"
+  ],
+  "triggers": [
+   "newLead"
+  ]
+ },
+ "softr": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "createAppUser",
+   "createDatabaseRecord",
+   "deleteAppUser",
+   "deleteDatabaseRecord",
+   "findDatabaseRecord",
+   "updateDatabaseRecord",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "newDatabaseRecord"
+  ]
+ },
+ "spotify": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "search",
+   "get_playback_state",
+   "play",
+   "pause",
+   "set_volume",
+   "get_playlists",
+   "get_playlist_info",
+   "get_playlist_items",
+   "get_saved_tracks",
+   "create_playlist",
+   "update_playlist",
+   "add_playlist_items",
+   "remove_playlist_items",
+   "reorder_playlist",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "playlist_items_changed"
+  ]
+ },
+ "surveymonkey": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_response"
+  ]
+ },
+ "thankster": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "send_handwritten_cards"
+  ],
+  "triggers": []
+ },
+ "totalcms": {
+  "version": "2.0.0",
+  "auth": "Custom(domain,license)",
+  "actions": [
+   "get_content",
+   "get_blog_post",
+   "save_blog_post",
+   "save_blog_gallery",
+   "save_blog_image",
+   "save_date",
+   "save_depot",
+   "save_file",
+   "save_gallery",
+   "save_image",
+   "save_text",
+   "save_toggle",
+   "save_video",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_blog_post"
+  ]
+ },
+ "vimeo": {
+  "version": "2.0.0",
+  "auth": "OAuth2",
+  "actions": [
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new_video_by_search",
+   "new_video_by_user",
+   "new_video_liked",
+   "new_video_mine"
+  ]
+ },
+ "webling": {
+  "version": "2.0.0",
+  "auth": "Custom(baseUrl,apikey)",
+  "actions": [
+   "EventsById"
+  ],
+  "triggers": [
+   "onEventChanged",
+   "onChangedData"
+  ]
+ },
+ "what-converts": {
+  "version": "2.0.0",
+  "auth": "Custom(api_token,api_secret)",
+  "actions": [
+   "create_lead",
+   "export_leads",
+   "update_lead",
+   "find_lead"
+  ],
+  "triggers": [
+   "new_lead",
+   "updated_lead"
+  ]
+ },
+ "whatsable": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "sendMessage"
+  ],
+  "triggers": []
+ },
+ "wonderchat": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "askQuestion",
+   "addPage",
+   "addTag",
+   "removeTag"
+  ],
+  "triggers": [
+   "newUserMessage"
+  ]
+ },
+ "youtube": {
+  "version": "2.0.2",
+  "auth": "OAuth2",
+  "actions": [
+   "list_videos",
+   "delete_video",
+   "update_video",
+   "search_videos",
+   "add_video_to_playlist",
+   "get_report",
+   "custom_api_call"
+  ],
+  "triggers": [
+   "new-video",
+   "new_video_in_playlist"
+  ]
+ },
+ "zoo": {
+  "version": "2.0.0",
+  "auth": "API Key",
+  "actions": [
+   "generate_cad_model",
+   "kcl_completions",
+   "text_to_cad_iteration",
+   "list_cad_models",
+   "get_cad_model",
+   "give_model_feedback",
+   "get_async_operation",
+   "list_org_api_calls",
+   "get_org_api_call",
+   "list_user_api_calls",
+   "get_user_api_call",
+   "list_api_tokens",
+   "create_api_token",
+   "get_api_token",
+   "delete_api_token",
+   "get_center_of_mass",
+   "convert_cad_file",
+   "get_density",
+   "get_mass",
+   "get_surface_area",
+   "get_volume",
+   "get_openapi_schema",
+   "return_pong",
+   "send_modeling_command",
+   "get_org",
+   "update_org",
+   "create_org",
+   "list_org_members",
+   "add_org_member",
+   "get_org_member",
+   "get_org_payment",
+   "update_org_payment",
+   "create_org_payment",
+   "delete_org_payment",
+   "get_org_balance",
+   "list_org_invoices",
+   "list_org_payment_methods",
+   "get_org_subscription",
+   "update_org_subscription",
+   "create_org_subscription",
+   "get_user_payment",
+   "update_user_payment",
+   "create_user_payment",
+   "delete_user_payment",
+   "get_user_balance",
+   "list_user_invoices",
+   "list_user_payment_methods",
+   "get_user_subscription",
+   "update_user_subscription",
+   "create_user_subscription",
+   "list_service_accounts",
+   "create_service_account",
+   "get_service_account",
+   "delete_service_account",
+   "list_org_shortlinks",
+   "list_user_shortlinks",
+   "create_shortlink",
+   "update_shortlink",
+   "delete_shortlink",
+   "convert_angle",
+   "convert_area",
+   "convert_current",
+   "convert_energy",
+   "convert_force",
+   "convert_frequency",
+   "convert_length",
+   "convert_mass",
+   "convert_power",
+   "convert_pressure",
+   "convert_temperature",
+   "convert_torque",
+   "convert_volume",
+   "get_user",
+   "update_user",
+   "delete_user",
+   "get_extended_user",
+   "get_oauth2_providers",
+   "get_user_org",
+   "get_privacy_settings",
+   "update_privacy_settings",
+   "get_user_session"
+  ],
+  "triggers": []
+ }
+}

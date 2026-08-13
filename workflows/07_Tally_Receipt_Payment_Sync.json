@@ -1,0 +1,205 @@
+{
+  "created": "1786095018298",
+  "updated": "1786095018298",
+  "name": "07 - Sync Tally Receipt and Payment Vouchers",
+  "description": "Syncs Tally receipt and payment vouchers to Google Sheets every hour. Appends new records without clearing existing data.",
+  "tags": ["tally", "sync", "receipt", "payment", "vouchers", "google-sheets"],
+  "pieces": [
+    "@puchoaistudio/tool-schedule",
+    "@puchoaistudio/tool-tallyconnection",
+    "@puchoaistudio/tool-google-sheets",
+    "@puchoaistudio/tool-code"
+  ],
+  "template": {
+    "displayName": "07 - Sync Tally Receipt and Payment Vouchers",
+    "trigger": {
+      "name": "trigger",
+      "valid": true,
+      "displayName": "Every Hour",
+      "type": "TOOL_TRIGGER",
+      "settings": {
+        "pieceName": "@puchoaistudio/tool-schedule",
+        "pieceVersion": "^2.0.0",
+        "input": {
+          "timezone": "Asia/Kolkata",
+          "cron": "10 * * * *"
+        },
+        "sampleData": {},
+        "propertySettings": {
+          "timezone": {"type": "MANUAL"},
+          "cron": {"type": "MANUAL"}
+        },
+        "triggerName": "scheduled_trigger"
+      },
+      "nextAction": {
+        "name": "step_1",
+        "skip": false,
+        "type": "PIECE",
+        "valid": true,
+        "displayName": "Ask Receipts",
+        "settings": {
+          "input": {
+            "template": "93",
+            "variables": {},
+            "tallyconnection": ""
+          },
+          "pieceName": "@puchoaistudio/tool-tallyconnection",
+          "actionName": "ask_tally_template",
+          "sampleData": {},
+          "pieceVersion": "^2.3.4",
+          "propertySettings": {
+            "template": {"type": "MANUAL"},
+            "variables": {"type": "MANUAL", "schema": {}},
+            "tallyconnection": {"type": "MANUAL"}
+          },
+          "errorHandlingOptions": {
+            "retryOnFailure": {"value": false},
+            "continueOnFailure": {"value": false}
+          }
+        },
+        "nextAction": {
+          "name": "step_2",
+          "skip": false,
+          "type": "PIECE",
+          "valid": true,
+          "displayName": "Ask Payments",
+          "settings": {
+            "input": {
+              "template": "92",
+              "variables": {},
+              "tallyconnection": ""
+            },
+            "pieceName": "@puchoaistudio/tool-tallyconnection",
+            "actionName": "ask_tally_template",
+            "sampleData": {},
+            "pieceVersion": "^2.3.4",
+            "propertySettings": {
+              "template": {"type": "MANUAL"},
+              "variables": {"type": "MANUAL", "schema": {}},
+              "tallyconnection": {"type": "MANUAL"}
+            },
+            "errorHandlingOptions": {
+              "retryOnFailure": {"value": false},
+              "continueOnFailure": {"value": false}
+            }
+          },
+          "nextAction": {
+            "name": "step_3",
+            "skip": false,
+            "type": "CODE",
+            "valid": true,
+            "displayName": "Transform Receipt Vouchers",
+            "settings": {
+              "input": {
+                "tally_data": "{{step_1['output']}}"
+              },
+              "sampleData": {},
+              "sourceCode": {
+                "code": "export const code = async (inputs) => {\n  const tallyData = inputs.tally_data || {};\n  const vouchers = tallyData.vouchers || [];\n  const now = new Date().toISOString().replace('T', ' ').substring(0, 19);\n  \n  const rows = vouchers.map((item, index) => {\n    const voucherID = `VCH-${String(index + 1).padStart(4, '0')}`;\n    return [\n      voucherID,\n      'COMP-0001',\n      item.voucherNo || '',\n      'Receipt',\n      item.date || '',\n      item.partyGuid || '',\n      item.referenceNo || '',\n      item.narration || '',\n      item.subTotal || 0,\n      item.gstTotal || 0,\n      item.roundOff || 0,\n      item.grandTotal || 0,\n      'FALSE',\n      now,\n      now,\n      'USER-0001',\n      'USER-0001',\n      1\n    ];\n  });\n  \n  return { rows, count: rows.length };\n};",
+                "packageJson": "{}",
+                "language": "typescript"
+              },
+              "errorHandlingOptions": {
+                "retryOnFailure": {"value": false},
+                "continueOnFailure": {"value": false}
+              }
+            },
+            "nextAction": {
+              "name": "step_4",
+              "skip": false,
+              "type": "PIECE",
+              "valid": true,
+              "displayName": "Insert Receipt Vouchers",
+              "settings": {
+                "input": {
+                  "auth": "",
+                  "spreadsheetId": "",
+                  "sheetId": 759847801,
+                  "input_type": "json",
+                  "values": {
+                    "values": "{{step_3['rows']}}"
+                  }
+                },
+                "pieceName": "@puchoaistudio/tool-google-sheets",
+                "actionName": "google-sheets-insert-multiple-rows",
+                "sampleData": {},
+                "pieceVersion": "^2.0.9",
+                "propertySettings": {
+                  "auth": {"type": "MANUAL"},
+                  "spreadsheetId": {"type": "MANUAL"},
+                  "sheetId": {"type": "MANUAL"},
+                  "input_type": {"type": "MANUAL"},
+                  "values": {"type": "MANUAL", "schema": {"values": {"type": "ARRAY", "items": {"type": "ARRAY"}}}}
+                },
+                "errorHandlingOptions": {
+                  "retryOnFailure": {"value": true},
+                  "continueOnFailure": {"value": false}
+                }
+              },
+              "nextAction": {
+                "name": "step_5",
+                "skip": false,
+                "type": "CODE",
+                "valid": true,
+                "displayName": "Transform Payment Vouchers",
+                "settings": {
+                  "input": {
+                    "tally_data": "{{step_2['output']}}"
+                  },
+                  "sampleData": {},
+                  "sourceCode": {
+                    "code": "export const code = async (inputs) => {\n  const tallyData = inputs.tally_data || {};\n  const vouchers = tallyData.vouchers || [];\n  const now = new Date().toISOString().replace('T', ' ').substring(0, 19);\n  \n  const rows = vouchers.map((item, index) => {\n    const voucherID = `VCH-${String(index + 1).padStart(4, '0')}`;\n    return [\n      voucherID,\n      'COMP-0001',\n      item.voucherNo || '',\n      'Payment',\n      item.date || '',\n      item.partyGuid || '',\n      item.referenceNo || '',\n      item.narration || '',\n      item.subTotal || 0,\n      item.gstTotal || 0,\n      item.roundOff || 0,\n      item.grandTotal || 0,\n      'FALSE',\n      now,\n      now,\n      'USER-0001',\n      'USER-0001',\n      1\n    ];\n  });\n  \n  return { rows, count: rows.length };\n};",
+                    "packageJson": "{}",
+                    "language": "typescript"
+                  },
+                  "errorHandlingOptions": {
+                    "retryOnFailure": {"value": false},
+                    "continueOnFailure": {"value": false}
+                  }
+                },
+                "nextAction": {
+                  "name": "step_6",
+                  "skip": false,
+                  "type": "PIECE",
+                  "valid": true,
+                  "displayName": "Insert Payment Vouchers",
+                  "settings": {
+                    "input": {
+                      "auth": "",
+                      "spreadsheetId": "",
+                      "sheetId": 759847801,
+                      "input_type": "json",
+                      "values": {
+                        "values": "{{step_5['rows']}}"
+                      }
+                    },
+                    "pieceName": "@puchoaistudio/tool-google-sheets",
+                    "actionName": "google-sheets-insert-multiple-rows",
+                    "sampleData": {},
+                    "pieceVersion": "^2.0.9",
+                    "propertySettings": {
+                      "auth": {"type": "MANUAL"},
+                      "spreadsheetId": {"type": "MANUAL"},
+                      "sheetId": {"type": "MANUAL"},
+                      "input_type": {"type": "MANUAL"},
+                      "values": {"type": "MANUAL", "schema": {"values": {"type": "ARRAY", "items": {"type": "ARRAY"}}}}
+                    },
+                    "errorHandlingOptions": {
+                      "retryOnFailure": {"value": true},
+                      "continueOnFailure": {"value": false}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "valid": true,
+    "agentIds": [],
+    "connectionIds": [],
+    "schemaVersion": "7"
+  },
+  "blogUrl": ""
+}

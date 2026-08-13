@@ -1,0 +1,93 @@
+{
+  "created": "1786095018298",
+  "updated": "1786095018298",
+  "name": "10 - Refresh Tally Receivables and Payables Aging",
+  "description": "Fetches Tally receivable and payable aging reports every hour for analysis. Data is available in workflow execution output.",
+  "tags": ["tally", "sync", "aging", "outstanding", "receivables", "payables"],
+  "pieces": [
+    "@puchoaistudio/tool-schedule",
+    "@puchoaistudio/tool-tallyconnection"
+  ],
+  "template": {
+    "displayName": "10 - Refresh Tally Outstanding Aging",
+    "trigger": {
+      "name": "trigger",
+      "valid": true,
+      "displayName": "Every Hour",
+      "type": "TOOL_TRIGGER",
+      "settings": {
+        "pieceName": "@puchoaistudio/tool-schedule",
+        "pieceVersion": "^2.0.0",
+        "input": {
+          "timezone": "Asia/Kolkata",
+          "cron": "25 * * * *"
+        },
+        "sampleData": {},
+        "propertySettings": {
+          "timezone": {"type": "MANUAL"},
+          "cron": {"type": "MANUAL"}
+        },
+        "triggerName": "scheduled_trigger"
+      },
+      "nextAction": {
+        "name": "step_1",
+        "skip": false,
+        "type": "PIECE",
+        "valid": true,
+        "displayName": "Ask Receivable Aging",
+        "settings": {
+          "input": {
+            "template": "136",
+            "variables": {},
+            "tallyconnection": ""
+          },
+          "pieceName": "@puchoaistudio/tool-tallyconnection",
+          "actionName": "ask_tally_template",
+          "sampleData": {},
+          "pieceVersion": "^2.3.4",
+          "propertySettings": {
+            "template": {"type": "MANUAL"},
+            "variables": {"type": "MANUAL", "schema": {}},
+            "tallyconnection": {"type": "MANUAL"}
+          },
+          "errorHandlingOptions": {
+            "retryOnFailure": {"value": false},
+            "continueOnFailure": {"value": true}
+          }
+        },
+        "nextAction": {
+          "name": "step_2",
+          "skip": false,
+          "type": "PIECE",
+          "valid": true,
+          "displayName": "Ask Payable Aging",
+          "settings": {
+            "input": {
+              "template": "85",
+              "variables": {},
+              "tallyconnection": ""
+            },
+            "pieceName": "@puchoaistudio/tool-tallyconnection",
+            "actionName": "ask_tally_template",
+            "sampleData": {},
+            "pieceVersion": "^2.3.4",
+            "propertySettings": {
+              "template": {"type": "MANUAL"},
+              "variables": {"type": "MANUAL", "schema": {}},
+              "tallyconnection": {"type": "MANUAL"}
+            },
+            "errorHandlingOptions": {
+              "retryOnFailure": {"value": false},
+              "continueOnFailure": {"value": true}
+            }
+          }
+        }
+      }
+    },
+    "valid": true,
+    "agentIds": [],
+    "connectionIds": [],
+    "schemaVersion": "7"
+  },
+  "blogUrl": ""
+}

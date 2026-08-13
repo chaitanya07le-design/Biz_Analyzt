@@ -11,18 +11,7 @@ const ExpensesReport = () => {
   const { currentCompany } = useCompany();
   const { dateRange } = useDateRange();
   
-  const { ledgers: apiLedgers, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
-
-  const normalizedLedgers = useMemo(() => {
-    if (!apiLedgers || apiLedgers.length === 0) return [];
-    return apiLedgers.map(l => ({
-      id: l.LedgerID || l.id,
-      name: l.LedgerName || l.name || '',
-      group: l.Group || l.group || '',
-      type: l.LedgerType || l.type || '',
-      balance: parseFloat(l.OpeningBalance || l.balance || 0),
-    }));
-  }, [apiLedgers]);
+  const { ledgers: apiLedgers, groups, vouchers, voucherLines, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
 
   const expenseData = useMemo(() => {
     const directExpenses = [];
@@ -30,22 +19,68 @@ const ExpensesReport = () => {
     let totalDirect = 0;
     let totalIndirect = 0;
 
-    normalizedLedgers.forEach(ledger => {
-      if (ledger.type === 'expense') {
-        const item = {
-          id: ledger.id,
-          name: ledger.name,
-          group: ledger.group,
-          amount: Math.abs(ledger.balance)
-        };
+    if (!vouchers || !voucherLines || !groups || !apiLedgers) {
+      return {
+        directExpenses,
+        indirectExpenses,
+        totalDirect,
+        totalIndirect,
+        grandTotal: totalDirect + totalIndirect
+      };
+    }
 
-        if (ledger.group === 'Direct Expenses') {
-          directExpenses.push(item);
-          totalDirect += item.amount;
-        } else if (ledger.group === 'Indirect Expenses') {
-          indirectExpenses.push(item);
-          totalIndirect += item.amount;
-        }
+    const groupMap = new Map();
+    groups.forEach(g => {
+      groupMap.set(g.GroupID, g);
+    });
+
+    const ledgerMap = new Map();
+    apiLedgers.forEach(l => {
+      ledgerMap.set(l.LedgerID, l);
+    });
+
+    const expenseMap = new Map();
+
+    voucherLines.forEach(line => {
+      if (line.LineType !== 'Ledger') return;
+      if (!line.LedgerID) return;
+
+      const ledger = ledgerMap.get(line.LedgerID);
+      if (!ledger) return;
+
+      const group = groupMap.get(ledger.GroupID);
+      if (!group) return;
+
+      if (group.StatementType !== 'P&L' || group.Nature !== 'Expense') return;
+
+      const amount = parseFloat(line.LedgerDebit || 0);
+      const key = ledger.LedgerID;
+      
+      if (!expenseMap.has(key)) {
+        expenseMap.set(key, {
+          id: ledger.LedgerID,
+          name: ledger.LedgerName,
+          groupName: group.GroupName,
+          amount: 0
+        });
+      }
+      expenseMap.get(key).amount += amount;
+    });
+
+    expenseMap.forEach(item => {
+      const expenseItem = {
+        id: item.id,
+        name: item.name,
+        group: item.groupName,
+        amount: item.amount
+      };
+
+      if (item.groupName === 'Direct Expenses') {
+        directExpenses.push(expenseItem);
+        totalDirect += item.amount;
+      } else if (item.groupName === 'Indirect Expenses') {
+        indirectExpenses.push(expenseItem);
+        totalIndirect += item.amount;
       }
     });
 
@@ -56,7 +91,7 @@ const ExpensesReport = () => {
       totalIndirect,
       grandTotal: totalDirect + totalIndirect
     };
-  }, [normalizedLedgers]);
+  }, [vouchers, voucherLines, groups, apiLedgers]);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {

@@ -51,7 +51,7 @@ const CustomerView = () => {
   }, [vouchers, dateRange]);
 
   const customerData = useMemo(() => {
-    const customers = normalizedParties.filter(p => p.type === 'Sundry Debtors');
+    const customers = normalizedParties.filter(p => p.type === 'Customer');
     const customerSummary = {};
 
     customers.forEach(customer => {

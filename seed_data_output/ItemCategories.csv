@@ -1,0 +1,6 @@
+CategoryID,CategoryName,Description,CreatedAt,UpdatedAt
+CAT-001,Electronics,Electronic devices and accessories,2024-01-01,2024-05-01
+CAT-002,Clothing,Apparel and garments,2024-01-01,2024-05-01
+CAT-003,Food & Beverages,Packaged foods and drinks,2024-01-01,2024-05-01
+CAT-004,Hardware,Tools and hardware items,2024-01-01,2024-05-01
+CAT-005,Automotive,Vehicle parts and accessories,2024-01-01,2024-05-01

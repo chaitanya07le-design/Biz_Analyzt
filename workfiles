@@ -1,0 +1,199 @@
+const express = require('express');
+const router = express.Router();
+const { fetchSheetData, clearCache, getCacheStats, SHEET_GIDS } = require('../services/csvService');
+
+router.get('/health', (req, res) => {
+  res.json({ 
+    success: true,
+    data: {
+      status: 'ok', 
+      timestamp: new Date().toISOString(),
+      cache: getCacheStats()
+    }
+  });
+});
+
+router.get('/cache/stats', (req, res) => {
+  res.json(getCacheStats());
+});
+
+router.delete('/cache', (req, res) => {
+  const { sheet } = req.query;
+  clearCache(sheet);
+  res.json({ message: sheet ? `Cache cleared for ${sheet}` : 'All cache cleared' });
+});
+
+const createDataRoute = (sheetName, companyIdField = null) => {
+  return async (req, res) => {
+    try {
+      const { companyId } = req.query;
+      console.log(`📞 API call to fetch: "${sheetName}" (companyId: ${companyId || 'all'})`);
+      
+      let data = await fetchSheetData(sheetName);
+      
+      if (companyId && companyIdField && data.length > 0 && data[0].hasOwnProperty(companyIdField)) {
+        data = data.filter(row => row[companyIdField] === companyId);
+      }
+      
+      res.json({
+        success: true,
+        count: data.length,
+        data
+      });
+    } catch (error) {
+      console.error(`Error fetching ${sheetName}:`, error);
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  };
+};
+
+router.get('/companies', createDataRoute('Companies'));
+router.get('/users', createDataRoute('Users'));
+router.get('/user-company-mapping', createDataRoute('UserCompanyMapping'));
+router.get('/groups', createDataRoute('Groups', 'CompanyID'));
+router.get('/ledgers', createDataRoute('Ledgers', 'CompanyID'));
+router.get('/parties', createDataRoute('Parties', 'CompanyID'));
+router.get('/item-categories', createDataRoute('ItemCategories'));
+router.get('/item-groups', createDataRoute('ItemGroups'));
+router.get('/items', createDataRoute('Items', 'CompanyID'));
+router.get('/vouchers', createDataRoute('Vouchers', 'CompanyID'));
+router.get('/voucher-lines', createDataRoute('VoucherLines', 'CompanyID'));
+router.get('/bank-accounts', createDataRoute('BankAccounts', 'CompanyID'));
+router.get('/cash-accounts', createDataRoute('CashAccounts', 'CompanyID'));
+router.get('/settings', createDataRoute('Settings', 'CompanyID'));
+router.get('/reminder-log', createDataRoute('ReminderLog'));
+router.get('/stock-batches', createDataRoute('StockBatches', 'CompanyID'));
+router.get('/item-stock-status', createDataRoute('ItemStockStatus', 'CompanyID'));
+router.get('/customer-movement', createDataRoute('CustomerMovement', 'CompanyID'));
+router.get('/sync-log', createDataRoute('SyncLog', 'CompanyID'));
+router.get('/geographic-summary', createDataRoute('GeographicSummary', 'CompanyID'));
+
+router.get('/dashboard/summary', async (req, res) => {
+  try {
+    const { companyId } = req.query;
+    
+    if (!companyId) {
+      return res.status(400).json({
+        success: false,
+        error: 'companyId query parameter is required'
+      });
+    }
+
+    const [ledgers, parties, items, vouchers, bankAccounts, cashAccounts] = await Promise.all([
+      fetchSheetData('Ledgers'),
+      fetchSheetData('Parties'),
+      fetchSheetData('Items'),
+      fetchSheetData('Vouchers'),
+      fetchSheetData('BankAccounts'),
+      fetchSheetData('CashAccounts'),
+    ]);
+
+    const companyLedgers = ledgers.filter(l => l.CompanyID === companyId);
+    const companyParties = parties.filter(p => p.CompanyID === companyId);
+    const companyItems = items.filter(i => i.CompanyID === companyId);
+    const companyVouchers = vouchers.filter(v => v.CompanyID === companyId);
+    const companyBankAccounts = bankAccounts.filter(b => b.CompanyID === companyId);
+    const companyCashAccounts = cashAccounts.filter(c => c.CompanyID === companyId);
+
+    const totalSales = companyVouchers
+      .filter(v => v.VoucherType === 'Sales')
+      .reduce((sum, v) => sum + parseFloat(v.GrandTotal || 0), 0);
+
+    const totalPurchases = companyVouchers
+      .filter(v => v.VoucherType === 'Purchase')
+      .reduce((sum, v) => sum + parseFloat(v.GrandTotal || 0), 0);
+
+    const totalReceivables = companyParties
+      .filter(p => p.PartyType === 'Sundry Debtors')
+      .reduce((sum, p) => sum + parseFloat(p.OpeningBalance || 0), 0);
+
+    const totalPayables = companyParties
+      .filter(p => p.PartyType === 'Sundry Creditors')
+      .reduce((sum, p) => sum + Math.abs(parseFloat(p.OpeningBalance || 0)), 0);
+
+    const bankBalance = companyBankAccounts
+      .reduce((sum, b) => sum + parseFloat(b.OpeningBalance || 0), 0);
+
+    const cashInHand = companyCashAccounts
+      .reduce((sum, c) => sum + parseFloat(c.OpeningBalance || 0), 0);
+
+    res.json({
+      success: true,
+      data: {
+        totalSales,
+        totalPurchases,
+        totalReceivables,
+        totalPayables,
+        bankBalance,
+        cashInHand,
+        bankBalanceTotal: bankBalance + cashInHand,
+        partyCount: companyParties.length,
+        itemCount: companyItems.length,
+        voucherCount: companyVouchers.length,
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching dashboard summary:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+router.get('/outstanding/:type', async (req, res) => {
+  try {
+    const { type } = req.params;
+    const { companyId } = req.query;
+    
+    if (!companyId) {
+      return res.status(400).json({
+        success: false,
+        error: 'companyId query parameter is required'
+      });
+    }
+
+    const parties = await fetchSheetData('Parties');
+    const vouchers = await fetchSheetData('Vouchers');
+
+    const partyType = type === 'receivable' ? 'Sundry Debtors' : 'Sundry Creditors';
+    const companyParties = parties.filter(p => p.CompanyID === companyId && p.PartyType === partyType);
+
+    const outstanding = companyParties.map(party => {
+      const partyVouchers = vouchers.filter(v => 
+        v.CompanyID === companyId && 
+        v.PartyID === party.PartyID &&
+        v.IsDeleted !== 'TRUE'
+      );
+
+      const totalAmount = partyVouchers.reduce((sum, v) => sum + parseFloat(v.GrandTotal || 0), 0);
+      const openingBalance = parseFloat(party.OpeningBalance || 0);
+
+      return {
+        partyId: party.PartyID,
+        partyName: party.PartyName,
+        city: party.City,
+        totalOutstanding: Math.abs(openingBalance + totalAmount),
+        openingBalance: openingBalance,
+        transactionCount: partyVouchers.length,
+      };
+    });
+
+    res.json({
+      success: true,
+      count: outstanding.length,
+      data: outstanding
+    });
+  } catch (error) {
+    console.error('Error fetching outstanding:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+module.exports = router;

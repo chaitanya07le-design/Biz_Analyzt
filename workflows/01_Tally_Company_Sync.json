@@ -1,0 +1,152 @@
+{
+  "created": "1786095018298",
+  "updated": "1786095018298",
+  "name": "01 - Sync Tally Company and Trial Balance",
+  "description": "Syncs Tally company info and trial balance to Google Sheets (Companies) every day at midnight. Clears existing data and inserts fresh records.",
+  "tags": ["tally", "sync", "company", "google-sheets"],
+  "pieces": [
+    "@puchoaistudio/tool-schedule",
+    "@puchoaistudio/tool-tallyconnection",
+    "@puchoaistudio/tool-google-sheets",
+    "@puchoaistudio/tool-code"
+  ],
+  "template": {
+    "displayName": "01 - Sync Tally Company and Trial Balance",
+    "trigger": {
+      "name": "trigger",
+      "valid": true,
+      "displayName": "Every Day at Midnight",
+      "type": "TOOL_TRIGGER",
+      "settings": {
+        "pieceName": "@puchoaistudio/tool-schedule",
+        "pieceVersion": "^2.0.0",
+        "input": {
+          "timezone": "Asia/Kolkata",
+          "cron": "0 0 * * *"
+        },
+        "sampleData": {},
+        "propertySettings": {
+          "timezone": {"type": "MANUAL"},
+          "cron": {"type": "MANUAL"}
+        },
+        "triggerName": "scheduled_trigger"
+      },
+      "nextAction": {
+        "name": "step_1",
+        "skip": false,
+        "type": "PIECE",
+        "valid": true,
+        "displayName": "Ask Trial Balance",
+        "settings": {
+          "input": {
+            "template": "48",
+            "variables": {},
+            "tallyconnection": ""
+          },
+          "pieceName": "@puchoaistudio/tool-tallyconnection",
+          "actionName": "ask_tally_template",
+          "sampleData": {},
+          "pieceVersion": "^2.3.4",
+          "propertySettings": {
+            "template": {"type": "MANUAL"},
+            "variables": {"type": "MANUAL", "schema": {}},
+            "tallyconnection": {"type": "MANUAL"}
+          },
+          "errorHandlingOptions": {
+            "retryOnFailure": {"value": false},
+            "continueOnFailure": {"value": false}
+          }
+        },
+        "nextAction": {
+          "name": "step_2",
+          "skip": false,
+          "type": "CODE",
+          "valid": true,
+          "displayName": "Transform Companies",
+          "settings": {
+            "input": {
+              "tally_data": "{{step_1['output']}}"
+            },
+            "sampleData": {},
+            "sourceCode": {
+              "code": "export const code = async (inputs) => {\n  const tallyData = inputs.tally_data || {};\n  const companies = tallyData.companies || [];\n  const now = new Date().toISOString().replace('T', ' ').substring(0, 19);\n  \n  const rows = companies.map((item, index) => {\n    const companyID = `COMP-${String(index + 1).padStart(4, '0')}`;\n    return [\n      companyID,\n      item.name || '',\n      item.address || '',\n      item.gstin || '',\n      item.financialYearStart || '01-Apr',\n      item.currency || 'INR',\n      'TRUE',\n      now,\n      now,\n      1\n    ];\n  });\n  \n  return { rows, count: rows.length };\n};",
+              "packageJson": "{}",
+              "language": "typescript"
+            },
+            "errorHandlingOptions": {
+              "retryOnFailure": {"value": false},
+              "continueOnFailure": {"value": false}
+            }
+          },
+          "nextAction": {
+            "name": "step_3",
+            "skip": false,
+            "type": "PIECE",
+            "valid": true,
+            "displayName": "Clear Companies Sheet",
+            "settings": {
+              "input": {
+                "auth": "",
+                "spreadsheetId": "",
+                "sheetId": 0,
+                "is_first_row_headers": true
+              },
+              "pieceName": "@puchoaistudio/tool-google-sheets",
+              "actionName": "clear_sheet",
+              "sampleData": {},
+              "pieceVersion": "^2.0.9",
+              "propertySettings": {
+                "auth": {"type": "MANUAL"},
+                "spreadsheetId": {"type": "MANUAL"},
+                "sheetId": {"type": "MANUAL"},
+                "is_first_row_headers": {"type": "MANUAL"}
+              },
+              "errorHandlingOptions": {
+                "retryOnFailure": {"value": true},
+                "continueOnFailure": {"value": false}
+              }
+            },
+            "nextAction": {
+              "name": "step_4",
+              "skip": false,
+              "type": "PIECE",
+              "valid": true,
+              "displayName": "Insert Companies",
+              "settings": {
+                "input": {
+                  "auth": "",
+                  "spreadsheetId": "",
+                  "sheetId": 0,
+                  "input_type": "json",
+                  "values": {
+                    "values": "{{step_2['rows']}}"
+                  }
+                },
+                "pieceName": "@puchoaistudio/tool-google-sheets",
+                "actionName": "google-sheets-insert-multiple-rows",
+                "sampleData": {},
+                "pieceVersion": "^2.0.9",
+                "propertySettings": {
+                  "auth": {"type": "MANUAL"},
+                  "spreadsheetId": {"type": "MANUAL"},
+                  "sheetId": {"type": "MANUAL"},
+                  "input_type": {"type": "MANUAL"},
+                  "values": {"type": "MANUAL", "schema": {"values": {"type": "ARRAY", "items": {"type": "ARRAY"}}}}
+                },
+                "errorHandlingOptions": {
+                  "retryOnFailure": {"value": true},
+                  "continueOnFailure": {"value": false}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "valid": true,
+    "agentIds": [],
+    "connectionIds": [],
+    "schemaVersion": "7"
+  },
+  "blogUrl": ""
+}

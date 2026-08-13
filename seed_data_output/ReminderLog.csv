@@ -1,0 +1,455 @@
+LogID,CompanyID,ReminderType,ReferenceID,Message,Status,SentAt,CreatedAt
+REM-0001,COMP-0001,LowStock,REF-0001,Low stock alert for items below reorder level - REF-0001,Failed,2024-06-14 00:00:00,2024-06-14 00:00:00
+REM-0002,COMP-0001,ExpiryAlert,REF-0002,Expiry alert for batch items nearing expiry - REF-0002,Sent,2024-04-16 00:00:00,2024-04-16 00:00:00
+REM-0003,COMP-0001,ExpiryAlert,REF-0003,Expiry alert for batch items nearing expiry - REF-0003,Sent,2024-05-23 00:00:00,2024-05-23 00:00:00
+REM-0004,COMP-0001,PaymentDue,REF-0004,Payment reminder for outstanding invoices - REF-0004,Sent,2024-04-01 00:00:00,2024-04-01 00:00:00
+REM-0005,COMP-0001,PaymentDue,REF-0005,Payment reminder for outstanding invoices - REF-0005,Sent,2024-06-30 00:00:00,2024-06-30 00:00:00
+REM-0006,COMP-0001,ExpiryAlert,REF-0006,Expiry alert for batch items nearing expiry - REF-0006,Sent,2024-05-28 00:00:00,2024-05-28 00:00:00
+REM-0007,COMP-0001,PaymentDue,REF-0007,Payment reminder for outstanding invoices - REF-0007,Failed,2024-04-20 00:00:00,2024-04-20 00:00:00
+REM-0008,COMP-0001,ExpiryAlert,REF-0008,Expiry alert for batch items nearing expiry - REF-0008,Failed,2024-06-04 00:00:00,2024-06-04 00:00:00
+REM-0009,COMP-0001,CustomerInactive,REF-0009,Customer inactivity alert - REF-0009,Failed,2024-05-10 00:00:00,2024-05-10 00:00:00
+REM-0010,COMP-0001,CustomerInactive,REF-0010,Customer inactivity alert - REF-0010,Pending,2024-06-04 00:00:00,2024-06-04 00:00:00
+REM-0011,COMP-0001,ExpiryAlert,REF-0011,Expiry alert for batch items nearing expiry - REF-0011,Failed,2024-05-17 00:00:00,2024-05-17 00:00:00
+REM-0012,COMP-0001,LowStock,REF-0012,Low stock alert for items below reorder level - REF-0012,Pending,2024-04-10 00:00:00,2024-04-10 00:00:00
+REM-0013,COMP-0001,PaymentDue,REF-0013,Payment reminder for outstanding invoices - REF-0013,Sent,2024-04-24 00:00:00,2024-04-24 00:00:00
+REM-0014,COMP-0001,CustomerInactive,REF-0014,Customer inactivity alert - REF-0014,Pending,2024-06-24 00:00:00,2024-06-24 00:00:00
+REM-0015,COMP-0002,PaymentDue,REF-0015,Payment reminder for outstanding invoices - REF-0015,Pending,2024-05-12 00:00:00,2024-05-12 00:00:00
+REM-0016,COMP-0002,ExpiryAlert,REF-0016,Expiry alert for batch items nearing expiry - REF-0016,Failed,2024-05-10 00:00:00,2024-05-10 00:00:00
+REM-0017,COMP-0002,PaymentDue,REF-0017,Payment reminder for outstanding invoices - REF-0017,Pending,2024-06-21 00:00:00,2024-06-21 00:00:00
+REM-0018,COMP-0002,LowStock,REF-0018,Low stock alert for items below reorder level - REF-0018,Failed,2024-04-25 00:00:00,2024-04-25 00:00:00
+REM-0019,COMP-0002,PaymentDue,REF-0019,Payment reminder for outstanding invoices - REF-0019,Sent,2024-04-15 00:00:00,2024-04-15 00:00:00
+REM-0020,COMP-0002,LowStock,REF-0020,Low stock alert for items below reorder level - REF-0020,Sent,2024-04-13 00:00:00,2024-04-13 00:00:00
+REM-0021,COMP-0002,ExpiryAlert,REF-0021,Expiry alert for batch items nearing expiry - REF-0021,Sent,2024-06-06 00:00:00,2024-06-06 00:00:00
+REM-0022,COMP-0002,PaymentDue,REF-0022,Payment reminder for outstanding invoices - REF-0022,Pending,2024-04-28 00:00:00,2024-04-28 00:00:00
+REM-0023,COMP-0002,LowStock,REF-0023,Low stock alert for items below reorder level - REF-0023,Sent,2024-05-22 00:00:00,2024-05-22 00:00:00
+REM-0024,COMP-0002,LowStock,REF-0024,Low stock alert for items below reorder level - REF-0024,Failed,2024-05-08 00:00:00,2024-05-08 00:00:00
+REM-0025,COMP-0002,PaymentDue,REF-0025,Payment reminder for outstanding invoices - REF-0025,Failed,2024-05-03 00:00:00,2024-05-03 00:00:00
+REM-0026,COMP-0002,LowStock,REF-0026,Low stock alert for items below reorder level - REF-0026,Failed,2024-04-17 00:00:00,2024-04-17 00:00:00
+REM-0027,COMP-0002,CustomerInactive,REF-0027,Customer inactivity alert - REF-0027,Sent,2024-05-03 00:00:00,2024-05-03 00:00:00
+REM-0028,COMP-0002,CustomerInactive,REF-0028,Customer inactivity alert - REF-0028,Sent,2024-05-21 00:00:00,2024-05-21 00:00:00
+REM-0029,COMP-0002,LowStock,REF-0029,Low stock alert for items below reorder level - REF-0029,Sent,2024-06-20 00:00:00,2024-06-20 00:00:00
+REM-0030,COMP-0003,ExpiryAlert,REF-0030,Expiry alert for batch items nearing expiry - REF-0030,Sent,2024-04-18 00:00:00,2024-04-18 00:00:00
+REM-0031,COMP-0003,LowStock,REF-0031,Low stock alert for items below reorder level - REF-0031,Sent,2024-05-03 00:00:00,2024-05-03 00:00:00
+REM-0032,COMP-0003,CustomerInactive,REF-0032,Customer inactivity alert - REF-0032,Pending,2024-06-08 00:00:00,2024-06-08 00:00:00
+REM-0033,COMP-0003,CustomerInactive,REF-0033,Customer inactivity alert - REF-0033,Pending,2024-04-06 00:00:00,2024-04-06 00:00:00
+REM-0034,COMP-0003,PaymentDue,REF-0034,Payment reminder for outstanding invoices - REF-0034,Pending,2024-05-20 00:00:00,2024-05-20 00:00:00
+REM-0035,COMP-0004,LowStock,REF-0035,Low stock alert for items below reorder level - REF-0035,Failed,2024-06-19 00:00:00,2024-06-19 00:00:00
+REM-0036,COMP-0004,CustomerInactive,REF-0036,Customer inactivity alert - REF-0036,Failed,2024-06-21 00:00:00,2024-06-21 00:00:00
+REM-0037,COMP-0004,CustomerInactive,REF-0037,Customer inactivity alert - REF-0037,Failed,2024-06-30 00:00:00,2024-06-30 00:00:00
+REM-0038,COMP-0004,CustomerInactive,REF-0038,Customer inactivity alert - REF-0038,Pending,2024-05-21 00:00:00,2024-05-21 00:00:00
+REM-0039,COMP-0004,CustomerInactive,REF-0039,Customer inactivity alert - REF-0039,Pending,2024-04-07 00:00:00,2024-04-07 00:00:00
+REM-0040,COMP-0004,PaymentDue,REF-0040,Payment reminder for outstanding invoices - REF-0040,Sent,2024-04-18 00:00:00,2024-04-18 00:00:00
+REM-0041,COMP-0004,ExpiryAlert,REF-0041,Expiry alert for batch items nearing expiry - REF-0041,Sent,2024-05-28 00:00:00,2024-05-28 00:00:00
+REM-0042,COMP-0005,PaymentDue,REF-0042,Payment reminder for outstanding invoices - REF-0042,Sent,2024-06-28 00:00:00,2024-06-28 00:00:00
+REM-0043,COMP-0005,LowStock,REF-0043,Low stock alert for items below reorder level - REF-0043,Failed,2024-05-01 00:00:00,2024-05-01 00:00:00
+REM-0044,COMP-0005,ExpiryAlert,REF-0044,Expiry alert for batch items nearing expiry - REF-0044,Sent,2024-04-05 00:00:00,2024-04-05 00:00:00
+REM-0045,COMP-0005,CustomerInactive,REF-0045,Customer inactivity alert - REF-0045,Sent,2024-04-03 00:00:00,2024-04-03 00:00:00
+REM-0046,COMP-0005,CustomerInactive,REF-0046,Customer inactivity alert - REF-0046,Sent,2024-05-07 00:00:00,2024-05-07 00:00:00
+REM-0047,COMP-0005,ExpiryAlert,REF-0047,Expiry alert for batch items nearing expiry - REF-0047,Sent,2024-05-15 00:00:00,2024-05-15 00:00:00
+REM-0048,COMP-0005,ExpiryAlert,REF-0048,Expiry alert for batch items nearing expiry - REF-0048,Pending,2024-05-26 00:00:00,2024-05-26 00:00:00
+REM-0049,COMP-0005,CustomerInactive,REF-0049,Customer inactivity alert - REF-0049,Failed,2024-04-09 00:00:00,2024-04-09 00:00:00
+REM-0050,COMP-0005,LowStock,REF-0050,Low stock alert for items below reorder level - REF-0050,Failed,2024-06-25 00:00:00,2024-06-25 00:00:00
+REM-0051,COMP-0006,CustomerInactive,REF-0051,Customer inactivity alert - REF-0051,Failed,2024-06-02 00:00:00,2024-06-02 00:00:00
+REM-0052,COMP-0006,LowStock,REF-0052,Low stock alert for items below reorder level - REF-0052,Failed,2024-06-30 00:00:00,2024-06-30 00:00:00
+REM-0053,COMP-0006,ExpiryAlert,REF-0053,Expiry alert for batch items nearing expiry - REF-0053,Failed,2024-06-10 00:00:00,2024-06-10 00:00:00
+REM-0054,COMP-0006,LowStock,REF-0054,Low stock alert for items below reorder level - REF-0054,Failed,2024-04-24 00:00:00,2024-04-24 00:00:00
+REM-0055,COMP-0006,PaymentDue,REF-0055,Payment reminder for outstanding invoices - REF-0055,Failed,2024-06-24 00:00:00,2024-06-24 00:00:00
+REM-0056,COMP-0006,LowStock,REF-0056,Low stock alert for items below reorder level - REF-0056,Pending,2024-04-22 00:00:00,2024-04-22 00:00:00
+REM-0057,COMP-0006,LowStock,REF-0057,Low stock alert for items below reorder level - REF-0057,Failed,2024-06-22 00:00:00,2024-06-22 00:00:00
+REM-0058,COMP-0007,CustomerInactive,REF-0058,Customer inactivity alert - REF-0058,Failed,2024-04-22 00:00:00,2024-04-22 00:00:00
+REM-0059,COMP-0007,CustomerInactive,REF-0059,Customer inactivity alert - REF-0059,Failed,2024-06-23 00:00:00,2024-06-23 00:00:00
+REM-0060,COMP-0007,CustomerInactive,REF-0060,Customer inactivity alert - REF-0060,Failed,2024-04-03 00:00:00,2024-04-03 00:00:00
+REM-0061,COMP-0007,ExpiryAlert,REF-0061,Expiry alert for batch items nearing expiry - REF-0061,Sent,2024-04-06 00:00:00,2024-04-06 00:00:00
+REM-0062,COMP-0007,LowStock,REF-0062,Low stock alert for items below reorder level - REF-0062,Pending,2024-06-23 00:00:00,2024-06-23 00:00:00
+REM-0063,COMP-0007,LowStock,REF-0063,Low stock alert for items below reorder level - REF-0063,Sent,2024-05-29 00:00:00,2024-05-29 00:00:00
+REM-0064,COMP-0007,ExpiryAlert,REF-0064,Expiry alert for batch items nearing expiry - REF-0064,Failed,2024-06-06 00:00:00,2024-06-06 00:00:00
+REM-0065,COMP-0007,PaymentDue,REF-0065,Payment reminder for outstanding invoices - REF-0065,Sent,2024-05-01 00:00:00,2024-05-01 00:00:00
+REM-0066,COMP-0007,LowStock,REF-0066,Low stock alert for items below reorder level - REF-0066,Failed,2024-05-25 00:00:00,2024-05-25 00:00:00
+REM-0067,COMP-0007,LowStock,REF-0067,Low stock alert for items below reorder level - REF-0067,Pending,2024-04-11 00:00:00,2024-04-11 00:00:00
+REM-0068,COMP-0007,ExpiryAlert,REF-0068,Expiry alert for batch items nearing expiry - REF-0068,Failed,2024-05-02 00:00:00,2024-05-02 00:00:00
+REM-0069,COMP-0007,PaymentDue,REF-0069,Payment reminder for outstanding invoices - REF-0069,Pending,2024-05-30 00:00:00,2024-05-30 00:00:00
+REM-0070,COMP-0007,CustomerInactive,REF-0070,Customer inactivity alert - REF-0070,Failed,2024-04-01 00:00:00,2024-04-01 00:00:00
+REM-0071,COMP-0007,CustomerInactive,REF-0071,Customer inactivity alert - REF-0071,Pending,2024-04-01 00:00:00,2024-04-01 00:00:00
+REM-0072,COMP-0007,PaymentDue,REF-0072,Payment reminder for outstanding invoices - REF-0072,Failed,2024-05-18 00:00:00,2024-05-18 00:00:00
+REM-0073,COMP-0008,ExpiryAlert,REF-0073,Expiry alert for batch items nearing expiry - REF-0073,Failed,2024-06-10 00:00:00,2024-06-10 00:00:00
+REM-0074,COMP-0008,CustomerInactive,REF-0074,Customer inactivity alert - REF-0074,Sent,2024-05-07 00:00:00,2024-05-07 00:00:00
+REM-0075,COMP-0008,CustomerInactive,REF-0075,Customer inactivity alert - REF-0075,Pending,2024-05-15 00:00:00,2024-05-15 00:00:00
+REM-0076,COMP-0008,CustomerInactive,REF-0076,Customer inactivity alert - REF-0076,Failed,2024-06-04 00:00:00,2024-06-04 00:00:00
+REM-0077,COMP-0008,LowStock,REF-0077,Low stock alert for items below reorder level - REF-0077,Sent,2024-05-24 00:00:00,2024-05-24 00:00:00
+REM-0078,COMP-0008,PaymentDue,REF-0078,Payment reminder for outstanding invoices - REF-0078,Pending,2024-05-01 00:00:00,2024-05-01 00:00:00
+REM-0079,COMP-0008,ExpiryAlert,REF-0079,Expiry alert for batch items nearing expiry - REF-0079,Sent,2024-06-14 00:00:00,2024-06-14 00:00:00
+REM-0080,COMP-0008,ExpiryAlert,REF-0080,Expiry alert for batch items nearing expiry - REF-0080,Failed,2024-06-18 00:00:00,2024-06-18 00:00:00
+REM-0081,COMP-0008,ExpiryAlert,REF-0081,Expiry alert for batch items nearing expiry - REF-0081,Pending,2024-05-06 00:00:00,2024-05-06 00:00:00
+REM-0082,COMP-0008,LowStock,REF-0082,Low stock alert for items below reorder level - REF-0082,Pending,2024-04-22 00:00:00,2024-04-22 00:00:00
+REM-0083,COMP-0008,ExpiryAlert,REF-0083,Expiry alert for batch items nearing expiry - REF-0083,Pending,2024-06-14 00:00:00,2024-06-14 00:00:00
+REM-0084,COMP-0008,LowStock,REF-0084,Low stock alert for items below reorder level - REF-0084,Sent,2024-04-13 00:00:00,2024-04-13 00:00:00
+REM-0085,COMP-0008,PaymentDue,REF-0085,Payment reminder for outstanding invoices - REF-0085,Failed,2024-06-30 00:00:00,2024-06-30 00:00:00
+REM-0086,COMP-0009,PaymentDue,REF-0086,Payment reminder for outstanding invoices - REF-0086,Pending,2024-06-18 00:00:00,2024-06-18 00:00:00
+REM-0087,COMP-0009,PaymentDue,REF-0087,Payment reminder for outstanding invoices - REF-0087,Failed,2024-05-08 00:00:00,2024-05-08 00:00:00
+REM-0088,COMP-0009,LowStock,REF-0088,Low stock alert for items below reorder level - REF-0088,Failed,2024-05-23 00:00:00,2024-05-23 00:00:00
+REM-0089,COMP-0009,ExpiryAlert,REF-0089,Expiry alert for batch items nearing expiry - REF-0089,Sent,2024-06-28 00:00:00,2024-06-28 00:00:00
+REM-0090,COMP-0009,PaymentDue,REF-0090,Payment reminder for outstanding invoices - REF-0090,Sent,2024-06-30 00:00:00,2024-06-30 00:00:00
+REM-0091,COMP-0009,CustomerInactive,REF-0091,Customer inactivity alert - REF-0091,Pending,2024-06-16 00:00:00,2024-06-16 00:00:00
+REM-0092,COMP-0009,ExpiryAlert,REF-0092,Expiry alert for batch items nearing expiry - REF-0092,Sent,2024-05-10 00:00:00,2024-05-10 00:00:00
+REM-0093,COMP-0009,LowStock,REF-0093,Low stock alert for items below reorder level - REF-0093,Pending,2024-06-26 00:00:00,2024-06-26 00:00:00
+REM-0094,COMP-0009,CustomerInactive,REF-0094,Customer inactivity alert - REF-0094,Pending,2024-04-30 00:00:00,2024-04-30 00:00:00
+REM-0095,COMP-0009,PaymentDue,REF-0095,Payment reminder for outstanding invoices - REF-0095,Pending,2024-06-17 00:00:00,2024-06-17 00:00:00
+REM-0096,COMP-0010,PaymentDue,REF-0096,Payment reminder for outstanding invoices - REF-0096,Pending,2024-05-03 00:00:00,2024-05-03 00:00:00
+REM-0097,COMP-0010,CustomerInactive,REF-0097,Customer inactivity alert - REF-0097,Sent,2024-05-01 00:00:00,2024-05-01 00:00:00
+REM-0098,COMP-0010,LowStock,REF-0098,Low stock alert for items below reorder level - REF-0098,Pending,2024-04-19 00:00:00,2024-04-19 00:00:00
+REM-0099,COMP-0010,CustomerInactive,REF-0099,Customer inactivity alert - REF-0099,Failed,2024-04-18 00:00:00,2024-04-18 00:00:00
+REM-0100,COMP-0010,CustomerInactive,REF-0100,Customer inactivity alert - REF-0100,Sent,2024-06-02 00:00:00,2024-06-02 00:00:00
+REM-0101,COMP-0011,LowStock,REF-0101,Low stock alert for items below reorder level - REF-0101,Sent,2024-06-26 00:00:00,2024-06-26 00:00:00
+REM-0102,COMP-0011,PaymentDue,REF-0102,Payment reminder for outstanding invoices - REF-0102,Sent,2024-06-21 00:00:00,2024-06-21 00:00:00
+REM-0103,COMP-0011,PaymentDue,REF-0103,Payment reminder for outstanding invoices - REF-0103,Pending,2024-06-06 00:00:00,2024-06-06 00:00:00
+REM-0104,COMP-0011,LowStock,REF-0104,Low stock alert for items below reorder level - REF-0104,Pending,2024-04-09 00:00:00,2024-04-09 00:00:00
+REM-0105,COMP-0011,CustomerInactive,REF-0105,Customer inactivity alert - REF-0105,Failed,2024-05-10 00:00:00,2024-05-10 00:00:00
+REM-0106,COMP-0011,ExpiryAlert,REF-0106,Expiry alert for batch items nearing expiry - REF-0106,Sent,2024-06-27 00:00:00,2024-06-27 00:00:00
+REM-0107,COMP-0011,PaymentDue,REF-0107,Payment reminder for outstanding invoices - REF-0107,Sent,2024-04-16 00:00:00,2024-04-16 00:00:00
+REM-0108,COMP-0011,ExpiryAlert,REF-0108,Expiry alert for batch items nearing expiry - REF-0108,Failed,2024-05-27 00:00:00,2024-05-27 00:00:00
+REM-0109,COMP-0012,CustomerInactive,REF-0109,Customer inactivity alert - REF-0109,Sent,2024-05-02 00:00:00,2024-05-02 00:00:00
+REM-0110,COMP-0012,PaymentDue,REF-0110,Payment reminder for outstanding invoices - REF-0110,Pending,2024-04-10 00:00:00,2024-04-10 00:00:00
+REM-0111,COMP-0012,LowStock,REF-0111,Low stock alert for items below reorder level - REF-0111,Sent,2024-06-17 00:00:00,2024-06-17 00:00:00
+REM-0112,COMP-0012,PaymentDue,REF-0112,Payment reminder for outstanding invoices - REF-0112,Failed,2024-04-14 00:00:00,2024-04-14 00:00:00
+REM-0113,COMP-0012,CustomerInactive,REF-0113,Customer inactivity alert - REF-0113,Sent,2024-06-04 00:00:00,2024-06-04 00:00:00
+REM-0114,COMP-0012,PaymentDue,REF-0114,Payment reminder for outstanding invoices - REF-0114,Pending,2024-05-01 00:00:00,2024-05-01 00:00:00
+REM-0115,COMP-0012,ExpiryAlert,REF-0115,Expiry alert for batch items nearing expiry - REF-0115,Failed,2024-05-13 00:00:00,2024-05-13 00:00:00
+REM-0116,COMP-0012,PaymentDue,REF-0116,Payment reminder for outstanding invoices - REF-0116,Sent,2024-04-04 00:00:00,2024-04-04 00:00:00
+REM-0117,COMP-0012,PaymentDue,REF-0117,Payment reminder for outstanding invoices - REF-0117,Failed,2024-06-08 00:00:00,2024-06-08 00:00:00
+REM-0118,COMP-0012,LowStock,REF-0118,Low stock alert for items below reorder level - REF-0118,Failed,2024-04-03 00:00:00,2024-04-03 00:00:00
+REM-0119,COMP-0012,ExpiryAlert,REF-0119,Expiry alert for batch items nearing expiry - REF-0119,Failed,2024-05-24 00:00:00,2024-05-24 00:00:00
+REM-0120,COMP-0013,PaymentDue,REF-0120,Payment reminder for outstanding invoices - REF-0120,Sent,2024-04-12 00:00:00,2024-04-12 00:00:00
+REM-0121,COMP-0013,PaymentDue,REF-0121,Payment reminder for outstanding invoices - REF-0121,Failed,2024-04-17 00:00:00,2024-04-17 00:00:00
+REM-0122,COMP-0013,ExpiryAlert,REF-0122,Expiry alert for batch items nearing expiry - REF-0122,Sent,2024-04-20 00:00:00,2024-04-20 00:00:00
+REM-0123,COMP-0013,ExpiryAlert,REF-0123,Expiry alert for batch items nearing expiry - REF-0123,Sent,2024-06-30 00:00:00,2024-06-30 00:00:00
+REM-0124,COMP-0013,PaymentDue,REF-0124,Payment reminder for outstanding invoices - REF-0124,Pending,2024-06-09 00:00:00,2024-06-09 00:00:00
+REM-0125,COMP-0013,LowStock,REF-0125,Low stock alert for items below reorder level - REF-0125,Failed,2024-04-06 00:00:00,2024-04-06 00:00:00
+REM-0126,COMP-0013,CustomerInactive,REF-0126,Customer inactivity alert - REF-0126,Sent,2024-05-04 00:00:00,2024-05-04 00:00:00
+REM-0127,COMP-0013,CustomerInactive,REF-0127,Customer inactivity alert - REF-0127,Failed,2024-05-25 00:00:00,2024-05-25 00:00:00
+REM-0128,COMP-0013,LowStock,REF-0128,Low stock alert for items below reorder level - REF-0128,Sent,2024-05-28 00:00:00,2024-05-28 00:00:00
+REM-0129,COMP-0013,ExpiryAlert,REF-0129,Expiry alert for batch items nearing expiry - REF-0129,Failed,2024-04-09 00:00:00,2024-04-09 00:00:00
+REM-0130,COMP-0014,CustomerInactive,REF-0130,Customer inactivity alert - REF-0130,Sent,2024-06-13 00:00:00,2024-06-13 00:00:00
+REM-0131,COMP-0014,LowStock,REF-0131,Low stock alert for items below reorder level - REF-0131,Sent,2024-04-27 00:00:00,2024-04-27 00:00:00
+REM-0132,COMP-0014,LowStock,REF-0132,Low stock alert for items below reorder level - REF-0132,Failed,2024-05-06 00:00:00,2024-05-06 00:00:00
+REM-0133,COMP-0014,CustomerInactive,REF-0133,Customer inactivity alert - REF-0133,Pending,2024-05-10 00:00:00,2024-05-10 00:00:00
+REM-0134,COMP-0014,LowStock,REF-0134,Low stock alert for items below reorder level - REF-0134,Pending,2024-04-28 00:00:00,2024-04-28 00:00:00
+REM-0135,COMP-0014,LowStock,REF-0135,Low stock alert for items below reorder level - REF-0135,Sent,2024-05-10 00:00:00,2024-05-10 00:00:00
+REM-0136,COMP-0014,CustomerInactive,REF-0136,Customer inactivity alert - REF-0136,Pending,2024-04-06 00:00:00,2024-04-06 00:00:00
+REM-0137,COMP-0014,PaymentDue,REF-0137,Payment reminder for outstanding invoices - REF-0137,Sent,2024-04-09 00:00:00,2024-04-09 00:00:00
+REM-0138,COMP-0014,CustomerInactive,REF-0138,Customer inactivity alert - REF-0138,Sent,2024-05-08 00:00:00,2024-05-08 00:00:00
+REM-0139,COMP-0014,PaymentDue,REF-0139,Payment reminder for outstanding invoices - REF-0139,Failed,2024-04-09 00:00:00,2024-04-09 00:00:00
+REM-0140,COMP-0014,PaymentDue,REF-0140,Payment reminder for outstanding invoices - REF-0140,Sent,2024-05-08 00:00:00,2024-05-08 00:00:00
+REM-0141,COMP-0014,LowStock,REF-0141,Low stock alert for items below reorder level - REF-0141,Pending,2024-04-16 00:00:00,2024-04-16 00:00:00
+REM-0142,COMP-0014,ExpiryAlert,REF-0142,Expiry alert for batch items nearing expiry - REF-0142,Failed,2024-05-17 00:00:00,2024-05-17 00:00:00
+REM-0143,COMP-0014,ExpiryAlert,REF-0143,Expiry alert for batch items nearing expiry - REF-0143,Sent,2024-05-29 00:00:00,2024-05-29 00:00:00
+REM-0144,COMP-0015,LowStock,REF-0144,Low stock alert for items below reorder level - REF-0144,Failed,2024-05-31 00:00:00,2024-05-31 00:00:00
+REM-0145,COMP-0015,LowStock,REF-0145,Low stock alert for items below reorder level - REF-0145,Failed,2024-06-27 00:00:00,2024-06-27 00:00:00
+REM-0146,COMP-0015,ExpiryAlert,REF-0146,Expiry alert for batch items nearing expiry - REF-0146,Pending,2024-04-30 00:00:00,2024-04-30 00:00:00
+REM-0147,COMP-0015,CustomerInactive,REF-0147,Customer inactivity alert - REF-0147,Sent,2024-06-28 00:00:00,2024-06-28 00:00:00
+REM-0148,COMP-0015,PaymentDue,REF-0148,Payment reminder for outstanding invoices - REF-0148,Pending,2024-06-24 00:00:00,2024-06-24 00:00:00
+REM-0149,COMP-0016,CustomerInactive,REF-0149,Customer inactivity alert - REF-0149,Failed,2024-04-10 00:00:00,2024-04-10 00:00:00
+REM-0150,COMP-0016,CustomerInactive,REF-0150,Customer inactivity alert - REF-0150,Pending,2024-06-10 00:00:00,2024-06-10 00:00:00
+REM-0151,COMP-0016,CustomerInactive,REF-0151,Customer inactivity alert - REF-0151,Failed,2024-05-25 00:00:00,2024-05-25 00:00:00
+REM-0152,COMP-0016,ExpiryAlert,REF-0152,Expiry alert for batch items nearing expiry - REF-0152,Sent,2024-05-27 00:00:00,2024-05-27 00:00:00
+REM-0153,COMP-0016,CustomerInactive,REF-0153,Customer inactivity alert - REF-0153,Pending,2024-04-28 00:00:00,2024-04-28 00:00:00
+REM-0154,COMP-0016,PaymentDue,REF-0154,Payment reminder for outstanding invoices - REF-0154,Sent,2024-06-24 00:00:00,2024-06-24 00:00:00
+REM-0155,COMP-0016,PaymentDue,REF-0155,Payment reminder for outstanding invoices - REF-0155,Failed,2024-04-28 00:00:00,2024-04-28 00:00:00
+REM-0156,COMP-0016,LowStock,REF-0156,Low stock alert for items below reorder level - REF-0156,Failed,2024-06-13 00:00:00,2024-06-13 00:00:00
+REM-0157,COMP-0016,LowStock,REF-0157,Low stock alert for items below reorder level - REF-0157,Sent,2024-05-29 00:00:00,2024-05-29 00:00:00
+REM-0158,COMP-0016,CustomerInactive,REF-0158,Customer inactivity alert - REF-0158,Sent,2024-05-06 00:00:00,2024-05-06 00:00:00
+REM-0159,COMP-0016,ExpiryAlert,REF-0159,Expiry alert for batch items nearing expiry - REF-0159,Pending,2024-04-05 00:00:00,2024-04-05 00:00:00
+REM-0160,COMP-0017,ExpiryAlert,REF-0160,Expiry alert for batch items nearing expiry - REF-0160,Pending,2024-06-15 00:00:00,2024-06-15 00:00:00
+REM-0161,COMP-0017,CustomerInactive,REF-0161,Customer inactivity alert - REF-0161,Failed,2024-05-14 00:00:00,2024-05-14 00:00:00
+REM-0162,COMP-0017,CustomerInactive,REF-0162,Customer inactivity alert - REF-0162,Failed,2024-04-11 00:00:00,2024-04-11 00:00:00
+REM-0163,COMP-0017,ExpiryAlert,REF-0163,Expiry alert for batch items nearing expiry - REF-0163,Sent,2024-04-29 00:00:00,2024-04-29 00:00:00
+REM-0164,COMP-0017,PaymentDue,REF-0164,Payment reminder for outstanding invoices - REF-0164,Pending,2024-06-08 00:00:00,2024-06-08 00:00:00
+REM-0165,COMP-0017,CustomerInactive,REF-0165,Customer inactivity alert - REF-0165,Pending,2024-06-14 00:00:00,2024-06-14 00:00:00
+REM-0166,COMP-0018,LowStock,REF-0166,Low stock alert for items below reorder level - REF-0166,Failed,2024-04-06 00:00:00,2024-04-06 00:00:00
+REM-0167,COMP-0018,PaymentDue,REF-0167,Payment reminder for outstanding invoices - REF-0167,Pending,2024-06-21 00:00:00,2024-06-21 00:00:00
+REM-0168,COMP-0018,ExpiryAlert,REF-0168,Expiry alert for batch items nearing expiry - REF-0168,Failed,2024-06-02 00:00:00,2024-06-02 00:00:00
+REM-0169,COMP-0018,LowStock,REF-0169,Low stock alert for items below reorder level - REF-0169,Failed,2024-05-13 00:00:00,2024-05-13 00:00:00
+REM-0170,COMP-0018,ExpiryAlert,REF-0170,Expiry alert for batch items nearing expiry - REF-0170,Sent,2024-04-14 00:00:00,2024-04-14 00:00:00
+REM-0171,COMP-0018,CustomerInactive,REF-0171,Customer inactivity alert - REF-0171,Failed,2024-06-24 00:00:00,2024-06-24 00:00:00
+REM-0172,COMP-0018,PaymentDue,REF-0172,Payment reminder for outstanding invoices - REF-0172,Pending,2024-04-18 00:00:00,2024-04-18 00:00:00
+REM-0173,COMP-0018,ExpiryAlert,REF-0173,Expiry alert for batch items nearing expiry - REF-0173,Failed,2024-05-06 00:00:00,2024-05-06 00:00:00
+REM-0174,COMP-0018,LowStock,REF-0174,Low stock alert for items below reorder level - REF-0174,Failed,2024-04-25 00:00:00,2024-04-25 00:00:00
+REM-0175,COMP-0018,CustomerInactive,REF-0175,Customer inactivity alert - REF-0175,Sent,2024-04-24 00:00:00,2024-04-24 00:00:00
+REM-0176,COMP-0018,ExpiryAlert,REF-0176,Expiry alert for batch items nearing expiry - REF-0176,Pending,2024-06-26 00:00:00,2024-06-26 00:00:00
+REM-0177,COMP-0018,CustomerInactive,REF-0177,Customer inactivity alert - REF-0177,Sent,2024-04-04 00:00:00,2024-04-04 00:00:00
+REM-0178,COMP-0018,ExpiryAlert,REF-0178,Expiry alert for batch items nearing expiry - REF-0178,Pending,2024-06-06 00:00:00,2024-06-06 00:00:00
+REM-0179,COMP-0018,PaymentDue,REF-0179,Payment reminder for outstanding invoices - REF-0179,Sent,2024-05-29 00:00:00,2024-05-29 00:00:00
+REM-0180,COMP-0018,CustomerInactive,REF-0180,Customer inactivity alert - REF-0180,Failed,2024-04-07 00:00:00,2024-04-07 00:00:00
+REM-0181,COMP-0019,LowStock,REF-0181,Low stock alert for items below reorder level - REF-0181,Pending,2024-05-16 00:00:00,2024-05-16 00:00:00
+REM-0182,COMP-0019,ExpiryAlert,REF-0182,Expiry alert for batch items nearing expiry - REF-0182,Sent,2024-06-11 00:00:00,2024-06-11 00:00:00
+REM-0183,COMP-0019,ExpiryAlert,REF-0183,Expiry alert for batch items nearing expiry - REF-0183,Pending,2024-04-08 00:00:00,2024-04-08 00:00:00
+REM-0184,COMP-0019,ExpiryAlert,REF-0184,Expiry alert for batch items nearing expiry - REF-0184,Failed,2024-06-27 00:00:00,2024-06-27 00:00:00
+REM-0185,COMP-0019,LowStock,REF-0185,Low stock alert for items below reorder level - REF-0185,Failed,2024-05-14 00:00:00,2024-05-14 00:00:00
+REM-0186,COMP-0019,ExpiryAlert,REF-0186,Expiry alert for batch items nearing expiry - REF-0186,Pending,2024-05-11 00:00:00,2024-05-11 00:00:00
+REM-0187,COMP-0020,CustomerInactive,REF-0187,Customer inactivity alert - REF-0187,Pending,2024-05-28 00:00:00,2024-05-28 00:00:00
+REM-0188,COMP-0020,LowStock,REF-0188,Low stock alert for items below reorder level - REF-0188,Failed,2024-05-30 00:00:00,2024-05-30 00:00:00
+REM-0189,COMP-0020,PaymentDue,REF-0189,Payment reminder for outstanding invoices - REF-0189,Sent,2024-04-18 00:00:00,2024-04-18 00:00:00
+REM-0190,COMP-0020,CustomerInactive,REF-0190,Customer inactivity alert - REF-0190,Sent,2024-04-05 00:00:00,2024-04-05 00:00:00
+REM-0191,COMP-0020,PaymentDue,REF-0191,Payment reminder for outstanding invoices - REF-0191,Pending,2024-06-26 00:00:00,2024-06-26 00:00:00
+REM-0192,COMP-0021,ExpiryAlert,REF-0192,Expiry alert for batch items nearing expiry - REF-0192,Pending,2024-06-19 00:00:00,2024-06-19 00:00:00
+REM-0193,COMP-0021,PaymentDue,REF-0193,Payment reminder for outstanding invoices - REF-0193,Sent,2024-04-09 00:00:00,2024-04-09 00:00:00
+REM-0194,COMP-0021,CustomerInactive,REF-0194,Customer inactivity alert - REF-0194,Sent,2024-05-08 00:00:00,2024-05-08 00:00:00
+REM-0195,COMP-0021,CustomerInactive,REF-0195,Customer inactivity alert - REF-0195,Pending,2024-06-28 00:00:00,2024-06-28 00:00:00
+REM-0196,COMP-0021,CustomerInactive,REF-0196,Customer inactivity alert - REF-0196,Failed,2024-06-25 00:00:00,2024-06-25 00:00:00
+REM-0197,COMP-0022,PaymentDue,REF-0197,Payment reminder for outstanding invoices - REF-0197,Sent,2024-05-06 00:00:00,2024-05-06 00:00:00
+REM-0198,COMP-0022,ExpiryAlert,REF-0198,Expiry alert for batch items nearing expiry - REF-0198,Failed,2024-06-28 00:00:00,2024-06-28 00:00:00
+REM-0199,COMP-0022,CustomerInactive,REF-0199,Customer inactivity alert - REF-0199,Pending,2024-05-25 00:00:00,2024-05-25 00:00:00
+REM-0200,COMP-0022,CustomerInactive,REF-0200,Customer inactivity alert - REF-0200,Pending,2024-04-11 00:00:00,2024-04-11 00:00:00
+REM-0201,COMP-0022,LowStock,REF-0201,Low stock alert for items below reorder level - REF-0201,Pending,2024-05-05 00:00:00,2024-05-05 00:00:00
+REM-0202,COMP-0023,ExpiryAlert,REF-0202,Expiry alert for batch items nearing expiry - REF-0202,Pending,2024-05-08 00:00:00,2024-05-08 00:00:00
+REM-0203,COMP-0023,ExpiryAlert,REF-0203,Expiry alert for batch items nearing expiry - REF-0203,Failed,2024-04-08 00:00:00,2024-04-08 00:00:00
+REM-0204,COMP-0023,CustomerInactive,REF-0204,Customer inactivity alert - REF-0204,Pending,2024-06-10 00:00:00,2024-06-10 00:00:00
+REM-0205,COMP-0023,PaymentDue,REF-0205,Payment reminder for outstanding invoices - REF-0205,Sent,2024-04-11 00:00:00,2024-04-11 00:00:00
+REM-0206,COMP-0023,CustomerInactive,REF-0206,Customer inactivity alert - REF-0206,Pending,2024-04-16 00:00:00,2024-04-16 00:00:00
+REM-0207,COMP-0023,LowStock,REF-0207,Low stock alert for items below reorder level - REF-0207,Sent,2024-04-02 00:00:00,2024-04-02 00:00:00
+REM-0208,COMP-0023,ExpiryAlert,REF-0208,Expiry alert for batch items nearing expiry - REF-0208,Pending,2024-04-21 00:00:00,2024-04-21 00:00:00
+REM-0209,COMP-0024,ExpiryAlert,REF-0209,Expiry alert for batch items nearing expiry - REF-0209,Failed,2024-06-28 00:00:00,2024-06-28 00:00:00
+REM-0210,COMP-0024,LowStock,REF-0210,Low stock alert for items below reorder level - REF-0210,Sent,2024-05-08 00:00:00,2024-05-08 00:00:00
+REM-0211,COMP-0024,LowStock,REF-0211,Low stock alert for items below reorder level - REF-0211,Sent,2024-05-30 00:00:00,2024-05-30 00:00:00
+REM-0212,COMP-0024,CustomerInactive,REF-0212,Customer inactivity alert - REF-0212,Failed,2024-05-10 00:00:00,2024-05-10 00:00:00
+REM-0213,COMP-0024,CustomerInactive,REF-0213,Customer inactivity alert - REF-0213,Failed,2024-05-25 00:00:00,2024-05-25 00:00:00
+REM-0214,COMP-0025,PaymentDue,REF-0214,Payment reminder for outstanding invoices - REF-0214,Sent,2024-06-16 00:00:00,2024-06-16 00:00:00
+REM-0215,COMP-0025,PaymentDue,REF-0215,Payment reminder for outstanding invoices - REF-0215,Pending,2024-06-21 00:00:00,2024-06-21 00:00:00
+REM-0216,COMP-0025,PaymentDue,REF-0216,Payment reminder for outstanding invoices - REF-0216,Pending,2024-04-30 00:00:00,2024-04-30 00:00:00
+REM-0217,COMP-0025,LowStock,REF-0217,Low stock alert for items below reorder level - REF-0217,Pending,2024-05-27 00:00:00,2024-05-27 00:00:00
+REM-0218,COMP-0025,LowStock,REF-0218,Low stock alert for items below reorder level - REF-0218,Pending,2024-05-22 00:00:00,2024-05-22 00:00:00
+REM-0219,COMP-0025,PaymentDue,REF-0219,Payment reminder for outstanding invoices - REF-0219,Pending,2024-05-30 00:00:00,2024-05-30 00:00:00
+REM-0220,COMP-0025,PaymentDue,REF-0220,Payment reminder for outstanding invoices - REF-0220,Sent,2024-06-07 00:00:00,2024-06-07 00:00:00
+REM-0221,COMP-0025,LowStock,REF-0221,Low stock alert for items below reorder level - REF-0221,Sent,2024-06-27 00:00:00,2024-06-27 00:00:00
+REM-0222,COMP-0025,CustomerInactive,REF-0222,Customer inactivity alert - REF-0222,Pending,2024-04-12 00:00:00,2024-04-12 00:00:00
+REM-0223,COMP-0026,LowStock,REF-0223,Low stock alert for items below reorder level - REF-0223,Sent,2024-04-18 00:00:00,2024-04-18 00:00:00
+REM-0224,COMP-0026,ExpiryAlert,REF-0224,Expiry alert for batch items nearing expiry - REF-0224,Failed,2024-05-04 00:00:00,2024-05-04 00:00:00
+REM-0225,COMP-0026,ExpiryAlert,REF-0225,Expiry alert for batch items nearing expiry - REF-0225,Sent,2024-05-19 00:00:00,2024-05-19 00:00:00
+REM-0226,COMP-0026,PaymentDue,REF-0226,Payment reminder for outstanding invoices - REF-0226,Sent,2024-06-05 00:00:00,2024-06-05 00:00:00
+REM-0227,COMP-0026,ExpiryAlert,REF-0227,Expiry alert for batch items nearing expiry - REF-0227,Failed,2024-05-30 00:00:00,2024-05-30 00:00:00
+REM-0228,COMP-0026,CustomerInactive,REF-0228,Customer inactivity alert - REF-0228,Sent,2024-04-11 00:00:00,2024-04-11 00:00:00
+REM-0229,COMP-0026,LowStock,REF-0229,Low stock alert for items below reorder level - REF-0229,Pending,2024-04-03 00:00:00,2024-04-03 00:00:00
+REM-0230,COMP-0026,CustomerInactive,REF-0230,Customer inactivity alert - REF-0230,Pending,2024-05-01 00:00:00,2024-05-01 00:00:00
+REM-0231,COMP-0027,ExpiryAlert,REF-0231,Expiry alert for batch items nearing expiry - REF-0231,Pending,2024-04-20 00:00:00,2024-04-20 00:00:00
+REM-0232,COMP-0027,CustomerInactive,REF-0232,Customer inactivity alert - REF-0232,Pending,2024-06-27 00:00:00,2024-06-27 00:00:00
+REM-0233,COMP-0027,ExpiryAlert,REF-0233,Expiry alert for batch items nearing expiry - REF-0233,Sent,2024-04-04 00:00:00,2024-04-04 00:00:00
+REM-0234,COMP-0027,LowStock,REF-0234,Low stock alert for items below reorder level - REF-0234,Pending,2024-05-19 00:00:00,2024-05-19 00:00:00
+REM-0235,COMP-0027,LowStock,REF-0235,Low stock alert for items below reorder level - REF-0235,Sent,2024-04-12 00:00:00,2024-04-12 00:00:00
+REM-0236,COMP-0027,PaymentDue,REF-0236,Payment reminder for outstanding invoices - REF-0236,Pending,2024-04-16 00:00:00,2024-04-16 00:00:00
+REM-0237,COMP-0027,PaymentDue,REF-0237,Payment reminder for outstanding invoices - REF-0237,Failed,2024-05-04 00:00:00,2024-05-04 00:00:00
+REM-0238,COMP-0027,PaymentDue,REF-0238,Payment reminder for outstanding invoices - REF-0238,Failed,2024-04-09 00:00:00,2024-04-09 00:00:00
+REM-0239,COMP-0028,LowStock,REF-0239,Low stock alert for items below reorder level - REF-0239,Sent,2024-06-21 00:00:00,2024-06-21 00:00:00
+REM-0240,COMP-0028,PaymentDue,REF-0240,Payment reminder for outstanding invoices - REF-0240,Pending,2024-05-19 00:00:00,2024-05-19 00:00:00
+REM-0241,COMP-0028,LowStock,REF-0241,Low stock alert for items below reorder level - REF-0241,Failed,2024-04-14 00:00:00,2024-04-14 00:00:00
+REM-0242,COMP-0028,LowStock,REF-0242,Low stock alert for items below reorder level - REF-0242,Sent,2024-05-22 00:00:00,2024-05-22 00:00:00
+REM-0243,COMP-0028,ExpiryAlert,REF-0243,Expiry alert for batch items nearing expiry - REF-0243,Sent,2024-04-05 00:00:00,2024-04-05 00:00:00
+REM-0244,COMP-0029,ExpiryAlert,REF-0244,Expiry alert for batch items nearing expiry - REF-0244,Pending,2024-04-10 00:00:00,2024-04-10 00:00:00
+REM-0245,COMP-0029,CustomerInactive,REF-0245,Customer inactivity alert - REF-0245,Pending,2024-04-21 00:00:00,2024-04-21 00:00:00
+REM-0246,COMP-0029,LowStock,REF-0246,Low stock alert for items below reorder level - REF-0246,Failed,2024-06-23 00:00:00,2024-06-23 00:00:00
+REM-0247,COMP-0029,LowStock,REF-0247,Low stock alert for items below reorder level - REF-0247,Failed,2024-05-17 00:00:00,2024-05-17 00:00:00
+REM-0248,COMP-0029,LowStock,REF-0248,Low stock alert for items below reorder level - REF-0248,Pending,2024-05-04 00:00:00,2024-05-04 00:00:00
+REM-0249,COMP-0029,PaymentDue,REF-0249,Payment reminder for outstanding invoices - REF-0249,Sent,2024-05-25 00:00:00,2024-05-25 00:00:00
+REM-0250,COMP-0029,PaymentDue,REF-0250,Payment reminder for outstanding invoices - REF-0250,Failed,2024-05-23 00:00:00,2024-05-23 00:00:00
+REM-0251,COMP-0030,ExpiryAlert,REF-0251,Expiry alert for batch items nearing expiry - REF-0251,Pending,2024-06-25 00:00:00,2024-06-25 00:00:00
+REM-0252,COMP-0030,CustomerInactive,REF-0252,Customer inactivity alert - REF-0252,Failed,2024-04-19 00:00:00,2024-04-19 00:00:00
+REM-0253,COMP-0030,ExpiryAlert,REF-0253,Expiry alert for batch items nearing expiry - REF-0253,Pending,2024-04-11 00:00:00,2024-04-11 00:00:00
+REM-0254,COMP-0030,LowStock,REF-0254,Low stock alert for items below reorder level - REF-0254,Pending,2024-05-11 00:00:00,2024-05-11 00:00:00
+REM-0255,COMP-0030,LowStock,REF-0255,Low stock alert for items below reorder level - REF-0255,Pending,2024-05-11 00:00:00,2024-05-11 00:00:00
+REM-0256,COMP-0030,LowStock,REF-0256,Low stock alert for items below reorder level - REF-0256,Failed,2024-06-07 00:00:00,2024-06-07 00:00:00
+REM-0257,COMP-0030,ExpiryAlert,REF-0257,Expiry alert for batch items nearing expiry - REF-0257,Sent,2024-06-22 00:00:00,2024-06-22 00:00:00
+REM-0258,COMP-0030,PaymentDue,REF-0258,Payment reminder for outstanding invoices - REF-0258,Pending,2024-06-08 00:00:00,2024-06-08 00:00:00
+REM-0259,COMP-0030,ExpiryAlert,REF-0259,Expiry alert for batch items nearing expiry - REF-0259,Sent,2024-06-18 00:00:00,2024-06-18 00:00:00
+REM-0260,COMP-0030,LowStock,REF-0260,Low stock alert for items below reorder level - REF-0260,Sent,2024-04-24 00:00:00,2024-04-24 00:00:00
+REM-0261,COMP-0031,ExpiryAlert,REF-0261,Expiry alert for batch items nearing expiry - REF-0261,Failed,2024-05-15 00:00:00,2024-05-15 00:00:00
+REM-0262,COMP-0031,ExpiryAlert,REF-0262,Expiry alert for batch items nearing expiry - REF-0262,Failed,2024-04-30 00:00:00,2024-04-30 00:00:00
+REM-0263,COMP-0031,LowStock,REF-0263,Low stock alert for items below reorder level - REF-0263,Failed,2024-04-08 00:00:00,2024-04-08 00:00:00
+REM-0264,COMP-0031,ExpiryAlert,REF-0264,Expiry alert for batch items nearing expiry - REF-0264,Failed,2024-06-20 00:00:00,2024-06-20 00:00:00
+REM-0265,COMP-0031,PaymentDue,REF-0265,Payment reminder for outstanding invoices - REF-0265,Pending,2024-04-22 00:00:00,2024-04-22 00:00:00
+REM-0266,COMP-0031,CustomerInactive,REF-0266,Customer inactivity alert - REF-0266,Pending,2024-04-04 00:00:00,2024-04-04 00:00:00
+REM-0267,COMP-0031,CustomerInactive,REF-0267,Customer inactivity alert - REF-0267,Failed,2024-04-06 00:00:00,2024-04-06 00:00:00
+REM-0268,COMP-0031,PaymentDue,REF-0268,Payment reminder for outstanding invoices - REF-0268,Failed,2024-06-25 00:00:00,2024-06-25 00:00:00
+REM-0269,COMP-0032,CustomerInactive,REF-0269,Customer inactivity alert - REF-0269,Sent,2024-06-20 00:00:00,2024-06-20 00:00:00
+REM-0270,COMP-0032,ExpiryAlert,REF-0270,Expiry alert for batch items nearing expiry - REF-0270,Pending,2024-05-17 00:00:00,2024-05-17 00:00:00
+REM-0271,COMP-0032,ExpiryAlert,REF-0271,Expiry alert for batch items nearing expiry - REF-0271,Sent,2024-04-17 00:00:00,2024-04-17 00:00:00
+REM-0272,COMP-0032,CustomerInactive,REF-0272,Customer inactivity alert - REF-0272,Pending,2024-05-06 00:00:00,2024-05-06 00:00:00
+REM-0273,COMP-0032,CustomerInactive,REF-0273,Customer inactivity alert - REF-0273,Pending,2024-06-02 00:00:00,2024-06-02 00:00:00
+REM-0274,COMP-0032,ExpiryAlert,REF-0274,Expiry alert for batch items nearing expiry - REF-0274,Failed,2024-05-07 00:00:00,2024-05-07 00:00:00
+REM-0275,COMP-0032,ExpiryAlert,REF-0275,Expiry alert for batch items nearing expiry - REF-0275,Failed,2024-05-20 00:00:00,2024-05-20 00:00:00
+REM-0276,COMP-0032,PaymentDue,REF-0276,Payment reminder for outstanding invoices - REF-0276,Pending,2024-05-02 00:00:00,2024-05-02 00:00:00
+REM-0277,COMP-0032,ExpiryAlert,REF-0277,Expiry alert for batch items nearing expiry - REF-0277,Sent,2024-05-25 00:00:00,2024-05-25 00:00:00
+REM-0278,COMP-0032,CustomerInactive,REF-0278,Customer inactivity alert - REF-0278,Sent,2024-04-07 00:00:00,2024-04-07 00:00:00
+REM-0279,COMP-0032,LowStock,REF-0279,Low stock alert for items below reorder level - REF-0279,Pending,2024-05-20 00:00:00,2024-05-20 00:00:00
+REM-0280,COMP-0032,CustomerInactive,REF-0280,Customer inactivity alert - REF-0280,Sent,2024-05-09 00:00:00,2024-05-09 00:00:00
+REM-0281,COMP-0032,CustomerInactive,REF-0281,Customer inactivity alert - REF-0281,Pending,2024-06-25 00:00:00,2024-06-25 00:00:00
+REM-0282,COMP-0032,LowStock,REF-0282,Low stock alert for items below reorder level - REF-0282,Pending,2024-05-17 00:00:00,2024-05-17 00:00:00
+REM-0283,COMP-0032,LowStock,REF-0283,Low stock alert for items below reorder level - REF-0283,Failed,2024-05-30 00:00:00,2024-05-30 00:00:00
+REM-0284,COMP-0033,ExpiryAlert,REF-0284,Expiry alert for batch items nearing expiry - REF-0284,Failed,2024-06-23 00:00:00,2024-06-23 00:00:00
+REM-0285,COMP-0033,PaymentDue,REF-0285,Payment reminder for outstanding invoices - REF-0285,Failed,2024-05-19 00:00:00,2024-05-19 00:00:00
+REM-0286,COMP-0033,LowStock,REF-0286,Low stock alert for items below reorder level - REF-0286,Sent,2024-04-13 00:00:00,2024-04-13 00:00:00
+REM-0287,COMP-0033,ExpiryAlert,REF-0287,Expiry alert for batch items nearing expiry - REF-0287,Sent,2024-04-03 00:00:00,2024-04-03 00:00:00
+REM-0288,COMP-0033,LowStock,REF-0288,Low stock alert for items below reorder level - REF-0288,Pending,2024-05-30 00:00:00,2024-05-30 00:00:00
+REM-0289,COMP-0033,ExpiryAlert,REF-0289,Expiry alert for batch items nearing expiry - REF-0289,Failed,2024-05-03 00:00:00,2024-05-03 00:00:00
+REM-0290,COMP-0033,CustomerInactive,REF-0290,Customer inactivity alert - REF-0290,Sent,2024-04-26 00:00:00,2024-04-26 00:00:00
+REM-0291,COMP-0033,CustomerInactive,REF-0291,Customer inactivity alert - REF-0291,Sent,2024-04-12 00:00:00,2024-04-12 00:00:00
+REM-0292,COMP-0033,LowStock,REF-0292,Low stock alert for items below reorder level - REF-0292,Sent,2024-06-13 00:00:00,2024-06-13 00:00:00
+REM-0293,COMP-0033,ExpiryAlert,REF-0293,Expiry alert for batch items nearing expiry - REF-0293,Pending,2024-06-20 00:00:00,2024-06-20 00:00:00
+REM-0294,COMP-0034,LowStock,REF-0294,Low stock alert for items below reorder level - REF-0294,Pending,2024-05-27 00:00:00,2024-05-27 00:00:00
+REM-0295,COMP-0034,ExpiryAlert,REF-0295,Expiry alert for batch items nearing expiry - REF-0295,Failed,2024-04-18 00:00:00,2024-04-18 00:00:00
+REM-0296,COMP-0034,CustomerInactive,REF-0296,Customer inactivity alert - REF-0296,Pending,2024-04-14 00:00:00,2024-04-14 00:00:00
+REM-0297,COMP-0034,PaymentDue,REF-0297,Payment reminder for outstanding invoices - REF-0297,Failed,2024-04-26 00:00:00,2024-04-26 00:00:00
+REM-0298,COMP-0034,PaymentDue,REF-0298,Payment reminder for outstanding invoices - REF-0298,Sent,2024-05-21 00:00:00,2024-05-21 00:00:00
+REM-0299,COMP-0035,PaymentDue,REF-0299,Payment reminder for outstanding invoices - REF-0299,Failed,2024-05-18 00:00:00,2024-05-18 00:00:00
+REM-0300,COMP-0035,ExpiryAlert,REF-0300,Expiry alert for batch items nearing expiry - REF-0300,Sent,2024-04-30 00:00:00,2024-04-30 00:00:00
+REM-0301,COMP-0035,ExpiryAlert,REF-0301,Expiry alert for batch items nearing expiry - REF-0301,Pending,2024-06-26 00:00:00,2024-06-26 00:00:00
+REM-0302,COMP-0035,CustomerInactive,REF-0302,Customer inactivity alert - REF-0302,Failed,2024-04-20 00:00:00,2024-04-20 00:00:00
+REM-0303,COMP-0035,ExpiryAlert,REF-0303,Expiry alert for batch items nearing expiry - REF-0303,Sent,2024-06-13 00:00:00,2024-06-13 00:00:00
+REM-0304,COMP-0035,LowStock,REF-0304,Low stock alert for items below reorder level - REF-0304,Pending,2024-06-27 00:00:00,2024-06-27 00:00:00
+REM-0305,COMP-0035,CustomerInactive,REF-0305,Customer inactivity alert - REF-0305,Failed,2024-04-12 00:00:00,2024-04-12 00:00:00
+REM-0306,COMP-0036,CustomerInactive,REF-0306,Customer inactivity alert - REF-0306,Failed,2024-06-12 00:00:00,2024-06-12 00:00:00
+REM-0307,COMP-0036,ExpiryAlert,REF-0307,Expiry alert for batch items nearing expiry - REF-0307,Pending,2024-05-04 00:00:00,2024-05-04 00:00:00
+REM-0308,COMP-0036,ExpiryAlert,REF-0308,Expiry alert for batch items nearing expiry - REF-0308,Failed,2024-06-17 00:00:00,2024-06-17 00:00:00
+REM-0309,COMP-0036,ExpiryAlert,REF-0309,Expiry alert for batch items nearing expiry - REF-0309,Pending,2024-06-19 00:00:00,2024-06-19 00:00:00
+REM-0310,COMP-0036,PaymentDue,REF-0310,Payment reminder for outstanding invoices - REF-0310,Sent,2024-06-04 00:00:00,2024-06-04 00:00:00
+REM-0311,COMP-0036,LowStock,REF-0311,Low stock alert for items below reorder level - REF-0311,Failed,2024-05-28 00:00:00,2024-05-28 00:00:00
+REM-0312,COMP-0036,CustomerInactive,REF-0312,Customer inactivity alert - REF-0312,Failed,2024-04-14 00:00:00,2024-04-14 00:00:00
+REM-0313,COMP-0036,LowStock,REF-0313,Low stock alert for items below reorder level - REF-0313,Pending,2024-05-07 00:00:00,2024-05-07 00:00:00
+REM-0314,COMP-0036,LowStock,REF-0314,Low stock alert for items below reorder level - REF-0314,Sent,2024-04-14 00:00:00,2024-04-14 00:00:00
+REM-0315,COMP-0037,ExpiryAlert,REF-0315,Expiry alert for batch items nearing expiry - REF-0315,Sent,2024-06-27 00:00:00,2024-06-27 00:00:00
+REM-0316,COMP-0037,LowStock,REF-0316,Low stock alert for items below reorder level - REF-0316,Failed,2024-04-21 00:00:00,2024-04-21 00:00:00
+REM-0317,COMP-0037,CustomerInactive,REF-0317,Customer inactivity alert - REF-0317,Failed,2024-04-27 00:00:00,2024-04-27 00:00:00
+REM-0318,COMP-0037,CustomerInactive,REF-0318,Customer inactivity alert - REF-0318,Pending,2024-04-17 00:00:00,2024-04-17 00:00:00
+REM-0319,COMP-0037,CustomerInactive,REF-0319,Customer inactivity alert - REF-0319,Pending,2024-04-14 00:00:00,2024-04-14 00:00:00
+REM-0320,COMP-0037,PaymentDue,REF-0320,Payment reminder for outstanding invoices - REF-0320,Failed,2024-05-05 00:00:00,2024-05-05 00:00:00
+REM-0321,COMP-0037,PaymentDue,REF-0321,Payment reminder for outstanding invoices - REF-0321,Pending,2024-05-06 00:00:00,2024-05-06 00:00:00
+REM-0322,COMP-0038,ExpiryAlert,REF-0322,Expiry alert for batch items nearing expiry - REF-0322,Sent,2024-05-14 00:00:00,2024-05-14 00:00:00
+REM-0323,COMP-0038,LowStock,REF-0323,Low stock alert for items below reorder level - REF-0323,Failed,2024-04-11 00:00:00,2024-04-11 00:00:00
+REM-0324,COMP-0038,LowStock,REF-0324,Low stock alert for items below reorder level - REF-0324,Failed,2024-05-19 00:00:00,2024-05-19 00:00:00
+REM-0325,COMP-0038,PaymentDue,REF-0325,Payment reminder for outstanding invoices - REF-0325,Sent,2024-04-11 00:00:00,2024-04-11 00:00:00
+REM-0326,COMP-0038,PaymentDue,REF-0326,Payment reminder for outstanding invoices - REF-0326,Sent,2024-05-15 00:00:00,2024-05-15 00:00:00
+REM-0327,COMP-0038,LowStock,REF-0327,Low stock alert for items below reorder level - REF-0327,Failed,2024-06-30 00:00:00,2024-06-30 00:00:00
+REM-0328,COMP-0038,LowStock,REF-0328,Low stock alert for items below reorder level - REF-0328,Sent,2024-06-17 00:00:00,2024-06-17 00:00:00
+REM-0329,COMP-0038,ExpiryAlert,REF-0329,Expiry alert for batch items nearing expiry - REF-0329,Failed,2024-06-01 00:00:00,2024-06-01 00:00:00
+REM-0330,COMP-0038,ExpiryAlert,REF-0330,Expiry alert for batch items nearing expiry - REF-0330,Failed,2024-06-21 00:00:00,2024-06-21 00:00:00
+REM-0331,COMP-0038,LowStock,REF-0331,Low stock alert for items below reorder level - REF-0331,Failed,2024-05-16 00:00:00,2024-05-16 00:00:00
+REM-0332,COMP-0038,CustomerInactive,REF-0332,Customer inactivity alert - REF-0332,Pending,2024-04-18 00:00:00,2024-04-18 00:00:00
+REM-0333,COMP-0039,ExpiryAlert,REF-0333,Expiry alert for batch items nearing expiry - REF-0333,Sent,2024-06-01 00:00:00,2024-06-01 00:00:00
+REM-0334,COMP-0039,LowStock,REF-0334,Low stock alert for items below reorder level - REF-0334,Pending,2024-04-27 00:00:00,2024-04-27 00:00:00
+REM-0335,COMP-0039,ExpiryAlert,REF-0335,Expiry alert for batch items nearing expiry - REF-0335,Sent,2024-06-29 00:00:00,2024-06-29 00:00:00
+REM-0336,COMP-0039,CustomerInactive,REF-0336,Customer inactivity alert - REF-0336,Sent,2024-04-30 00:00:00,2024-04-30 00:00:00
+REM-0337,COMP-0039,CustomerInactive,REF-0337,Customer inactivity alert - REF-0337,Failed,2024-04-18 00:00:00,2024-04-18 00:00:00
+REM-0338,COMP-0039,CustomerInactive,REF-0338,Customer inactivity alert - REF-0338,Failed,2024-04-28 00:00:00,2024-04-28 00:00:00
+REM-0339,COMP-0039,LowStock,REF-0339,Low stock alert for items below reorder level - REF-0339,Sent,2024-06-14 00:00:00,2024-06-14 00:00:00
+REM-0340,COMP-0039,PaymentDue,REF-0340,Payment reminder for outstanding invoices - REF-0340,Sent,2024-05-15 00:00:00,2024-05-15 00:00:00
+REM-0341,COMP-0039,LowStock,REF-0341,Low stock alert for items below reorder level - REF-0341,Pending,2024-04-02 00:00:00,2024-04-02 00:00:00
+REM-0342,COMP-0039,CustomerInactive,REF-0342,Customer inactivity alert - REF-0342,Pending,2024-04-01 00:00:00,2024-04-01 00:00:00
+REM-0343,COMP-0039,PaymentDue,REF-0343,Payment reminder for outstanding invoices - REF-0343,Pending,2024-04-22 00:00:00,2024-04-22 00:00:00
+REM-0344,COMP-0039,ExpiryAlert,REF-0344,Expiry alert for batch items nearing expiry - REF-0344,Failed,2024-04-25 00:00:00,2024-04-25 00:00:00
+REM-0345,COMP-0040,CustomerInactive,REF-0345,Customer inactivity alert - REF-0345,Pending,2024-05-20 00:00:00,2024-05-20 00:00:00
+REM-0346,COMP-0040,CustomerInactive,REF-0346,Customer inactivity alert - REF-0346,Sent,2024-04-28 00:00:00,2024-04-28 00:00:00
+REM-0347,COMP-0040,ExpiryAlert,REF-0347,Expiry alert for batch items nearing expiry - REF-0347,Pending,2024-05-17 00:00:00,2024-05-17 00:00:00
+REM-0348,COMP-0040,PaymentDue,REF-0348,Payment reminder for outstanding invoices - REF-0348,Sent,2024-05-02 00:00:00,2024-05-02 00:00:00
+REM-0349,COMP-0040,LowStock,REF-0349,Low stock alert for items below reorder level - REF-0349,Sent,2024-05-16 00:00:00,2024-05-16 00:00:00
+REM-0350,COMP-0040,LowStock,REF-0350,Low stock alert for items below reorder level - REF-0350,Sent,2024-06-11 00:00:00,2024-06-11 00:00:00
+REM-0351,COMP-0040,CustomerInactive,REF-0351,Customer inactivity alert - REF-0351,Sent,2024-06-11 00:00:00,2024-06-11 00:00:00
+REM-0352,COMP-0040,ExpiryAlert,REF-0352,Expiry alert for batch items nearing expiry - REF-0352,Sent,2024-04-04 00:00:00,2024-04-04 00:00:00
+REM-0353,COMP-0040,LowStock,REF-0353,Low stock alert for items below reorder level - REF-0353,Sent,2024-05-31 00:00:00,2024-05-31 00:00:00
+REM-0354,COMP-0040,CustomerInactive,REF-0354,Customer inactivity alert - REF-0354,Sent,2024-05-30 00:00:00,2024-05-30 00:00:00
+REM-0355,COMP-0040,LowStock,REF-0355,Low stock alert for items below reorder level - REF-0355,Failed,2024-04-14 00:00:00,2024-04-14 00:00:00
+REM-0356,COMP-0040,LowStock,REF-0356,Low stock alert for items below reorder level - REF-0356,Pending,2024-05-31 00:00:00,2024-05-31 00:00:00
+REM-0357,COMP-0040,ExpiryAlert,REF-0357,Expiry alert for batch items nearing expiry - REF-0357,Failed,2024-04-11 00:00:00,2024-04-11 00:00:00
+REM-0358,COMP-0041,LowStock,REF-0358,Low stock alert for items below reorder level - REF-0358,Failed,2024-04-07 00:00:00,2024-04-07 00:00:00
+REM-0359,COMP-0041,CustomerInactive,REF-0359,Customer inactivity alert - REF-0359,Failed,2024-06-28 00:00:00,2024-06-28 00:00:00
+REM-0360,COMP-0041,PaymentDue,REF-0360,Payment reminder for outstanding invoices - REF-0360,Failed,2024-05-18 00:00:00,2024-05-18 00:00:00
+REM-0361,COMP-0041,CustomerInactive,REF-0361,Customer inactivity alert - REF-0361,Failed,2024-04-20 00:00:00,2024-04-20 00:00:00
+REM-0362,COMP-0041,PaymentDue,REF-0362,Payment reminder for outstanding invoices - REF-0362,Failed,2024-04-03 00:00:00,2024-04-03 00:00:00
+REM-0363,COMP-0041,CustomerInactive,REF-0363,Customer inactivity alert - REF-0363,Sent,2024-04-08 00:00:00,2024-04-08 00:00:00
+REM-0364,COMP-0041,PaymentDue,REF-0364,Payment reminder for outstanding invoices - REF-0364,Failed,2024-04-23 00:00:00,2024-04-23 00:00:00
+REM-0365,COMP-0041,CustomerInactive,REF-0365,Customer inactivity alert - REF-0365,Sent,2024-06-23 00:00:00,2024-06-23 00:00:00
+REM-0366,COMP-0041,PaymentDue,REF-0366,Payment reminder for outstanding invoices - REF-0366,Failed,2024-04-21 00:00:00,2024-04-21 00:00:00
+REM-0367,COMP-0041,ExpiryAlert,REF-0367,Expiry alert for batch items nearing expiry - REF-0367,Pending,2024-06-14 00:00:00,2024-06-14 00:00:00
+REM-0368,COMP-0042,ExpiryAlert,REF-0368,Expiry alert for batch items nearing expiry - REF-0368,Failed,2024-05-02 00:00:00,2024-05-02 00:00:00
+REM-0369,COMP-0042,PaymentDue,REF-0369,Payment reminder for outstanding invoices - REF-0369,Sent,2024-05-23 00:00:00,2024-05-23 00:00:00
+REM-0370,COMP-0042,LowStock,REF-0370,Low stock alert for items below reorder level - REF-0370,Sent,2024-05-01 00:00:00,2024-05-01 00:00:00
+REM-0371,COMP-0042,CustomerInactive,REF-0371,Customer inactivity alert - REF-0371,Pending,2024-05-12 00:00:00,2024-05-12 00:00:00
+REM-0372,COMP-0042,CustomerInactive,REF-0372,Customer inactivity alert - REF-0372,Pending,2024-04-15 00:00:00,2024-04-15 00:00:00
+REM-0373,COMP-0042,PaymentDue,REF-0373,Payment reminder for outstanding invoices - REF-0373,Sent,2024-05-28 00:00:00,2024-05-28 00:00:00
+REM-0374,COMP-0042,LowStock,REF-0374,Low stock alert for items below reorder level - REF-0374,Sent,2024-04-22 00:00:00,2024-04-22 00:00:00
+REM-0375,COMP-0043,PaymentDue,REF-0375,Payment reminder for outstanding invoices - REF-0375,Pending,2024-06-07 00:00:00,2024-06-07 00:00:00
+REM-0376,COMP-0043,ExpiryAlert,REF-0376,Expiry alert for batch items nearing expiry - REF-0376,Sent,2024-04-01 00:00:00,2024-04-01 00:00:00
+REM-0377,COMP-0043,ExpiryAlert,REF-0377,Expiry alert for batch items nearing expiry - REF-0377,Sent,2024-05-30 00:00:00,2024-05-30 00:00:00
+REM-0378,COMP-0043,ExpiryAlert,REF-0378,Expiry alert for batch items nearing expiry - REF-0378,Sent,2024-04-22 00:00:00,2024-04-22 00:00:00
+REM-0379,COMP-0043,PaymentDue,REF-0379,Payment reminder for outstanding invoices - REF-0379,Sent,2024-04-29 00:00:00,2024-04-29 00:00:00
+REM-0380,COMP-0043,CustomerInactive,REF-0380,Customer inactivity alert - REF-0380,Pending,2024-05-27 00:00:00,2024-05-27 00:00:00
+REM-0381,COMP-0043,ExpiryAlert,REF-0381,Expiry alert for batch items nearing expiry - REF-0381,Failed,2024-06-23 00:00:00,2024-06-23 00:00:00
+REM-0382,COMP-0043,CustomerInactive,REF-0382,Customer inactivity alert - REF-0382,Pending,2024-06-29 00:00:00,2024-06-29 00:00:00
+REM-0383,COMP-0043,ExpiryAlert,REF-0383,Expiry alert for batch items nearing expiry - REF-0383,Sent,2024-05-14 00:00:00,2024-05-14 00:00:00
+REM-0384,COMP-0043,ExpiryAlert,REF-0384,Expiry alert for batch items nearing expiry - REF-0384,Failed,2024-06-15 00:00:00,2024-06-15 00:00:00
+REM-0385,COMP-0043,ExpiryAlert,REF-0385,Expiry alert for batch items nearing expiry - REF-0385,Pending,2024-04-13 00:00:00,2024-04-13 00:00:00
+REM-0386,COMP-0043,ExpiryAlert,REF-0386,Expiry alert for batch items nearing expiry - REF-0386,Failed,2024-04-06 00:00:00,2024-04-06 00:00:00
+REM-0387,COMP-0043,LowStock,REF-0387,Low stock alert for items below reorder level - REF-0387,Sent,2024-05-27 00:00:00,2024-05-27 00:00:00
+REM-0388,COMP-0044,ExpiryAlert,REF-0388,Expiry alert for batch items nearing expiry - REF-0388,Failed,2024-05-23 00:00:00,2024-05-23 00:00:00
+REM-0389,COMP-0044,LowStock,REF-0389,Low stock alert for items below reorder level - REF-0389,Pending,2024-05-21 00:00:00,2024-05-21 00:00:00
+REM-0390,COMP-0044,CustomerInactive,REF-0390,Customer inactivity alert - REF-0390,Pending,2024-04-23 00:00:00,2024-04-23 00:00:00
+REM-0391,COMP-0044,PaymentDue,REF-0391,Payment reminder for outstanding invoices - REF-0391,Pending,2024-04-14 00:00:00,2024-04-14 00:00:00
+REM-0392,COMP-0044,LowStock,REF-0392,Low stock alert for items below reorder level - REF-0392,Sent,2024-06-28 00:00:00,2024-06-28 00:00:00
+REM-0393,COMP-0044,LowStock,REF-0393,Low stock alert for items below reorder level - REF-0393,Failed,2024-05-10 00:00:00,2024-05-10 00:00:00
+REM-0394,COMP-0044,ExpiryAlert,REF-0394,Expiry alert for batch items nearing expiry - REF-0394,Failed,2024-06-10 00:00:00,2024-06-10 00:00:00
+REM-0395,COMP-0044,PaymentDue,REF-0395,Payment reminder for outstanding invoices - REF-0395,Failed,2024-05-12 00:00:00,2024-05-12 00:00:00
+REM-0396,COMP-0044,ExpiryAlert,REF-0396,Expiry alert for batch items nearing expiry - REF-0396,Pending,2024-06-28 00:00:00,2024-06-28 00:00:00
+REM-0397,COMP-0044,PaymentDue,REF-0397,Payment reminder for outstanding invoices - REF-0397,Pending,2024-04-19 00:00:00,2024-04-19 00:00:00
+REM-0398,COMP-0044,ExpiryAlert,REF-0398,Expiry alert for batch items nearing expiry - REF-0398,Failed,2024-05-20 00:00:00,2024-05-20 00:00:00
+REM-0399,COMP-0045,LowStock,REF-0399,Low stock alert for items below reorder level - REF-0399,Failed,2024-05-08 00:00:00,2024-05-08 00:00:00
+REM-0400,COMP-0045,PaymentDue,REF-0400,Payment reminder for outstanding invoices - REF-0400,Pending,2024-05-07 00:00:00,2024-05-07 00:00:00
+REM-0401,COMP-0045,CustomerInactive,REF-0401,Customer inactivity alert - REF-0401,Pending,2024-05-19 00:00:00,2024-05-19 00:00:00
+REM-0402,COMP-0045,CustomerInactive,REF-0402,Customer inactivity alert - REF-0402,Failed,2024-04-05 00:00:00,2024-04-05 00:00:00
+REM-0403,COMP-0045,CustomerInactive,REF-0403,Customer inactivity alert - REF-0403,Failed,2024-06-26 00:00:00,2024-06-26 00:00:00
+REM-0404,COMP-0045,ExpiryAlert,REF-0404,Expiry alert for batch items nearing expiry - REF-0404,Failed,2024-06-05 00:00:00,2024-06-05 00:00:00
+REM-0405,COMP-0045,CustomerInactive,REF-0405,Customer inactivity alert - REF-0405,Pending,2024-05-11 00:00:00,2024-05-11 00:00:00
+REM-0406,COMP-0045,PaymentDue,REF-0406,Payment reminder for outstanding invoices - REF-0406,Sent,2024-06-19 00:00:00,2024-06-19 00:00:00
+REM-0407,COMP-0046,CustomerInactive,REF-0407,Customer inactivity alert - REF-0407,Pending,2024-05-21 00:00:00,2024-05-21 00:00:00
+REM-0408,COMP-0046,LowStock,REF-0408,Low stock alert for items below reorder level - REF-0408,Pending,2024-06-22 00:00:00,2024-06-22 00:00:00
+REM-0409,COMP-0046,PaymentDue,REF-0409,Payment reminder for outstanding invoices - REF-0409,Failed,2024-05-08 00:00:00,2024-05-08 00:00:00
+REM-0410,COMP-0046,LowStock,REF-0410,Low stock alert for items below reorder level - REF-0410,Failed,2024-05-28 00:00:00,2024-05-28 00:00:00
+REM-0411,COMP-0046,CustomerInactive,REF-0411,Customer inactivity alert - REF-0411,Failed,2024-06-14 00:00:00,2024-06-14 00:00:00
+REM-0412,COMP-0047,LowStock,REF-0412,Low stock alert for items below reorder level - REF-0412,Pending,2024-05-11 00:00:00,2024-05-11 00:00:00
+REM-0413,COMP-0047,PaymentDue,REF-0413,Payment reminder for outstanding invoices - REF-0413,Sent,2024-05-31 00:00:00,2024-05-31 00:00:00
+REM-0414,COMP-0047,ExpiryAlert,REF-0414,Expiry alert for batch items nearing expiry - REF-0414,Failed,2024-04-21 00:00:00,2024-04-21 00:00:00
+REM-0415,COMP-0047,PaymentDue,REF-0415,Payment reminder for outstanding invoices - REF-0415,Pending,2024-04-28 00:00:00,2024-04-28 00:00:00
+REM-0416,COMP-0047,ExpiryAlert,REF-0416,Expiry alert for batch items nearing expiry - REF-0416,Failed,2024-05-05 00:00:00,2024-05-05 00:00:00
+REM-0417,COMP-0047,LowStock,REF-0417,Low stock alert for items below reorder level - REF-0417,Pending,2024-06-25 00:00:00,2024-06-25 00:00:00
+REM-0418,COMP-0047,CustomerInactive,REF-0418,Customer inactivity alert - REF-0418,Failed,2024-05-02 00:00:00,2024-05-02 00:00:00
+REM-0419,COMP-0047,ExpiryAlert,REF-0419,Expiry alert for batch items nearing expiry - REF-0419,Pending,2024-04-02 00:00:00,2024-04-02 00:00:00
+REM-0420,COMP-0047,ExpiryAlert,REF-0420,Expiry alert for batch items nearing expiry - REF-0420,Sent,2024-04-01 00:00:00,2024-04-01 00:00:00
+REM-0421,COMP-0047,LowStock,REF-0421,Low stock alert for items below reorder level - REF-0421,Pending,2024-06-01 00:00:00,2024-06-01 00:00:00
+REM-0422,COMP-0047,PaymentDue,REF-0422,Payment reminder for outstanding invoices - REF-0422,Failed,2024-05-15 00:00:00,2024-05-15 00:00:00
+REM-0423,COMP-0047,ExpiryAlert,REF-0423,Expiry alert for batch items nearing expiry - REF-0423,Pending,2024-05-28 00:00:00,2024-05-28 00:00:00
+REM-0424,COMP-0047,LowStock,REF-0424,Low stock alert for items below reorder level - REF-0424,Pending,2024-06-14 00:00:00,2024-06-14 00:00:00
+REM-0425,COMP-0047,LowStock,REF-0425,Low stock alert for items below reorder level - REF-0425,Sent,2024-06-29 00:00:00,2024-06-29 00:00:00
+REM-0426,COMP-0048,LowStock,REF-0426,Low stock alert for items below reorder level - REF-0426,Pending,2024-06-25 00:00:00,2024-06-25 00:00:00
+REM-0427,COMP-0048,ExpiryAlert,REF-0427,Expiry alert for batch items nearing expiry - REF-0427,Pending,2024-04-27 00:00:00,2024-04-27 00:00:00
+REM-0428,COMP-0048,LowStock,REF-0428,Low stock alert for items below reorder level - REF-0428,Pending,2024-04-16 00:00:00,2024-04-16 00:00:00
+REM-0429,COMP-0048,CustomerInactive,REF-0429,Customer inactivity alert - REF-0429,Sent,2024-05-20 00:00:00,2024-05-20 00:00:00
+REM-0430,COMP-0048,LowStock,REF-0430,Low stock alert for items below reorder level - REF-0430,Sent,2024-04-10 00:00:00,2024-04-10 00:00:00
+REM-0431,COMP-0048,PaymentDue,REF-0431,Payment reminder for outstanding invoices - REF-0431,Failed,2024-04-01 00:00:00,2024-04-01 00:00:00
+REM-0432,COMP-0048,CustomerInactive,REF-0432,Customer inactivity alert - REF-0432,Failed,2024-05-14 00:00:00,2024-05-14 00:00:00
+REM-0433,COMP-0048,ExpiryAlert,REF-0433,Expiry alert for batch items nearing expiry - REF-0433,Failed,2024-06-04 00:00:00,2024-06-04 00:00:00
+REM-0434,COMP-0049,LowStock,REF-0434,Low stock alert for items below reorder level - REF-0434,Sent,2024-05-18 00:00:00,2024-05-18 00:00:00
+REM-0435,COMP-0049,ExpiryAlert,REF-0435,Expiry alert for batch items nearing expiry - REF-0435,Sent,2024-06-30 00:00:00,2024-06-30 00:00:00
+REM-0436,COMP-0049,CustomerInactive,REF-0436,Customer inactivity alert - REF-0436,Pending,2024-05-14 00:00:00,2024-05-14 00:00:00
+REM-0437,COMP-0049,PaymentDue,REF-0437,Payment reminder for outstanding invoices - REF-0437,Failed,2024-04-03 00:00:00,2024-04-03 00:00:00
+REM-0438,COMP-0049,PaymentDue,REF-0438,Payment reminder for outstanding invoices - REF-0438,Pending,2024-06-09 00:00:00,2024-06-09 00:00:00
+REM-0439,COMP-0049,LowStock,REF-0439,Low stock alert for items below reorder level - REF-0439,Pending,2024-06-02 00:00:00,2024-06-02 00:00:00
+REM-0440,COMP-0050,PaymentDue,REF-0440,Payment reminder for outstanding invoices - REF-0440,Failed,2024-06-17 00:00:00,2024-06-17 00:00:00
+REM-0441,COMP-0050,PaymentDue,REF-0441,Payment reminder for outstanding invoices - REF-0441,Sent,2024-04-27 00:00:00,2024-04-27 00:00:00
+REM-0442,COMP-0050,PaymentDue,REF-0442,Payment reminder for outstanding invoices - REF-0442,Sent,2024-05-05 00:00:00,2024-05-05 00:00:00
+REM-0443,COMP-0050,CustomerInactive,REF-0443,Customer inactivity alert - REF-0443,Pending,2024-06-21 00:00:00,2024-06-21 00:00:00
+REM-0444,COMP-0050,LowStock,REF-0444,Low stock alert for items below reorder level - REF-0444,Sent,2024-06-23 00:00:00,2024-06-23 00:00:00
+REM-0445,COMP-0050,ExpiryAlert,REF-0445,Expiry alert for batch items nearing expiry - REF-0445,Pending,2024-06-15 00:00:00,2024-06-15 00:00:00
+REM-0446,COMP-0050,ExpiryAlert,REF-0446,Expiry alert for batch items nearing expiry - REF-0446,Failed,2024-06-08 00:00:00,2024-06-08 00:00:00
+REM-0447,COMP-0050,CustomerInactive,REF-0447,Customer inactivity alert - REF-0447,Failed,2024-06-26 00:00:00,2024-06-26 00:00:00
+REM-0448,COMP-0050,PaymentDue,REF-0448,Payment reminder for outstanding invoices - REF-0448,Failed,2024-05-27 00:00:00,2024-05-27 00:00:00
+REM-0449,COMP-0050,PaymentDue,REF-0449,Payment reminder for outstanding invoices - REF-0449,Pending,2024-06-03 00:00:00,2024-06-03 00:00:00
+REM-0450,COMP-0050,PaymentDue,REF-0450,Payment reminder for outstanding invoices - REF-0450,Pending,2024-04-06 00:00:00,2024-04-06 00:00:00
+REM-0451,COMP-0050,CustomerInactive,REF-0451,Customer inactivity alert - REF-0451,Sent,2024-05-05 00:00:00,2024-05-05 00:00:00
+REM-0452,COMP-0050,LowStock,REF-0452,Low stock alert for items below reorder level - REF-0452,Sent,2024-05-06 00:00:00,2024-05-06 00:00:00
+REM-0453,COMP-0050,PaymentDue,REF-0453,Payment reminder for outstanding invoices - REF-0453,Sent,2024-05-27 00:00:00,2024-05-27 00:00:00
+REM-0454,COMP-0050,PaymentDue,REF-0454,Payment reminder for outstanding invoices - REF-0454,Failed,2024-05-06 00:00:00,2024-05-06 00:00:00

@@ -4,6 +4,7 @@ import ItemsGrid from '../components/items/ItemsGrid';
 import ItemsTable from '../components/items/ItemsTable';
 import { ItemCardSkeleton } from '../components/shared/ListSkeleton';
 import Skeleton from '../components/shared/Skeleton';
+import EntityDetailModal from '../components/shared/EntityDetailModal';
 import useGoogleSheetsData from '../hooks/useGoogleSheetsData';
 import { useCompany } from '../context/CompanyContext';
 
@@ -13,28 +14,38 @@ const ItemsPage = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [stockFilter, setStockFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedItemId, setSelectedItemId] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
   
-  const { items, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { items, itemStockStatus, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+
+  const stockStatusMap = useMemo(() => {
+    if (!itemStockStatus || itemStockStatus.length === 0) return new Map();
+    return new Map(itemStockStatus.map(s => [s.ItemID, s]));
+  }, [itemStockStatus]);
 
   const normalizedItems = useMemo(() => {
     if (!items || items.length === 0) return [];
     
-    return items.map(item => ({
-      id: item.ItemID || item.id,
-      name: item.ItemName || item.name || '',
-      category: item.CategoryName || item.category || 'Uncategorized',
-      group: item.ItemGroup || item.group || '',
-      hsnSac: item.HSNSAC || item.hsnSac || '',
-      unit: item.Unit || item.unit || 'Nos',
-      gstRate: parseFloat(item.GSTRate || item.gstRate || 0),
-      saleRate: parseFloat(item.SaleRate || item.saleRate || 0),
-      purchaseRate: parseFloat(item.PurchaseRate || item.purchaseRate || 0),
-      openingQty: parseFloat(item.OpeningQty || item.openingQty || 0),
-      openingValue: parseFloat(item.OpeningValue || item.openingValue || 0),
-      closingQty: parseFloat(item.ClosingQty || item.closingQty || item.openingQty || 0),
-      closingValue: parseFloat(item.ClosingValue || item.closingValue || item.openingValue || 0),
-    }));
-  }, [items]);
+    return items.map(item => {
+      const stockInfo = stockStatusMap.get(item.ItemID) || {};
+      return {
+        id: item.ItemID || item.id,
+        name: item.ItemName || item.name || '',
+        category: item.CategoryName || item.category || 'Uncategorized',
+        group: item.ItemGroup || item.group || '',
+        hsnSac: item.HSNSAC || item.hsnSac || '',
+        unit: item.Unit || item.unit || 'Nos',
+        gstRate: parseFloat(item.GSTRate || item.gstRate || 0),
+        saleRate: parseFloat(item.SaleRate || item.saleRate || 0),
+        purchaseRate: parseFloat(item.PurchaseRate || item.purchaseRate || 0),
+        openingQty: parseFloat(item.OpeningQty || item.openingQty || 0),
+        openingValue: parseFloat(item.OpeningValue || item.openingValue || 0),
+        closingQty: parseFloat(stockInfo.CurrentStock || item.ClosingQty || item.closingQty || 0),
+        closingValue: parseFloat(stockInfo.StockValue || item.ClosingValue || item.closingValue || 0),
+      };
+    });
+  }, [items, stockStatusMap]);
 
   const categories = useMemo(() => {
     const cats = [...new Set(normalizedItems.map(i => i.category))];
@@ -66,8 +77,14 @@ const ItemsPage = () => {
   const lowStockCount = normalizedItems.filter(i => i.closingQty >= 0 && i.closingQty < 10).length;
   const totalStockValue = normalizedItems.reduce((sum, i) => sum + i.closingValue, 0);
 
-  const handleItemClick = (item) => {
-    alert(`Item detail page coming in Phase 3!\n\nItem: ${item.name}\nCategory: ${item.category}\nStock: ${item.closingQty} ${item.unit}\nValue: ₹${item.closingValue.toLocaleString('en-IN')}`);
+  const handleItemClick = (itemId) => {
+    setSelectedItemId(itemId);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedItemId(null);
   };
 
   if (loading) {
@@ -257,17 +274,24 @@ const ItemsPage = () => {
             {viewMode === 'grid' ? (
               <ItemsGrid 
                 items={filteredItems}
-                onItemClick={handleItemClick}
+                onItemClick={(item) => handleItemClick(item.id)}
               />
             ) : (
               <ItemsTable 
                 items={filteredItems}
-                onItemClick={handleItemClick}
+                onItemClick={(item) => handleItemClick(item.id)}
               />
             )}
           </motion.div>
         )}
       </div>
+
+      <EntityDetailModal
+        isOpen={modalOpen}
+        onClose={handleCloseModal}
+        entityType="item"
+        entityId={selectedItemId}
+      />
     </motion.div>
   );
 };

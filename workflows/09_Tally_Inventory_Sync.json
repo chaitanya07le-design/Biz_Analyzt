@@ -1,0 +1,263 @@
+{
+  "created": "1786095018298",
+  "updated": "1786095018298",
+  "name": "09 - Sync Tally Inventory and Stock Valuation",
+  "description": "Syncs Tally item groups and inventory items to Google Sheets daily at 2 AM. Overwrites existing data with fresh sync.",
+  "tags": ["tally", "sync", "inventory", "stock", "items", "google-sheets"],
+  "pieces": [
+    "@puchoaistudio/tool-schedule",
+    "@puchoaistudio/tool-tallyconnection",
+    "@puchoaistudio/tool-google-sheets",
+    "@puchoaistudio/tool-code"
+  ],
+  "template": {
+    "displayName": "09 - Sync Tally Inventory",
+    "trigger": {
+      "name": "trigger",
+      "valid": true,
+      "displayName": "Daily at 2 AM",
+      "type": "TOOL_TRIGGER",
+      "settings": {
+        "pieceName": "@puchoaistudio/tool-schedule",
+        "pieceVersion": "^2.0.0",
+        "input": {
+          "timezone": "Asia/Kolkata",
+          "cron": "0 2 * * *"
+        },
+        "sampleData": {},
+        "propertySettings": {
+          "timezone": {"type": "MANUAL"},
+          "cron": {"type": "MANUAL"}
+        },
+        "triggerName": "scheduled_trigger"
+      },
+      "nextAction": {
+        "name": "step_1",
+        "skip": false,
+        "type": "PIECE",
+        "valid": true,
+        "displayName": "Ask Stock Balances",
+        "settings": {
+          "input": {
+            "template": "46",
+            "variables": {},
+            "tallyconnection": ""
+          },
+          "pieceName": "@puchoaistudio/tool-tallyconnection",
+          "actionName": "ask_tally_template",
+          "sampleData": {},
+          "pieceVersion": "^2.3.4",
+          "propertySettings": {
+            "template": {"type": "MANUAL"},
+            "variables": {"type": "MANUAL", "schema": {}},
+            "tallyconnection": {"type": "MANUAL"}
+          },
+          "errorHandlingOptions": {
+            "retryOnFailure": {"value": false},
+            "continueOnFailure": {"value": false}
+          }
+        },
+        "nextAction": {
+          "name": "step_2",
+          "skip": false,
+          "type": "PIECE",
+          "valid": true,
+          "displayName": "Ask Closing Stock",
+          "settings": {
+            "input": {
+              "template": "144",
+              "variables": {},
+              "tallyconnection": ""
+            },
+            "pieceName": "@puchoaistudio/tool-tallyconnection",
+            "actionName": "ask_tally_template",
+            "sampleData": {},
+            "pieceVersion": "^2.3.4",
+            "propertySettings": {
+              "template": {"type": "MANUAL"},
+              "variables": {"type": "MANUAL", "schema": {}},
+              "tallyconnection": {"type": "MANUAL"}
+            },
+            "errorHandlingOptions": {
+              "retryOnFailure": {"value": false},
+              "continueOnFailure": {"value": false}
+            }
+          },
+          "nextAction": {
+            "name": "step_3",
+            "skip": false,
+            "type": "CODE",
+            "valid": true,
+            "displayName": "Transform Item Groups",
+            "settings": {
+              "input": {
+                "tally_data": "{{step_1['output']}}"
+              },
+              "sampleData": {},
+              "sourceCode": {
+                "code": "export const code = async (inputs) => {\n  const tallyData = inputs.tally_data || {};\n  const itemGroups = tallyData.itemGroups || [];\n  const now = new Date().toISOString().replace('T', ' ').substring(0, 19);\n  \n  const rows = itemGroups.map((item, index) => {\n    const groupID = `IGRP-${String(index + 1).padStart(4, '0')}`;\n    return [\n      groupID,\n      'COMP-0001',\n      item.itemGroupName || '',\n      item.categoryId || '',\n      now,\n      now,\n      1\n    ];\n  });\n  \n  return { rows, count: rows.length };\n};",
+                "packageJson": "{}",
+                "language": "typescript"
+              },
+              "errorHandlingOptions": {
+                "retryOnFailure": {"value": false},
+                "continueOnFailure": {"value": false}
+              }
+            },
+            "nextAction": {
+              "name": "step_4",
+              "skip": false,
+              "type": "PIECE",
+              "valid": true,
+              "displayName": "Clear Item Groups Sheet",
+              "settings": {
+                "input": {
+                  "auth": "",
+                  "spreadsheetId": "",
+                  "sheetId": 145144998,
+                  "is_first_row_headers": true
+                },
+                "pieceName": "@puchoaistudio/tool-google-sheets",
+                "actionName": "clear_sheet",
+                "sampleData": {},
+                "pieceVersion": "^2.0.9",
+                "propertySettings": {
+                  "auth": {"type": "MANUAL"},
+                  "spreadsheetId": {"type": "MANUAL"},
+                  "sheetId": {"type": "MANUAL"},
+                  "is_first_row_headers": {"type": "MANUAL"}
+                },
+                "errorHandlingOptions": {
+                  "retryOnFailure": {"value": false},
+                  "continueOnFailure": {"value": false}
+                }
+              },
+              "nextAction": {
+                "name": "step_5",
+                "skip": false,
+                "type": "PIECE",
+                "valid": true,
+                "displayName": "Insert Item Groups",
+                "settings": {
+                  "input": {
+                    "auth": "",
+                    "spreadsheetId": "",
+                    "sheetId": 145144998,
+                    "input_type": "json",
+                    "values": {
+                      "values": "{{step_3['rows']}}"
+                    }
+                  },
+                  "pieceName": "@puchoaistudio/tool-google-sheets",
+                  "actionName": "google-sheets-insert-multiple-rows",
+                  "sampleData": {},
+                  "pieceVersion": "^2.0.9",
+                  "propertySettings": {
+                    "auth": {"type": "MANUAL"},
+                    "spreadsheetId": {"type": "MANUAL"},
+                    "sheetId": {"type": "MANUAL"},
+                    "input_type": {"type": "MANUAL"},
+                    "values": {"type": "MANUAL", "schema": {"values": {"type": "ARRAY", "items": {"type": "ARRAY"}}}}
+                  },
+                  "errorHandlingOptions": {
+                    "retryOnFailure": {"value": true},
+                    "continueOnFailure": {"value": false}
+                  }
+                },
+                "nextAction": {
+                  "name": "step_6",
+                  "skip": false,
+                  "type": "CODE",
+                  "valid": true,
+                  "displayName": "Transform Items",
+                  "settings": {
+                    "input": {
+                      "tally_data": "{{step_2['output']}}"
+                    },
+                    "sampleData": {},
+                    "sourceCode": {
+                      "code": "export const code = async (inputs) => {\n  const tallyData = inputs.tally_data || {};\n  const items = tallyData.items || [];\n  const now = new Date().toISOString().replace('T', ' ').substring(0, 19);\n  \n  const rows = items.map((item, index) => {\n    const itemID = `ITM-${String(index + 1).padStart(4, '0')}`;\n    return [\n      itemID,\n      'COMP-0001',\n      item.itemName || '',\n      item.categoryId || '',\n      item.itemGroupId || '',\n      item.hsnCode || '',\n      item.unit || '',\n      item.gstRate || 0,\n      item.saleRate || 0,\n      item.purchaseRate || 0,\n      item.openingStock || 0,\n      item.openingValue || 0,\n      item.reorderLevel || 0,\n      item.isActive ? 'TRUE' : 'TRUE',\n      now,\n      now,\n      1\n    ];\n  });\n  \n  return { rows, count: rows.length };\n};",
+                      "packageJson": "{}",
+                      "language": "typescript"
+                    },
+                    "errorHandlingOptions": {
+                      "retryOnFailure": {"value": false},
+                      "continueOnFailure": {"value": false}
+                    }
+                  },
+                  "nextAction": {
+                    "name": "step_7",
+                    "skip": false,
+                    "type": "PIECE",
+                    "valid": true,
+                    "displayName": "Clear Items Sheet",
+                    "settings": {
+                      "input": {
+                        "auth": "",
+                        "spreadsheetId": "",
+                        "sheetId": 2067663692,
+                        "is_first_row_headers": true
+                      },
+                      "pieceName": "@puchoaistudio/tool-google-sheets",
+                      "actionName": "clear_sheet",
+                      "sampleData": {},
+                      "pieceVersion": "^2.0.9",
+                      "propertySettings": {
+                        "auth": {"type": "MANUAL"},
+                        "spreadsheetId": {"type": "MANUAL"},
+                        "sheetId": {"type": "MANUAL"},
+                        "is_first_row_headers": {"type": "MANUAL"}
+                      },
+                      "errorHandlingOptions": {
+                        "retryOnFailure": {"value": false},
+                        "continueOnFailure": {"value": false}
+                      }
+                    },
+                    "nextAction": {
+                      "name": "step_8",
+                      "skip": false,
+                      "type": "PIECE",
+                      "valid": true,
+                      "displayName": "Insert Items",
+                      "settings": {
+                        "input": {
+                          "auth": "",
+                          "spreadsheetId": "",
+                          "sheetId": 2067663692,
+                          "input_type": "json",
+                          "values": {
+                            "values": "{{step_6['rows']}}"
+                          }
+                        },
+                        "pieceName": "@puchoaistudio/tool-google-sheets",
+                        "actionName": "google-sheets-insert-multiple-rows",
+                        "sampleData": {},
+                        "pieceVersion": "^2.0.9",
+                        "propertySettings": {
+                          "auth": {"type": "MANUAL"},
+                          "spreadsheetId": {"type": "MANUAL"},
+                          "sheetId": {"type": "MANUAL"},
+                          "input_type": {"type": "MANUAL"},
+                          "values": {"type": "MANUAL", "schema": {"values": {"type": "ARRAY", "items": {"type": "ARRAY"}}}}
+                        },
+                        "errorHandlingOptions": {
+                          "retryOnFailure": {"value": true},
+                          "continueOnFailure": {"value": false}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "valid": true,
+    "agentIds": [],
+    "connectionIds": [],
+    "schemaVersion": "7"
+  },
+  "blogUrl": ""
+}

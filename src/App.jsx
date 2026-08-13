@@ -26,6 +26,14 @@ import ByItem from './pages/reports/ByItem';
 import TopReport from './pages/reports/TopReport';
 import ExpensesReport from './pages/reports/ExpensesReport';
 import CustomerView from './pages/reports/CustomerView';
+import TopBrands from './pages/reports/TopBrands';
+import StockAging from './pages/reports/StockAging';
+import CustomerMovementReport from './pages/reports/CustomerMovementReport';
+import StockStatusReport from './pages/reports/StockStatusReport';
+import SyncLogPage from './pages/reports/SyncLogPage';
+import TrendCharts from './pages/reports/TrendCharts';
+import GeographicReport from './pages/reports/GeographicReport';
+import LedgerStatement from './pages/reports/LedgerStatement';
 import PendingOrders from './pages/reports/PendingOrders';
 import SalesVouchers from './pages/Vouchers/SalesVouchers';
 import PurchaseVouchers from './pages/Vouchers/PurchaseVouchers';
@@ -133,8 +141,16 @@ function AppRoutes() {
           <Route path="reports/by-ledger" element={<ByLedger />} />
           <Route path="reports/by-item" element={<ByItem />} />
           <Route path="reports/top" element={<TopReport />} />
+          <Route path="reports/brands" element={<TopBrands />} />
+          <Route path="reports/stock-aging" element={<StockAging />} />
+          <Route path="reports/customer-movement" element={<CustomerMovementReport />} />
+          <Route path="reports/stock-status" element={<StockStatusReport />} />
+          <Route path="reports/sync-log" element={<SyncLogPage />} />
+          <Route path="reports/trends" element={<TrendCharts />} />
+          <Route path="reports/geographic" element={<GeographicReport />} />
           <Route path="reports/expenses" element={<ExpensesReport />} />
           <Route path="reports/customer" element={<CustomerView />} />
+          <Route path="reports/ledger/:ledgerId" element={<LedgerStatement />} />
           <Route path="reports/pending-purchase" element={<PendingOrders type="purchase" />} />
           <Route path="reports/pending-sales" element={<PendingOrders type="sales" />} />
           <Route path="sales-team" element={<ComingSoon />} />

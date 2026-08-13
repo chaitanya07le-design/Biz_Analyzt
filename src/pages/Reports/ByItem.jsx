@@ -11,7 +11,7 @@ const ByItem = () => {
   const { currentCompany } = useCompany();
   const { dateRange } = useDateRange();
   
-  const { items: apiItems, vouchers, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { items: apiItems, vouchers, voucherLines, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
 
   const normalizedItems = useMemo(() => {
     if (!apiItems || apiItems.length === 0) return [];
@@ -39,37 +39,54 @@ const ByItem = () => {
       };
     });
 
-    if (!vouchers || vouchers.length === 0) {
+    if (!vouchers || !voucherLines) {
       return Object.values(transactions).filter(t => t.count > 0).sort((a, b) => b.salesValue - a.salesValue);
     }
     
-    let filteredVouchers = vouchers;
-    if (dateRange.startDate && dateRange.endDate) {
-      filteredVouchers = vouchers.filter(v => {
-        const voucherDate = new Date(v.VoucherDate || v.date);
-        return voucherDate >= new Date(dateRange.startDate) && voucherDate <= new Date(dateRange.endDate);
-      });
-    }
-
-    const salesVouchersOnly = filteredVouchers.filter(v => 
-      v.VoucherType === 'Sales' || v.voucherType === 'Sales'
-    );
-    
-    salesVouchersOnly.forEach(voucher => {
-      const itemId = voucher.ItemID || voucher.itemId;
-      const qty = parseFloat(voucher.Quantity || voucher.qty || 0);
-      const amount = parseFloat(voucher.Amount || voucher.amount || voucher.GrandTotal || 0);
-      if (transactions[itemId]) {
-        transactions[itemId].qtySold += qty;
-        transactions[itemId].salesValue += amount;
-        transactions[itemId].count++;
-      }
+    const voucherMap = new Map();
+    vouchers.forEach(v => {
+      voucherMap.set(v.VoucherID, v);
     });
+
+    const salesVoucherIds = new Set(
+      vouchers
+        .filter(v => v.VoucherType === 'Sales')
+        .map(v => v.VoucherID)
+    );
+
+    const dateStart = dateRange.startDate ? new Date(dateRange.startDate) : null;
+    const dateEnd = dateRange.endDate ? new Date(dateRange.endDate) : null;
+
+    voucherLines
+      .filter(line => 
+        line.LineType === 'Item' && 
+        salesVoucherIds.has(line.VoucherID) &&
+        line.ItemID
+      )
+      .forEach(line => {
+        const parentVoucher = voucherMap.get(line.VoucherID);
+        if (!parentVoucher) return;
+
+        const voucherDate = new Date(parentVoucher.VoucherDate);
+        if (dateStart && dateEnd) {
+          if (voucherDate < dateStart || voucherDate > dateEnd) return;
+        }
+
+        const itemId = line.ItemID;
+        const qty = parseFloat(line.Qty || 0);
+        const amount = parseFloat(line.Amount || 0);
+        
+        if (transactions[itemId]) {
+          transactions[itemId].qtySold += qty;
+          transactions[itemId].salesValue += amount;
+          transactions[itemId].count++;
+        }
+      });
 
     return Object.values(transactions)
       .filter(t => t.count > 0)
       .sort((a, b) => b.salesValue - a.salesValue);
-  }, [normalizedItems, vouchers, dateRange]);
+  }, [normalizedItems, vouchers, voucherLines, dateRange]);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {
