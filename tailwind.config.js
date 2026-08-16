@@ -14,6 +14,14 @@ export default {
     },
     extend: {
       colors: {
+        kinetic: {
+          primary: '#4338CA',
+          secondary: '#65A30D',
+          tertiary: '#EA580C',
+          neutral: '#94A3B8',
+          bg: '#FFFFFF',
+          surface: '#F8FAFC',
+        },
         brand: {
           DEFAULT: '#8b5cf6',
           50: '#faf5ff',
@@ -76,7 +84,7 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'SF Pro Text', 'system-ui', 'sans-serif'],
-        display: ['"Space Grotesk"', 'Inter', 'sans-serif'],
+        display: ['Montserrat', '"Space Grotesk"', 'Inter', 'sans-serif'],
       },
       boxShadow: {
         card: '0 2px 10px rgba(0,0,0,0.04)',

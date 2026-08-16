@@ -205,7 +205,14 @@ const LedgerDetail = () => {
 
   return (
     <div className="min-h-screen bg-canvas-default">
-      <LedgerHeader party={{ ...party, name: party.PartyName || party.name, city: party.City || party.city }} onBack={handleBack} />
+      <LedgerHeader party={{ 
+        ...party, 
+        name: party.PartyName || party.name, 
+        city: party.City || party.city,
+        type: party.PartyType || party.type,
+        gstin: party.GSTIN || party.gstin,
+        creditLimit: party.CreditLimit ? parseFloat(party.CreditLimit) : party.creditLimit ? parseFloat(party.creditLimit) : 0
+      }} onBack={handleBack} />
       
       <div className="p-4 md:p-6">
         {agingData && agingData.totalOutstanding > 0.01 && (

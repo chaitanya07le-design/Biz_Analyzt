@@ -115,79 +115,81 @@ const Outstanding = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
-      className="min-h-screen bg-canvas-default pb-20 md:pb-6"
+      className="min-h-screen bg-slate-50 pb-20 md:pb-6 font-sans"
     >
       {/* Combined Sticky Header + Aging */}
-      <div className="sticky top-0 z-10 bg-canvas-default">
+      <div className="bg-slate-50">
         {/* Header */}
-        <div className="bg-white border-b border-canvas-faint">
-          <div className="px-4 py-4 md:px-6">
-            <div className="flex items-center justify-between mb-4">
+        <div className="bg-white border-b border-slate-100">
+          <div className="px-4 py-4 md:px-8 max-w-7xl mx-auto">
+            <div className="flex items-center justify-between mb-6">
               <div>
-                <h1 className="text-xl md:text-2xl font-semibold text-ink-default flex items-center gap-2">
-                  <AlertCircle className="w-6 h-6 text-brand-500" />
+                <h1 className="text-2xl md:text-3xl font-display font-bold text-ink-900 tracking-tight flex items-center gap-3">
+                  <div className="bg-kinetic-primary/10 p-2 rounded-xl">
+                    <AlertCircle className="w-6 h-6 text-kinetic-primary" />
+                  </div>
                   Outstanding
                 </h1>
-                <p className="text-sm text-ink-muted">
+                <p className="text-sm font-medium text-kinetic-neutral mt-1">
                   {activeTab === 'receivable' ? 'Money owed to you' : 'Money you owe'}
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-ink-muted">Total Outstanding</p>
-                <p className={`text-xl font-semibold ${activeTab === 'receivable' ? 'text-teal-600' : 'text-rose-600'}`}>
+                <p className="text-sm font-bold text-kinetic-neutral uppercase tracking-widest mb-1">Total Outstanding</p>
+                <p className={`text-2xl md:text-3xl font-extrabold ${activeTab === 'receivable' ? 'text-kinetic-secondary' : 'text-kinetic-tertiary'}`}>
                   {formatCurrency(grandTotal)}
                 </p>
               </div>
             </div>
 
             {/* Tab Buttons */}
-            <div className="flex gap-2">
+            <div className="flex gap-3 bg-slate-50 p-1.5 rounded-xl w-fit">
               <button
                 onClick={() => setActiveTab('receivable')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold transition-all ${
                   activeTab === 'receivable' 
-                    ? 'bg-teal-light text-teal-700 ring-1 ring-teal-200' 
-                    : 'bg-ink-50 text-ink-600 hover:bg-ink-100'
+                    ? 'bg-white text-kinetic-primary shadow-sm' 
+                    : 'text-kinetic-neutral hover:text-ink-900'
                 }`}
               >
                 <TrendingUp className="w-4 h-4" />
-                Receivables ({normalizedData.length})
+                Receivables ({outstandingReceivables?.length || 0})
               </button>
               <button
                 onClick={() => setActiveTab('payable')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold transition-all ${
                   activeTab === 'payable' 
-                    ? 'bg-rose-light text-rose-700 ring-1 ring-rose-200' 
-                    : 'bg-ink-50 text-ink-600 hover:bg-ink-100'
+                    ? 'bg-white text-kinetic-primary shadow-sm' 
+                    : 'text-kinetic-neutral hover:text-ink-900'
                 }`}
               >
                 <TrendingDown className="w-4 h-4" />
-                Payables ({normalizedData.length})
+                Payables ({outstandingPayables?.length || 0})
               </button>
             </div>
           </div>
         </div>
 
         {/* Aging Analysis - inside sticky container */}
-        <div className="bg-white border-b border-canvas-faint px-4 py-3 md:px-6">
-          <h3 className="text-sm font-semibold text-ink-default mb-3 flex items-center gap-2">
+        <div className="bg-white border-b border-slate-100 px-4 py-4 md:px-8 max-w-7xl mx-auto w-full">
+          <h3 className="text-sm font-bold text-kinetic-neutral uppercase tracking-widest mb-4 flex items-center gap-2">
             <Calendar className="w-4 h-4" />
             Aging Analysis
           </h3>
-          <div className="grid grid-cols-5 gap-2">
-            <AgingBucket label="Not Due" amount={totals.notDue} color="bg-indigo-light" />
-            <AgingBucket label="0-30 days" amount={totals.overdue0to30} color="bg-amber-light" isOverdue />
-            <AgingBucket label="31-60 days" amount={totals.overdue31to60} color="bg-amber-100" isOverdue />
-            <AgingBucket label="61-90 days" amount={totals.overdue61to90} color="bg-rose-light" isOverdue />
-            <AgingBucket label="90+ days" amount={totals.over90} color="bg-rose-100" isOverdue />
+          <div className="grid grid-cols-5 gap-3">
+            <AgingBucket label="Not Due" amount={totals.notDue} color="bg-slate-50 border border-slate-100" />
+            <AgingBucket label="0-30 days" amount={totals.overdue0to30} color="bg-orange-50 text-orange-900" isOverdue />
+            <AgingBucket label="31-60 days" amount={totals.overdue31to60} color="bg-orange-100 text-orange-900" isOverdue />
+            <AgingBucket label="61-90 days" amount={totals.overdue61to90} color="bg-red-50 text-red-900" isOverdue />
+            <AgingBucket label="90+ days" amount={totals.over90} color="bg-red-100 text-red-900" isOverdue />
           </div>
         </div>
       </div>
 
       {/* Party List */}
-      <div className="px-4 py-4 md:px-6 md:py-6 space-y-4">
-        <div className="space-y-3">
-          <p className="text-sm text-ink-muted">
+      <div className="px-4 py-6 md:px-8 max-w-7xl mx-auto space-y-4">
+        <div className="space-y-4">
+          <p className="text-sm font-bold text-kinetic-neutral uppercase tracking-widest">
             {normalizedData.length} {activeTab === 'receivable' ? 'debtor' : 'creditor'}{normalizedData.length !== 1 ? 's' : ''}
           </p>
 
@@ -201,33 +203,33 @@ const Outstanding = () => {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: idx * 0.03 }}
-                className="bg-white rounded-lg border border-canvas-faint overflow-hidden"
+                className="bg-white rounded-2xl border border-slate-100 shadow-card overflow-hidden"
               >
                 {/* Party Header */}
                 <div 
-                  className="p-4 cursor-pointer hover:bg-canvas-faint transition-colors"
+                  className="p-5 cursor-pointer hover:bg-slate-50 transition-colors"
                   onClick={() => handlePartyClick(party)}
                 >
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-4">
                       {hasInvoices && (
-                        <div className="text-ink-400">
+                        <div className={`p-1.5 rounded-lg ${isExpanded ? 'bg-kinetic-primary/10 text-kinetic-primary' : 'bg-slate-100 text-kinetic-neutral'}`}>
                           {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
                         </div>
                       )}
                       <div>
-                        <p className="font-medium text-ink-900">{party.partyName}</p>
-                        <p className="text-xs text-ink-500">{party.city} • {party.transactionCount} transactions</p>
+                        <p className="font-bold text-ink-900 text-lg">{party.partyName}</p>
+                        <p className="text-sm font-medium text-kinetic-neutral">{party.city} • {party.transactionCount} transactions</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className={`text-sm font-semibold ${
-                        party.totalOutstanding > 0 ? 'text-ink-900' : 'text-green-600'
+                      <p className={`text-lg font-extrabold ${
+                        party.totalOutstanding > 0 ? 'text-ink-900' : 'text-kinetic-secondary'
                       }`}>
                         {formatCurrency(party.totalOutstanding)}
                       </p>
                       {(party.aging?.overdue61to90 > 0 || party.aging?.over90 > 0) && (
-                        <p className="text-xs text-rose-600">
+                        <p className="text-xs font-bold text-kinetic-tertiary">
                           {formatCurrency((party.aging?.overdue61to90 || 0) + (party.aging?.over90 || 0))} 60+ days overdue
                         </p>
                       )}
@@ -235,21 +237,21 @@ const Outstanding = () => {
                   </div>
 
                   {/* Mini Aging Bar */}
-                  <div className="mt-3 flex gap-1 h-2 rounded-full overflow-hidden bg-canvas-faint">
+                  <div className="mt-4 flex gap-1 h-2 rounded-full overflow-hidden bg-slate-100">
                     {party.aging?.notDue > 0 && (
-                      <div className="bg-indigo-400" style={{ width: `${(party.aging.notDue / party.totalOutstanding) * 100}%` }} />
+                      <div className="bg-kinetic-primary" style={{ width: `${(party.aging.notDue / party.totalOutstanding) * 100}%` }} />
                     )}
                     {party.aging?.overdue0to30 > 0 && (
-                      <div className="bg-amber-400" style={{ width: `${(party.aging.overdue0to30 / party.totalOutstanding) * 100}%` }} />
+                      <div className="bg-kinetic-secondary" style={{ width: `${(party.aging.overdue0to30 / party.totalOutstanding) * 100}%` }} />
                     )}
                     {party.aging?.overdue31to60 > 0 && (
-                      <div className="bg-amber-500" style={{ width: `${(party.aging.overdue31to60 / party.totalOutstanding) * 100}%` }} />
+                      <div className="bg-orange-400" style={{ width: `${(party.aging.overdue31to60 / party.totalOutstanding) * 100}%` }} />
                     )}
                     {party.aging?.overdue61to90 > 0 && (
-                      <div className="bg-rose-400" style={{ width: `${(party.aging.overdue61to90 / party.totalOutstanding) * 100}%` }} />
+                      <div className="bg-kinetic-tertiary" style={{ width: `${(party.aging.overdue61to90 / party.totalOutstanding) * 100}%` }} />
                     )}
                     {party.aging?.over90 > 0 && (
-                      <div className="bg-rose-600" style={{ width: `${(party.aging.over90 / party.totalOutstanding) * 100}%` }} />
+                      <div className="bg-red-600" style={{ width: `${(party.aging.over90 / party.totalOutstanding) * 100}%` }} />
                     )}
                   </div>
                 </div>

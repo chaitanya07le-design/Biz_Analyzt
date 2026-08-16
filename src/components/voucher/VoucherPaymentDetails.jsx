@@ -10,12 +10,12 @@ const VoucherPaymentDetails = ({ paymentDetails }) => {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <p className="text-xs text-ink-faint">Mode</p>
-          <p className="text-sm text-ink-default font-medium">{paymentDetails.mode || '—'}</p>
+          <p className="text-sm text-ink-default font-medium">{paymentDetails.mode || <span className="text-ink-faint italic">Not recorded</span>}</p>
         </div>
         
         <div>
           <p className="text-xs text-ink-faint">Bank/Ledger</p>
-          <p className="text-sm text-ink-default font-medium">{paymentDetails.ledgerName || '—'}</p>
+          <p className="text-sm text-ink-default font-medium">{paymentDetails.ledgerName || <span className="text-ink-faint italic">Not recorded</span>}</p>
         </div>
         
         {paymentDetails.refNo && (

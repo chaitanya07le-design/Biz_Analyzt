@@ -234,9 +234,9 @@ const ReportPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-canvas-default pb-20 md:pb-6">
-        <div className="p-4 md:p-6">
-          <p className="text-ink-muted">Loading {config.title}...</p>
+      <div className="min-h-screen bg-slate-50 pb-20 md:pb-6 font-sans">
+        <div className="p-4 md:p-8 max-w-7xl mx-auto">
+          <p className="text-kinetic-neutral font-medium">Loading {config.title}...</p>
         </div>
       </div>
     );
@@ -275,7 +275,7 @@ const ReportPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-canvas-default pb-20 md:pb-6">
+    <div className="min-h-screen bg-slate-50 pb-20 md:pb-6 font-sans">
       <ReportPageHeader 
         title={config.title}
         startDate={dateRange.startDate || '2025-04-01'}
@@ -285,35 +285,35 @@ const ReportPage = () => {
       
       <ReportSummaryStrip items={config.summaryItems(filteredData)} />
 
-      <div className="p-4 md:p-6 space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-white rounded-lg border border-canvas-faint p-4">
-            <p className="text-xs text-ink-faint uppercase tracking-wider mb-3">Monthly Trend</p>
+      <div className="p-4 md:p-8 space-y-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-card p-5">
+            <p className="text-xs font-bold text-kinetic-neutral uppercase tracking-widest mb-4">Monthly Trend</p>
             <ReportChart data={monthlyChartData} height={180} />
           </div>
           
-          <div className="bg-white rounded-lg border border-canvas-faint p-4">
-            <p className="text-xs text-ink-faint uppercase tracking-wider mb-3">Payment Status</p>
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-card p-5">
+            <p className="text-xs font-bold text-kinetic-neutral uppercase tracking-widest mb-4">Payment Status</p>
             <DonutChart data={chartData} height={180} />
           </div>
           
-          <div className="md:col-span-2 bg-white rounded-lg border border-canvas-faint p-4">
-            <p className="text-xs text-ink-faint uppercase tracking-wider mb-3">By Party</p>
-            <div className="space-y-2 max-h-64 overflow-y-auto">
+          <div className="md:col-span-2 bg-white rounded-2xl border border-slate-100 shadow-card p-5">
+            <p className="text-xs font-bold text-kinetic-neutral uppercase tracking-widest mb-4">By Party</p>
+            <div className="space-y-3 max-h-64 overflow-y-auto pr-2">
               {ledgerViewData.slice(0, 5).map((item, idx) => (
                 <div 
                   key={idx}
-                  className="flex items-center justify-between py-2 hover:bg-canvas-subtle px-2 rounded cursor-pointer"
+                  className="flex items-center justify-between py-3 hover:bg-slate-50 px-4 rounded-xl cursor-pointer transition-colors border border-transparent hover:border-slate-100"
                   onClick={() => navigate(`${config.basePath}/${item.id}`)}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-4">
                     <div 
-                      className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'][idx % 5] }}
+                      className="w-3 h-3 rounded-full shadow-sm"
+                      style={{ backgroundColor: ['#4338CA', '#65A30D', '#EA580C', '#EF4444', '#8B5CF6'][idx % 5] }}
                     />
-                    <span className="text-sm text-ink-default">{item.partyName}</span>
+                    <span className="text-sm font-bold text-ink-900">{item.partyName}</span>
                   </div>
-                  <span className="text-sm font-medium text-ink-default">
+                  <span className="text-sm font-extrabold text-kinetic-secondary">
                     ₹{item.totalAmount.toLocaleString('en-IN')}
                   </span>
                 </div>
@@ -322,8 +322,8 @@ const ReportPage = () => {
           </div>
         </div>
 
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-medium text-ink-muted uppercase tracking-wider">
+        <div className="flex items-center justify-between mt-6">
+          <h2 className="text-sm font-bold text-kinetic-neutral uppercase tracking-widest">
             {viewMode === 'ledger' ? 'By Party' : 'By Bills'}
           </h2>
           <GroupByToggle view={viewMode} onViewChange={setViewMode} />

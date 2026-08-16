@@ -192,7 +192,7 @@ router.get('/vouchers/:voucherId', async (req, res) => {
       line => line.VoucherID === voucherId && line.LineType === 'Ledger'
     );
 
-    const voucherItems = itemLines.map(line => {
+    let voucherItems = itemLines.map(line => {
       const item = items.find(i => i.ItemID === line.ItemID) || {};
       const gstPercent = parseFloat(item.GST) || 0;
       const lineAmount = parseFloat(line.Amount) || 0;
@@ -208,6 +208,25 @@ router.get('/vouchers/:voucherId', async (req, res) => {
         amount: lineAmount,
       };
     });
+
+    const needsFallback = ['Sales', 'Purchase', 'Receipt Note', 'Delivery Note', 'Sales Order', 'Purchase Order'].includes(voucher.VoucherType);
+    if (voucherItems.length === 0 && needsFallback) {
+      let subTotal = parseFloat(voucher.SubTotal) || parseFloat(voucher.GrandTotal) || 0;
+      if (subTotal === 0 && ledgerLines.length > 0) {
+        subTotal = ledgerLines.reduce((sum, line) => sum + parseFloat(line.LedgerDebit || 0), 0);
+      }
+      
+      const taxAmt = parseFloat(voucher.TaxAmount) || 0;
+      voucherItems = [{
+        name: 'Multiple Items (Details Not Provided)',
+        hsnSac: '-',
+        qty: 1,
+        unit: 'Unit',
+        rate: subTotal,
+        tax: taxAmt > 0 && subTotal > 0 ? [{ type: 'GST', percent: Math.round((taxAmt/subTotal)*100), amount: taxAmt }] : [],
+        amount: subTotal,
+      }];
+    }
 
     const entries = ledgerLines.map(line => {
       const ledger = ledgers.find(lg => lg.LedgerID === line.LedgerID);
@@ -231,6 +250,11 @@ router.get('/vouchers/:voucherId', async (req, res) => {
                                 bankLedger.LedgerName.toLowerCase().includes('cash') ? 'Cash' : 'Transfer';
           paymentDetails.refNo = bankLine.Narration || '';
         }
+      } else {
+        // Fallback if no bank ledger line is explicitly found (common in mock data with only items)
+        paymentDetails.ledgerName = 'Cash Account (Default)';
+        paymentDetails.mode = 'Cash';
+        paymentDetails.refNo = '';
       }
     }
 

@@ -14,7 +14,7 @@ const initializeSheetsClient = async () => {
         client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
         private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
       },
-      scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     });
 
     const authClient = await auth.getClient();
@@ -121,6 +121,29 @@ const fetchSheetDataByGid = async (gid) => {
   }
 };
 
+const updateSheetData = async (sheetName, valuesToAppend) => {
+  try {
+    const sheets = await initializeSheetsClient();
+    
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: SPREADSHEET_ID,
+      range: sheetName,
+      valueInputOption: 'USER_ENTERED',
+      insertDataOption: 'INSERT_ROWS',
+      requestBody: {
+        values: [valuesToAppend],
+      },
+    });
+
+    clearCache(sheetName);
+    console.log(`✅ Appended new row to ${sheetName}`);
+    return true;
+  } catch (error) {
+    console.error(`❌ Error updating ${sheetName}:`, error.message);
+    throw error;
+  }
+};
+
 const clearCache = (sheetName = null) => {
   if (sheetName) {
     cache.del(`sheet_${sheetName}`);
@@ -139,6 +162,7 @@ module.exports = {
   initializeSheetsClient,
   fetchSheetData,
   fetchSheetDataByGid,
+  updateSheetData,
   clearCache,
   getCacheStats,
   SHEET_GIDS,

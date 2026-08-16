@@ -177,12 +177,12 @@ const ReportsPage = () => {
 
   if (loading) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="min-h-screen bg-canvas-default pb-20 md:pb-6"
-      >
-        <div className="px-4 py-4 md:px-6 md:py-6">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="min-h-screen bg-slate-50 pb-20 md:pb-6 font-sans"
+        >
+          <div className="px-4 py-4 md:px-8 max-w-7xl mx-auto">
           <div className="mb-6">
             <Skeleton variant="text" className="w-24 h-7" />
             <Skeleton variant="text" className="w-48 h-4 mt-2" />
@@ -207,27 +207,27 @@ const ReportsPage = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
-      className="min-h-screen bg-canvas-default pb-20 md:pb-6"
+      className="min-h-screen bg-slate-50 pb-20 md:pb-6 font-sans"
     >
-      <div className="px-4 py-4 md:px-6 md:py-6">
-        <motion.div 
-          className="mb-6"
+      <div className="px-4 py-4 md:px-8 max-w-7xl mx-auto space-y-6">
+        <motion.div
+          className="bg-white p-6 rounded-2xl shadow-card border border-slate-100"
           initial={{ y: -10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1 }}
         >
-          <h1 className="text-xl md:text-2xl font-semibold text-ink-default">Reports</h1>
-          <p className="text-sm text-ink-muted mt-1">Financial and operational reports</p>
+          <h1 className="text-2xl md:text-3xl font-display font-bold text-ink-900 tracking-tight">Reports</h1>
+          <p className="text-sm font-medium text-kinetic-neutral mt-1">Financial and operational reports</p>
         </motion.div>
 
         <motion.div 
-          className="mb-4"
+          className="bg-white rounded-2xl shadow-card border border-slate-100 p-4"
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
           <div className="relative">
-            <svg className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-kinetic-neutral" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <input
@@ -235,7 +235,7 @@ const ReportsPage = () => {
               placeholder="Search reports..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-white border border-canvas-faint rounded-lg text-sm text-ink-default placeholder-ink-faint focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
+              className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-ink-900 placeholder-kinetic-neutral focus:outline-none focus:ring-2 focus:ring-kinetic-primary/20 focus:border-kinetic-primary transition-all"
             />
           </div>
         </motion.div>

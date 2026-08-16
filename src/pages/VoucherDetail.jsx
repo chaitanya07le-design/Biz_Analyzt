@@ -117,6 +117,12 @@ const VoucherDetail = () => {
       case 'Payment':
         return (
           <div className="space-y-4">
+            {voucher?.Items && voucher.Items.length > 0 && (
+              <VoucherItemsTable items={voucher.Items} showTax={false} />
+            )}
+            {voucher?.Entries && voucher.Entries.length > 0 && (
+              <VoucherJournalEntries entries={voucher.Entries} />
+            )}
             <VoucherBillsSection bills={voucher?.Bills || []} />
             <VoucherPaymentDetails paymentDetails={voucher?.PaymentDetails || {}} />
             {(voucher?.Narration) && <VoucherNarration narration={voucher?.Narration} />}

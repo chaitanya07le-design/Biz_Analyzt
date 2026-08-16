@@ -138,16 +138,17 @@ const ItemsPage = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-canvas-default pb-20 md:pb-6"
+      className="min-h-screen bg-slate-50 pb-20 md:pb-6 font-sans"
     >
-      <div className="px-4 py-4 md:px-6 md:py-6 space-y-4">
+      <div className="px-4 py-4 md:px-8 md:py-8 space-y-6 max-w-7xl mx-auto">
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.3 }}
+          className="bg-white p-6 rounded-2xl shadow-card border border-slate-100"
         >
-          <h1 className="text-xl md:text-2xl font-semibold text-ink-default">Items</h1>
-          <p className="text-sm text-ink-muted mt-1">
+          <h1 className="text-2xl md:text-3xl font-display font-bold text-ink-900 tracking-tight">Items</h1>
+          <p className="text-sm text-kinetic-neutral font-medium mt-1">
             {normalizedItems.length} items • Total value: ₹{totalStockValue.toLocaleString('en-IN')}
           </p>
         </motion.div>
@@ -183,10 +184,10 @@ const ItemsPage = () => {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.3, delay: 0.2 }}
-          className="bg-white rounded-lg border border-canvas-faint p-3 space-y-3"
+          className="bg-white rounded-2xl shadow-card border border-slate-100 p-4 space-y-4"
         >
           <div className="relative">
-            <svg className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-kinetic-neutral" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <input
@@ -194,15 +195,15 @@ const ItemsPage = () => {
               placeholder="Search items..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-canvas-subtle border border-canvas-faint rounded-lg text-sm text-ink-default placeholder-ink-faint focus:outline-none focus:ring-2 focus:ring-brand-primary transition-shadow"
+              className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-ink-900 placeholder-kinetic-neutral focus:outline-none focus:ring-2 focus:ring-kinetic-primary/20 focus:border-kinetic-primary transition-all"
             />
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-3">
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-3 py-1.5 bg-canvas-subtle border border-canvas-faint rounded-lg text-xs text-ink-default focus:outline-none focus:ring-2 focus:ring-brand-primary cursor-pointer"
+              className="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-ink-900 focus:outline-none focus:ring-2 focus:ring-kinetic-primary/20 focus:border-kinetic-primary cursor-pointer"
             >
               {categories.map(cat => (
                 <option key={cat} value={cat}>
@@ -214,7 +215,7 @@ const ItemsPage = () => {
             <select
               value={stockFilter}
               onChange={(e) => setStockFilter(e.target.value)}
-              className="px-3 py-1.5 bg-canvas-subtle border border-canvas-faint rounded-lg text-xs text-ink-default focus:outline-none focus:ring-2 focus:ring-brand-primary cursor-pointer"
+              className="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-ink-900 focus:outline-none focus:ring-2 focus:ring-kinetic-primary/20 focus:border-kinetic-primary cursor-pointer"
             >
               <option value="all">All Stock</option>
               <option value="negative">⚠️ Negative ({negativeCount})</option>
@@ -223,13 +224,13 @@ const ItemsPage = () => {
             </select>
           </div>
 
-          <div className="flex gap-2 bg-canvas-subtle p-1 rounded-lg">
+          <div className="flex gap-2 bg-slate-50 p-1.5 rounded-xl w-fit">
             <button
               onClick={() => setViewMode('grid')}
-              className={`flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center gap-1 ${
+              className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 ${
                 viewMode === 'grid'
-                  ? 'bg-white text-ink-default shadow-sm'
-                  : 'text-ink-muted hover:text-ink-default'
+                  ? 'bg-white text-kinetic-primary shadow-sm'
+                  : 'text-kinetic-neutral hover:text-ink-900'
               }`}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -239,10 +240,10 @@ const ItemsPage = () => {
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center gap-1 ${
+              className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 ${
                 viewMode === 'list'
-                  ? 'bg-white text-ink-default shadow-sm'
-                  : 'text-ink-muted hover:text-ink-default'
+                  ? 'bg-white text-kinetic-primary shadow-sm'
+                  : 'text-kinetic-neutral hover:text-ink-900'
               }`}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

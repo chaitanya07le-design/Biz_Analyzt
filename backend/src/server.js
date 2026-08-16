@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const dataRoutes = require('./routes/dataRoutes');
+const settingsRoutes = require('./routes/settingsRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -15,6 +16,7 @@ app.use(cors({
 
 app.use(express.json());
 
+app.use('/api/settings', settingsRoutes);
 app.use('/api', dataRoutes);
 
 app.use((err, req, res, next) => {

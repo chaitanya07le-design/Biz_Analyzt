@@ -52,6 +52,15 @@ import Groups from './pages/Masters/Groups';
 import Ledgers from './pages/Masters/Ledgers';
 import Categories from './pages/Masters/Categories';
 import Accounts from './pages/Masters/Accounts';
+import ShareSettings from './pages/Settings/ShareSettings';
+import OutstandingSettings from './pages/Settings/OutstandingSettings';
+import AutoReminderSettings from './pages/Settings/AutoReminderSettings';
+import DataEntrySettings from './pages/Settings/DataEntrySettings';
+import NotificationSettings from './pages/Settings/NotificationSettings';
+import StockItemSettings from './pages/Settings/StockItemSettings';
+import DateSettings from './pages/Settings/DateSettings';
+import DefaultScreenSettings from './pages/Settings/DefaultScreenSettings';
+import CurrencySettings from './pages/Settings/CurrencySettings';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -156,6 +165,16 @@ function AppRoutes() {
           <Route path="reports/pending-sales" element={<PendingOrders type="sales" />} />
           <Route path="sales-team" element={<ComingSoon />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="settings/share" element={<ShareSettings />} />
+          <Route path="settings/outstanding" element={<OutstandingSettings />} />
+          <Route path="settings/auto-reminder" element={<AutoReminderSettings />} />
+          <Route path="settings/data-entry" element={<DataEntrySettings />} />
+          <Route path="settings/notification" element={<NotificationSettings />} />
+          <Route path="settings/stock-item" element={<StockItemSettings />} />
+          <Route path="settings/date" element={<DateSettings />} />
+          <Route path="settings/default-screen" element={<DefaultScreenSettings />} />
+          <Route path="settings/currency" element={<CurrencySettings />} />
+          <Route path="settings/*" element={<ComingSoon />} />
         </Route>
       </Routes>
     </AnimatePresence>

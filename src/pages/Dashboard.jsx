@@ -175,61 +175,61 @@ const Dashboard = () => {
     { 
       title: 'Cash in Hand', 
       value: metrics.cashInHand, 
-      color: 'teal', 
+      color: 'kinetic-secondary', 
       onClick: () => navigate('/cash-bank'),
       subtitle: `${metrics.cashAccountCount || 0} accounts`
     },
     { 
       title: 'Bank Balance', 
       value: metrics.bankBalance, 
-      color: 'indigo', 
+      color: 'kinetic-primary', 
       onClick: () => navigate('/cash-bank'),
       subtitle: `${metrics.bankAccountCount || 0} accounts`
     },
     { 
       title: 'Total Sales', 
       value: metrics.totalSales, 
-      color: 'teal', 
+      color: 'kinetic-secondary', 
       onClick: () => navigate('/vouchers/sales'),
       subtitle: `${filteredVouchers.filter(v => v.VoucherType === 'Sales').length} vouchers`
     },
     { 
       title: 'Total Purchases', 
       value: metrics.totalPurchases, 
-      color: 'amber', 
+      color: 'kinetic-tertiary', 
       onClick: () => navigate('/vouchers/purchase'),
       subtitle: `${filteredVouchers.filter(v => v.VoucherType === 'Purchase').length} vouchers`
     },
     { 
       title: 'Receivables', 
       value: metrics.totalReceivables, 
-      color: 'teal', 
+      color: 'kinetic-secondary', 
       onClick: () => navigate('/outstanding?type=receivable'),
       subtitle: `${(parties || []).filter(p => p.PartyType === 'Sundry Debtors' || p.PartyType === 'Customer').length} parties`
     },
     { 
       title: 'Payables', 
       value: metrics.totalPayables, 
-      color: 'rose', 
+      color: 'kinetic-tertiary', 
       onClick: () => navigate('/outstanding?type=payable'),
       subtitle: `${(parties || []).filter(p => p.PartyType === 'Sundry Creditors' || p.PartyType === 'Supplier').length} parties`
     },
     { 
       title: 'Gross Profit', 
       value: metrics.grossProfit, 
-      color: metrics.grossProfit >= 0 ? 'teal' : 'rose', 
+      color: metrics.grossProfit >= 0 ? 'kinetic-secondary' : 'kinetic-tertiary', 
       onClick: () => navigate('/reports/profit-loss#trading')
     },
     { 
       title: 'Net Profit', 
       value: metrics.netProfit, 
-      color: metrics.netProfit >= 0 ? 'teal' : 'rose', 
+      color: metrics.netProfit >= 0 ? 'kinetic-secondary' : 'kinetic-tertiary', 
       onClick: () => navigate('/reports/profit-loss#pl')
     },
     { 
       title: 'Stock Value', 
       value: metrics.stockValue, 
-      color: 'amber', 
+      color: 'kinetic-primary', 
       onClick: () => navigate('/items'),
       subtitle: `${items?.length || 0} items`
     },
@@ -240,9 +240,9 @@ const Dashboard = () => {
       p.PartyType === 'Sundry Debtors' || p.PartyType === 'Customer'
     ) || [];
     const total = receivables.reduce((sum, p) => sum + Math.abs(parseFloat(p.OpeningBalance || 0) || 0), 0);
-    if (total === 0) return [{ name: 'No Data', value: 1, color: '#E5E7EB' }];
+    if (total === 0) return [{ name: 'No Data', value: 1, color: '#F1F5F9' }]; // slate-100
     return [
-      { name: 'Outstanding', value: total, color: '#0D9488' },
+      { name: 'Outstanding', value: total, color: '#65A30D' }, // kinetic-secondary
     ];
   }, [parties]);
 
@@ -251,9 +251,9 @@ const Dashboard = () => {
       p.PartyType === 'Sundry Creditors' || p.PartyType === 'Supplier'
     ) || [];
     const total = payables.reduce((sum, p) => sum + Math.abs(parseFloat(p.OpeningBalance || 0) || 0), 0);
-    if (total === 0) return [{ name: 'No Data', value: 1, color: '#E5E7EB' }];
+    if (total === 0) return [{ name: 'No Data', value: 1, color: '#F1F5F9' }];
     return [
-      { name: 'Outstanding', value: total, color: '#E11D48' },
+      { name: 'Outstanding', value: total, color: '#EA580C' }, // kinetic-tertiary
     ];
   }, [parties]);
 
@@ -360,18 +360,18 @@ const Dashboard = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
-      className="min-h-screen bg-gradient-to-br from-canvas-default via-canvas-soft to-indigo-light/20 pb-20 md:pb-6"
+      className="min-h-screen bg-slate-50 pb-20 md:pb-6 font-sans"
     >
-      <div className="px-4 py-4 md:px-6 md:py-6 space-y-4">
-        <div className="flex items-start justify-between">
+      <div className="px-4 py-4 md:px-8 md:py-8 space-y-6 max-w-7xl mx-auto">
+        <div className="flex items-start justify-between bg-white p-6 rounded-2xl shadow-card border border-slate-100">
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl md:text-2xl font-semibold text-ink-default">Dashboard</h1>
-              <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${
+            <div className="flex items-center gap-3">
+              <h1 className="text-2xl md:text-3xl font-display font-bold text-ink-900 tracking-tight">System Dashboard</h1>
+              <span className={`px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded-md ${
                 connectionStatus === 'connected' 
-                  ? 'bg-teal-light text-teal-DEFAULT' 
+                  ? 'bg-kinetic-secondary/10 text-kinetic-secondary' 
                   : connectionStatus === 'disconnected'
-                  ? 'bg-amber-light text-amber-DEFAULT'
+                  ? 'bg-kinetic-tertiary/10 text-kinetic-tertiary'
                   : 'bg-slate-100 text-slate-600'
               }`}>
                 {connectionStatus === 'connected' && '● Live'}
@@ -379,11 +379,11 @@ const Dashboard = () => {
                 {connectionStatus === 'checking' && '● Checking...'}
               </span>
             </div>
-            <p className="text-sm text-ink-muted mt-1">
+            <p className="text-sm text-kinetic-neutral font-medium mt-1">
               {currentCompany?.name || 'Sharma Trading Co.'}
             </p>
           </div>
-          <div className="text-xs text-ink-faint">
+          <div className="bg-slate-50 px-4 py-2 rounded-lg border border-slate-100 text-sm font-semibold text-ink-muted">
             {dateRange.label || 'All data'}
           </div>
         </div>
@@ -393,26 +393,26 @@ const Dashboard = () => {
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.3 }}
-            className="relative overflow-hidden bg-gradient-to-r from-indigo-light to-indigo-light/50 border-l-4 border-indigo-DEFAULT rounded-lg p-4"
+            className="relative overflow-hidden bg-kinetic-primary text-white rounded-2xl p-6 shadow-card"
           >
-            <div className="absolute -top-6 -right-6 w-20 h-20 bg-indigo-DEFAULT/10 rounded-full blur-xl pointer-events-none" />
+            <div className="absolute -top-12 -right-12 w-40 h-40 bg-white/10 rounded-full blur-2xl pointer-events-none" />
             <button
               onClick={dismissPromoBanner}
-              className="absolute top-2 right-2 text-ink-muted hover:text-ink-DEFAULT z-10"
+              className="absolute top-4 right-4 text-white/70 hover:text-white z-10 transition-colors"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            <div className="flex items-center gap-3 relative z-10">
-              <div className="flex-shrink-0">
-                <svg className="w-6 h-6 text-indigo-DEFAULT" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex items-center gap-4 relative z-10">
+              <div className="flex-shrink-0 bg-white/20 p-3 rounded-xl">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
               <div>
-                <p className="font-semibold text-ink-DEFAULT">Live Data Connected</p>
-                <p className="text-sm text-ink-muted mt-1">
+                <p className="font-display font-bold text-lg">Live Data Connected</p>
+                <p className="text-sm text-white/80 mt-1 font-medium">
                   Dashboard now shows real-time data from Google Sheets.
                 </p>
               </div>
@@ -439,120 +439,116 @@ const Dashboard = () => {
         </motion.div>
 
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 gap-4"
+          className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <div className="bg-surface border border-border rounded-lg overflow-hidden">
-            <div className="bg-gradient-to-r from-teal-light/50 to-teal-light/20 px-4 py-3 border-b border-border">
-              <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-teal-DEFAULT">Receivables</h3>
-                <button
-                  onClick={() => navigate('/outstanding?type=receivable')}
-                  className="text-sm text-teal-DEFAULT hover:text-teal-dark hover:underline"
-                >
-                  View All
-                </button>
-              </div>
+          <div className="bg-white rounded-2xl shadow-card overflow-hidden border border-slate-100">
+            <div className="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+              <h3 className="font-display font-bold text-ink-900 tracking-tight">Receivables</h3>
+              <button
+                onClick={() => navigate('/outstanding?type=receivable')}
+                className="text-sm font-semibold text-kinetic-primary hover:text-kinetic-primary/80 transition-colors"
+              >
+                View All
+              </button>
             </div>
-            <div className="p-4">
+            <div className="p-6">
               <DonutChart data={receivableChartData} />
             </div>
           </div>
 
-          <div className="bg-surface border border-border rounded-lg overflow-hidden">
-            <div className="bg-gradient-to-r from-rose-light/50 to-rose-light/20 px-4 py-3 border-b border-border">
-              <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-rose-DEFAULT">Payables</h3>
-                <button
-                  onClick={() => navigate('/outstanding?type=payable')}
-                  className="text-sm text-rose-DEFAULT hover:text-rose-dark hover:underline"
-                >
-                  View All
-                </button>
-              </div>
+          <div className="bg-white rounded-2xl shadow-card overflow-hidden border border-slate-100">
+            <div className="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+              <h3 className="font-display font-bold text-ink-900 tracking-tight">Payables</h3>
+              <button
+                onClick={() => navigate('/outstanding?type=payable')}
+                className="text-sm font-semibold text-kinetic-primary hover:text-kinetic-primary/80 transition-colors"
+              >
+                View All
+              </button>
             </div>
-            <div className="p-4">
+            <div className="p-6">
               <DonutChart data={payableChartData} />
             </div>
           </div>
         </motion.div>
 
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 gap-4"
+          className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <div className="bg-surface border border-border rounded-lg p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-ink-DEFAULT">Top Selling Items</h3>
+          <div className="bg-white rounded-2xl shadow-card p-6 border border-slate-100">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="font-display font-bold text-ink-900 tracking-tight">Top Selling Items</h3>
               <button
                 onClick={() => navigate('/items')}
-                className="text-sm text-ink-muted hover:text-ink-DEFAULT hover:underline"
+                className="text-sm font-semibold text-kinetic-primary hover:text-kinetic-primary/80 transition-colors"
               >
                 View All
               </button>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               {topItems.length > 0 ? topItems.slice(0, 3).map((item, idx) => {
                 const badgeStyles = [
-                  'bg-gradient-to-br from-amber-light to-amber-DEFAULT/30 border-amber-DEFAULT/30 text-amber-DEFAULT',
-                  'bg-gradient-to-br from-slate-100 to-slate-200/50 border-slate-300/50 text-slate-600',
-                  'bg-gradient-to-br from-orange-light to-orange-DEFAULT/30 border-orange-DEFAULT/30 text-orange-DEFAULT',
+                  'bg-kinetic-secondary/10 text-kinetic-secondary',
+                  'bg-slate-100 text-kinetic-neutral',
+                  'bg-kinetic-tertiary/10 text-kinetic-tertiary',
                 ];
                 return (
                   <div
                     key={item.itemId || idx}
-                    className="flex items-center gap-3 p-2 hover:bg-canvas-default rounded-lg cursor-pointer transition-colors"
+                    className="flex items-center gap-4 p-3 hover:bg-slate-50 rounded-xl cursor-pointer transition-colors border border-transparent hover:border-slate-100"
                     onClick={() => navigate('/items')}
                   >
-                    <div className={`flex-shrink-0 w-10 h-10 ${badgeStyles[idx]} rounded-lg flex items-center justify-center border`}>
-                      <span className="font-semibold text-sm">{idx + 1}</span>
+                    <div className={`flex-shrink-0 w-12 h-12 ${badgeStyles[idx]} rounded-xl flex items-center justify-center`}>
+                      <span className="font-display font-bold text-lg">{idx + 1}</span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-ink-DEFAULT truncate">{item.name}</p>
-                      <p className="text-xs text-ink-muted">{item.totalQty} units sold</p>
+                      <p className="text-sm font-bold text-ink-900 truncate">{item.name}</p>
+                      <p className="text-xs font-medium text-kinetic-neutral mt-0.5">{item.totalQty} units sold</p>
                     </div>
-                    <p className="text-sm font-semibold text-ink-DEFAULT">{formatCurrency(item.totalValue)}</p>
+                    <p className="text-base font-extrabold text-ink-900">{formatCurrency(item.totalValue)}</p>
                   </div>
                 );
               }) : (
-                <p className="text-sm text-ink-muted text-center py-4">No sales data available</p>
+                <p className="text-sm font-medium text-kinetic-neutral text-center py-6 bg-slate-50 rounded-xl">No sales data available</p>
               )}
             </div>
           </div>
 
-          <div className="bg-surface border border-border rounded-lg p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-ink-DEFAULT">Recent Transactions</h3>
+          <div className="bg-white rounded-2xl shadow-card p-6 border border-slate-100">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="font-display font-bold text-ink-900 tracking-tight">Recent Transactions</h3>
               <button
                 onClick={() => navigate('/reports/day-book')}
-                className="text-sm text-ink-muted hover:text-ink-DEFAULT hover:underline"
+                className="text-sm font-semibold text-kinetic-primary hover:text-kinetic-primary/80 transition-colors"
               >
                 View All
               </button>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               {recentTransactions.length > 0 ? recentTransactions.map((trans, idx) => (
-                <div key={idx} className="flex items-center gap-3 p-2 hover:bg-canvas rounded-lg transition-colors">
-                  <div className="flex-shrink-0 w-8 h-8 bg-indigo-light rounded-full flex items-center justify-center border border-border">
-                    <svg className="w-4 h-4 text-indigo-DEFAULT" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div key={idx} className="flex items-center gap-4 p-3 hover:bg-slate-50 rounded-xl transition-colors border border-transparent hover:border-slate-100">
+                  <div className="flex-shrink-0 w-10 h-10 bg-kinetic-primary/10 rounded-xl flex items-center justify-center">
+                    <svg className="w-5 h-5 text-kinetic-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-ink-DEFAULT">{trans.type}</p>
-                    <p className="text-xs text-ink-muted truncate">{trans.party}</p>
+                    <p className="text-sm font-bold text-ink-900">{trans.type}</p>
+                    <p className="text-xs font-medium text-kinetic-neutral truncate mt-0.5">{trans.party}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-semibold text-ink-DEFAULT">{formatCurrency(trans.amount)}</p>
-                    <p className="text-xs text-ink-muted">{formatDate(trans.date)}</p>
+                    <p className="text-sm font-extrabold text-ink-900">{formatCurrency(trans.amount)}</p>
+                    <p className="text-xs font-medium text-kinetic-neutral mt-0.5">{formatDate(trans.date)}</p>
                   </div>
                 </div>
               )) : (
-                <p className="text-sm text-ink-muted text-center py-4">No transactions available</p>
+                <p className="text-sm font-medium text-kinetic-neutral text-center py-6 bg-slate-50 rounded-xl">No transactions available</p>
               )}
             </div>
           </div>

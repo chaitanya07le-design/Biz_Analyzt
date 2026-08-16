@@ -1,103 +1,101 @@
 import React from 'react';
 
-const KpiCard = ({ title, value, trend, trendDirection, icon, color = 'indigo', onClick, subtitle }) => {
+const KpiCard = ({ title, value, trend, trendDirection, icon, color = 'kinetic-primary', onClick, subtitle }) => {
   const colorConfig = {
-    indigo: {
-      border: 'border-l-indigo-DEFAULT',
-      gradient: 'from-indigo-light/30',
-      orb: 'bg-indigo-DEFAULT/10',
-      iconBg: 'from-indigo-light to-indigo-DEFAULT/20',
-      iconText: 'text-indigo-DEFAULT',
+    'indigo': {
+      border: 'border-t-kinetic-primary',
+      gradient: 'from-surface to-slate-50',
+      orb: 'bg-kinetic-primary/5',
+      iconBg: 'bg-kinetic-primary/10',
+      iconText: 'text-kinetic-primary',
     },
-    teal: {
-      border: 'border-l-teal-DEFAULT',
-      gradient: 'from-teal-light/30',
-      orb: 'bg-teal-DEFAULT/10',
-      iconBg: 'from-teal-light to-teal-DEFAULT/20',
-      iconText: 'text-teal-DEFAULT',
+    'teal': {
+      border: 'border-t-kinetic-secondary',
+      gradient: 'from-surface to-slate-50',
+      orb: 'bg-kinetic-secondary/5',
+      iconBg: 'bg-kinetic-secondary/10',
+      iconText: 'text-kinetic-secondary',
     },
-    rose: {
-      border: 'border-l-rose-DEFAULT',
-      gradient: 'from-rose-light/30',
-      orb: 'bg-rose-DEFAULT/10',
-      iconBg: 'from-rose-light to-rose-DEFAULT/20',
-      iconText: 'text-rose-DEFAULT',
+    'rose': {
+      border: 'border-t-kinetic-tertiary',
+      gradient: 'from-surface to-slate-50',
+      orb: 'bg-kinetic-tertiary/5',
+      iconBg: 'bg-kinetic-tertiary/10',
+      iconText: 'text-kinetic-tertiary',
     },
-    amber: {
-      border: 'border-l-amber-DEFAULT',
-      gradient: 'from-amber-light/30',
-      orb: 'bg-amber-DEFAULT/10',
-      iconBg: 'from-amber-light to-amber-DEFAULT/20',
-      iconText: 'text-amber-DEFAULT',
+    'amber': {
+      border: 'border-t-kinetic-tertiary',
+      gradient: 'from-surface to-slate-50',
+      orb: 'bg-kinetic-tertiary/5',
+      iconBg: 'bg-kinetic-tertiary/10',
+      iconText: 'text-kinetic-tertiary',
     },
-    blue: {
-      border: 'border-l-indigo-DEFAULT',
-      gradient: 'from-indigo-light/30',
-      orb: 'bg-indigo-DEFAULT/10',
-      iconBg: 'from-indigo-light to-indigo-DEFAULT/20',
-      iconText: 'text-indigo-DEFAULT',
+    'kinetic-primary': {
+      border: 'border-t-kinetic-primary',
+      gradient: 'from-surface to-slate-50',
+      orb: 'bg-kinetic-primary/5',
+      iconBg: 'bg-kinetic-primary/10',
+      iconText: 'text-kinetic-primary',
     },
-    green: {
-      border: 'border-l-teal-DEFAULT',
-      gradient: 'from-teal-light/30',
-      orb: 'bg-teal-DEFAULT/10',
-      iconBg: 'from-teal-light to-teal-DEFAULT/20',
-      iconText: 'text-teal-DEFAULT',
-    },
-    red: {
-      border: 'border-l-rose-DEFAULT',
-      gradient: 'from-rose-light/30',
-      orb: 'bg-rose-DEFAULT/10',
-      iconBg: 'from-rose-light to-rose-DEFAULT/20',
-      iconText: 'text-rose-DEFAULT',
-    },
-    purple: {
-      border: 'border-l-indigo-DEFAULT',
-      gradient: 'from-indigo-light/30',
-      orb: 'bg-indigo-DEFAULT/10',
-      iconBg: 'from-indigo-light to-indigo-DEFAULT/20',
-      iconText: 'text-indigo-DEFAULT',
-    },
+    'kinetic-secondary': {
+      border: 'border-t-kinetic-secondary',
+      gradient: 'from-surface to-slate-50',
+      orb: 'bg-kinetic-secondary/5',
+      iconBg: 'bg-kinetic-secondary/10',
+      iconText: 'text-kinetic-secondary',
+    }
   };
 
-  const config = colorConfig[color] || colorConfig.indigo;
+  const config = colorConfig[color] || colorConfig['kinetic-primary'];
 
   const trendColors = {
-    up: 'text-teal-DEFAULT',
-    down: 'text-rose-DEFAULT',
-    neutral: 'text-ink-muted',
+    up: 'text-kinetic-secondary',
+    down: 'text-kinetic-tertiary',
+    neutral: 'text-kinetic-neutral',
   };
 
   return (
     <div 
-      className={`relative overflow-hidden bg-gradient-to-br ${config.gradient} to-white border border-border border-l-4 ${config.border} rounded-xl shadow-sm p-4 ${onClick ? 'cursor-pointer hover:shadow-md transition-shadow' : ''}`}
+      className={`relative overflow-hidden bg-gradient-to-br ${config.gradient} border border-border border-t-4 ${config.border} rounded-xl shadow-card p-5 ${onClick ? 'cursor-pointer hover:shadow-card-hover transition-all duration-300 transform hover:-translate-y-1' : ''}`}
       onClick={onClick}
     >
-      <div className={`absolute -top-8 -right-8 w-24 h-24 ${config.orb} rounded-full blur-2xl pointer-events-none`} />
-      <div className="flex items-start justify-between relative z-10">
-        <div className="flex-1">
-          <p className="text-ink-muted text-sm font-medium">{title}</p>
-          <p className="text-2xl font-semibold text-ink-DEFAULT mt-1">
-            {typeof value === 'number' ? `₹${value.toLocaleString('en-IN')}` : value}
-          </p>
-          {subtitle && (
-            <p className="text-xs text-ink-faint mt-0.5">{subtitle}</p>
-          )}
-          {trend && (
-            <p className={`text-sm mt-2 ${trendColors[trendDirection] || trendColors.neutral}`}>
-              {trendDirection === 'up' && '↑ '}
-              {trendDirection === 'down' && '↓ '}
-              {trend}
-            </p>
+      <div className={`absolute -bottom-8 -right-8 w-32 h-32 ${config.orb} rounded-full blur-2xl pointer-events-none`} />
+      
+      <div className="flex flex-col relative z-10 h-full justify-between">
+        <div className="flex items-start justify-between">
+          <p className="font-display font-bold text-xs uppercase tracking-wider text-kinetic-neutral mb-2">{title}</p>
+          {icon && (
+            <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${config.iconBg}`}>
+              <div className={config.iconText}>
+                {icon}
+              </div>
+            </div>
           )}
         </div>
-        {icon && (
-          <div className={`flex-shrink-0 w-10 h-10 bg-gradient-to-br ${config.iconBg} rounded-lg flex items-center justify-center`}>
-            <div className={config.iconText}>
-              {icon}
-            </div>
+        
+        <div>
+          <p className="font-sans text-3xl font-extrabold text-ink-DEFAULT tracking-tight">
+            {typeof value === 'number' ? `₹${value.toLocaleString('en-IN')}` : value}
+          </p>
+          
+          <div className="flex items-center justify-between mt-2">
+            {subtitle && (
+              <p className="font-sans text-xs text-kinetic-neutral font-medium">{subtitle}</p>
+            )}
+            
+            {trend && (
+              <p className={`font-sans font-semibold text-xs flex items-center gap-1 ${trendColors[trendDirection] || trendColors.neutral}`}>
+                {trendDirection === 'up' && (
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+                )}
+                {trendDirection === 'down' && (
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                )}
+                {trend}
+              </p>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

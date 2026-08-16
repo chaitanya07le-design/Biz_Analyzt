@@ -144,18 +144,18 @@ export default function Settings() {
             <Link
               key={item.id}
               to={item.path}
-              className="flex items-center justify-between p-4 rounded-xl hover:bg-ink-50 transition-colors group"
+              className="flex items-center justify-between p-4 rounded-xl hover:bg-slate-50 transition-colors group"
             >
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-ink-100 flex items-center justify-center group-hover:bg-brand-100 transition-colors">
-                  <item.icon className="w-5 h-5 text-ink-600 group-hover:text-brand-600 transition-colors" />
+                <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center group-hover:bg-kinetic-primary/10 transition-colors">
+                  <item.icon className="w-5 h-5 text-kinetic-neutral group-hover:text-kinetic-primary transition-colors" />
                 </div>
                 <div>
-                  <div className="font-semibold text-ink-900">{item.name}</div>
-                  <div className="text-xs text-ink-600 mt-0.5">{item.desc}</div>
+                  <div className="font-bold text-ink-900">{item.name}</div>
+                  <div className="text-xs font-medium text-kinetic-neutral mt-0.5">{item.desc}</div>
                 </div>
               </div>
-              <ChevronRight className="w-5 h-5 text-ink-400 group-hover:text-brand-600 transition-colors" />
+              <ChevronRight className="w-5 h-5 text-kinetic-neutral/50 group-hover:text-kinetic-primary transition-colors" />
             </Link>
           ))}
         </div>
@@ -164,23 +164,23 @@ export default function Settings() {
       <Card>
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full flex items-center justify-between p-4 hover:bg-ink-50 transition-colors rounded-xl"
+          className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors rounded-xl"
         >
           <div className="flex items-center gap-4">
             <div className={`w-10 h-10 rounded-xl ${currentStatus.bg} flex items-center justify-center`}>
               <StatusIcon className={`w-5 h-5 ${currentStatus.color}`} />
             </div>
             <div className="text-left">
-              <div className="font-semibold text-ink-900">Google Sheets Connection</div>
-              <div className="text-xs text-ink-600 mt-0.5">
+              <div className="font-bold text-ink-900">Google Sheets Connection</div>
+              <div className="text-xs font-medium text-kinetic-neutral mt-0.5">
                 {currentStatus.label}
               </div>
             </div>
           </div>
           {isExpanded ? (
-            <ChevronUp className="w-5 h-5 text-ink-400" />
+            <ChevronUp className="w-5 h-5 text-kinetic-neutral" />
           ) : (
-            <ChevronDown className="w-5 h-5 text-ink-400" />
+            <ChevronDown className="w-5 h-5 text-kinetic-neutral" />
           )}
         </button>
 

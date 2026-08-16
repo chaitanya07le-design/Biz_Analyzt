@@ -70,7 +70,7 @@ const Login = () => {
   };
 
   return (
-    <div className="h-screen w-full bg-canvas relative flex items-center justify-center p-4 lg:p-8 overflow-hidden font-sans">
+    <div className="h-screen w-full bg-slate-50 relative flex items-center justify-center p-4 lg:p-8 overflow-hidden font-sans">
       <div className="absolute inset-0 z-0 opacity-100 pointer-events-none"
         style={{
           backgroundImage: `linear-gradient(#cbd5e1 1px, transparent 1px), linear-gradient(90deg, #cbd5e1 1px, transparent 1px)`,
@@ -112,13 +112,13 @@ const Login = () => {
 
           <div className="space-y-2 md:space-y-4 lg:space-y-6">
             <div className="space-y-1 md:space-y-2">
-              <div className="font-semibold text-ink-900 text-sm md:text-base lg:text-lg">Multi-Company Accounting Dashboard</div>
-              <div className="text-[10px] md:text-[11px] lg:text-xs font-bold text-brand-600 tracking-wider uppercase drop-shadow-sm">BUILT ON PUCHO.AI</div>
+              <div className="font-bold text-ink-900 text-sm md:text-base lg:text-lg">Multi-Company Accounting Dashboard</div>
+              <div className="text-[10px] md:text-[11px] lg:text-xs font-bold text-kinetic-primary tracking-wider uppercase drop-shadow-sm">BUILT ON PUCHO.AI</div>
             </div>
 
-            <h1 className="text-3xl md:text-5xl lg:text-[70px] font-bold text-ink-900 leading-[1.1] md:leading-[1] lg:leading-[0.95] tracking-tight bg-clip-text text-transparent bg-gradient-to-br from-ink-900 to-indigo-700">
+            <h1 className="text-3xl md:text-5xl lg:text-[70px] font-display font-bold text-ink-900 leading-[1.1] md:leading-[1] lg:leading-[0.95] tracking-tight bg-clip-text text-transparent bg-gradient-to-br from-ink-900 to-kinetic-primary">
               Build.<br />
-              <span className="text-brand-600/80">Automate.</span><br />
+              <span className="text-kinetic-primary/80">Automate.</span><br />
               Scale.
             </h1>
 
@@ -128,7 +128,7 @@ const Login = () => {
           </div>
 
           <div className="hidden md:flex flex-wrap justify-center md:justify-start gap-2 md:gap-3 lg:gap-4 pt-2 md:pt-3 lg:pt-4">
-            <div className="flex items-center gap-2 px-3 lg:px-4 py-1.5 lg:py-2 bg-brand-50 border border-brand-100 rounded-full text-[10px] lg:text-xs font-bold text-brand-700">
+            <div className="flex items-center gap-2 px-3 lg:px-4 py-1.5 lg:py-2 bg-kinetic-primary/10 border border-kinetic-primary/20 rounded-full text-[10px] lg:text-xs font-bold text-kinetic-primary">
               <img src={SparklesIcon} alt="Sparkles" className="w-4 h-4" />
               AI-Powered Intelligence
             </div>
@@ -140,10 +140,10 @@ const Login = () => {
         </div>
 
         <div className="flex flex-col items-center justify-center md:justify-end w-full">
-          <div className="bg-white/70 backdrop-blur-xl p-6 md:p-8 lg:p-12 rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] w-full max-w-sm md:max-w-md border border-white/50 relative overflow-hidden group">
+          <div className="bg-white/70 backdrop-blur-xl p-6 md:p-8 lg:p-12 rounded-3xl shadow-card w-full max-w-sm md:max-w-md border border-white relative overflow-hidden group">
             <div className="space-y-2 mb-6 md:mb-8">
-              <h2 className="text-2xl font-bold text-ink-900">Welcome Back</h2>
-              <p className="text-gray-400 text-sm">Enter your credentials to access the dashboard.</p>
+              <h2 className="text-2xl font-display font-bold text-ink-900">Welcome Back</h2>
+              <p className="text-kinetic-neutral font-medium text-sm">Enter your credentials to access the dashboard.</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
@@ -213,7 +213,7 @@ const Login = () => {
               Transform your Tally data into actionable intelligence. Access your financial command center to manage your business with real-time insights.
             </p>
             <div className="flex flex-wrap justify-center gap-2">
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-brand-50 border border-brand-100 rounded-full text-[10px] font-medium text-brand-700">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-kinetic-primary/10 border border-kinetic-primary/20 rounded-full text-[10px] font-bold text-kinetic-primary">
                 <img src={SparklesIcon} alt="Sparkles" className="w-4 h-4" />
                 AI-Powered Intelligence
               </div>

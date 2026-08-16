@@ -148,39 +148,40 @@ const CashBankPage = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
-      className="min-h-screen bg-canvas-default pb-20 md:pb-6"
+      className="min-h-screen bg-slate-50 pb-20 md:pb-6 font-sans"
     >
-      <div className="px-4 py-4 md:px-6 md:py-6 space-y-4">
+      <div className="px-4 py-4 md:px-8 md:py-8 space-y-6 max-w-7xl mx-auto">
         <motion.div
           initial={{ y: -10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1 }}
+          className="bg-white p-6 rounded-2xl shadow-card border border-slate-100"
         >
-          <h1 className="text-xl md:text-2xl font-semibold text-ink-default">Cash & Bank</h1>
-          <p className="text-sm text-ink-muted mt-1">Account balances and details</p>
+          <h1 className="text-2xl md:text-3xl font-display font-bold text-ink-900 tracking-tight">Cash & Bank</h1>
+          <p className="text-sm text-kinetic-neutral font-medium mt-1">Account balances and details</p>
         </motion.div>
 
         <motion.div 
-          className="grid grid-cols-3 gap-3"
+          className="grid grid-cols-3 gap-4"
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          <div className="bg-white rounded-lg border border-canvas-faint p-3">
-            <p className="text-xs text-ink-faint mb-1">Cash</p>
-            <p className="text-base font-semibold text-ink-default font-mono">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-card p-5">
+            <p className="text-xs font-bold text-kinetic-neutral uppercase tracking-widest mb-2">Cash</p>
+            <p className="text-xl md:text-2xl font-extrabold text-ink-900">
               ₹{totalCash.toLocaleString('en-IN')}
             </p>
           </div>
-          <div className="bg-white rounded-lg border border-canvas-faint p-3">
-            <p className="text-xs text-ink-faint mb-1">Bank</p>
-            <p className="text-base font-semibold text-ink-default font-mono">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-card p-5">
+            <p className="text-xs font-bold text-kinetic-neutral uppercase tracking-widest mb-2">Bank</p>
+            <p className="text-xl md:text-2xl font-extrabold text-ink-900">
               ₹{totalBank.toLocaleString('en-IN')}
             </p>
           </div>
-          <div className="bg-white rounded-lg border border-canvas-faint p-3">
-            <p className="text-xs text-ink-faint mb-1">Total</p>
-            <p className="text-base font-semibold text-ink-default font-mono">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-card p-5 bg-gradient-to-br from-indigo-50/50 to-white">
+            <p className="text-xs font-bold text-kinetic-primary uppercase tracking-widest mb-2">Total</p>
+            <p className="text-xl md:text-2xl font-extrabold text-kinetic-primary">
               ₹{grandTotal.toLocaleString('en-IN')}
             </p>
           </div>
@@ -208,51 +209,51 @@ const CashBankPage = () => {
         )}
 
         <motion.div 
-          className="bg-white rounded-lg border border-canvas-faint p-3"
+          className="bg-white rounded-2xl border border-slate-100 shadow-card p-4"
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
           <div className="flex gap-2">
-            <div className="flex-1 flex gap-2 bg-canvas-subtle p-1 rounded-lg">
+            <div className="flex-1 flex gap-2 bg-slate-50 p-1 rounded-xl">
               <button
                 onClick={() => setAccountTypeFilter('all')}
-                className={`flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                className={`flex-1 px-3 py-2 rounded-lg text-xs font-bold transition-all ${
                   accountTypeFilter === 'all'
-                    ? 'bg-white text-ink-default shadow-sm'
-                    : 'text-ink-muted hover:text-ink-default'
+                    ? 'bg-white text-kinetic-primary shadow-sm'
+                    : 'text-kinetic-neutral hover:text-ink-900'
                 }`}
               >
                 All
               </button>
               <button
                 onClick={() => setAccountTypeFilter('bank')}
-                className={`flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                className={`flex-1 px-3 py-2 rounded-lg text-xs font-bold transition-all ${
                   accountTypeFilter === 'bank'
-                    ? 'bg-white text-ink-default shadow-sm'
-                    : 'text-ink-muted hover:text-ink-default'
+                    ? 'bg-white text-kinetic-primary shadow-sm'
+                    : 'text-kinetic-neutral hover:text-ink-900'
                 }`}
               >
                 Bank
               </button>
               <button
                 onClick={() => setAccountTypeFilter('cash')}
-                className={`flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                className={`flex-1 px-3 py-2 rounded-lg text-xs font-bold transition-all ${
                   accountTypeFilter === 'cash'
-                    ? 'bg-white text-ink-default shadow-sm'
-                    : 'text-ink-muted hover:text-ink-default'
+                    ? 'bg-white text-kinetic-primary shadow-sm'
+                    : 'text-kinetic-neutral hover:text-ink-900'
                 }`}
               >
                 Cash
               </button>
             </div>
-            <div className="flex gap-1 bg-canvas-subtle p-1 rounded-lg">
+            <div className="flex gap-1 bg-slate-50 p-1 rounded-xl">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center ${
+                className={`px-3 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center ${
                   viewMode === 'grid'
-                    ? 'bg-white text-ink-default shadow-sm'
-                    : 'text-ink-muted hover:text-ink-default'
+                    ? 'bg-white text-kinetic-primary shadow-sm'
+                    : 'text-kinetic-neutral hover:text-ink-900'
                 }`}
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -261,10 +262,10 @@ const CashBankPage = () => {
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center justify-center ${
+                className={`px-3 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center ${
                   viewMode === 'list'
-                    ? 'bg-white text-ink-default shadow-sm'
-                    : 'text-ink-muted hover:text-ink-default'
+                    ? 'bg-white text-kinetic-primary shadow-sm'
+                    : 'text-kinetic-neutral hover:text-ink-900'
                 }`}
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -281,7 +282,7 @@ const CashBankPage = () => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4 }}
           >
-            <h2 className="text-sm font-medium text-ink-muted uppercase tracking-wider mb-3">
+            <h2 className="text-sm font-bold text-kinetic-neutral uppercase tracking-widest mb-4">
               Cash Accounts ({filteredCashAccounts.length})
             </h2>
             <AccountList 
@@ -298,7 +299,7 @@ const CashBankPage = () => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
-            <h2 className="text-sm font-medium text-ink-muted uppercase tracking-wider mb-3">
+            <h2 className="text-sm font-bold text-kinetic-neutral uppercase tracking-widest mb-4">
               Bank Accounts ({filteredBankAccounts.length})
             </h2>
             <AccountList 
