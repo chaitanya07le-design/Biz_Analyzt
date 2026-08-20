@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import { useCompany } from '../../context/CompanyContext';
+import useTallyPendingSales from '../../hooks/useTallyPendingSales';
 
 const currency = (amount) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(amount || 0);
 
@@ -9,9 +10,11 @@ export default function PendingOrders({ type }) {
   const navigate = useNavigate();
   const { currentCompany } = useCompany();
   const { orders: allOrders, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const tallySalesOrders = useTallyPendingSales();
   const isSales = type === 'sales';
   const orderType = isSales ? 'Sales Order' : 'Purchase Order';
   const orders = useMemo(() => {
+    if (isSales && tallySalesOrders) return tallySalesOrders;
     const source = allOrders || [];
     return source.filter(o => (o.OrderType || o.orderType) === orderType).filter(order => (order.Status || order.status || '').toUpperCase() === 'PENDING').map(order => ({
       id: order.OrderID || order.VoucherID || order.id,
@@ -22,7 +25,7 @@ export default function PendingOrders({ type }) {
       status: order.Status || order.status || 'PENDING',
       dueDate: order.ExpectedDate || order.DueDate || order.dueDate,
     }));
-  }, [allOrders, orderType]);
+  }, [allOrders, orderType, isSales, tallySalesOrders]);
   const total = orders.reduce((sum, order) => sum + order.amount, 0);
 
   return <div className="min-h-screen bg-canvas-default p-4 md:p-6 space-y-5">

@@ -5,11 +5,13 @@ import { AlertTriangle, Package, Clock, TrendingDown } from 'lucide-react';
 import Skeleton from '../../components/shared/Skeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import { useCompany } from '../../context/CompanyContext';
+import useTallyStockBatches from '../../hooks/useTallyStockBatches';
 
 const StockAging = () => {
   const navigate = useNavigate();
   const { currentCompany } = useCompany();
   const { items, stockBatches, itemStockStatus, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const tallyBatches = useTallyStockBatches();
 
   const [selectedBucket, setSelectedBucket] = useState('all');
   const [showDeadOnly, setShowDeadOnly] = useState(false);
@@ -38,12 +40,19 @@ const StockAging = () => {
   // Future WF-13 workflow will implement batch-wise inventory sync from Tally for tracked items.
   // This badge makes the 5-of-9 split explicit until WF-13 provides real batch data.
   const agingData = useMemo(() => {
-    if (!stockBatches) return [];
+    const sourceBatches = tallyBatches || stockBatches;
+    if (!sourceBatches) return [];
 
     const today = new Date();
     const daysAgo30 = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-    return stockBatches.map(batch => {
+    return sourceBatches.map((batch, index) => {
+      if (tallyBatches) {
+        const inwardDate = new Date(batch.voucher_date);
+        const ageingDays = Number.isNaN(inwardDate.getTime()) ? 0 : Math.max(0, Math.floor((today - inwardDate) / 86400000));
+        const ageingBucket = ageingDays <= 30 ? '0-30' : ageingDays <= 60 ? '31-60' : ageingDays <= 90 ? '61-90' : ageingDays <= 180 ? '91-180' : '180+';
+        return { batchId: `tally-batch-${index}`, itemId: batch.stock_item, itemName: batch.stock_item, brand: '—', batchNo: batch.batch_name, quantity: parseFloat(batch.closing_qty) || 0, value: Math.abs(parseFloat(batch.stock_value) || 0), rate: 0, inwardDate: batch.voucher_date, ageingDays, ageingBucket, location: batch.godown_name || '-', isDeadStock: false, lastSaleDate: '-', salesVelocity: 0 };
+      }
       const item = itemMap.get(batch.ItemID) || {};
       const status = statusMap.get(batch.ItemID) || {};
 
@@ -71,7 +80,7 @@ const StockAging = () => {
         salesVelocity: parseFloat(status.SalesVelocity30d || 0),
       };
     });
-  }, [stockBatches, itemMap, statusMap]);
+  }, [stockBatches, tallyBatches, itemMap, statusMap]);
 
   const filteredData = useMemo(() => {
     let result = agingData;

@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { BellRing } from 'lucide-react';
+import { BellRing, Send } from 'lucide-react';
 import SettingsDetailLayout from '../../components/Settings/SettingsDetailLayout';
 import { useCompany } from '../../context/CompanyContext';
 import { settingsService } from '../../services/settingsService';
 
+// Pucho W-Reminder-Send-Now webhook — replace with the published URL
+const SEND_NOW_WEBHOOK_URL = 'https://studio.pucho.ai/api/v1/webhooks/6hNVqXRCYXttMGSFx0Mcv';
+
 export default function AutoReminderSettings() {
   const { currentCompany } = useCompany();
   const [isSaving, setIsSaving] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [sendMessage, setSendMessage] = useState('');
   
   const [enabled, setEnabled] = useState(false);
   const [triggerDays, setTriggerDays] = useState(3);
@@ -47,9 +52,34 @@ export default function AutoReminderSettings() {
     setIsSaving(false);
   };
 
+  const handleSendNow = async () => {
+    if (!currentCompany?.id || !enabled) return;
+    setIsSending(true);
+    setSendMessage('');
+    try {
+      // 1. Save settings so the workflow reads the latest triggerDays
+      await settingsService.updateSettings(currentCompany.id, 'AutoReminder', {
+        enabled, triggerDays, triggerType, frequency, channelEmail, channelWhatsapp, template,
+      });
+      // 2. Trigger the send-now workflow
+      await fetch(SEND_NOW_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ companyId: currentCompany.id }),
+      });
+      setSendMessage('Reminders sent! Check the ReminderLog sheet.');
+    } catch (e) {
+      console.warn('Send now failed:', e);
+      setSendMessage('Failed to send reminders. Check the Pucho workflow logs.');
+    } finally {
+      setIsSending(false);
+    }
+  };
+
   return (
     <SettingsDetailLayout
       title="Auto Reminder"
+      category="AutoReminder"
       description="Set up automatic payment reminders"
       icon={BellRing}
       onSave={handleSave}
@@ -68,6 +98,23 @@ export default function AutoReminderSettings() {
             <p className="text-xs text-kinetic-neutral">Send reminders to parties automatically based on rules below.</p>
           </div>
         </label>
+
+        {/* Send Reminders Now Button */}
+        <div className={!enabled ? 'opacity-50 pointer-events-none' : ''}>
+          <button
+            onClick={handleSendNow}
+            disabled={!enabled || isSending}
+            className="flex items-center gap-2 px-6 py-3 bg-kinetic-primary text-white rounded-xl font-bold text-sm hover:bg-kinetic-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+          >
+            <Send className="w-4 h-4" />
+            {isSending ? 'Sending...' : 'Send Reminders Now'}
+          </button>
+          {sendMessage && (
+            <p className={`text-sm font-medium mt-2 ${sendMessage.includes('Failed') ? 'text-red-600' : 'text-green-600'}`}>
+              {sendMessage}
+            </p>
+          )}
+        </div>
 
         <div className={`space-y-6 transition-opacity ${!enabled ? 'opacity-50 pointer-events-none' : ''}`}>
           <div>

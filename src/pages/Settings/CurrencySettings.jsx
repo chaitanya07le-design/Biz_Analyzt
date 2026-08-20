@@ -3,9 +3,11 @@ import { IndianRupee } from 'lucide-react';
 import SettingsDetailLayout from '../../components/Settings/SettingsDetailLayout';
 import { useCompany } from '../../context/CompanyContext';
 import { settingsService } from '../../services/settingsService';
+import { useSettings } from '../../context/SettingsContext';
 
 export default function CurrencySettings() {
   const { currentCompany } = useCompany();
+  const { refreshSettings } = useSettings();
   const [isSaving, setIsSaving] = useState(false);
   
   const [currencySymbol, setCurrencySymbol] = useState('₹');
@@ -35,6 +37,7 @@ export default function CurrencySettings() {
       decimalPlaces,
       roundingRule,
     });
+    refreshSettings();
     setIsSaving(false);
   };
 

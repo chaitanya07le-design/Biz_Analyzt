@@ -1,18 +1,21 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Skeleton from '../components/shared/Skeleton';
 import { PartyCardSkeleton } from '../components/shared/ListSkeleton';
 import useGoogleSheetsData from '../hooks/useGoogleSheetsData';
 import { useCompany } from '../context/CompanyContext';
+import { settingsService } from '../services/settingsService';
+import useTallyOutstanding from '../hooks/useTallyOutstanding';
 import { 
   AlertCircle, 
   ChevronDown, 
   ChevronRight,
   Calendar,
-  IndianRupee,
   TrendingUp,
-  TrendingDown
+  TrendingDown,
+  Bell,
+  X
 } from 'lucide-react';
 
 const formatCurrency = (amount) => {
@@ -40,24 +43,61 @@ const Outstanding = () => {
   const [activeTab, setActiveTab] = useState(initialTab);
   const [expandedParty, setExpandedParty] = useState(null);
   
-  const { outstandingReceivables, outstandingPayables, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  // Settings State
+  const [agingSettings, setAgingSettings] = useState({ bucket1: 30, bucket2: 60, bucket3: 90 });
+  const [reminderSettings, setReminderSettings] = useState({ enabled: false, triggerDays: 7, triggerType: 'after', template: '' });
+  const [dismissReminders, setDismissReminders] = useState(false);
 
-  const data = activeTab === 'receivable' ? outstandingReceivables : outstandingPayables;
+  useEffect(() => {
+    if (currentCompany?.id) {
+      settingsService.getAllSettings(currentCompany.id).then(data => {
+        if (data.Outstanding) {
+          setAgingSettings({
+            bucket1: parseInt(data.Outstanding.bucket1) || 30,
+            bucket2: parseInt(data.Outstanding.bucket2) || 60,
+            bucket3: parseInt(data.Outstanding.bucket3) || 90
+          });
+        }
+        if (data.AutoReminder) {
+          setReminderSettings({
+            enabled: data.AutoReminder.enabled ?? false,
+            triggerDays: parseInt(data.AutoReminder.triggerDays) || 7,
+            triggerType: data.AutoReminder.triggerType || 'after',
+            template: data.AutoReminder.template || 'Friendly reminder for your overdue payment of [Amount].'
+          });
+        }
+      });
+    }
+  }, [currentCompany?.id]);
+
+  const { outstandingReceivables, outstandingPayables, parties, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { outstanding: tallyOutstanding, templates: tallyTemplates, loading: tallyLoading, error: tallyError } = useTallyOutstanding();
+
+  const hasLiveReceivables = tallyTemplates[37]?.status === 'success';
+  const hasLivePayables = tallyTemplates[7]?.status === 'success';
+  const useLiveData = activeTab === 'receivable' ? hasLiveReceivables : hasLivePayables;
+  const data = useLiveData
+    ? (activeTab === 'receivable' ? tallyOutstanding?.receivables : tallyOutstanding?.payables)
+    : (activeTab === 'receivable' ? outstandingReceivables : outstandingPayables);
 
   const normalizedData = useMemo(() => {
     if (!data || data.length === 0) return [];
     
-    return data.map(p => ({
-      partyId: p.partyId || p.PartyID || p.id,
-      partyName: p.partyName || p.PartyName || p.name || '',
-      city: p.city || p.City || '',
-      totalOutstanding: parseFloat(p.totalOutstanding || p.TotalOutstanding || 0),
-      openingBalance: parseFloat(p.openingBalance || p.OpeningBalance || p.openingBalance || 0),
-      transactionCount: p.transactionCount || 0,
-      aging: p.aging || { notDue: 0, overdue0to30: 0, overdue31to60: 0, overdue61to90: 0, over90: 0 },
-      invoiceAging: p.invoiceAging || []
-    }));
-  }, [data]);
+    return data.map(p => {
+      const partyName = p.partyName || p.PartyName || p.name || '';
+      const matchingParty = (parties || []).find((party) => (party.PartyName || party.name || '').trim().toLowerCase() === partyName.trim().toLowerCase());
+      return {
+        partyId: p.partyId || p.PartyID || p.id || matchingParty?.PartyID || matchingParty?.id || partyName,
+        partyName,
+        city: p.city || p.City || matchingParty?.City || matchingParty?.city || '',
+        totalOutstanding: parseFloat(p.totalOutstanding || p.TotalOutstanding || 0),
+        openingBalance: parseFloat(p.openingBalance || p.OpeningBalance || 0),
+        transactionCount: p.transactionCount || 0,
+        aging: p.aging || { notDue: 0, overdue0to30: 0, overdue31to60: 0, overdue61to90: 0, over90: 0 },
+        invoiceAging: p.invoiceAging || []
+      };
+    });
+  }, [data, parties]);
 
   const totals = useMemo(() => {
     return {
@@ -70,6 +110,37 @@ const Outstanding = () => {
   }, [normalizedData]);
 
   const grandTotal = Object.values(totals).reduce((sum, v) => sum + v, 0);
+  const receivableCount = hasLiveReceivables ? (tallyOutstanding?.receivables?.length || 0) : (outstandingReceivables?.length || 0);
+  const payableCount = hasLivePayables ? (tallyOutstanding?.payables?.length || 0) : (outstandingPayables?.length || 0);
+
+  // Compute Auto Reminders Due
+  const remindersDue = useMemo(() => {
+    if (!reminderSettings.enabled || activeTab !== 'receivable' || dismissReminders) return [];
+    
+    const due = [];
+    normalizedData.forEach(party => {
+      // Find invoices matching the trigger rule
+      const matchingInvoices = party.invoiceAging?.filter(inv => {
+        // Simplified check using aging bucket for 'after' (overdue) logic
+        // Ideally we'd use exact due dates, but since we don't have them in the data model yet,
+        // we'll approximate based on total outstanding if there's overdue amount.
+        if (reminderSettings.triggerType === 'after') {
+          return party.aging?.overdue0to30 > 0 || party.aging?.overdue31to60 > 0 || party.aging?.overdue61to90 > 0 || party.aging?.over90 > 0;
+        }
+        return false;
+      }) || [];
+
+      if (matchingInvoices.length > 0 || (party.totalOutstanding > 0 && party.aging.notDue < party.totalOutstanding)) {
+        // Approximate a reminder if they have overdue balance
+        due.push({
+          partyName: party.partyName,
+          amount: party.totalOutstanding - party.aging.notDue,
+          message: reminderSettings.template.replace('[Amount]', formatCurrency(party.totalOutstanding - party.aging.notDue))
+        });
+      }
+    });
+    return due;
+  }, [normalizedData, reminderSettings, activeTab, dismissReminders]);
 
   const handlePartyClick = (party) => {
     if (expandedParty === party.partyId) {
@@ -117,6 +188,11 @@ const Outstanding = () => {
       transition={{ duration: 0.3 }}
       className="min-h-screen bg-slate-50 pb-20 md:pb-6 font-sans"
     >
+      {tallyError && !tallyLoading && (
+        <div className="mx-4 mt-4 max-w-7xl md:mx-auto rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          Live Tally outstanding data is unavailable. Google Sheets data remains displayed.
+        </div>
+      )}
       {/* Combined Sticky Header + Aging */}
       <div className="bg-slate-50">
         {/* Header */}
@@ -129,6 +205,7 @@ const Outstanding = () => {
                     <AlertCircle className="w-6 h-6 text-kinetic-primary" />
                   </div>
                   Outstanding
+                  {useLiveData && <span className="text-xs font-bold text-kinetic-primary">LIVE TALLY</span>}
                 </h1>
                 <p className="text-sm font-medium text-kinetic-neutral mt-1">
                   {activeTab === 'receivable' ? 'Money owed to you' : 'Money you owe'}
@@ -153,7 +230,7 @@ const Outstanding = () => {
                 }`}
               >
                 <TrendingUp className="w-4 h-4" />
-                Receivables ({outstandingReceivables?.length || 0})
+                Receivables ({receivableCount})
               </button>
               <button
                 onClick={() => setActiveTab('payable')}
@@ -164,7 +241,7 @@ const Outstanding = () => {
                 }`}
               >
                 <TrendingDown className="w-4 h-4" />
-                Payables ({outstandingPayables?.length || 0})
+                Payables ({payableCount})
               </button>
             </div>
           </div>
@@ -178,13 +255,47 @@ const Outstanding = () => {
           </h3>
           <div className="grid grid-cols-5 gap-3">
             <AgingBucket label="Not Due" amount={totals.notDue} color="bg-slate-50 border border-slate-100" />
-            <AgingBucket label="0-30 days" amount={totals.overdue0to30} color="bg-orange-50 text-orange-900" isOverdue />
-            <AgingBucket label="31-60 days" amount={totals.overdue31to60} color="bg-orange-100 text-orange-900" isOverdue />
-            <AgingBucket label="61-90 days" amount={totals.overdue61to90} color="bg-red-50 text-red-900" isOverdue />
-            <AgingBucket label="90+ days" amount={totals.over90} color="bg-red-100 text-red-900" isOverdue />
+            <AgingBucket label={`0-${agingSettings.bucket1} days`} amount={totals.overdue0to30} color="bg-orange-50 text-orange-900" isOverdue />
+            <AgingBucket label={`${agingSettings.bucket1 + 1}-${agingSettings.bucket2} days`} amount={totals.overdue31to60} color="bg-orange-100 text-orange-900" isOverdue />
+            <AgingBucket label={`${agingSettings.bucket2 + 1}-${agingSettings.bucket3} days`} amount={totals.overdue61to90} color="bg-red-50 text-red-900" isOverdue />
+            <AgingBucket label={`${agingSettings.bucket3}+ days`} amount={totals.over90} color="bg-red-100 text-red-900" isOverdue />
           </div>
         </div>
       </div>
+
+      {/* Auto Reminders Panel */}
+      {remindersDue.length > 0 && (
+        <div className="px-4 py-4 md:px-8 max-w-7xl mx-auto">
+          <div className="bg-brand-50 border border-brand-200 rounded-xl p-4 relative shadow-sm">
+            <button 
+              onClick={() => setDismissReminders(true)} 
+              className="absolute top-4 right-4 text-brand-400 hover:text-brand-600 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <div className="flex items-start gap-3 mb-3">
+              <div className="bg-brand-100 p-2 rounded-lg text-brand-600 mt-0.5">
+                <Bell className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-bold text-brand-900">Reminders Due ({remindersDue.length})</h3>
+                <p className="text-sm text-brand-700">Based on your Auto Reminder settings, these parties have overdue payments.</p>
+              </div>
+            </div>
+            <div className="space-y-2 mt-4 max-h-[150px] overflow-y-auto pr-2 custom-scrollbar">
+              {remindersDue.map((reminder, idx) => (
+                <div key={idx} className="bg-white rounded-lg p-3 border border-brand-100 flex items-center justify-between shadow-sm">
+                  <div>
+                    <p className="font-semibold text-ink-900">{reminder.partyName}</p>
+                    <p className="text-xs text-ink-muted italic mt-1 line-clamp-1">"{reminder.message}"</p>
+                  </div>
+                  <span className="font-bold text-brand-600">{formatCurrency(reminder.amount)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Party List */}
       <div className="px-4 py-6 md:px-8 max-w-7xl mx-auto space-y-4">

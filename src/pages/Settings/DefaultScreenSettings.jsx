@@ -41,6 +41,7 @@ export default function DefaultScreenSettings() {
   return (
     <SettingsDetailLayout
       title="Default App Screen"
+      category="UserPreference"
       description="Choose default landing screen (Dashboard)"
       icon={LayoutDashboard}
       onSave={handleSave}

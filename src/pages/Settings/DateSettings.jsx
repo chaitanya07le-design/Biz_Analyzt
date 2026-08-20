@@ -3,9 +3,11 @@ import { Calendar } from 'lucide-react';
 import SettingsDetailLayout from '../../components/Settings/SettingsDetailLayout';
 import { useCompany } from '../../context/CompanyContext';
 import { settingsService } from '../../services/settingsService';
+import { useDateRange } from '../../context/DateRangeContext';
 
 export default function DateSettings() {
   const { currentCompany } = useCompany();
+  const { setFyStartMonth: applyFyStartMonth } = useDateRange();
   const [isSaving, setIsSaving] = useState(false);
   
   const [fyStartMonth, setFyStartMonth] = useState(4); // April (1-indexed)
@@ -32,6 +34,8 @@ export default function DateSettings() {
       dateFormat,
       defaultRange,
     });
+    // Apply immediately to DateRangeContext so reports update without reload
+    applyFyStartMonth(fyStartMonth);
     setIsSaving(false);
   };
 
@@ -53,6 +57,7 @@ export default function DateSettings() {
   return (
     <SettingsDetailLayout
       title="Date Settings"
+      category="Date"
       description="Set financial year and date preferences"
       icon={Calendar}
       onSave={handleSave}

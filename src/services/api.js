@@ -176,6 +176,31 @@ class ApiService {
     return this.get(`/dashboard/summary?companyId=${companyId}`);
   }
 
+  async getTallyDashboardTemplates() {
+    return this.post('/tally/dashboard/templates', {});
+  }
+
+  async getTallyOutstandingTemplates() {
+    return this.post('/tally/outstanding/templates', {});
+  }
+
+  async getTallyCashBankTemplates() {
+    return this.post('/tally/cash-bank/templates', {});
+  }
+
+  async getTallyPaymentVouchers() {
+    return this.post('/tally/payment-vouchers/template', {});
+  }
+
+  async getTallyPendingSales() {
+    return this.post('/tally/pending-sales/template', {});
+  }
+
+  async getTallyTrends() { return this.post('/tally/trends/templates', {}); }
+  async getTallyGstLiability() { return this.post('/tally/gst-liability/template', {}); }
+  async getTallyStockBatches() { return this.post('/tally/stock-batches/template', {}); }
+  async getTallyParties() { return this.post('/tally/parties/templates', {}); }
+
   async getOutstandingReceivables(companyId) {
     return this.get(`/outstanding/receivable?companyId=${companyId}`);
   }

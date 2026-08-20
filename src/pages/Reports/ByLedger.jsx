@@ -11,18 +11,28 @@ const ByLedger = () => {
   const { currentCompany } = useCompany();
   const { dateRange } = useDateRange();
   
-  const { ledgers: apiLedgers, vouchers, voucherLines, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { ledgers: apiLedgers, vouchers, voucherLines, groups, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
 
   const normalizedLedgers = useMemo(() => {
     if (!apiLedgers || apiLedgers.length === 0) return [];
-    return apiLedgers.map(l => ({
-      id: l.LedgerID || l.id,
-      name: l.LedgerName || l.name || '',
-      group: l.Group || l.group || '',
-      type: l.LedgerType || l.type || '',
-      balance: parseFloat(l.OpeningBalance || l.balance || 0),
-    }));
-  }, [apiLedgers]);
+
+    const groupMap = new Map();
+    if (groups) {
+      groups.forEach(g => groupMap.set(g.GroupID, g));
+    }
+
+    return apiLedgers.map(l => {
+      const group = groupMap.get(l.GroupID) || {};
+      return {
+        id: l.LedgerID || l.id,
+        name: l.LedgerName || l.name || '',
+        group: l.Group || l.group || group.GroupName || '',
+        nature: group.Nature || '',
+        type: l.LedgerType || l.type || '',
+        balance: parseFloat(l.OpeningBalance || l.balance || 0),
+      };
+    });
+  }, [apiLedgers, groups]);
 
   const ledgerTransactions = useMemo(() => {
     const transactions = {};
@@ -80,6 +90,15 @@ const ByLedger = () => {
     });
 
     return Object.values(transactions)
+      .map(t => {
+        const isDebitNature = t.ledger.nature === 'Expense' || t.ledger.nature === 'Asset';
+        if (isDebitNature) {
+          t.closingBalance = t.ledger.balance + t.debits - t.credits;
+        } else {
+          t.closingBalance = t.ledger.balance + t.credits - t.debits;
+        }
+        return t;
+      })
       .filter(t => t.count > 0)
       .sort((a, b) => b.count - a.count);
   }, [normalizedLedgers, vouchers, voucherLines, dateRange]);
@@ -176,7 +195,7 @@ const ByLedger = () => {
                   <div className="text-right">
                     <p className="text-sm font-semibold text-ink-default">{item.count} transactions</p>
                     <p className="text-xs text-ink-muted">
-                      Balance: {formatCurrency(item.ledger.balance)}
+                      Balance: {formatCurrency(item.closingBalance)}
                     </p>
                   </div>
                 </div>

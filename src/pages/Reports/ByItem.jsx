@@ -35,7 +35,8 @@ const ByItem = () => {
         qtyPurchased: 0,
         salesValue: 0,
         purchaseValue: 0,
-        count: 0
+        count: 0,
+        vouchers: []
       };
     });
 
@@ -80,13 +81,29 @@ const ByItem = () => {
           transactions[itemId].qtySold += qty;
           transactions[itemId].salesValue += amount;
           transactions[itemId].count++;
+          transactions[itemId].vouchers.push({
+            id: line.VoucherID,
+            date: parentVoucher.VoucherDate,
+            voucherNo: parentVoucher.VoucherNo,
+            type: parentVoucher.VoucherType,
+            qty: qty,
+            rate: parseFloat(line.Rate || 0),
+            amount: amount,
+            partyName: parentVoucher.PartyName || 'Cash/Bank'
+          });
         }
       });
 
     return Object.values(transactions)
+      .map(t => {
+        t.vouchers.sort((a, b) => new Date(a.date) - new Date(b.date));
+        return t;
+      })
       .filter(t => t.count > 0)
       .sort((a, b) => b.salesValue - a.salesValue);
   }, [normalizedItems, vouchers, voucherLines, dateRange]);
+
+  const [expandedItemId, setExpandedItemId] = useState(null);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {
@@ -198,13 +215,14 @@ const ByItem = () => {
               </thead>
               <tbody className="divide-y divide-canvas-faint">
                 {itemTransactions.map((item, idx) => (
-                  <motion.tr
-                    key={item.item.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.02 }}
-                    className="hover:bg-canvas-faint transition-colors"
-                  >
+                  <React.Fragment key={item.item.id}>
+                    <motion.tr
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: idx * 0.02 }}
+                      onClick={() => setExpandedItemId(expandedItemId === item.item.id ? null : item.item.id)}
+                      className={`hover:bg-canvas-faint transition-colors cursor-pointer ${expandedItemId === item.item.id ? 'bg-canvas-faint' : ''}`}
+                    >
                     <td className="px-4 py-3">
                       <p className="text-sm font-medium text-ink-default">{item.item.name}</p>
                       <p className="text-xs text-ink-muted">{item.item.category} • {item.item.hsnSac}</p>
@@ -224,7 +242,54 @@ const ByItem = () => {
                         {formatNumber(item.item.closingQty)} {item.item.unit}
                       </span>
                     </td>
-                  </motion.tr>
+                    </motion.tr>
+                    {expandedItemId === item.item.id && (
+                      <tr>
+                        <td colSpan="5" className="px-0 py-0 bg-white">
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="overflow-hidden bg-brand-50/30 border-y border-brand-100"
+                          >
+                            <div className="p-4 md:p-6">
+                              <h4 className="text-sm font-semibold text-ink-default mb-3">Transaction History</h4>
+                              <div className="bg-white rounded border border-canvas-faint overflow-hidden">
+                                <table className="w-full text-sm">
+                                  <thead className="bg-canvas-faint">
+                                    <tr>
+                                      <th className="px-4 py-2 text-left font-medium text-ink-muted">Date</th>
+                                      <th className="px-4 py-2 text-left font-medium text-ink-muted">Voucher</th>
+                                      <th className="px-4 py-2 text-left font-medium text-ink-muted">Party</th>
+                                      <th className="px-4 py-2 text-right font-medium text-ink-muted">Qty</th>
+                                      <th className="px-4 py-2 text-right font-medium text-ink-muted">Rate</th>
+                                      <th className="px-4 py-2 text-right font-medium text-ink-muted">Amount</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody className="divide-y divide-canvas-faint">
+                                    {item.vouchers.map((v, vIdx) => (
+                                      <tr key={`${v.id}-${vIdx}`} className="hover:bg-canvas-faint transition-colors cursor-pointer" onClick={(e) => { e.stopPropagation(); navigate(`/voucher/${v.id}`); }}>
+                                        <td className="px-4 py-2 text-ink-default whitespace-nowrap">
+                                          {v.date ? new Date(v.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'}
+                                        </td>
+                                        <td className="px-4 py-2">
+                                          <span className="text-brand-primary">{v.voucherNo}</span>
+                                        </td>
+                                        <td className="px-4 py-2 text-ink-muted truncate max-w-[150px]">{v.partyName}</td>
+                                        <td className="px-4 py-2 text-right text-ink-default">{formatNumber(v.qty)} {item.item.unit}</td>
+                                        <td className="px-4 py-2 text-right text-ink-muted">{formatCurrency(v.rate)}</td>
+                                        <td className="px-4 py-2 text-right font-medium text-ink-default">{formatCurrency(v.amount)}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </motion.div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
                 ))}
               </tbody>
             </table>

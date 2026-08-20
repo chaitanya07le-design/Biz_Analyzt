@@ -2,15 +2,31 @@ import { useNavigate } from 'react-router-dom';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import { useCompany } from '../context/CompanyContext';
+import { useAuth } from '../context/AuthContext';
+import { settingsService } from '../services/settingsService';
 import { Building2, ArrowRight, Loader2 } from 'lucide-react';
 
 export default function CompanySelection() {
   const { companies, selectCompany, loading } = useCompany();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
-  const handleSelect = (company) => {
+  const handleSelect = async (company) => {
     selectCompany(company);
-    navigate('/dashboard');
+    
+    // Check if there is a saved default screen for this user
+    let defaultScreen = '/dashboard';
+    try {
+      const data = await settingsService.getAllSettings(company.id);
+      const userKey = `DefaultScreen_${user?.id || 'USER001'}`;
+      if (data?.UserPreference?.[userKey]) {
+        defaultScreen = data.UserPreference[userKey];
+      }
+    } catch (e) {
+      console.warn('Failed to load default screen setting:', e);
+    }
+
+    navigate(defaultScreen);
   };
 
   if (loading) {

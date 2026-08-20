@@ -9,6 +9,7 @@ import useGoogleSheetsData from '../hooks/useGoogleSheetsData';
 import { useCompany } from '../context/CompanyContext';
 import { useDateRange } from '../context/DateRangeContext';
 import { calculateProfitLoss } from '../utils/profitLoss';
+import useTallyDashboardTemplates from '../hooks/useTallyDashboardTemplates';
 
 const formatCurrency = (value) => '₹' + (value || 0).toLocaleString('en-IN');
 const formatDate = (dateStr) => {
@@ -22,6 +23,7 @@ const Dashboard = () => {
   const { currentCompany } = useCompany();
   const { dateRange } = useDateRange();
   const [showPromoBanner, setShowPromoBanner] = useState(true);
+  const { templates: tallyTemplates, dashboard: tallyDashboard, loading: tallyLoading, error: tallyError } = useTallyDashboardTemplates();
   
   const {
     ledgers,
@@ -235,27 +237,73 @@ const Dashboard = () => {
     },
   ];
 
+  const hasTallyTemplate = (templateNo) => tallyTemplates[templateNo]?.status === 'success';
+  const displayMetrics = {
+    ...metrics,
+    ...(hasTallyTemplate(14) ? {
+      cashInHand: tallyDashboard?.cashInHand,
+      bankBalance: tallyDashboard?.bankBalance,
+      cashAccountCount: tallyDashboard?.cashAccountCount,
+      bankAccountCount: tallyDashboard?.bankAccountCount,
+    } : {}),
+    ...(hasTallyTemplate(23) ? { totalSales: tallyDashboard?.totalSales } : {}),
+    ...(hasTallyTemplate(1) ? { totalReceivables: tallyDashboard?.totalReceivables } : {}),
+    ...(hasTallyTemplate(5) ? { totalPayables: tallyDashboard?.totalPayables } : {}),
+    ...(hasTallyTemplate(30) ? {
+      grossProfit: tallyDashboard?.grossProfit,
+      netProfit: tallyDashboard?.netProfit,
+    } : {}),
+  };
+
+  const displayKpis = kpis.map((kpi) => {
+    const liveKpi = {
+      'Cash in Hand': hasTallyTemplate(14),
+      'Bank Balance': hasTallyTemplate(14),
+      'Total Sales': hasTallyTemplate(23),
+      Receivables: hasTallyTemplate(1),
+      Payables: hasTallyTemplate(5),
+      'Gross Profit': hasTallyTemplate(30),
+      'Net Profit': hasTallyTemplate(30),
+    }[kpi.title];
+    const title = kpi.title;
+    const valueKey = kpi.title === 'Total Sales' ? 'totalSales' :
+      kpi.title === 'Cash in Hand' ? 'cashInHand' :
+      kpi.title === 'Bank Balance' ? 'bankBalance' :
+      kpi.title === 'Gross Profit' ? 'grossProfit' :
+      kpi.title === 'Net Profit' ? 'netProfit' :
+      kpi.title === 'Receivables' ? 'totalReceivables' :
+      kpi.title === 'Payables' ? 'totalPayables' : 'stockValue';
+    return {
+      ...kpi,
+      title,
+      value: displayMetrics[valueKey],
+      subtitle: kpi.title === 'Total Sales' && hasTallyTemplate(23)
+        ? `${tallyDashboard?.totalSalesInvoiceCount || 0} invoices · Live Tally`
+        : liveKpi ? `${kpi.subtitle || ''}${kpi.subtitle ? ' · ' : ''}Live Tally` : kpi.subtitle,
+    };
+  });
+
   const receivableChartData = useMemo(() => {
     const receivables = parties?.filter(p => 
       p.PartyType === 'Sundry Debtors' || p.PartyType === 'Customer'
     ) || [];
-    const total = receivables.reduce((sum, p) => sum + Math.abs(parseFloat(p.OpeningBalance || 0) || 0), 0);
+    const total = hasTallyTemplate(1) ? displayMetrics.totalReceivables : receivables.reduce((sum, p) => sum + Math.abs(parseFloat(p.OpeningBalance || 0) || 0), 0);
     if (total === 0) return [{ name: 'No Data', value: 1, color: '#F1F5F9' }]; // slate-100
     return [
       { name: 'Outstanding', value: total, color: '#65A30D' }, // kinetic-secondary
     ];
-  }, [parties]);
+  }, [parties, tallyTemplates, displayMetrics.totalReceivables]);
 
   const payableChartData = useMemo(() => {
     const payables = parties?.filter(p => 
       p.PartyType === 'Sundry Creditors' || p.PartyType === 'Supplier'
     ) || [];
-    const total = payables.reduce((sum, p) => sum + Math.abs(parseFloat(p.OpeningBalance || 0) || 0), 0);
+    const total = hasTallyTemplate(5) ? displayMetrics.totalPayables : payables.reduce((sum, p) => sum + Math.abs(parseFloat(p.OpeningBalance || 0) || 0), 0);
     if (total === 0) return [{ name: 'No Data', value: 1, color: '#F1F5F9' }];
     return [
       { name: 'Outstanding', value: total, color: '#EA580C' }, // kinetic-tertiary
     ];
-  }, [parties]);
+  }, [parties, tallyTemplates, displayMetrics.totalPayables]);
 
   const topItems = useMemo(() => {
     const salesVoucherIds = new Set(
@@ -363,6 +411,11 @@ const Dashboard = () => {
       className="min-h-screen bg-slate-50 pb-20 md:pb-6 font-sans"
     >
       <div className="px-4 py-4 md:px-8 md:py-8 space-y-6 max-w-7xl mx-auto">
+        {tallyError && (
+          <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            Live Tally dashboard data is unavailable. Existing Google Sheets data remains displayed.
+          </div>
+        )}
         <div className="flex items-start justify-between bg-white p-6 rounded-2xl shadow-card border border-slate-100">
           <div>
             <div className="flex items-center gap-3">
@@ -378,6 +431,9 @@ const Dashboard = () => {
                 {connectionStatus === 'disconnected' && '● Demo'}
                 {connectionStatus === 'checking' && '● Checking...'}
               </span>
+              {!tallyLoading && Object.keys(tallyTemplates).length > 0 && (
+                <span className="text-xs font-medium text-kinetic-neutral">Tally refresh requested</span>
+              )}
             </div>
             <p className="text-sm text-kinetic-neutral font-medium mt-1">
               {currentCompany?.name || 'Sharma Trading Co.'}
@@ -426,7 +482,7 @@ const Dashboard = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          {kpis.map((kpi, idx) => (
+          {displayKpis.map((kpi, idx) => (
             <motion.div
               key={kpi.title}
               initial={{ opacity: 0, y: 20 }}
@@ -437,6 +493,32 @@ const Dashboard = () => {
             </motion.div>
           ))}
         </motion.div>
+
+        {(hasTallyTemplate(10) || hasTallyTemplate(11)) && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {hasTallyTemplate(10) && (
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-card p-5">
+                <p className="text-xs font-bold text-kinetic-neutral uppercase tracking-widest">Sales comparison</p>
+                <div className="mt-3 flex items-end justify-between gap-4">
+                  <div><p className="text-sm text-ink-muted">Today</p><p className="text-xl font-extrabold text-ink-900">{formatCurrency(tallyDashboard?.salesComparison?.todaySales)}</p></div>
+                  <div><p className="text-sm text-ink-muted">Last week</p><p className="text-xl font-extrabold text-ink-900">{formatCurrency(tallyDashboard?.salesComparison?.lastWeekSales)}</p></div>
+                  <span className="text-sm font-bold text-kinetic-primary">{tallyDashboard?.salesComparison?.salesDifferencePercent || 0}%</span>
+                </div>
+              </div>
+            )}
+            {hasTallyTemplate(11) && (
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-card p-5">
+                <p className="text-xs font-bold text-kinetic-neutral uppercase tracking-widest">Weekly MIS</p>
+                <div className="mt-3 grid grid-cols-2 gap-3 text-sm">
+                  <div><p className="text-ink-muted">Sales</p><p className="font-extrabold text-ink-900">{formatCurrency(tallyDashboard?.weeklyMis?.weeklySales)}</p></div>
+                  <div><p className="text-ink-muted">Net cash flow</p><p className="font-extrabold text-ink-900">{formatCurrency(tallyDashboard?.weeklyMis?.netCashFlow)}</p></div>
+                  <div><p className="text-ink-muted">Top customer</p><p className="font-bold text-ink-900 truncate">{tallyDashboard?.weeklyMis?.topCustomerName || '—'}</p></div>
+                  <div><p className="text-ink-muted">Top vendor</p><p className="font-bold text-ink-900 truncate">{tallyDashboard?.weeklyMis?.topVendorName || '—'}</p></div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         <motion.div 
           className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6"

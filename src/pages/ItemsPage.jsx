@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ItemsGrid from '../components/items/ItemsGrid';
 import ItemsTable from '../components/items/ItemsTable';
@@ -7,6 +7,7 @@ import Skeleton from '../components/shared/Skeleton';
 import EntityDetailModal from '../components/shared/EntityDetailModal';
 import useGoogleSheetsData from '../hooks/useGoogleSheetsData';
 import { useCompany } from '../context/CompanyContext';
+import { settingsService } from '../services/settingsService';
 
 const ItemsPage = () => {
   const { currentCompany } = useCompany();
@@ -17,6 +18,22 @@ const ItemsPage = () => {
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   
+  // Settings State
+  const [stockSettings, setStockSettings] = useState({ lowStockAlert: true, lowStockThreshold: 10 });
+
+  useEffect(() => {
+    if (currentCompany?.id) {
+      settingsService.getAllSettings(currentCompany.id).then(data => {
+        if (data.StockItem) {
+          setStockSettings({
+            lowStockAlert: data.StockItem.lowStockAlert ?? true,
+            lowStockThreshold: parseInt(data.StockItem.lowStockThreshold) || 10
+          });
+        }
+      });
+    }
+  }, [currentCompany?.id]);
+
   const { items, itemStockStatus, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
 
   const stockStatusMap = useMemo(() => {
@@ -44,8 +61,12 @@ const ItemsPage = () => {
         closingQty: parseFloat(stockInfo.CurrentStock || item.ClosingQty || item.closingQty || 0),
         closingValue: parseFloat(stockInfo.StockValue || item.ClosingValue || item.closingValue || 0),
       };
+      
+      // Calculate low stock dynamically based on settings
+      ret.isLowStock = stockSettings.lowStockAlert && ret.closingQty > 0 && ret.closingQty <= stockSettings.lowStockThreshold;
+      return ret;
     });
-  }, [items, stockStatusMap]);
+  }, [items, stockStatusMap, stockSettings]);
 
   const categories = useMemo(() => {
     const cats = [...new Set(normalizedItems.map(i => i.category))];
@@ -57,7 +78,7 @@ const ItemsPage = () => {
       if (categoryFilter !== 'all' && item.category !== categoryFilter) return false;
       
       if (stockFilter === 'negative' && item.closingQty >= 0) return false;
-      if (stockFilter === 'low' && item.closingQty >= 10) return false;
+      if (stockFilter === 'low' && !item.isLowStock) return false;
       if (stockFilter === 'in-stock' && item.closingQty <= 0) return false;
       
       if (searchQuery) {

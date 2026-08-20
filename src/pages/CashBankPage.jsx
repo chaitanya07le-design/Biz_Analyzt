@@ -6,6 +6,7 @@ import Skeleton from '../components/shared/Skeleton';
 import EntityDetailModal from '../components/shared/EntityDetailModal';
 import useGoogleSheetsData from '../hooks/useGoogleSheetsData';
 import { useCompany } from '../context/CompanyContext';
+import useTallyCashBank from '../hooks/useTallyCashBank';
 
 const CashBankPage = () => {
   const { currentCompany } = useCompany();
@@ -15,6 +16,7 @@ const CashBankPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   
   const { ledgers, bankAccounts: apiBankAccounts, cashAccounts: apiCashAccounts, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { cashBank: tallyCashBank } = useTallyCashBank();
   
   const accounts = useMemo(() => {
     const allAccounts = [];
@@ -46,7 +48,7 @@ const CashBankPage = () => {
     }
     
     if (allAccounts.length === 0 && ledgers && ledgers.length > 0) {
-      return ledgers.filter(l => 
+      allAccounts.push(...ledgers.filter(l => 
         l.Group === 'Cash-in-Hand' || l.Group === 'Bank Accounts' ||
         l.group === 'Cash-in-Hand' || l.group === 'Bank Accounts'
       ).map(l => ({
@@ -60,11 +62,32 @@ const CashBankPage = () => {
         bankName: l.BankName || l.bankName || '',
         accountType: l.AccountType || l.accountType || '',
         lastTransaction: l.LastTransaction || l.lastTransaction || '',
-      }));
+      })));
     }
     
-    return allAccounts;
-  }, [ledgers, apiBankAccounts, apiCashAccounts]);
+    const tallyAccounts = tallyCashBank?.accounts || [];
+    const tallyBalances = new Map(tallyAccounts.map((account) => [String(account.name).trim().toLowerCase(), account.closingBalance]));
+    const mergedAccounts = allAccounts.map((account) => ({
+      ...account,
+      balance: tallyBalances.has(String(account.name).trim().toLowerCase()) ? tallyBalances.get(String(account.name).trim().toLowerCase()) : account.balance,
+    }));
+    const existingNames = new Set(mergedAccounts.map((account) => String(account.name).trim().toLowerCase()));
+    const tallyOnlyAccounts = tallyAccounts
+      .filter((account) => !existingNames.has(String(account.name).trim().toLowerCase()))
+      .map((account, index) => ({
+        id: `tally-account-${index}`,
+        name: account.name,
+        group: account.group === 'Bank Accounts' ? 'Bank Accounts' : 'Cash-in-Hand',
+        balance: account.closingBalance,
+        type: account.group === 'Bank Accounts' ? 'bank' : 'cash',
+        accountNumber: '',
+        ifsc: '',
+        bankName: '',
+        accountType: '',
+        lastTransaction: '',
+      }));
+    return [...mergedAccounts, ...tallyOnlyAccounts];
+  }, [ledgers, apiBankAccounts, apiCashAccounts, tallyCashBank]);
 
   const cashAccounts = accounts.filter(a => a.group === 'Cash-in-Hand');
   const bankAccounts = accounts.filter(a => a.group === 'Bank Accounts');
@@ -158,7 +181,7 @@ const CashBankPage = () => {
           className="bg-white p-6 rounded-2xl shadow-card border border-slate-100"
         >
           <h1 className="text-2xl md:text-3xl font-display font-bold text-ink-900 tracking-tight">Cash & Bank</h1>
-          <p className="text-sm text-kinetic-neutral font-medium mt-1">Account balances and details</p>
+          <p className="text-sm text-kinetic-neutral font-medium mt-1">Account balances and details {tallyCashBank && <span className="text-kinetic-primary font-bold">· LIVE TALLY</span>}</p>
         </motion.div>
 
         <motion.div 

@@ -1,0 +1,657 @@
+{
+  "created": 1734300000000,
+  "updated": 1734300000000,
+  "name": "W-Notification-Dispatcher",
+  "description": "Hourly: reads Notification settings, detects events (new voucher, payment received, overdue, reminder sent), writes in-app Notification entries, sends real Gmail for email channel.",
+  "tags": [],
+  "pieces": [
+    "@puchoaistudio/tool-schedule",
+    "@puchoaistudio/tool-google-sheets",
+    "@puchoaistudio/tool-gmail"
+  ],
+  "template": {
+    "displayName": "W-Notification-Dispatcher",
+    "trigger": {
+      "name": "trigger",
+      "valid": true,
+      "displayName": "Every Hour",
+      "type": "TOOL_TRIGGER",
+      "settings": {
+        "pieceName": "@puchoaistudio/tool-schedule",
+        "pieceVersion": "^2.0.0",
+        "input": {
+          "run_on_weekends": true
+        },
+        "sampleData": {},
+        "propertySettings": {
+          "run_on_weekends": {
+            "type": "MANUAL"
+          }
+        },
+        "triggerName": "every_hour"
+      },
+      "nextAction": {
+        "name": "step_2",
+        "type": "PIECE",
+        "displayName": "Read Settings",
+        "valid": true,
+        "skip": false,
+        "settings": {
+          "input": {
+            "auth": "",
+            "spreadsheetId": "1OLwA-WEK2rRJLV__gl8v9iyLYIoOBIQ_rxoIbJEQsfM",
+            "sheetId": 1099457799,
+            "startRow": 1,
+            "groupSize": 1,
+            "memKey": "row_number",
+            "includeTeamDrives": false
+          },
+          "pieceName": "@puchoaistudio/tool-google-sheets",
+          "actionName": "get_all_rows",
+          "pieceVersion": "^2.0.9",
+          "sampleData": {},
+          "propertySettings": {
+            "includeTeamDrives": {
+              "type": "MANUAL"
+            },
+            "spreadsheetId": {
+              "type": "MANUAL"
+            },
+            "sheetId": {
+              "type": "MANUAL"
+            },
+            "startRow": {
+              "type": "MANUAL"
+            },
+            "memKey": {
+              "type": "MANUAL"
+            },
+            "groupSize": {
+              "type": "MANUAL"
+            }
+          },
+          "errorHandlingOptions": {
+            "retryOnFailure": {
+              "value": true
+            },
+            "continueOnFailure": {
+              "value": false
+            }
+          }
+        },
+        "nextAction": {
+          "name": "step_3",
+          "type": "CODE",
+          "displayName": "Parse Notification Configs",
+          "valid": true,
+          "skip": false,
+          "settings": {
+            "input": {
+              "allSettings": "{{step_2['data']}}"
+            },
+            "sourceCode": {
+              "code": "export const code = async (inputs) => {\n  const rows = Array.isArray(inputs.allSettings) ? inputs.allSettings : [];\n  let lastPoll = \"2024-01-01T00:00:00.000Z\";\n  const now = new Date().toISOString();\n  const configs = [];\n  const cm = {};\n  for (const r of rows) {\n    if (!r.SettingKey || !r.CompanyID) continue;\n    if (r.SettingKey === \"_SystemState.lastNotificationPoll\" && r.CompanyID === \"SYSTEM\") {\n      lastPoll = r.SettingValue || lastPoll;\n      continue;\n    }\n    if (!r.SettingKey.startsWith(\"Notification.\")) continue;\n    const cid = r.CompanyID;\n    if (!cm[cid]) cm[cid] = {};\n    const k = r.SettingKey.replace(\"Notification.\", \"\");\n    let v = r.SettingValue;\n    if (k === \"events\") {\n      try { v = JSON.parse(v); } catch(e) { v = null; }\n    } else if (v === \"true\") v = true;\n    else if (v === \"false\") v = false;\n    cm[cid][k] = v;\n  }\n  for (const [cid, cfg] of Object.entries(cm)) {\n    const events = cfg.events || {};\n    const hasActive = Object.values(events).some(function(e) { return e && e.enabled === true; });\n    if (hasActive) {\n      configs.push({\n        companyId: cid,\n        events: events,\n        quietHoursEnabled: cfg.quietHoursEnabled === true,\n        quietHoursStart: cfg.quietHoursStart || \"22:00\",\n        quietHoursEnd: cfg.quietHoursEnd || \"08:00\"\n      });\n    }\n  }\n  return { configs, lastPoll, now, hasActive: configs.length > 0 };\n};",
+              "packageJson": "{}"
+            },
+            "propertySettings": {
+              "allSettings": {
+                "type": "MANUAL"
+              }
+            },
+            "sampleData": {},
+            "errorHandlingOptions": {
+              "retryOnFailure": {
+                "value": false
+              },
+              "continueOnFailure": {
+                "value": false
+              }
+            }
+          },
+          "nextAction": {
+            "name": "step_4",
+            "type": "ROUTER",
+            "displayName": "Any Active Companies?",
+            "valid": true,
+            "skip": false,
+            "settings": {
+              "branches": [
+                {
+                  "branchName": "HasActive",
+                  "branchType": "CONDITION",
+                  "conditions": [
+                    [
+                      {
+                        "operator": "BOOLEAN_IS_TRUE",
+                        "firstValue": "{{step_3['hasActive']}}"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "branchName": "Otherwise",
+                  "branchType": "FALLBACK"
+                }
+              ],
+              "executionType": "EXECUTE_FIRST_MATCH"
+            },
+            "children": [
+              {
+                "name": "step_5_loop",
+                "type": "LOOP_ON_ITEMS",
+                "displayName": "For Each Company",
+                "valid": true,
+                "skip": false,
+                "settings": {
+                  "items": "{{step_3['configs']}}",
+                  "sampleData": {}
+                },
+                "firstLoopAction": {
+                  "name": "step_5a",
+                  "type": "PIECE",
+                  "displayName": "Read Vouchers",
+                  "valid": true,
+                  "skip": false,
+                  "settings": {
+                    "input": {
+                      "auth": "",
+                      "spreadsheetId": "1OLwA-WEK2rRJLV__gl8v9iyLYIoOBIQ_rxoIbJEQsfM",
+                      "sheetId": 759847801,
+                      "startRow": 1,
+                      "groupSize": 1,
+                      "memKey": "row_number",
+                      "includeTeamDrives": false
+                    },
+                    "pieceName": "@puchoaistudio/tool-google-sheets",
+                    "actionName": "get_all_rows",
+                    "pieceVersion": "^2.0.9",
+                    "sampleData": {},
+                    "propertySettings": {
+                      "includeTeamDrives": {
+                        "type": "MANUAL"
+                      },
+                      "spreadsheetId": {
+                        "type": "MANUAL"
+                      },
+                      "sheetId": {
+                        "type": "MANUAL"
+                      },
+                      "startRow": {
+                        "type": "MANUAL"
+                      },
+                      "memKey": {
+                        "type": "MANUAL"
+                      },
+                      "groupSize": {
+                        "type": "MANUAL"
+                      }
+                    },
+                    "errorHandlingOptions": {
+                      "retryOnFailure": {
+                        "value": true
+                      },
+                      "continueOnFailure": {
+                        "value": false
+                      }
+                    }
+                  },
+                  "nextAction": {
+                    "name": "step_5b",
+                    "type": "PIECE",
+                    "displayName": "Read Parties",
+                    "valid": true,
+                    "skip": false,
+                    "settings": {
+                      "input": {
+                        "auth": "",
+                        "spreadsheetId": "1OLwA-WEK2rRJLV__gl8v9iyLYIoOBIQ_rxoIbJEQsfM",
+                        "sheetId": 360235701,
+                        "startRow": 1,
+                        "groupSize": 1,
+                        "memKey": "row_number",
+                        "includeTeamDrives": false
+                      },
+                      "pieceName": "@puchoaistudio/tool-google-sheets",
+                      "actionName": "get_all_rows",
+                      "pieceVersion": "^2.0.9",
+                      "sampleData": {},
+                      "propertySettings": {
+                        "includeTeamDrives": {
+                          "type": "MANUAL"
+                        },
+                        "spreadsheetId": {
+                          "type": "MANUAL"
+                        },
+                        "sheetId": {
+                          "type": "MANUAL"
+                        },
+                        "startRow": {
+                          "type": "MANUAL"
+                        },
+                        "memKey": {
+                          "type": "MANUAL"
+                        },
+                        "groupSize": {
+                          "type": "MANUAL"
+                        }
+                      },
+                      "errorHandlingOptions": {
+                        "retryOnFailure": {
+                          "value": true
+                        },
+                        "continueOnFailure": {
+                          "value": false
+                        }
+                      }
+                    },
+                    "nextAction": {
+                      "name": "step_5c",
+                      "type": "PIECE",
+                      "displayName": "Read ReminderLog",
+                      "valid": true,
+                      "skip": false,
+                      "settings": {
+                        "input": {
+                          "auth": "",
+                          "spreadsheetId": "1OLwA-WEK2rRJLV__gl8v9iyLYIoOBIQ_rxoIbJEQsfM",
+                          "sheetId": 1978497307,
+                          "startRow": 1,
+                          "groupSize": 1,
+                          "memKey": "row_number",
+                          "includeTeamDrives": false
+                        },
+                        "pieceName": "@puchoaistudio/tool-google-sheets",
+                        "actionName": "get_all_rows",
+                        "pieceVersion": "^2.0.9",
+                        "sampleData": {},
+                        "propertySettings": {
+                          "includeTeamDrives": {
+                            "type": "MANUAL"
+                          },
+                          "spreadsheetId": {
+                            "type": "MANUAL"
+                          },
+                          "sheetId": {
+                            "type": "MANUAL"
+                          },
+                          "startRow": {
+                            "type": "MANUAL"
+                          },
+                          "memKey": {
+                            "type": "MANUAL"
+                          },
+                          "groupSize": {
+                            "type": "MANUAL"
+                          }
+                        },
+                        "errorHandlingOptions": {
+                          "retryOnFailure": {
+                            "value": true
+                          },
+                          "continueOnFailure": {
+                            "value": false
+                          }
+                        }
+                      },
+                      "nextAction": {
+                        "name": "step_5a2",
+                        "type": "PIECE",
+                        "displayName": "Read Users",
+                        "valid": true,
+                        "skip": false,
+                        "settings": {
+                          "input": {
+                            "auth": "",
+                            "spreadsheetId": "1OLwA-WEK2rRJLV__gl8v9iyLYIoOBIQ_rxoIbJEQsfM",
+                            "sheetId": 1833896148,
+                            "startRow": 1,
+                            "groupSize": 1,
+                            "memKey": "row_number",
+                            "includeTeamDrives": false
+                          },
+                          "pieceName": "@puchoaistudio/tool-google-sheets",
+                          "actionName": "get_all_rows",
+                          "pieceVersion": "^2.0.9",
+                          "sampleData": {},
+                          "propertySettings": {
+                            "includeTeamDrives": { "type": "MANUAL" },
+                            "spreadsheetId": { "type": "MANUAL" },
+                            "sheetId": { "type": "MANUAL" },
+                            "startRow": { "type": "MANUAL" },
+                            "memKey": { "type": "MANUAL" },
+                            "groupSize": { "type": "MANUAL" }
+                          },
+                          "errorHandlingOptions": {
+                            "retryOnFailure": { "value": true },
+                            "continueOnFailure": { "value": false }
+                          }
+                        },
+                        "nextAction": {
+                          "name": "step_5a3",
+                          "type": "PIECE",
+                          "displayName": "Read UserCompanyMapping",
+                          "valid": true,
+                          "skip": false,
+                          "settings": {
+                            "input": {
+                              "auth": "",
+                              "spreadsheetId": "1OLwA-WEK2rRJLV__gl8v9iyLYIoOBIQ_rxoIbJEQsfM",
+                              "sheetId": 37199415,
+                              "startRow": 1,
+                              "groupSize": 1,
+                              "memKey": "row_number",
+                              "includeTeamDrives": false
+                            },
+                            "pieceName": "@puchoaistudio/tool-google-sheets",
+                            "actionName": "get_all_rows",
+                            "pieceVersion": "^2.0.9",
+                            "sampleData": {},
+                            "propertySettings": {
+                              "includeTeamDrives": { "type": "MANUAL" },
+                              "spreadsheetId": { "type": "MANUAL" },
+                              "sheetId": { "type": "MANUAL" },
+                              "startRow": { "type": "MANUAL" },
+                              "memKey": { "type": "MANUAL" },
+                              "groupSize": { "type": "MANUAL" }
+                            },
+                            "errorHandlingOptions": {
+                              "retryOnFailure": { "value": true },
+                              "continueOnFailure": { "value": false }
+                            }
+                          },
+                          "nextAction": {
+                            "name": "step_5d",
+                            "type": "CODE",
+                            "displayName": "Detect Events",
+                            "valid": true,
+                            "skip": false,
+                            "settings": {
+                              "input": {
+                                "cfg": "{{step_5_loop['item']}}",
+                                "allVouchers": "{{step_5a['data']}}",
+                                "allParties": "{{step_5b['data']}}",
+                                "allReminderLog": "{{step_5c['data']}}",
+                                "allUsers": "{{step_5a2['data']}}",
+                                "allMappings": "{{step_5a3['data']}}",
+                                "lastPoll": "{{step_3['lastPoll']}}",
+                                "now": "{{step_3['now']}}"
+                              },
+                              "sourceCode": {
+                                "code": "export const code = async (inputs) => {\n  const { cfg, allVouchers, allParties, allReminderLog, allUsers, allMappings, lastPoll, now } = inputs;\n  const vouchers = Array.isArray(allVouchers) ? allVouchers : [];\n  const parties = Array.isArray(allParties) ? allParties : [];\n  const logs = Array.isArray(allReminderLog) ? allReminderLog : [];\n  const users = Array.isArray(allUsers) ? allUsers : [];\n  const mappings = Array.isArray(allMappings) ? allMappings : [];\n  const detected = [];\n  const cid = cfg.companyId;\n  const events = cfg.events || {};\n\n  // Check quiet hours\n  if (cfg.quietHoursEnabled) {\n    const nowTime = new Date().toLocaleTimeString(\"en-GB\", { hour: \"2-digit\", minute: \"2-digit\", hour12: false });\n    if (nowTime >= cfg.quietHoursStart && nowTime <= cfg.quietHoursEnd) {\n      return { detected, hasEvents: false, quietHoursBlocked: true };\n    }\n  }\n\n  // Option C: Sort by AccessLevel (Full > Write > Read)\n  let recipientEmail = \"\";\n  const compMappings = mappings.filter(m => m.CompanyID === cid);\n  if (compMappings.length > 0) {\n    const levelWeight = { \"Full\": 3, \"Write\": 2, \"Read\": 1 };\n    compMappings.sort((a, b) => (levelWeight[b.AccessLevel] || 0) - (levelWeight[a.AccessLevel] || 0));\n    const bestUserId = compMappings[0].UserID;\n    const user = users.find(u => u.UserID === bestUserId);\n    if (user) recipientEmail = user.Email || \"\";\n  }\n\n  const lastPollDate = new Date(lastPoll);\n\n  // newVoucher: check Vouchers created/modified since last poll\n  if (events.newVoucher && events.newVoucher.enabled) {\n    const newVchs = vouchers.filter(function(v) {\n      return v.CompanyID === cid && (new Date(v.CreatedDate || v.LastModifiedDate) > lastPollDate);\n    });\n    if (newVchs.length > 0) {\n      detected.push({\n        eventType: \"newVoucher\", title: newVchs.length + \" new voucher(s) synced\",\n        message: newVchs.length + \" new voucher(s) have been added since last check.\",\n        channels: events.newVoucher.channels || [\"in-app\"],\n        email: recipientEmail\n      });\n    }\n  }\n\n  // paymentReceived: Receipt vouchers since last poll\n  if (events.paymentReceived && events.paymentReceived.enabled) {\n    const rcpts = vouchers.filter(function(v) {\n      return v.CompanyID === cid && v.VoucherType === \"Receipt\" && (new Date(v.CreatedDate || v.LastModifiedDate) > lastPollDate);\n    });\n    if (rcpts.length > 0) {\n      detected.push({\n        eventType: \"paymentReceived\", title: rcpts.length + \" payment(s) received\",\n        message: rcpts.length + \" receipt voucher(s) recorded since last check.\",\n        channels: events.paymentReceived.channels || [\"in-app\"],\n        email: recipientEmail\n      });\n    }\n  }\n\n  // overdueAlert: Sales vouchers past due date\n  if (events.overdueAlert && events.overdueAlert.enabled) {\n    const today = new Date(); today.setHours(0,0,0,0);\n    const pm = {};\n    for (const p of parties) { if (p.CompanyID === cid) pm[p.PartyID] = p; }\n    const overdue = vouchers.filter(function(v) {\n      if (v.CompanyID !== cid || v.VoucherType !== \"Sales\") return false;\n      const party = pm[v.PartyID];\n      if (!party) return false;\n      const cd = parseInt(party.CreditDays) || 0;\n      const dd = new Date(v.VoucherDate); dd.setDate(dd.getDate() + cd);\n      return dd < today;\n    });\n    if (overdue.length > 0) {\n      detected.push({\n        eventType: \"overdueAlert\", title: overdue.length + \" overdue invoice(s)\",\n        message: overdue.length + \" sales invoice(s) are past their due date.\",\n        channels: events.overdueAlert.channels || [\"in-app\"],\n        email: recipientEmail\n      });\n    }\n  }\n\n  // reminderSent: check ReminderLog for recently sent\n  if (events.reminderSent && events.reminderSent.enabled) {\n    const recent = logs.filter(function(l) {\n      return l.CompanyID === cid && l.Status === \"Sent\" && new Date(l.SentAt) > lastPollDate;\n    });\n    if (recent.length > 0) {\n      detected.push({\n        eventType: \"reminderSent\", title: recent.length + \" reminder(s) sent\",\n        message: recent.length + \" payment reminder(s) were sent since last check.\",\n        channels: events.reminderSent.channels || [\"in-app\"],\n        email: recipientEmail\n      });\n    }\n  }\n\n  // syncFailure: STUBBED - no sync infrastructure exists\n  // if (events.syncFailure && events.syncFailure.enabled) { ... }\n\n  return { detected, hasEvents: detected.length > 0, quietHoursBlocked: false };\n};",
+                                "packageJson": "{}"
+                              },
+                              "propertySettings": {
+                                "cfg": { "type": "MANUAL" },
+                                "allVouchers": { "type": "MANUAL" },
+                                "allParties": { "type": "MANUAL" },
+                                "allReminderLog": { "type": "MANUAL" },
+                                "allUsers": { "type": "MANUAL" },
+                                "allMappings": { "type": "MANUAL" },
+                                "lastPoll": { "type": "MANUAL" },
+                                "now": { "type": "MANUAL" }
+                              },
+                              "sampleData": {},
+                              "errorHandlingOptions": {
+                                "retryOnFailure": { "value": false },
+                                "continueOnFailure": { "value": false }
+                              }
+                            }
+                          }
+                        },
+                        "nextAction": {
+                          "name": "step_5e",
+                          "type": "ROUTER",
+                          "displayName": "Any Events?",
+                          "valid": true,
+                          "skip": false,
+                          "settings": {
+                            "branches": [
+                              {
+                                "branchName": "HasEvents",
+                                "branchType": "CONDITION",
+                                "conditions": [
+                                  [
+                                    {
+                                      "operator": "BOOLEAN_IS_TRUE",
+                                      "firstValue": "{{step_5d['hasEvents']}}"
+                                    }
+                                  ]
+                                ]
+                              },
+                              {
+                                "branchName": "Otherwise",
+                                "branchType": "FALLBACK"
+                              }
+                            ],
+                            "executionType": "EXECUTE_FIRST_MATCH"
+                          },
+                          "children": [
+                            {
+                              "name": "step_5f",
+                              "type": "PIECE",
+                              "displayName": "Write Notifications",
+                              "valid": true,
+                              "skip": false,
+                              "settings": {
+                                "input": {
+                                  "auth": "",
+                                  "spreadsheetId": "1OLwA-WEK2rRJLV__gl8v9iyLYIoOBIQ_rxoIbJEQsfM",
+                                  "sheetId": 679740122,
+                                  "input_type": "column_names",
+                                  "values": "{{step_5d['detected']}}",
+                                  "overwrite": false,
+                                  "check_for_duplicate": false
+                                },
+                                "pieceName": "@puchoaistudio/tool-google-sheets",
+                                "actionName": "google-sheets-insert-multiple-rows",
+                                "pieceVersion": "^2.0.9",
+                                "sampleData": {},
+                                "propertySettings": {
+                                  "includeTeamDrives": {
+                                    "type": "MANUAL"
+                                  },
+                                  "spreadsheetId": {
+                                    "type": "MANUAL"
+                                  },
+                                  "sheetId": {
+                                    "type": "MANUAL"
+                                  },
+                                  "input_type": {
+                                    "type": "MANUAL"
+                                  },
+                                  "values": {
+                                    "type": "MANUAL"
+                                  },
+                                  "overwrite": {
+                                    "type": "MANUAL"
+                                  },
+                                  "check_for_duplicate": {
+                                    "type": "MANUAL"
+                                  }
+                                },
+                                "errorHandlingOptions": {
+                                  "retryOnFailure": {
+                                    "value": true
+                                  },
+                                  "continueOnFailure": {
+                                    "value": false
+                                  }
+                                }
+                              },
+                              "nextAction": {
+                                "name": "step_5f_filter",
+                                "type": "CODE",
+                                "displayName": "Filter Email Events",
+                                "valid": true,
+                                "skip": false,
+                                "settings": {
+                                  "input": {
+                                    "events": "{{step_5d['detected']}}"
+                                  },
+                                  "sourceCode": {
+                                    "code": "export const code = async (inputs) => {\n  const events = inputs.events || [];\n  // Only keep events where 'email' is a channel AND recipientEmail actually resolved to something non-empty\n  const emailEvents = events.filter(e => Array.isArray(e.channels) && e.channels.includes(\"email\") && e.email);\n  return { emailEvents };\n};",
+                                    "packageJson": "{}"
+                                  },
+                                  "propertySettings": {
+                                    "events": { "type": "MANUAL" }
+                                  },
+                                  "sampleData": {},
+                                  "errorHandlingOptions": {
+                                    "retryOnFailure": { "value": false },
+                                    "continueOnFailure": { "value": false }
+                                  }
+                                },
+                                "nextAction": {
+                                  "name": "step_5g_loop",
+                                  "type": "LOOP_ON_ITEMS",
+                                  "displayName": "Send Email Notifications",
+                                  "valid": true,
+                                  "skip": false,
+                                  "settings": {
+                                    "items": "{{step_5f_filter['emailEvents']}}",
+                                    "sampleData": {}
+                                  },
+                                "firstLoopAction": {
+                                  "name": "step_5g_send",
+                                  "type": "PIECE",
+                                  "displayName": "Send Email",
+                                  "valid": true,
+                                  "skip": false,
+                                  "settings": {
+                                    "input": {
+                                      "auth": "",
+                                      "to": "{{step_5g_loop['item']['email']}}",
+                                      "subject": "{{step_5g_loop['item']['title']}}",
+                                      "body": "{{step_5g_loop['item']['message']}}"
+                                    },
+                                    "pieceName": "@puchoaistudio/tool-gmail",
+                                    "actionName": "send_email",
+                                    "pieceVersion": "^2.0.4",
+                                    "sampleData": {},
+                                    "propertySettings": {
+                                      "to": {
+                                        "type": "MANUAL"
+                                      },
+                                      "subject": {
+                                        "type": "MANUAL"
+                                      },
+                                      "body": {
+                                        "type": "MANUAL"
+                                      }
+                                    },
+                                    "errorHandlingOptions": {
+                                      "retryOnFailure": {
+                                        "value": false
+                                      },
+                                      "continueOnFailure": {
+                                        "value": true
+                                      }
+                                    }
+                                  },
+                                  "nextAction": null
+                                },
+                                "nextAction": null
+                              }
+                            },
+                            null
+                          ],
+                          "nextAction": null
+                        }
+                      }
+                    }
+                  }
+                },
+                "nextAction": {
+                  "name": "step_7",
+                  "type": "PIECE",
+                  "displayName": "Update Last Poll Timestamp",
+                  "valid": true,
+                  "skip": false,
+                  "settings": {
+                    "input": {
+                      "auth": "",
+                      "url": "https://sheets.googleapis.com/v4/spreadsheets/1OLwA-WEK2rRJLV__gl8v9iyLYIoOBIQ_rxoIbJEQsfM/values:batchUpdate",
+                      "method": "POST",
+                      "headers": {},
+                      "queryParams": {},
+                      "body": {
+                        "valueInputOption": "USER_ENTERED",
+                        "data": [
+                          {
+                            "range": "Settings!A501:G501",
+                            "values": [
+                              [
+                                "SET-SYS-LASTPOLL",
+                                "SYSTEM",
+                                "_SystemState.lastNotificationPoll",
+                                "{{step_3['now']}}",
+                                "Last notification poll timestamp",
+                                "{{step_3['now']}}",
+                                "{{step_3['now']}}"
+                              ]
+                            ]
+                          }
+                        ]
+                      },
+                      "response_is_binary": false,
+                      "failsafe": false
+                    },
+                    "pieceName": "@puchoaistudio/tool-google-sheets",
+                    "actionName": "custom_api_call",
+                    "pieceVersion": "^2.0.9",
+                    "sampleData": {},
+                    "propertySettings": {
+                      "url": {
+                        "type": "MANUAL"
+                      },
+                      "method": {
+                        "type": "MANUAL"
+                      },
+                      "headers": {
+                        "type": "MANUAL",
+                        "schema": {}
+                      },
+                      "queryParams": {
+                        "type": "MANUAL",
+                        "schema": {}
+                      },
+                      "body": {
+                        "type": "MANUAL",
+                        "schema": {}
+                      },
+                      "response_is_binary": {
+                        "type": "MANUAL"
+                      },
+                      "failsafe": {
+                        "type": "MANUAL"
+                      },
+                      "timeout": {
+                        "type": "MANUAL"
+                      }
+                    },
+                    "errorHandlingOptions": {
+                      "retryOnFailure": {
+                        "value": true
+                      },
+                      "continueOnFailure": {
+                        "value": false
+                      }
+                    }
+                  },
+                  "nextAction": null
+                }
+              },
+              null
+            ],
+            "nextAction": null
+          }
+        }
+      }
+    },
+    "valid": true,
+    "agentIds": [],
+    "connectionIds": [],
+    "schemaVersion": "7"
+  },
+  "blogUrl": ""
+}

@@ -1,0 +1,78 @@
+{
+  "COMP-0002": {
+    "Currency": {
+      "currencySymbol": "₹",
+      "numberFormat": "en-IN",
+      "decimalPlaces": 2,
+      "roundingRule": "nearest"
+    },
+    "UserPreference": {
+      "DefaultScreen_USER001": "/masters/parties"
+    },
+    "Share": {
+      "shares": [],
+      "includeVouchers": true,
+      "includeMasters": true,
+      "includeReports": true,
+      "includeOutstanding": true
+    },
+    "Notification": {
+      "events": {
+        "newVoucher": {
+          "enabled": true,
+          "channels": [
+            "in-app"
+          ]
+        },
+        "syncFailure": {
+          "enabled": true,
+          "channels": [
+            "in-app",
+            "email"
+          ]
+        },
+        "paymentReceived": {
+          "enabled": true,
+          "channels": [
+            "in-app",
+            "email"
+          ]
+        },
+        "reminderSent": {
+          "enabled": true,
+          "channels": [
+            "in-app",
+            "email"
+          ]
+        },
+        "overdueAlert": {
+          "enabled": true,
+          "channels": [
+            "in-app",
+            "email"
+          ]
+        }
+      },
+      "quietHoursEnabled": false,
+      "quietHoursStart": "22:00",
+      "quietHoursEnd": "08:00"
+    },
+    "AutoReminder": {
+      "enabled": true,
+      "triggerDays": 13,
+      "triggerType": "after",
+      "frequency": "once",
+      "channelEmail": true,
+      "channelWhatsapp": false,
+      "template": "Hi {party_name},\n\nThis is a reminder that your payment of {amount} for invoice {invoice_no} is due on {due_date}.\n\nPlease arrange for payment at your earliest convenience.\n\nThank you,\n{company_name}"
+    },
+    "Outstanding": {
+      "bucket1": 30,
+      "bucket2": 60,
+      "bucket3": 90,
+      "overdueThreshold": 0,
+      "defaultSort": "amount_desc",
+      "defaultFilter": "overdue"
+    }
+  }
+}

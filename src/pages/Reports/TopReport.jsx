@@ -53,23 +53,33 @@ const TopReport = () => {
     const salesOnly = normalizedVouchers.filter(v => v.voucherType === 'Sales' || v.VoucherType === 'Sales');
     const purchaseOnly = normalizedVouchers.filter(v => v.voucherType === 'Purchase' || v.VoucherType === 'Purchase');
 
+    const partyReceipts = {};
+    normalizedVouchers.filter(v => v.voucherType === 'Receipt' || v.voucherType === 'Credit Note').forEach(v => {
+      partyReceipts[v.partyId] = (partyReceipts[v.partyId] || 0) + v.netAmount;
+    });
+
+    const partyPayments = {};
+    normalizedVouchers.filter(v => v.voucherType === 'Payment' || v.voucherType === 'Debit Note').forEach(v => {
+      partyPayments[v.partyId] = (partyPayments[v.partyId] || 0) + v.netAmount;
+    });
+
     salesOnly.forEach(voucher => {
       if (!customerData[voucher.partyId]) {
         customerData[voucher.partyId] = {
           party: normalizedParties.find(p => p.id === voucher.partyId),
           totalAmount: 0,
           transactionCount: 0,
-          paidAmount: 0,
           outstanding: 0
         };
       }
       customerData[voucher.partyId].totalAmount += voucher.netAmount;
       customerData[voucher.partyId].transactionCount++;
-      if (voucher.status === 'PAID') {
-        customerData[voucher.partyId].paidAmount += voucher.netAmount;
-      } else {
-        customerData[voucher.partyId].outstanding += voucher.outstanding;
-      }
+    });
+
+    Object.keys(customerData).forEach(partyId => {
+      const r = partyReceipts[partyId] || 0;
+      // Outstanding = Total Sales - Receipts (capped at 0 for this basic report metric)
+      customerData[partyId].outstanding = Math.max(0, customerData[partyId].totalAmount - r);
     });
 
     purchaseOnly.forEach(voucher => {
@@ -78,17 +88,17 @@ const TopReport = () => {
           party: normalizedParties.find(p => p.id === voucher.partyId),
           totalAmount: 0,
           transactionCount: 0,
-          paidAmount: 0,
           outstanding: 0
         };
       }
       supplierData[voucher.partyId].totalAmount += voucher.netAmount;
       supplierData[voucher.partyId].transactionCount++;
-      if (voucher.status === 'PAID') {
-        supplierData[voucher.partyId].paidAmount += voucher.netAmount;
-      } else {
-        supplierData[voucher.partyId].outstanding += voucher.outstanding;
-      }
+    });
+
+    Object.keys(supplierData).forEach(partyId => {
+      const p = partyPayments[partyId] || 0;
+      // Outstanding = Total Purchases - Payments
+      supplierData[partyId].outstanding = Math.max(0, supplierData[partyId].totalAmount - p);
     });
 
     const topCustomers = Object.values(customerData)
@@ -161,7 +171,9 @@ const TopReport = () => {
               </svg>
             </button>
             <div>
-              <h1 className="text-xl md:text-2xl font-semibold text-ink-default">Top Report</h1>
+              <h1 className="text-xl md:text-2xl font-semibold text-ink-default">
+                {activeTab === 'customers' ? 'Top Customers' : 'Top Suppliers'}
+              </h1>
               <p className="text-sm text-ink-muted">Ranking by transaction volume</p>
             </div>
           </div>

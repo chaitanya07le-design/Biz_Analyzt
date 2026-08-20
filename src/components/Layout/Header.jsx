@@ -2,11 +2,16 @@ import { useLocation } from 'react-router-dom';
 import { titleForPath } from '../../config/nav';
 import { Bell, Search } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useSettings } from '../../context/SettingsContext';
 
 export default function Header({ subtitle, actions }) {
   const { pathname } = useLocation();
   const title = titleForPath(pathname);
   const { user } = useAuth();
+  const { notificationSettings } = useSettings();
+  
+  // If any notification setting is enabled, we consider notifications "active"
+  const hasNotificationsActive = Object.values(notificationSettings || {}).some(v => v === true);
 
   return (
     <header className="sticky top-0 z-20 h-16 px-4 md:px-6 flex items-center justify-between bg-white/80 backdrop-blur-xl border-b border-line">
@@ -31,7 +36,9 @@ export default function Header({ subtitle, actions }) {
 
         <button className="relative p-2 text-ink-600 hover:bg-ink-100 rounded-xl transition-colors">
           <Bell className="w-5 h-5" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
+          {hasNotificationsActive && (
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
+          )}
         </button>
 
         {user && (

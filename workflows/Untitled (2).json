@@ -1,0 +1,186 @@
+﻿{
+  "created": "1787123894319",
+  "updated": "1787123894319",
+  "name": "Untitled",
+  "description": "",
+  "tags": [],
+  "pieces": [
+    "@puchoaistudio/tool-webhook",
+    "@puchoaistudio/tool-tallyconnectionv3"
+  ],
+  "template": {
+    "displayName": "Untitled",
+    "trigger": {
+      "name": "trigger",
+      "valid": true,
+      "displayName": "Catch Webhook",
+      "type": "TOOL_TRIGGER",
+      "settings": {
+        "pieceName": "@puchoaistudio/tool-webhook",
+        "pieceVersion": "2.0.4",
+        "input": {
+          "authType": "none",
+          "authFields": {}
+        },
+        "sampleData": {},
+        "propertySettings": {
+          "authType": {
+            "type": "MANUAL"
+          },
+          "authFields": {
+            "type": "MANUAL",
+            "schema": {}
+          },
+          "liveMarkdown": {
+            "type": "MANUAL"
+          },
+          "syncMarkdown": {
+            "type": "MANUAL"
+          },
+          "testMarkdown": {
+            "type": "MANUAL"
+          }
+        },
+        "triggerName": "catch_webhook"
+      },
+      "nextAction": {
+        "name": "step_1",
+        "skip": false,
+        "type": "PIECE",
+        "valid": true,
+        "settings": {
+          "input": {
+            "secretCode": "test",
+            "tallyconnection": "c36ab6c4-2bac-403d-b1e8-2a48905afa63",
+            "incomingSecretKey": "{{trigger['queryParams']['key']}}"
+          },
+          "pieceName": "@puchoaistudio/tool-tallyconnectionv3",
+          "actionName": "get_tally_connection",
+          "sampleData": {},
+          "pieceVersion": "2.2.0",
+          "propertySettings": {
+            "secretCode": {
+              "type": "MANUAL"
+            },
+            "tallyconnection": {
+              "type": "MANUAL"
+            },
+            "incomingSecretKey": {
+              "type": "MANUAL"
+            }
+          },
+          "errorHandlingOptions": {
+            "retryOnFailure": {
+              "value": false
+            },
+            "continueOnFailure": {
+              "value": false
+            }
+          }
+        },
+        "nextAction": {
+            "name": "step_3",
+            "skip": true,
+          "type": "PIECE",
+          "valid": true,
+          "settings": {
+            "input": {
+              "template": "42\n\n",
+              "variables": null,
+              "tallyconnection": "3360bc11-60b1-4229-b8fb-3b64eeb38cb6"
+            },
+            "pieceName": "@puchoaistudio/tool-tallyconnectionv3",
+            "actionName": "ask_tally_template_v3",
+            "sampleData": {},
+            "pieceVersion": "2.2.0",
+            "propertySettings": {
+              "template": {
+                "type": "DYNAMIC"
+              },
+              "variables": {
+                "type": "MANUAL",
+                "schema": {}
+              },
+              "tallyconnection": {
+                "type": "MANUAL"
+              }
+            },
+            "errorHandlingOptions": {
+              "retryOnFailure": {
+                "value": false
+              },
+              "continueOnFailure": {
+                "value": false
+              }
+            }
+          },
+          "nextAction": {
+            "name": "step_2",
+            "type": "PIECE",
+            "valid": true,
+            "settings": {
+              "input": {
+                "fields": {
+                  "body": "{{step_1}}",
+                  "status": 200,
+                  "headers": {}
+                },
+                "respond": "stop",
+                "responseType": "json"
+              },
+              "pieceName": "@puchoaistudio/tool-webhook",
+              "actionName": "return_response",
+              "sampleData": {},
+              "pieceVersion": "2.0.4",
+              "propertySettings": {
+                "fields": {
+                  "type": "MANUAL",
+                  "schema": {
+                    "body": {
+                      "type": "JSON",
+                      "required": true,
+                      "displayName": "JSON Body"
+                    },
+                    "status": {
+                      "type": "NUMBER",
+                      "required": false,
+                      "displayName": "Status",
+                      "defaultValue": 200
+                    },
+                    "headers": {
+                      "type": "OBJECT",
+                      "required": false,
+                      "displayName": "Headers"
+                    }
+                  }
+                },
+                "respond": {
+                  "type": "MANUAL"
+                },
+                "responseType": {
+                  "type": "MANUAL"
+                }
+              },
+              "errorHandlingOptions": {
+                "retryOnFailure": {
+                  "value": false
+                },
+                "continueOnFailure": {
+                  "value": false
+                }
+              }
+            },
+            "displayName": "Return Response"
+          },
+          "displayName": "Ask Tally Template V3"
+        },
+        "displayName": "Tally Connection"
+      }
+    },
+    "valid": true,
+    "agentIds": [],
+    "connectionIds": [],
+    "schemaVersion": "7"
+  },
+  "blogUrl": ""
+}

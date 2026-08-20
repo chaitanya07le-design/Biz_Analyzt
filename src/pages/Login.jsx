@@ -38,9 +38,10 @@ const Mascot = ({ imageSrc, delay, x, y, size = "w-16 h-16", cursorColor = "text
 };
 
 const Login = () => {
-  const { login } = useAuth();
+  const { login, loginWithToken } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [tokenLoading, setTokenLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -52,6 +53,35 @@ const Login = () => {
     };
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // Magic-link token handling — runs once on mount
+  // Token is extracted from the URL, then validated server-side by W-Validate-Token.
+  // The URL itself is never trusted — email/role come only from the workflow response.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    if (!token) return;
+
+    // Clean the token from the URL immediately to prevent sharing/bookmarking
+    window.history.replaceState({}, document.title, window.location.pathname);
+
+    setTokenLoading(true);
+    setError('');
+
+    loginWithToken(token).then(result => {
+      if (result.success) {
+        // If the workflow returned a companyId, go straight to dashboard
+        if (result.companyId) {
+          navigate('/dashboard');
+        } else {
+          navigate('/company-selection');
+        }
+      } else {
+        setError(result.error || 'This invitation link is invalid or has been revoked.');
+        setTokenLoading(false);
+      }
+    });
   }, []);
 
   const handleSubmit = async (e) => {
@@ -141,10 +171,26 @@ const Login = () => {
 
         <div className="flex flex-col items-center justify-center md:justify-end w-full">
           <div className="bg-white/70 backdrop-blur-xl p-6 md:p-8 lg:p-12 rounded-3xl shadow-card w-full max-w-sm md:max-w-md border border-white relative overflow-hidden group">
+
+            {/* Magic-link validation loading overlay */}
+            {tokenLoading && (
+              <div className="absolute inset-0 bg-white/90 backdrop-blur-sm z-10 flex flex-col items-center justify-center gap-3 rounded-3xl">
+                <div className="w-8 h-8 border-3 border-kinetic-primary border-t-transparent rounded-full animate-spin" />
+                <p className="text-sm font-medium text-ink-900">Validating your invitation link…</p>
+              </div>
+            )}
+
             <div className="space-y-2 mb-6 md:mb-8">
               <h2 className="text-2xl font-display font-bold text-ink-900">Welcome Back</h2>
               <p className="text-kinetic-neutral font-medium text-sm">Enter your credentials to access the dashboard.</p>
             </div>
+
+            {/* Error banner — shown for both token and password errors */}
+            {error && (
+              <div className="mb-4 px-4 py-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-sm font-medium">
+                {error}
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <Input

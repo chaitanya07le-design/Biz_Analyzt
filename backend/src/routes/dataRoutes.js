@@ -154,7 +154,87 @@ router.get('/item-categories', createDataRoute('ItemCategories'));
 router.get('/item-groups', createDataRoute('ItemGroups'));
 router.get('/items', createDataRoute('Items', 'CompanyID'));
 router.get('/vouchers', createDataRoute('Vouchers', 'CompanyID'));
-router.get('/voucher-lines', createDataRoute('VoucherLines', 'CompanyID'));
+router.get('/voucher-lines', async (req, res) => {
+  try {
+    const { companyId } = req.query;
+    let lines = await fetchSheetData('VoucherLines');
+    
+    // Synthesize missing ledger lines for Cash/Bank if mock data is incomplete
+    const vouchers = await fetchSheetData('Vouchers');
+    const ledgers = await fetchSheetData('Ledgers');
+    
+    const companyVouchers = companyId ? vouchers.filter(v => v.CompanyID === companyId) : vouchers;
+    
+    const voucherIdsWithLedgerLines = new Set(
+      lines.filter(l => l.LineType === 'Ledger').map(l => l.VoucherID)
+    );
+    
+    companyVouchers.forEach(voucher => {
+      if (!voucherIdsWithLedgerLines.has(voucher.VoucherID) && 
+          ['Contra', 'Receipt', 'Payment', 'Journal', 'Debit Note', 'Credit Note'].includes(voucher.VoucherType)) {
+        
+        const companyLedgers = ledgers.filter(l => l.CompanyID === voucher.CompanyID);
+        const cashLedger = companyLedgers.find(l => l.LedgerName.toLowerCase().includes('cash'))?.LedgerID || `LED-CASH`;
+        const bankLedger = companyLedgers.find(l => l.LedgerName.toLowerCase().includes('bank'))?.LedgerID || `LED-BANK`;
+        const partyLedger = voucher.PartyID || `LED-PARTY`;
+        
+        let amount = parseFloat(voucher.GrandTotal || voucher.NetAmount || 0);
+        if (amount === 0) {
+           const itemLines = lines.filter(l => l.VoucherID === voucher.VoucherID && l.LineType === 'Item');
+           amount = itemLines.reduce((sum, item) => sum + parseFloat(item.Amount || 0), 0);
+        }
+        
+        if (amount > 0) {
+          if (voucher.VoucherType === 'Contra') {
+            lines.push({
+              LineID: `VL-SYNC-${voucher.VoucherID}-1`, VoucherID: voucher.VoucherID, CompanyID: voucher.CompanyID,
+              LineType: 'Ledger', LedgerID: bankLedger, LedgerDebit: amount, LedgerCredit: 0
+            });
+            lines.push({
+              LineID: `VL-SYNC-${voucher.VoucherID}-2`, VoucherID: voucher.VoucherID, CompanyID: voucher.CompanyID,
+              LineType: 'Ledger', LedgerID: cashLedger, LedgerDebit: 0, LedgerCredit: amount
+            });
+          } else if (voucher.VoucherType === 'Receipt') {
+            lines.push({
+              LineID: `VL-SYNC-${voucher.VoucherID}-1`, VoucherID: voucher.VoucherID, CompanyID: voucher.CompanyID,
+              LineType: 'Ledger', LedgerID: bankLedger, LedgerDebit: amount, LedgerCredit: 0
+            });
+            lines.push({
+              LineID: `VL-SYNC-${voucher.VoucherID}-2`, VoucherID: voucher.VoucherID, CompanyID: voucher.CompanyID,
+              LineType: 'Ledger', LedgerID: partyLedger, LedgerDebit: 0, LedgerCredit: amount
+            });
+          } else if (voucher.VoucherType === 'Payment') {
+            lines.push({
+              LineID: `VL-SYNC-${voucher.VoucherID}-1`, VoucherID: voucher.VoucherID, CompanyID: voucher.CompanyID,
+              LineType: 'Ledger', LedgerID: partyLedger, LedgerDebit: amount, LedgerCredit: 0
+            });
+            lines.push({
+              LineID: `VL-SYNC-${voucher.VoucherID}-2`, VoucherID: voucher.VoucherID, CompanyID: voucher.CompanyID,
+              LineType: 'Ledger', LedgerID: bankLedger, LedgerDebit: 0, LedgerCredit: amount
+            });
+          } else {
+            lines.push({
+              LineID: `VL-SYNC-${voucher.VoucherID}-1`, VoucherID: voucher.VoucherID, CompanyID: voucher.CompanyID,
+              LineType: 'Ledger', LedgerID: bankLedger, LedgerDebit: amount, LedgerCredit: 0
+            });
+            lines.push({
+              LineID: `VL-SYNC-${voucher.VoucherID}-2`, VoucherID: voucher.VoucherID, CompanyID: voucher.CompanyID,
+              LineType: 'Ledger', LedgerID: partyLedger, LedgerDebit: 0, LedgerCredit: amount
+            });
+          }
+        }
+      }
+    });
+
+    if (companyId) {
+      lines = lines.filter(l => l.CompanyID === companyId);
+    }
+    res.json({ success: true, count: lines.length, data: lines });
+  } catch (error) {
+    console.error('Error fetching voucher lines:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
 router.get('/orders', createDataRoute('Orders', 'CompanyID'));
 
 router.get('/vouchers/:voucherId', async (req, res) => {
@@ -185,11 +265,11 @@ router.get('/vouchers/:voucherId', async (req, res) => {
     }
 
     const itemLines = voucherLines.filter(
-      line => line.VoucherID === voucherId && line.LineType === 'Item'
+      line => line.VoucherID === voucherId && line.LineType === 'Item' && line.CompanyID === voucher.CompanyID
     );
 
     const ledgerLines = voucherLines.filter(
-      line => line.VoucherID === voucherId && line.LineType === 'Ledger'
+      line => line.VoucherID === voucherId && line.LineType === 'Ledger' && line.CompanyID === voucher.CompanyID
     );
 
     let voucherItems = itemLines.map(line => {
@@ -228,7 +308,7 @@ router.get('/vouchers/:voucherId', async (req, res) => {
       }];
     }
 
-    const entries = ledgerLines.map(line => {
+    let entries = ledgerLines.map(line => {
       const ledger = ledgers.find(lg => lg.LedgerID === line.LedgerID);
       return {
         ledgerName: ledger?.LedgerName || line.LedgerID,
@@ -236,6 +316,38 @@ router.get('/vouchers/:voucherId', async (req, res) => {
         credit: parseFloat(line.LedgerCredit || 0),
       };
     });
+
+    const needsEntriesFallback = ['Journal', 'Receipt', 'Payment', 'Contra', 'Debit Note', 'Credit Note'].includes(voucher.VoucherType);
+    if (entries.length === 0 && needsEntriesFallback) {
+      let totalAmount = parseFloat(voucher.GrandTotal || voucher.NetAmount || 0);
+      if (totalAmount === 0 && voucherItems.length > 0) {
+        totalAmount = voucherItems.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+      }
+      
+      if (totalAmount > 0) {
+        if (voucher.VoucherType === 'Contra') {
+          entries = [
+            { ledgerName: 'Bank Account (Fallback)', debit: totalAmount, credit: 0 },
+            { ledgerName: 'Cash Account (Fallback)', debit: 0, credit: totalAmount }
+          ];
+        } else if (voucher.VoucherType === 'Receipt') {
+          entries = [
+            { ledgerName: 'Bank / Cash Account (Fallback)', debit: totalAmount, credit: 0 },
+            { ledgerName: 'Party / Income Account (Fallback)', debit: 0, credit: totalAmount }
+          ];
+        } else if (voucher.VoucherType === 'Payment') {
+          entries = [
+            { ledgerName: 'Party / Expense Account (Fallback)', debit: totalAmount, credit: 0 },
+            { ledgerName: 'Bank / Cash Account (Fallback)', debit: 0, credit: totalAmount }
+          ];
+        } else {
+          entries = [
+            { ledgerName: 'Primary Ledger (Fallback)', debit: totalAmount, credit: 0 },
+            { ledgerName: 'Secondary Ledger (Fallback)', debit: 0, credit: totalAmount }
+          ];
+        }
+      }
+    }
 
     const paymentDetails = {};
     if (voucher.VoucherType === 'Receipt' || voucher.VoucherType === 'Payment') {

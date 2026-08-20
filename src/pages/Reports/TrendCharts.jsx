@@ -5,17 +5,23 @@ import Skeleton from '../../components/shared/Skeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import { useCompany } from '../../context/CompanyContext';
 import { useDateRange } from '../../context/DateRangeContext';
+import useTallyTrends from '../../hooks/useTallyTrends';
 
 const TrendCharts = () => {
   const { currentCompany } = useCompany();
   const { dateRange } = useDateRange();
   const { vouchers, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const tallyTrends = useTallyTrends();
+  const trendVouchers = useMemo(() => tallyTrends ? [
+    ...(tallyTrends.sales || []).map((row, index) => ({ VoucherID: `tally-sales-${index}`, VoucherDate: row.date, VoucherType: 'Sales', GrandTotal: row.amount })),
+    ...(tallyTrends.purchases || []).map((row, index) => ({ VoucherID: `tally-purchase-${index}`, VoucherDate: row.date, VoucherType: 'Purchase', GrandTotal: row.amount })),
+  ] : vouchers, [tallyTrends, vouchers]);
 
   const [chartType, setChartType] = useState('daily');
   const [viewMode, setViewMode] = useState('sales');
 
   const monthlyData = useMemo(() => {
-    if (!vouchers) return [];
+    if (!trendVouchers) return [];
 
     const salesByMonth = {};
     const purchaseByMonth = {};
@@ -23,7 +29,7 @@ const TrendCharts = () => {
     const dateStart = dateRange.startDate ? new Date(dateRange.startDate) : null;
     const dateEnd = dateRange.endDate ? new Date(dateRange.endDate) : null;
 
-    vouchers.forEach(v => {
+    trendVouchers.forEach(v => {
       const voucherDate = new Date(v.VoucherDate);
       if (dateStart && dateEnd) {
         if (voucherDate < dateStart || voucherDate > dateEnd) return;
@@ -46,10 +52,10 @@ const TrendCharts = () => {
       sales: salesByMonth[month] || 0,
       purchase: purchaseByMonth[month] || 0,
     }));
-  }, [vouchers, dateRange]);
+  }, [trendVouchers, dateRange]);
 
   const dailyData = useMemo(() => {
-    if (!vouchers) return [];
+    if (!trendVouchers) return [];
 
     const salesByDay = {};
     const purchaseByDay = {};
@@ -57,7 +63,7 @@ const TrendCharts = () => {
     const dateStart = dateRange.startDate ? new Date(dateRange.startDate) : null;
     const dateEnd = dateRange.endDate ? new Date(dateRange.endDate) : null;
 
-    vouchers.forEach(v => {
+    trendVouchers.forEach(v => {
       const voucherDate = new Date(v.VoucherDate);
       if (dateStart && dateEnd) {
         if (voucherDate < dateStart || voucherDate > dateEnd) return;
@@ -80,7 +86,7 @@ const TrendCharts = () => {
       sales: salesByDay[day] || 0,
       purchase: purchaseByDay[day] || 0,
     }));
-  }, [vouchers, dateRange]);
+  }, [trendVouchers, dateRange]);
 
   const summaryStats = useMemo(() => {
     const totalSales = (chartType === 'daily' ? dailyData : monthlyData).reduce((sum, d) => sum + d.sales, 0);

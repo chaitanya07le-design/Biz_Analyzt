@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { CompanyProvider, useCompany } from './context/CompanyContext';
 import { DateRangeProvider } from './context/DateRangeContext';
+import { SettingsProvider } from './context/SettingsContext';
 import Login from './pages/Login';
 import CompanySelection from './pages/CompanySelection';
 import DashboardLayout from './components/Layout/DashboardLayout';
@@ -61,6 +62,7 @@ import StockItemSettings from './pages/Settings/StockItemSettings';
 import DateSettings from './pages/Settings/DateSettings';
 import DefaultScreenSettings from './pages/Settings/DefaultScreenSettings';
 import CurrencySettings from './pages/Settings/CurrencySettings';
+import GstLiability from './pages/Reports/GstLiability';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -159,6 +161,7 @@ function AppRoutes() {
           <Route path="reports/trends" element={<TrendCharts />} />
           <Route path="reports/geographic" element={<GeographicReport />} />
           <Route path="reports/expenses" element={<ExpensesReport />} />
+          <Route path="reports/gst-liability" element={<GstLiability />} />
           <Route path="reports/customer" element={<CustomerView />} />
           <Route path="reports/ledger/:ledgerId" element={<LedgerStatement />} />
           <Route path="reports/pending-purchase" element={<PendingOrders type="purchase" />} />
@@ -181,12 +184,25 @@ function AppRoutes() {
   );
 }
 
+// Inner wrapper: gives DateRangeProvider and SettingsProvider access to currentCompany.id
+function AppWithSettings({ children }) {
+  const { currentCompany } = useCompany();
+  const companyId = currentCompany?.id;
+  return (
+    <SettingsProvider companyId={companyId}>
+      <DateRangeProvider companyId={companyId}>
+        {children}
+      </DateRangeProvider>
+    </SettingsProvider>
+  );
+}
+
 export default function App() {
   return (
     <Router>
       <AuthProvider>
         <CompanyProvider>
-          <DateRangeProvider>
+          <AppWithSettings>
             <div className="min-h-screen bg-canvas">
               <AppRoutes />
             
@@ -207,7 +223,7 @@ export default function App() {
               </motion.div>
             </div>
           </div>
-        </DateRangeProvider>
+        </AppWithSettings>
       </CompanyProvider>
     </AuthProvider>
   </Router>

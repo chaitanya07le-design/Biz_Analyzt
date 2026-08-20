@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const dataRoutes = require('./routes/dataRoutes');
 const settingsRoutes = require('./routes/settingsRoutes');
+const tallyRoutes = require('./routes/tallyRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -17,6 +18,7 @@ app.use(cors({
 app.use(express.json());
 
 app.use('/api/settings', settingsRoutes);
+app.use('/api/tally', tallyRoutes);
 app.use('/api', dataRoutes);
 
 app.use((err, req, res, next) => {

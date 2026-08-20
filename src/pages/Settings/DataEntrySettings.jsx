@@ -41,6 +41,7 @@ export default function DataEntrySettings() {
   return (
     <SettingsDetailLayout
       title="Data Entry"
+      category="DataEntry"
       description="Customize default values for voucher entry"
       icon={Database}
       onSave={handleSave}

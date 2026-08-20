@@ -1,0 +1,616 @@
+{
+  "created": 1734300000000,
+  "updated": 1734300000000,
+  "name": "W-Reminder-Send-Now",
+  "description": "Webhook-triggered: reads AutoReminder settings for a company, finds overdue invoices, writes ReminderLog, sends email via Gmail. Fired from the Send Reminders Now button.",
+  "tags": [],
+  "pieces": [
+    "@puchoaistudio/tool-webhook",
+    "@puchoaistudio/tool-google-sheets",
+    "@puchoaistudio/tool-gmail"
+  ],
+  "template": {
+    "displayName": "W-Reminder-Send-Now",
+    "trigger": {
+      "name": "trigger",
+      "valid": true,
+      "displayName": "Webhook - Send Now",
+      "type": "TOOL_TRIGGER",
+      "settings": {
+        "pieceName": "@puchoaistudio/tool-webhook",
+        "pieceVersion": "^2.0.4",
+        "input": {
+          "authType": "none"
+        },
+        "sampleData": {},
+        "propertySettings": {
+          "liveMarkdown": {
+            "type": "MANUAL"
+          },
+          "syncMarkdown": {
+            "type": "MANUAL"
+          },
+          "testMarkdown": {
+            "type": "MANUAL"
+          },
+          "authType": {
+            "type": "MANUAL"
+          },
+          "authFields": {
+            "type": "MANUAL",
+            "schema": {}
+          }
+        },
+        "triggerName": "catch_webhook"
+      },
+      "nextAction": {
+        "name": "step_2",
+        "type": "PIECE",
+        "displayName": "Read Settings",
+        "valid": true,
+        "skip": false,
+        "settings": {
+          "input": {
+            "auth": "",
+            "spreadsheetId": "1OLwA-WEK2rRJLV__gl8v9iyLYIoOBIQ_rxoIbJEQsfM",
+            "sheetId": 1099457799,
+            "startRow": 1,
+            "groupSize": 10000,
+            "memKey": "send_settings",
+            "includeTeamDrives": false
+          },
+          "pieceName": "@puchoaistudio/tool-google-sheets",
+          "actionName": "get_all_rows",
+          "pieceVersion": "^2.0.9",
+          "sampleData": {},
+          "propertySettings": {
+            "includeTeamDrives": {
+              "type": "MANUAL"
+            },
+            "spreadsheetId": {
+              "type": "MANUAL"
+            },
+            "sheetId": {
+              "type": "MANUAL"
+            },
+            "startRow": {
+              "type": "MANUAL"
+            },
+            "memKey": {
+              "type": "MANUAL"
+            },
+            "groupSize": {
+              "type": "MANUAL"
+            }
+          },
+          "errorHandlingOptions": {
+            "retryOnFailure": {
+              "value": true
+            },
+            "continueOnFailure": {
+              "value": false
+            }
+          }
+        },
+        "nextAction": {
+          "name": "step_3",
+          "type": "CODE",
+          "displayName": "Parse AutoReminder Configs",
+          "valid": true,
+          "skip": false,
+          "settings": {
+            "input": {
+              "allRows": "{{step_2}}",
+              "companyId": "{{trigger['body']['companyId']}}"
+            },
+            "sourceCode": {
+              "code": "export const code = async (inputs: any) => {\n  let raw: any = inputs.allRows;\n  if (typeof raw === 'string') { try { raw = JSON.parse(raw); } catch (e) { raw = null; } }\n  let entries: any[] = [];\n  if (raw && typeof raw === 'object' && !Array.isArray(raw)) entries = Object.values(raw);\n  else if (Array.isArray(raw)) entries = raw;\n  const cm: Record<string, any> = {};\n  for (const entry of entries) {\n    const vals: any = entry.values || entry;\n    const key: string = vals.C || vals.SettingKey;\n    if (!key || !key.startsWith(\"AutoReminder.\")) continue;\n    const cid: string = vals.B || vals.CompanyID;\n    if (!cm[cid]) cm[cid] = {};\n    const k: string = key.replace(\"AutoReminder.\", \"\");\n    let v: any = vals.D || vals.SettingValue;\n    if (v === \"true\") v = true;\n    else if (v === \"false\") v = false;\n    else if (!isNaN(parseInt(v)) && String(parseInt(v)) === v) v = parseInt(v);\n    cm[cid][k] = v;\n  }\n  // Filter to the company from the webhook payload (fire once per save)\n  const targetCid: string = inputs.companyId || '';\n  const configs: any[] = [];\n  for (const [cid, cfg] of Object.entries(cm)) {\n    if (targetCid && cid !== targetCid) continue;\n    {\n      configs.push({\n        companyId: cid,\n        triggerDays: cfg.triggerDays || 3,\n        triggerType: cfg.triggerType || \"after\",\n        frequency: cfg.frequency || \"once\",\n        channelEmail: cfg.channelEmail !== false,\n        channelWhatsapp: cfg.channelWhatsapp === true,\n        template: cfg.template || \"Payment reminder for {party_name} - {amount} due on {due_date}. Invoice: {invoice_no}. - {company_name}\"\n      });\n    }\n  }\n  return { configs, hasActive: configs.length > 0 };\n};",
+              "packageJson": "{}"
+            },
+            "propertySettings": {
+              "allRows": {
+                "type": "MANUAL"
+              },
+              "companyId": {
+                "type": "MANUAL"
+              }
+            },
+            "sampleData": {},
+            "errorHandlingOptions": {
+              "retryOnFailure": {
+                "value": false
+              },
+              "continueOnFailure": {
+                "value": false
+              }
+            }
+          },
+          "nextAction": {
+            "name": "step_4",
+            "type": "ROUTER",
+            "displayName": "Any Active Reminders?",
+            "valid": true,
+            "skip": false,
+            "settings": {
+              "branches": [
+                {
+                  "branchName": "HasActive",
+                  "branchType": "CONDITION",
+                  "conditions": [
+                    [
+                      {
+                        "operator": "BOOLEAN_IS_TRUE",
+                        "firstValue": "{{step_3['hasActive']}}"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "branchName": "Otherwise",
+                  "branchType": "FALLBACK"
+                }
+              ],
+              "executionType": "EXECUTE_FIRST_MATCH"
+            },
+            "children": [
+              {
+                "name": "step_5a",
+                "type": "PIECE",
+                "displayName": "Read Vouchers",
+                "valid": true,
+                "skip": false,
+                "settings": {
+                  "input": {
+                    "auth": "",
+                    "spreadsheetId": "1OLwA-WEK2rRJLV__gl8v9iyLYIoOBIQ_rxoIbJEQsfM",
+                    "sheetId": 759847801,
+                    "startRow": 1,
+                    "groupSize": 10000,
+                    "memKey": "send_vch",
+                    "includeTeamDrives": false
+                  },
+                  "pieceName": "@puchoaistudio/tool-google-sheets",
+                  "actionName": "get_all_rows",
+                  "pieceVersion": "^2.0.9",
+                  "sampleData": {},
+                  "propertySettings": {
+                    "includeTeamDrives": {
+                      "type": "MANUAL"
+                    },
+                    "spreadsheetId": {
+                      "type": "MANUAL"
+                    },
+                    "sheetId": {
+                      "type": "MANUAL"
+                    },
+                    "startRow": {
+                      "type": "MANUAL"
+                    },
+                    "memKey": {
+                      "type": "MANUAL"
+                    },
+                    "groupSize": {
+                      "type": "MANUAL"
+                    }
+                  },
+                  "errorHandlingOptions": {
+                    "retryOnFailure": {
+                      "value": true
+                    },
+                    "continueOnFailure": {
+                      "value": false
+                    }
+                  }
+                },
+                "nextAction": {
+                  "name": "step_5b",
+                  "type": "PIECE",
+                  "displayName": "Read Parties",
+                  "valid": true,
+                  "skip": false,
+                  "settings": {
+                    "input": {
+                      "auth": "",
+                      "spreadsheetId": "1OLwA-WEK2rRJLV__gl8v9iyLYIoOBIQ_rxoIbJEQsfM",
+                      "sheetId": 360235701,
+                      "startRow": 1,
+                      "groupSize": 10000,
+                      "memKey": "send_prt",
+                      "includeTeamDrives": false
+                    },
+                    "pieceName": "@puchoaistudio/tool-google-sheets",
+                    "actionName": "get_all_rows",
+                    "pieceVersion": "^2.0.9",
+                    "sampleData": {},
+                    "propertySettings": {
+                      "includeTeamDrives": {
+                        "type": "MANUAL"
+                      },
+                      "spreadsheetId": {
+                        "type": "MANUAL"
+                      },
+                      "sheetId": {
+                        "type": "MANUAL"
+                      },
+                      "startRow": {
+                        "type": "MANUAL"
+                      },
+                      "memKey": {
+                        "type": "MANUAL"
+                      },
+                      "groupSize": {
+                        "type": "MANUAL"
+                      }
+                    },
+                    "errorHandlingOptions": {
+                      "retryOnFailure": {
+                        "value": true
+                      },
+                      "continueOnFailure": {
+                        "value": false
+                      }
+                    }
+                  },
+                  "nextAction": {
+                    "name": "step_5c",
+                    "type": "PIECE",
+                    "displayName": "Read ReminderLog",
+                    "valid": true,
+                    "skip": false,
+                    "settings": {
+                      "input": {
+                        "auth": "",
+                        "spreadsheetId": "1OLwA-WEK2rRJLV__gl8v9iyLYIoOBIQ_rxoIbJEQsfM",
+                        "sheetId": 1978497307,
+                        "startRow": 1,
+                        "groupSize": 10000,
+                        "memKey": "send_log",
+                        "includeTeamDrives": false
+                      },
+                      "pieceName": "@puchoaistudio/tool-google-sheets",
+                      "actionName": "get_all_rows",
+                      "pieceVersion": "^2.0.9",
+                      "sampleData": {},
+                      "propertySettings": {
+                        "includeTeamDrives": {
+                          "type": "MANUAL"
+                        },
+                        "spreadsheetId": {
+                          "type": "MANUAL"
+                        },
+                        "sheetId": {
+                          "type": "MANUAL"
+                        },
+                        "startRow": {
+                          "type": "MANUAL"
+                        },
+                        "memKey": {
+                          "type": "MANUAL"
+                        },
+                        "groupSize": {
+                          "type": "MANUAL"
+                        }
+                      },
+                      "errorHandlingOptions": {
+                        "retryOnFailure": {
+                          "value": true
+                        },
+                        "continueOnFailure": {
+                          "value": false
+                        }
+                      }
+                    },
+                    "nextAction": {
+                      "name": "step_5d",
+                      "type": "CODE",
+                      "displayName": "Match Overdue and Build Reminders",
+                      "valid": true,
+                      "skip": false,
+                      "settings": {
+                        "input": {
+                          "configs": "{{step_3['configs']}}",
+                          "allVouchers": "{{step_5a}}",
+                          "allParties": "{{step_5b}}",
+                          "allReminderLog": "{{step_5c}}"
+                        },
+                        "sourceCode": {
+                          "code": "export const code = async (inputs: any) => {\n  const { configs, allVouchers, allParties, allReminderLog } = inputs;\n  const norm = (x: any) => {\n    let d: any = x;\n    if (typeof d === 'string') { try { d = JSON.parse(d); } catch (e) { d = null; } }\n    if (d && typeof d === 'object' && !Array.isArray(d)) return Object.values(d);\n    if (Array.isArray(d)) return d;\n    return [];\n  };\n  const vouchers: any[] = norm(allVouchers);\n  const parties: any[] = norm(allParties);\n  const logs: any[] = norm(allReminderLog);\n  const today: any = new Date();\n  today.setHours(0, 0, 0, 0);\n  const allReminders: any[] = [];\n  const allLogRows: any[] = [];\n  for (const cfg of configs) {\n    const cv: any[] = vouchers.filter(function(e: any) {\n      const v: any = e.values || e;\n      return (v.B || v.CompanyID) === cfg.companyId && (v.D || v.VoucherType) === \"Sales\";\n    });\n    const pm: Record<string, any> = {};\n    for (const e of parties) {\n      const p: any = e.values || e;\n      if ((p.B || p.CompanyID) === cfg.companyId) pm[p.A || p.PartyID] = p;\n    }\n    for (const e of cv) {\n      const v: any = e.values || e;\n      const party: any = pm[v.F || v.PartyID];\n      if (!party) continue;\n      const vd: any = new Date(v.E || v.VoucherDate);\n      const cd: number = parseInt(party.N || party.CreditDays) || 0;\n      const dd: any = new Date(vd);\n      dd.setDate(dd.getDate() + cd);\n      let isDue: boolean = false;\n      if (cfg.triggerType === \"after\") {\n        const od: number = Math.floor((today.getTime() - dd.getTime()) / (1000 * 60 * 60 * 24));\n        isDue = od >= cfg.triggerDays;\n      } else {\n        const du: number = Math.floor((dd.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));\n        isDue = du <= cfg.triggerDays && du >= 0;\n      }\n      if (!isDue) continue;\n      const voucherId: string = v.A || v.VoucherID;\n      const sent: boolean = logs.some(function(e: any) {\n        const l: any = e.values || e;\n        if ((l.B || l.CompanyID) !== cfg.companyId) return false;\n        if ((l.J || l.VoucherID) !== voucherId) return false;\n        if (cfg.frequency === \"once\") return true;\n        const sd: any = new Date(l.G || l.SentAt || l.H || l.CreatedAt);\n        return sd.toDateString() === today.toDateString();\n      });\n      if (sent) continue;\n      const rid: string = \"REM-\" + Date.now().toString(36) + Math.random().toString(36).substring(2, 6);\n      const amt: number = parseFloat(v.J || v.GrandTotal) || 0;\n      const cn: string = party.C || party.PartyName || \"Company\";\n      let msg: string = cfg.template;\n      msg = msg.replace(/{party_name}/g, party.C || party.PartyName || \"Customer\");\n      msg = msg.replace(/{amount}/g, String(amt));\n      msg = msg.replace(/{invoice_no}/g, v.C || v.VoucherNo || \"N/A\");\n      msg = msg.replace(/{due_date}/g, dd.toISOString().split(\"T\")[0]);\n      msg = msg.replace(/{company_name}/g, cn);\n      const ts: string = new Date().toISOString();\n      const ch: string = cfg.channelEmail && cfg.channelWhatsapp ? \"both\" : (cfg.channelEmail ? \"email\" : \"whatsapp\");\n      allLogRows.push({\n        LogID: rid, CompanyID: cfg.companyId, ReminderType: \"PaymentDue\",\n        ReferenceID: voucherId, Message: msg, Status: \"Pending\",\n        SentAt: ts, CreatedAt: ts, PartyID: v.F || v.PartyID || \"\",\n        VoucherID: voucherId, Channel: ch\n      });\n      if (cfg.channelEmail && (party.J || party.Email)) {\n        allReminders.push({\n          reminderId: rid, to: party.J || party.Email,\n          subject: \"Payment Reminder - \" + cn, message: msg,\n          channelEmail: true, voucherId: voucherId, partyName: party.C || party.PartyName\n        });\n      }\n    }\n  }\n  return { reminders: allReminders, logRows: allLogRows, hasReminders: allReminders.length > 0 };\n};",
+                          "packageJson": "{}"
+                        },
+                        "propertySettings": {
+                          "configs": {
+                            "type": "MANUAL"
+                          },
+                          "allVouchers": {
+                            "type": "MANUAL"
+                          },
+                          "allParties": {
+                            "type": "MANUAL"
+                          },
+                          "allReminderLog": {
+                            "type": "MANUAL"
+                          }
+                        },
+                        "sampleData": {},
+                        "errorHandlingOptions": {
+                          "retryOnFailure": {
+                            "value": false
+                          },
+                          "continueOnFailure": {
+                            "value": false
+                          }
+                        }
+                      },
+                      "nextAction": {
+                        "name": "step_5e",
+                        "type": "ROUTER",
+                        "displayName": "Any Reminders?",
+                        "valid": true,
+                        "skip": false,
+                        "settings": {
+                          "branches": [
+                            {
+                              "branchName": "HasReminders",
+                              "branchType": "CONDITION",
+                              "conditions": [
+                                [
+                                  {
+                                    "operator": "BOOLEAN_IS_TRUE",
+                                    "firstValue": "{{step_5d['hasReminders']}}"
+                                  }
+                                ]
+                              ]
+                            },
+                            {
+                              "branchName": "Otherwise",
+                              "branchType": "FALLBACK"
+                            }
+                          ],
+                          "executionType": "EXECUTE_FIRST_MATCH"
+                        },
+                        "children": [
+                          {
+                            "name": "step_5f",
+                            "type": "PIECE",
+                            "displayName": "Write ReminderLog",
+                            "valid": true,
+                            "skip": false,
+                            "settings": {
+                              "input": {
+                                "auth": "",
+                                "spreadsheetId": "1OLwA-WEK2rRJLV__gl8v9iyLYIoOBIQ_rxoIbJEQsfM",
+                                "sheetId": 1978497307,
+                                "input_type": "column_names",
+                                "values": "{{step_5d['logRows']}}",
+                                "overwrite": false,
+                                "check_for_duplicate": false
+                              },
+                              "pieceName": "@puchoaistudio/tool-google-sheets",
+                              "actionName": "google-sheets-insert-multiple-rows",
+                              "pieceVersion": "^2.0.9",
+                              "sampleData": {},
+                              "propertySettings": {
+                                "includeTeamDrives": {
+                                  "type": "MANUAL"
+                                },
+                                "spreadsheetId": {
+                                  "type": "MANUAL"
+                                },
+                                "sheetId": {
+                                  "type": "MANUAL"
+                                },
+                                "input_type": {
+                                  "type": "MANUAL"
+                                },
+                                "values": {
+                                  "type": "MANUAL",
+                                  "schema": {
+                                    "LogID": {
+                                      "type": "SHORT_TEXT",
+                                      "required": false,
+                                      "displayName": "LogID"
+                                    },
+                                    "CompanyID": {
+                                      "type": "SHORT_TEXT",
+                                      "required": false,
+                                      "displayName": "CompanyID"
+                                    },
+                                    "ReminderType": {
+                                      "type": "SHORT_TEXT",
+                                      "required": false,
+                                      "displayName": "ReminderType"
+                                    },
+                                    "ReferenceID": {
+                                      "type": "SHORT_TEXT",
+                                      "required": false,
+                                      "displayName": "ReferenceID"
+                                    },
+                                    "Message": {
+                                      "type": "SHORT_TEXT",
+                                      "required": false,
+                                      "displayName": "Message"
+                                    },
+                                    "Status": {
+                                      "type": "SHORT_TEXT",
+                                      "required": false,
+                                      "displayName": "Status"
+                                    },
+                                    "SentAt": {
+                                      "type": "SHORT_TEXT",
+                                      "required": false,
+                                      "displayName": "SentAt"
+                                    },
+                                    "CreatedAt": {
+                                      "type": "SHORT_TEXT",
+                                      "required": false,
+                                      "displayName": "CreatedAt"
+                                    },
+                                    "PartyID": {
+                                      "type": "SHORT_TEXT",
+                                      "required": false,
+                                      "displayName": "PartyID"
+                                    },
+                                    "VoucherID": {
+                                      "type": "SHORT_TEXT",
+                                      "required": false,
+                                      "displayName": "VoucherID"
+                                    },
+                                    "Channel": {
+                                      "type": "SHORT_TEXT",
+                                      "required": false,
+                                      "displayName": "Channel"
+                                    }
+                                  }
+                                },
+                                "overwrite": {
+                                  "type": "MANUAL"
+                                },
+                                "check_for_duplicate": {
+                                  "type": "MANUAL"
+                                }
+                              },
+                              "errorHandlingOptions": {
+                                "retryOnFailure": {
+                                  "value": true
+                                },
+                                "continueOnFailure": {
+                                  "value": false
+                                }
+                              }
+                            },
+                            "nextAction": {
+                              "name": "step_5g_loop",
+                              "type": "LOOP_ON_ITEMS",
+                              "displayName": "Send Reminder Emails",
+                              "valid": true,
+                              "skip": false,
+                              "settings": {
+                                "items": "{{step_5d['reminders']}}",
+                                "sampleData": {}
+                              },
+                              "firstLoopAction": {
+                                "name": "step_5g_send",
+                                "type": "PIECE",
+                                "displayName": "Send Email",
+                                "valid": true,
+                                "skip": false,
+                                "settings": {
+                                  "input": {
+                                    "auth": "",
+                                    "to": "{{step_5g_loop['item']['to']}}",
+                                    "subject": "{{step_5g_loop['item']['subject']}}",
+                                    "body": "{{step_5g_loop['item']['message']}}"
+                                  },
+                                  "pieceName": "@puchoaistudio/tool-gmail",
+                                  "actionName": "send_email",
+                                  "pieceVersion": "^2.0.4",
+                                  "sampleData": {},
+                                  "propertySettings": {
+                                    "to": {
+                                      "type": "MANUAL"
+                                    },
+                                    "subject": {
+                                      "type": "MANUAL"
+                                    },
+                                    "body": {
+                                      "type": "MANUAL"
+                                    }
+                                  },
+                                  "errorHandlingOptions": {
+                                    "retryOnFailure": {
+                                      "value": false
+                                    },
+                                    "continueOnFailure": {
+                                      "value": true
+                                    }
+                                  }
+                                },
+                                "nextAction": null
+                              },
+                              "nextAction": {
+                                "name": "step_6",
+                                "type": "PIECE",
+                                "displayName": "Respond",
+                                "valid": true,
+                                "skip": false,
+                                "settings": {
+                                  "input": {
+                                    "responseType": "json",
+                                    "fields": {
+                                      "body": {
+                                        "success": true,
+                                        "remindersSent": "{{step_5d['reminders']['length']}}"
+                                      },
+                                      "status": 200,
+                                      "headers": {}
+                                    },
+                                    "respond": "stop"
+                                  },
+                                  "pieceName": "@puchoaistudio/tool-webhook",
+                                  "actionName": "return_response",
+                                  "pieceVersion": "^2.0.4",
+                                  "sampleData": {},
+                                  "propertySettings": {
+                                    "responseType": {
+                                      "type": "MANUAL"
+                                    },
+                                    "fields": {
+                                      "type": "MANUAL",
+                                      "schema": {
+                                        "body": {
+                                          "type": "JSON",
+                                          "required": true,
+                                          "displayName": "JSON Body"
+                                        },
+                                        "status": {
+                                          "type": "NUMBER",
+                                          "required": false,
+                                          "displayName": "Status",
+                                          "defaultValue": 200
+                                        },
+                                        "headers": {
+                                          "type": "OBJECT",
+                                          "required": false,
+                                          "displayName": "Headers"
+                                        }
+                                      }
+                                    },
+                                    "respond": {
+                                      "type": "MANUAL"
+                                    }
+                                  },
+                                  "errorHandlingOptions": {
+                                    "retryOnFailure": {
+                                      "value": false
+                                    },
+                                    "continueOnFailure": {
+                                      "value": false
+                                    }
+                                  }
+                                },
+                                "nextAction": null
+                              }
+                            }
+                          },
+                          null
+                        ],
+                        "nextAction": null
+                      }
+                    }
+                  }
+                }
+              },
+              null
+            ],
+            "nextAction": null
+          }
+        }
+      }
+    },
+    "valid": true,
+    "agentIds": [],
+    "connectionIds": [],
+    "schemaVersion": "7"
+  },
+  "blogUrl": ""
+}

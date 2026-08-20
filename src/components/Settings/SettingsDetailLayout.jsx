@@ -22,6 +22,13 @@ export default function SettingsDetailLayout({
     navigate('/settings');
   };
 
+  const handleSave = async () => {
+    if (onSave) {
+      // The page's onSave already triggers persistence via settingsService
+      await onSave();
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-[calc(100vh-100px)] relative pb-24">
       {/* Header */}
@@ -68,7 +75,7 @@ export default function SettingsDetailLayout({
           </Button>
           <Button
             variant="primary"
-            onClick={onSave}
+            onClick={handleSave}
             disabled={isSaving}
           >
             {isSaving ? 'Saving...' : 'Save Settings'}

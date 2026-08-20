@@ -2,12 +2,15 @@ import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useCompany } from '../../context/CompanyContext';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import useTallyGstLiability from '../../hooks/useTallyGstLiability';
 
 const GstLiability = () => {
   const { currentCompany } = useCompany();
   const { ledgers, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const tallyTaxes = useTallyGstLiability();
 
   const gstData = useMemo(() => {
+    if (tallyTaxes) return tallyTaxes.map((tax) => ({ id: tax.name, name: tax.name, balance: tax.balance }));
     if (!ledgers) return [];
     
     return ledgers
@@ -26,7 +29,7 @@ const GstLiability = () => {
         name: l.LedgerName || l.name,
         balance: parseFloat(l.OpeningBalance || l.Balance || l.balance) || 0,
       }));
-  }, [ledgers]);
+  }, [ledgers, tallyTaxes]);
 
   const totalLiability = gstData.reduce((sum, item) => sum + Math.abs(item.balance), 0);
 

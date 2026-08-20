@@ -1,0 +1,114 @@
+{
+  "created": 1734300000000,
+  "updated": 1734300000000,
+  "name": "W-Validate-Token",
+  "description": "Webhook: receives a magic-link token, reads InvitationLog, and returns { valid, email, role, companyId } or { valid: false }.",
+  "tags": [],
+  "pieces": [
+    "@puchoaistudio/tool-webhook",
+    "@puchoaistudio/tool-google-sheets"
+  ],
+  "template": {
+    "displayName": "W-Validate-Token",
+    "trigger": {
+      "name": "trigger",
+      "valid": true,
+      "displayName": "Webhook - Validate Magic Token",
+      "type": "TOOL_TRIGGER",
+      "settings": {
+        "pieceName": "@puchoaistudio/tool-webhook",
+        "pieceVersion": "^2.0.4",
+        "input": {
+          "authType": "none"
+        },
+        "sampleData": {},
+        "propertySettings": {
+          "authType": { "type": "MANUAL" },
+          "authFields": { "type": "MANUAL", "schema": {} }
+        },
+        "triggerName": "catch_webhook"
+      },
+      "nextAction": {
+        "name": "step_2",
+        "type": "PIECE",
+        "displayName": "Read InvitationLog",
+        "valid": true,
+        "skip": false,
+        "settings": {
+          "input": {
+            "auth": "",
+            "spreadsheetId": "1OLwA-WEK2rRJLV__gl8v9iyLYIoOBIQ_rxoIbJEQsfM",
+            "sheetId": 494982652,
+            "limit": 1000,
+            "skip_empty_lines": true,
+            "include_team_drives": false
+          },
+          "pieceName": "@puchoaistudio/tool-google-sheets",
+          "actionName": "google-sheets-get-all-rows",
+          "pieceVersion": "^2.0.4",
+          "sampleData": {},
+          "propertySettings": {
+            "spreadsheetId": { "type": "MANUAL" },
+            "sheetId": { "type": "MANUAL" }
+          },
+          "errorHandlingOptions": {
+            "retryOnFailure": { "value": false },
+            "continueOnFailure": { "value": false }
+          }
+        },
+        "nextAction": {
+          "name": "step_3",
+          "type": "CODE",
+          "displayName": "Validate Token Against InvitationLog",
+          "valid": true,
+          "skip": false,
+          "settings": {
+            "input": {
+              "token": "{{trigger['body']['token']}}",
+              "rows": "{{step_2}}"
+            },
+            "sourceCode": {
+              "code": "export const code = async (inputs) => {\n  const token = (inputs.token || '').trim();\n  const rows = inputs.rows || [];\n\n  if (!token) {\n    return { valid: false, reason: 'No token provided' };\n  }\n\n  // Google Sheets rows come back letter-keyed (A, B, C...)\n  // Expected column order in InvitationLog:\n  // A=InvitationID, B=CompanyID, C=Email, D=Role, E=AccessToken, F=InvitedAt, G=Status\n  for (const row of rows) {\n    const accessToken = (row['E'] || row['AccessToken'] || '').trim();\n    const status = (row['G'] || row['Status'] || '').trim().toUpperCase();\n\n    if (accessToken === token) {\n      if (status === 'REVOKED') {\n        return { valid: false, reason: 'This invitation has been revoked' };\n      }\n      return {\n        valid: true,\n        email: (row['C'] || row['Email'] || '').trim(),\n        role: (row['D'] || row['Role'] || 'View-only').trim(),\n        companyId: (row['B'] || row['CompanyID'] || '').trim()\n      };\n    }\n  }\n\n  return { valid: false, reason: 'Token not found' };\n};",
+              "packageJson": "{}"
+            },
+            "propertySettings": {
+              "token": { "type": "MANUAL" },
+              "rows": { "type": "MANUAL" }
+            },
+            "sampleData": {},
+            "errorHandlingOptions": {
+              "retryOnFailure": { "value": false },
+              "continueOnFailure": { "value": false }
+            }
+          },
+          "nextAction": {
+            "name": "step_4",
+            "type": "PIECE",
+            "displayName": "Return Validation Result",
+            "valid": true,
+            "skip": false,
+            "settings": {
+              "input": {
+                "status": 200,
+                "headers": {},
+                "body": "{{step_3}}"
+              },
+              "pieceName": "@puchoaistudio/tool-webhook",
+              "actionName": "return_response",
+              "pieceVersion": "^2.0.4",
+              "sampleData": {},
+              "propertySettings": {
+                "status": { "type": "MANUAL" },
+                "body": { "type": "MANUAL" }
+              },
+              "errorHandlingOptions": {
+                "retryOnFailure": { "value": false },
+                "continueOnFailure": { "value": false }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

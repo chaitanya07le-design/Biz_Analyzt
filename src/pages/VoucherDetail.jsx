@@ -175,7 +175,11 @@ const VoucherDetail = () => {
         type: voucherType,
         status: voucherStatus,
         date: voucher.VoucherDate || voucher.date,
-        partyName: voucher.PartyName || voucher.partyName,
+        partyName: voucher.PartyName || voucher.partyName || (
+          voucherType === 'Contra' ? 'Internal Transfer' :
+          voucherType === 'Journal' ? 'Adjustment Entry' :
+          ['Receipt', 'Payment'].includes(voucherType) ? 'Various Parties' : '—'
+        ),
         voucherNo: voucher.VoucherNo || voucher.voucherNo,
       }} onBack={handleBack} />
       

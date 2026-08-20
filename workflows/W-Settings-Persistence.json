@@ -1,0 +1,519 @@
+{
+  "created": 1734300000000,
+  "updated": 1734300000000,
+  "name": "W-Settings-Persistence",
+  "description": "Save all 9 Settings categories to Google Sheets using native update_row/insert_row. Letter-keyed data (A=SettingID, B=CompanyID, C=SettingKey, D=SettingValue, E=Description, F=CreatedAt, G=UpdatedAt).",
+  "tags": [],
+  "pieces": [
+    "@puchoaistudio/tool-webhook",
+    "@puchoaistudio/tool-google-sheets"
+  ],
+  "template": {
+    "displayName": "W-Settings-Persistence",
+    "trigger": {
+      "name": "trigger",
+      "valid": true,
+      "displayName": "Webhook - Save Settings",
+      "type": "TOOL_TRIGGER",
+      "settings": {
+        "pieceName": "@puchoaistudio/tool-webhook",
+        "pieceVersion": "^2.0.4",
+        "input": {
+          "authType": "none"
+        },
+        "sampleData": {},
+        "propertySettings": {
+          "liveMarkdown": {
+            "type": "MANUAL"
+          },
+          "syncMarkdown": {
+            "type": "MANUAL"
+          },
+          "testMarkdown": {
+            "type": "MANUAL"
+          },
+          "authType": {
+            "type": "MANUAL"
+          },
+          "authFields": {
+            "type": "MANUAL",
+            "schema": {}
+          }
+        },
+        "triggerName": "catch_webhook"
+      },
+      "nextAction": {
+        "name": "step_2",
+        "type": "CODE",
+        "displayName": "Flatten and Generate IDs",
+        "valid": true,
+        "skip": false,
+        "settings": {
+          "input": {
+            "payload": "{{trigger['body']}}"
+          },
+          "sourceCode": {
+            "code": "export const code = async (inputs) => {\n  const { companyId, category, settings } = inputs.payload;\n  if (!companyId || !category || !settings) {\n    throw new Error('Missing required fields: companyId, category, settings');\n  }\n  const timestamp = new Date().toISOString();\n  const flattened = [];\n  for (const [key, value] of Object.entries(settings)) {\n    const settingId = 'SET-' + Date.now().toString(36) + Math.random().toString(36).substring(2, 6);\n    const settingKey = category + '.' + key;\n    const settingValue = typeof value === 'object' ? JSON.stringify(value) : String(value);\n    flattened.push({ settingId, companyId, category, settingKey, settingValue });\n  }\n  return { companyId, category, timestamp, flattened, count: flattened.length };\n};",
+            "packageJson": "{}"
+          },
+          "propertySettings": {
+            "payload": {
+              "type": "MANUAL"
+            }
+          },
+          "sampleData": {},
+          "errorHandlingOptions": {
+            "retryOnFailure": {
+              "value": false
+            },
+            "continueOnFailure": {
+              "value": false
+            }
+          }
+        },
+        "nextAction": {
+          "name": "step_3",
+          "type": "PIECE",
+          "displayName": "Read Settings Sheet",
+          "valid": true,
+          "skip": false,
+          "settings": {
+            "input": {
+              "auth": "",
+              "spreadsheetId": "1OLwA-WEK2rRJLV__gl8v9iyLYIoOBIQ_rxoIbJEQsfM",
+              "sheetId": 1099457799,
+              "startRow": 1,
+              "groupSize": 10000,
+              "memKey": "row_number",
+              "includeTeamDrives": false
+            },
+            "pieceName": "@puchoaistudio/tool-google-sheets",
+            "actionName": "get_all_rows",
+            "pieceVersion": "^2.0.9",
+            "sampleData": {},
+            "propertySettings": {
+              "includeTeamDrives": {
+                "type": "MANUAL"
+              },
+              "spreadsheetId": {
+                "type": "MANUAL"
+              },
+              "sheetId": {
+                "type": "MANUAL"
+              },
+              "startRow": {
+                "type": "MANUAL"
+              },
+              "memKey": {
+                "type": "MANUAL"
+              },
+              "groupSize": {
+                "type": "MANUAL"
+              }
+            },
+            "errorHandlingOptions": {
+              "retryOnFailure": {
+                "value": true
+              },
+              "continueOnFailure": {
+                "value": false
+              }
+            }
+          },
+          "nextAction": {
+            "name": "step_4",
+            "type": "CODE",
+            "displayName": "Classify Updates and Inserts",
+            "valid": true,
+            "skip": false,
+            "settings": {
+              "input": {
+                "allRows": "{{step_3}}",
+                "flattened": "{{step_2['flattened']}}",
+                "companyId": "{{step_2['companyId']}}",
+                "timestamp": "{{step_2['timestamp']}}"
+              },
+              "sourceCode": {
+                "code": "export const code = async (inputs) => {\n  const { flattened, allRows, companyId, timestamp } = inputs;\n  // Normalize: get_all_rows returns object keyed by index {\"0\":{row,values},...}\n  let rowEntries = [];\n  if (allRows && typeof allRows === 'object' && !Array.isArray(allRows)) {\n    rowEntries = Object.values(allRows);\n  } else if (Array.isArray(allRows)) {\n    rowEntries = allRows;\n  }\n  const updates = [];\n  const inserts = [];\n  for (const item of flattened) {\n    let found = false;\n    for (const entry of rowEntries) {\n      const vals = entry.values || entry;\n      if (vals.B === companyId && vals.C === item.settingKey) {\n        updates.push({\n          row_id: entry.row || (rowEntries.indexOf(entry) + 2),\n          values: {\n            A: vals.A || '',\n            B: companyId,\n            C: item.settingKey,\n            D: item.settingValue,\n            E: vals.E || '',\n            F: vals.F || '',\n            G: timestamp\n          }\n        });\n        found = true;\n        break;\n      }\n    }\n    if (!found) {\n      inserts.push({\n        A: item.settingId,\n        B: companyId,\n        C: item.settingKey,\n        D: item.settingValue,\n        E: '',\n        F: timestamp,\n        G: timestamp\n      });\n    }\n  }\n  return { updates, inserts, hasUpdates: updates.length > 0, hasInserts: inserts.length > 0 };\n};",
+                "packageJson": "{}"
+              },
+              "propertySettings": {
+                "allRows": {
+                  "type": "MANUAL"
+                },
+                "flattened": {
+                  "type": "MANUAL"
+                },
+                "companyId": {
+                  "type": "MANUAL"
+                },
+                "timestamp": {
+                  "type": "MANUAL"
+                }
+              },
+              "sampleData": {},
+              "errorHandlingOptions": {
+                "retryOnFailure": {
+                  "value": false
+                },
+                "continueOnFailure": {
+                  "value": false
+                }
+              }
+            },
+            "nextAction": {
+              "name": "step_5",
+              "type": "ROUTER",
+              "displayName": "Any Updates?",
+              "valid": true,
+              "skip": false,
+              "settings": {
+                "branches": [
+                  {
+                    "branchName": "HasUpdates",
+                    "branchType": "CONDITION",
+                    "conditions": [
+                      [
+                        {
+                          "operator": "BOOLEAN_IS_TRUE",
+                          "firstValue": "{{step_4['hasUpdates']}}"
+                        }
+                      ]
+                    ]
+                  },
+                  {
+                    "branchName": "Otherwise",
+                    "branchType": "FALLBACK"
+                  }
+                ],
+                "executionType": "EXECUTE_FIRST_MATCH"
+              },
+              "children": [
+                {
+                  "name": "step_5a_loop",
+                  "type": "LOOP_ON_ITEMS",
+                  "displayName": "Update Existing Rows",
+                  "valid": true,
+                  "skip": false,
+                  "settings": {
+                    "items": "{{step_4['updates']}}",
+                    "sampleData": {}
+                  },
+                  "firstLoopAction": {
+                    "name": "step_5a_update",
+                    "type": "PIECE",
+                    "displayName": "Update Row",
+                    "valid": true,
+                    "skip": false,
+                    "settings": {
+                      "input": {
+                        "auth": "",
+                        "spreadsheetId": "1OLwA-WEK2rRJLV__gl8v9iyLYIoOBIQ_rxoIbJEQsfM",
+                        "sheetId": 1099457799,
+                        "row_id": "{{step_5a_loop['item']['row_id']}}",
+                        "first_row_headers": true,
+                        "values": {
+                          "A": "{{step_5a_loop['item']['values']['A']}}",
+                          "B": "{{step_5a_loop['item']['values']['B']}}",
+                          "C": "{{step_5a_loop['item']['values']['C']}}",
+                          "D": "{{step_5a_loop['item']['values']['D']}}",
+                          "E": "{{step_5a_loop['item']['values']['E']}}",
+                          "F": "{{step_5a_loop['item']['values']['F']}}",
+                          "G": "{{step_5a_loop['item']['values']['G']}}"
+                        },
+                        "includeTeamDrives": false
+                      },
+                      "pieceName": "@puchoaistudio/tool-google-sheets",
+                      "actionName": "update_row",
+                      "pieceVersion": "^2.0.9",
+                      "sampleData": {},
+                      "propertySettings": {
+                        "includeTeamDrives": {
+                          "type": "MANUAL"
+                        },
+                        "spreadsheetId": {
+                          "type": "MANUAL"
+                        },
+                        "sheetId": {
+                          "type": "MANUAL"
+                        },
+                        "row_id": {
+                          "type": "MANUAL"
+                        },
+                        "first_row_headers": {
+                          "type": "MANUAL"
+                        },
+                        "values": {
+                          "type": "MANUAL",
+                          "schema": {
+                            "A": {
+                              "type": "SHORT_TEXT",
+                              "required": false,
+                              "description": "SettingID",
+                              "displayName": "SettingID",
+                              "defaultValue": ""
+                            },
+                            "B": {
+                              "type": "SHORT_TEXT",
+                              "required": false,
+                              "description": "CompanyID",
+                              "displayName": "CompanyID",
+                              "defaultValue": ""
+                            },
+                            "C": {
+                              "type": "SHORT_TEXT",
+                              "required": false,
+                              "description": "SettingKey",
+                              "displayName": "SettingKey",
+                              "defaultValue": ""
+                            },
+                            "D": {
+                              "type": "SHORT_TEXT",
+                              "required": false,
+                              "description": "SettingValue",
+                              "displayName": "SettingValue",
+                              "defaultValue": ""
+                            },
+                            "E": {
+                              "type": "SHORT_TEXT",
+                              "required": false,
+                              "description": "Description",
+                              "displayName": "Description",
+                              "defaultValue": ""
+                            },
+                            "F": {
+                              "type": "SHORT_TEXT",
+                              "required": false,
+                              "description": "CreatedAt",
+                              "displayName": "CreatedAt",
+                              "defaultValue": ""
+                            },
+                            "G": {
+                              "type": "SHORT_TEXT",
+                              "required": false,
+                              "description": "UpdatedAt",
+                              "displayName": "UpdatedAt",
+                              "defaultValue": ""
+                            }
+                          }
+                        }
+                      },
+                      "errorHandlingOptions": {
+                        "retryOnFailure": {
+                          "value": true
+                        },
+                        "continueOnFailure": {
+                          "value": false
+                        }
+                      }
+                    },
+                    "nextAction": null
+                  },
+                  "nextAction": null
+                },
+                null
+              ],
+              "nextAction": {
+                "name": "step_6",
+                "type": "ROUTER",
+                "displayName": "Any Inserts?",
+                "valid": true,
+                "skip": false,
+                "settings": {
+                  "branches": [
+                    {
+                      "branchName": "HasInserts",
+                      "branchType": "CONDITION",
+                      "conditions": [
+                        [
+                          {
+                            "operator": "BOOLEAN_IS_TRUE",
+                            "firstValue": "{{step_4['hasInserts']}}"
+                          }
+                        ]
+                      ]
+                    },
+                    {
+                      "branchName": "Otherwise",
+                      "branchType": "FALLBACK"
+                    }
+                  ],
+                  "executionType": "EXECUTE_FIRST_MATCH"
+                },
+                "children": [
+                  {
+                    "name": "step_6a_loop",
+                    "type": "LOOP_ON_ITEMS",
+                    "displayName": "Insert New Rows",
+                    "valid": true,
+                    "skip": false,
+                    "settings": {
+                      "items": "{{step_4['inserts']}}",
+                      "sampleData": {}
+                    },
+                    "firstLoopAction": {
+                      "name": "step_6a_insert",
+                      "type": "PIECE",
+                      "displayName": "Insert Row",
+                      "valid": true,
+                      "skip": false,
+                      "settings": {
+                        "input": {
+                          "auth": "",
+                          "spreadsheetId": "1OLwA-WEK2rRJLV__gl8v9iyLYIoOBIQ_rxoIbJEQsfM",
+                          "sheetId": 1099457799,
+                          "first_row_headers": true,
+                          "values": {
+                            "A": "{{step_6a_loop['item']['A']}}",
+                            "B": "{{step_6a_loop['item']['B']}}",
+                            "C": "{{step_6a_loop['item']['C']}}",
+                            "D": "{{step_6a_loop['item']['D']}}",
+                            "E": "{{step_6a_loop['item']['E']}}",
+                            "F": "{{step_6a_loop['item']['F']}}",
+                            "G": "{{step_6a_loop['item']['G']}}"
+                          },
+                          "includeTeamDrives": false
+                        },
+                        "pieceName": "@puchoaistudio/tool-google-sheets",
+                        "actionName": "insert_row",
+                        "pieceVersion": "^2.0.9",
+                        "sampleData": {},
+                        "propertySettings": {
+                          "includeTeamDrives": {
+                            "type": "MANUAL"
+                          },
+                          "spreadsheetId": {
+                            "type": "MANUAL"
+                          },
+                          "sheetId": {
+                            "type": "MANUAL"
+                          },
+                          "first_row_headers": {
+                            "type": "MANUAL"
+                          },
+                          "values": {
+                            "type": "MANUAL",
+                            "schema": {
+                              "A": {
+                                "type": "SHORT_TEXT",
+                                "required": false,
+                                "description": "SettingID",
+                                "displayName": "SettingID",
+                                "defaultValue": ""
+                              },
+                              "B": {
+                                "type": "SHORT_TEXT",
+                                "required": false,
+                                "description": "CompanyID",
+                                "displayName": "CompanyID",
+                                "defaultValue": ""
+                              },
+                              "C": {
+                                "type": "SHORT_TEXT",
+                                "required": false,
+                                "description": "SettingKey",
+                                "displayName": "SettingKey",
+                                "defaultValue": ""
+                              },
+                              "D": {
+                                "type": "SHORT_TEXT",
+                                "required": false,
+                                "description": "SettingValue",
+                                "displayName": "SettingValue",
+                                "defaultValue": ""
+                              },
+                              "E": {
+                                "type": "SHORT_TEXT",
+                                "required": false,
+                                "description": "Description",
+                                "displayName": "Description",
+                                "defaultValue": ""
+                              },
+                              "F": {
+                                "type": "SHORT_TEXT",
+                                "required": false,
+                                "description": "CreatedAt",
+                                "displayName": "CreatedAt",
+                                "defaultValue": ""
+                              },
+                              "G": {
+                                "type": "SHORT_TEXT",
+                                "required": false,
+                                "description": "UpdatedAt",
+                                "displayName": "UpdatedAt",
+                                "defaultValue": ""
+                              }
+                            }
+                          }
+                        },
+                        "errorHandlingOptions": {
+                          "retryOnFailure": {
+                            "value": true
+                          },
+                          "continueOnFailure": {
+                            "value": false
+                          }
+                        }
+                      },
+                      "nextAction": null
+                    },
+                    "nextAction": null
+                  },
+                  null
+                ],
+                "nextAction": {
+                  "name": "step_7",
+                  "type": "PIECE",
+                  "displayName": "Respond Success",
+                  "valid": true,
+                  "skip": false,
+                  "settings": {
+                    "input": {
+                      "responseType": "json",
+                      "fields": {
+                        "success": true,
+                        "updated": "{{step_4['updates']['length']}}",
+                        "inserted": "{{step_4['inserts']['length']}}"
+                      },
+                      "respond": "stop"
+                    },
+                    "pieceName": "@puchoaistudio/tool-webhook",
+                    "actionName": "return_response",
+                    "pieceVersion": "^2.0.4",
+                    "sampleData": {},
+                    "propertySettings": {
+                      "responseType": {
+                        "type": "MANUAL"
+                      },
+                      "fields": {
+                        "type": "MANUAL",
+                        "schema": {}
+                      },
+                      "respond": {
+                        "type": "MANUAL"
+                      }
+                    },
+                    "errorHandlingOptions": {
+                      "retryOnFailure": {
+                        "value": false
+                      },
+                      "continueOnFailure": {
+                        "value": false
+                      }
+                    }
+                  },
+                  "nextAction": null
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "valid": true,
+    "agentIds": [],
+    "connectionIds": [],
+    "schemaVersion": "7"
+  },
+  "blogUrl": ""
+}

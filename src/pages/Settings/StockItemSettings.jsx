@@ -50,6 +50,7 @@ export default function StockItemSettings() {
   return (
     <SettingsDetailLayout
       title="Stock Item"
+      category="StockItem"
       description="Configure stock and inventory settings"
       icon={Package}
       onSave={handleSave}

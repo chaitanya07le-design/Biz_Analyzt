@@ -17,21 +17,32 @@ const CustomerMovementReport = () => {
   const movementData = useMemo(() => {
     if (!customerMovement) return [];
 
-    return customerMovement.map(cm => ({
-      partyId: cm.PartyID,
-      partyName: cm.PartyName || 'Unknown',
-      partyType: cm.PartyType || 'Customer',
-      firstTxn: cm.FirstTransactionDate,
-      lastTxn: cm.LastTransactionDate,
-      salesValue: parseFloat(cm.TotalSalesValue || 0),
-      purchaseValue: parseFloat(cm.TotalPurchaseValue || 0),
-      txnCount: parseInt(cm.TransactionCount || 0),
-      daysSinceLastTxn: Math.abs(parseInt(cm.DaysSinceLastTxn || 0)),
-      status: cm.Status || 'Active',
-      salesPerson: cm.SalesPerson || '-',
-      city: cm.City || '-',
-      state: cm.State || '-',
-    }));
+    return customerMovement.map(cm => {
+      const days = Math.abs(parseInt(cm.DaysSinceLastTxn || 0));
+      let computedStatus;
+      if (days <= 30) {
+        computedStatus = 'Active';
+      } else if (days <= 90) {
+        computedStatus = 'Dormant';
+      } else {
+        computedStatus = 'Churned';
+      }
+      return {
+        partyId: cm.PartyID,
+        partyName: cm.PartyName || 'Unknown',
+        partyType: cm.PartyType || 'Customer',
+        firstTxn: cm.FirstTransactionDate,
+        lastTxn: cm.LastTransactionDate,
+        salesValue: parseFloat(cm.TotalSalesValue || 0),
+        purchaseValue: parseFloat(cm.TotalPurchaseValue || 0),
+        txnCount: parseInt(cm.TransactionCount || 0),
+        daysSinceLastTxn: days,
+        status: computedStatus,
+        salesPerson: cm.SalesPerson || '-',
+        city: cm.City || '-',
+        state: cm.State || '-',
+      };
+    });
   }, [customerMovement]);
 
   const filteredData = useMemo(() => {
@@ -63,7 +74,7 @@ const CustomerMovementReport = () => {
     const total = movementData.length;
     const active = movementData.filter(d => d.status === 'Active').length;
     const dormant = movementData.filter(d => d.status === 'Dormant').length;
-    const churned = movementData.filter(d => d.status === 'Churned' || d.daysSinceLastTxn > 60).length;
+    const churned = movementData.filter(d => d.status === 'Churned').length;
     const totalSales = movementData.reduce((sum, d) => sum + d.salesValue, 0);
     const avgTxn = total > 0 ? movementData.reduce((sum, d) => sum + d.txnCount, 0) / total : 0;
 
@@ -123,7 +134,10 @@ const CustomerMovementReport = () => {
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.1 }}
-            className="bg-white rounded-xl p-4 border border-canvas-faint"
+            onClick={() => setStatusFilter(statusFilter === 'all' ? 'all' : 'all')}
+            className={`bg-white rounded-xl p-4 border cursor-pointer transition-all hover:shadow-md ${
+              statusFilter === 'all' ? 'border-indigo-400 ring-2 ring-indigo-200' : 'border-canvas-faint'
+            }`}
           >
             <div className="flex items-center gap-2 mb-2">
               <Users className="w-4 h-4 text-indigo-600" />
@@ -136,7 +150,12 @@ const CustomerMovementReport = () => {
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.15 }}
-            className="bg-white rounded-xl p-4 border border-teal-200 bg-teal-light"
+            onClick={() => setStatusFilter(statusFilter === 'active' ? 'all' : 'active')}
+            className={`rounded-xl p-4 border cursor-pointer transition-all hover:shadow-md ${
+              statusFilter === 'active'
+                ? 'bg-teal-100 border-teal-400 ring-2 ring-teal-200'
+                : 'bg-white border-teal-200 bg-teal-light'
+            }`}
           >
             <div className="flex items-center gap-2 mb-2">
               <TrendingUp className="w-4 h-4 text-teal-600" />
@@ -149,7 +168,12 @@ const CustomerMovementReport = () => {
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="bg-white rounded-xl p-4 border border-amber-200 bg-amber-light"
+            onClick={() => setStatusFilter(statusFilter === 'dormant' ? 'all' : 'dormant')}
+            className={`rounded-xl p-4 border cursor-pointer transition-all hover:shadow-md ${
+              statusFilter === 'dormant'
+                ? 'bg-amber-100 border-amber-400 ring-2 ring-amber-200'
+                : 'bg-white border-amber-200 bg-amber-light'
+            }`}
           >
             <div className="flex items-center gap-2 mb-2">
               <Clock className="w-4 h-4 text-amber-600" />
@@ -162,7 +186,12 @@ const CustomerMovementReport = () => {
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.25 }}
-            className="bg-white rounded-xl p-4 border border-rose-200 bg-rose-light"
+            onClick={() => setStatusFilter(statusFilter === 'churned' ? 'all' : 'churned')}
+            className={`rounded-xl p-4 border cursor-pointer transition-all hover:shadow-md ${
+              statusFilter === 'churned'
+                ? 'bg-rose-100 border-rose-400 ring-2 ring-rose-200'
+                : 'bg-white border-rose-200 bg-rose-light'
+            }`}
           >
             <div className="flex items-center gap-2 mb-2">
               <UserX className="w-4 h-4 text-rose-600" />
@@ -189,7 +218,7 @@ const CustomerMovementReport = () => {
                 <option value="all">All Status</option>
                 <option value="active">Active</option>
                 <option value="dormant">Dormant</option>
-                <option value="churned">Churned</option>
+                <option value="churned">Churned/At Risk</option>
               </select>
             </div>
 
@@ -244,7 +273,7 @@ const CustomerMovementReport = () => {
                     <td className="px-4 py-3">{row.txnCount}</td>
                     <td className="px-4 py-3">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[row.status] || 'bg-gray-100'}`}>
-                        {row.status}
+                        {row.status === 'Churned' ? 'At Risk/Churned' : row.status}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-ink-muted">{row.salesPerson}</td>

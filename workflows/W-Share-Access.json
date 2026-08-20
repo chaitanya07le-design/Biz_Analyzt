@@ -1,0 +1,294 @@
+{
+  "created": 1734300000000,
+  "updated": 1734300000000,
+  "name": "W-Share-Access",
+  "description": "Webhook: diffs new vs previous Share collaborators, sends invitation emails via Gmail, logs to InvitationLog sheet.",
+  "tags": [],
+  "pieces": [
+    "@puchoaistudio/tool-webhook",
+    "@puchoaistudio/tool-google-sheets",
+    "@puchoaistudio/tool-gmail"
+  ],
+  "template": {
+    "displayName": "W-Share-Access",
+    "trigger": {
+      "name": "trigger",
+      "valid": true,
+      "displayName": "Webhook - Share Invitations",
+      "type": "TOOL_TRIGGER",
+      "settings": {
+        "pieceName": "@puchoaistudio/tool-webhook",
+        "pieceVersion": "^2.0.4",
+        "input": {
+          "authType": "none"
+        },
+        "sampleData": {},
+        "propertySettings": {
+          "liveMarkdown": {
+            "type": "MANUAL"
+          },
+          "syncMarkdown": {
+            "type": "MANUAL"
+          },
+          "testMarkdown": {
+            "type": "MANUAL"
+          },
+          "authType": {
+            "type": "MANUAL"
+          },
+          "authFields": {
+            "type": "MANUAL",
+            "schema": {}
+          }
+        },
+        "triggerName": "catch_webhook"
+      },
+      "nextAction": {
+        "name": "step_2",
+        "type": "CODE",
+        "displayName": "Diff New vs Previous Shares",
+        "valid": true,
+        "skip": false,
+        "settings": {
+          "input": {
+            "payload": "{{trigger['body']}}"
+          },
+          "sourceCode": {
+            "code": "export const code = async (inputs) => {\n  const payload = inputs.payload || {};\n  const shares = payload.shares || [];\n  const previousShares = payload.previousShares || [];\n  const newEntries = [];\n  const prevEmails = new Set();\n  for (const ps of previousShares) {\n    if (ps.email) prevEmails.add(ps.email.toLowerCase());\n  }\n  for (const s of shares) {\n    if (s.email && !prevEmails.has(s.email.toLowerCase())) {\n      // Generate a unique token per invite — this is what the magic link carries\n      const token = Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10);\n      newEntries.push({\n        email: s.email,\n        role: s.role || 'View-only',\n        token\n      });\n    }\n  }\n  return { newEntries, hasInvites: newEntries.length > 0, companyId: payload.companyId || '' };\n};",
+            "packageJson": "{}"
+          },
+          "propertySettings": {
+            "payload": {
+              "type": "MANUAL"
+            }
+          },
+          "sampleData": {},
+          "errorHandlingOptions": {
+            "retryOnFailure": {
+              "value": false
+            },
+            "continueOnFailure": {
+              "value": false
+            }
+          }
+        },
+        "nextAction": {
+          "name": "step_3",
+          "type": "ROUTER",
+          "displayName": "Any New Invites?",
+          "valid": true,
+          "skip": false,
+          "settings": {
+            "branches": [
+              {
+                "branchName": "HasInvites",
+                "branchType": "CONDITION",
+                "conditions": [
+                  [
+                    {
+                      "operator": "BOOLEAN_IS_TRUE",
+                      "firstValue": "{{step_2['hasInvites']}}"
+                    }
+                  ]
+                ]
+              },
+              {
+                "branchName": "Otherwise",
+                "branchType": "FALLBACK"
+              }
+            ],
+            "executionType": "EXECUTE_FIRST_MATCH"
+          },
+          "children": [
+            {
+              "name": "step_4_loop",
+              "type": "LOOP_ON_ITEMS",
+              "displayName": "Send Invitation Emails",
+              "valid": true,
+              "skip": false,
+              "settings": {
+                "items": "{{step_2['newEntries']}}",
+                "sampleData": {}
+              },
+              "firstLoopAction": {
+                "name": "step_4_send",
+                "type": "PIECE",
+                "displayName": "Send Invitation Email",
+                "valid": true,
+                "skip": false,
+                "settings": {
+                  "input": {
+                    "auth": "",
+                    "to": "{{step_4_loop['item']['email']}}",
+                    "subject": "You have been invited to Biz_Analyzt",
+                    "body": "Hello,\n\nYou have been invited to access the Biz_Analyzt dashboard as a {{step_4_loop['item']['role']}}.\n\nClick the link below to accept your invitation and log in:\n\nhttps://localhost:3000/login?token={{step_4_loop['item']['token']}}\n\nThis link is unique to you. Do not share it with others.\n\n- Biz_Analyzt Team"
+                  },
+                  "pieceName": "@puchoaistudio/tool-gmail",
+                  "actionName": "send_email",
+                  "pieceVersion": "^2.0.4",
+                  "sampleData": {},
+                  "propertySettings": {
+                    "to": {
+                      "type": "MANUAL"
+                    },
+                    "subject": {
+                      "type": "MANUAL"
+                    },
+                    "body": {
+                      "type": "MANUAL"
+                    }
+                  },
+                  "errorHandlingOptions": {
+                    "retryOnFailure": {
+                      "value": false
+                    },
+                    "continueOnFailure": {
+                      "value": true
+                    }
+                  }
+                },
+                "nextAction": {
+                  "name": "step_5",
+                  "type": "CODE",
+                  "displayName": "Build InvitationLog Rows",
+                  "valid": true,
+                  "skip": false,
+                  "settings": {
+                    "input": {
+                      "entries": "{{step_2['newEntries']}}",
+                      "companyId": "{{step_2['companyId']}}"
+                    },
+                    "sourceCode": {
+                      "code": "export const code = async (inputs) => {\n  const entries = inputs.entries || [];\n  const companyId = inputs.companyId || \"\";\n  const ts = new Date().toISOString();\n  const rows = [];\n  for (const e of entries) {\n    rows.push({\n      InvitationID: \"INV-\" + Date.now().toString(36) + Math.random().toString(36).substring(2, 6),\n      CompanyID: companyId,\n      Email: e.email,\n      Role: e.role,\n      AccessToken: e.token,\n      InvitedAt: ts,\n      Status: \"INVITED\"\n    });\n  }\n  return { logRows: rows };\n};",
+                      "packageJson": "{}"
+                    },
+                    "propertySettings": {
+                      "entries": {
+                        "type": "MANUAL"
+                      },
+                      "companyId": {
+                        "type": "MANUAL"
+                      }
+                    },
+                    "sampleData": {},
+                    "errorHandlingOptions": {
+                      "retryOnFailure": {
+                        "value": false
+                      },
+                      "continueOnFailure": {
+                        "value": false
+                      }
+                    }
+                  },
+                  "nextAction": {
+                    "name": "step_6",
+                    "type": "PIECE",
+                    "displayName": "Write InvitationLog",
+                    "valid": true,
+                    "skip": false,
+                    "settings": {
+                      "input": {
+                        "auth": "",
+                        "spreadsheetId": "1OLwA-WEK2rRJLV__gl8v9iyLYIoOBIQ_rxoIbJEQsfM",
+                        "sheetId": 494982652,
+                        "input_type": "column_names",
+                        "values": "{{step_5['logRows']}}",
+                        "overwrite": false,
+                        "check_for_duplicate": false
+                      },
+                      "pieceName": "@puchoaistudio/tool-google-sheets",
+                      "actionName": "google-sheets-insert-multiple-rows",
+                      "pieceVersion": "^2.0.9",
+                      "sampleData": {},
+                      "propertySettings": {
+                        "includeTeamDrives": {
+                          "type": "MANUAL"
+                        },
+                        "spreadsheetId": {
+                          "type": "MANUAL"
+                        },
+                        "sheetId": {
+                          "type": "MANUAL"
+                        },
+                        "input_type": {
+                          "type": "MANUAL"
+                        },
+                        "values": {
+                          "type": "MANUAL"
+                        },
+                        "overwrite": {
+                          "type": "MANUAL"
+                        },
+                        "check_for_duplicate": {
+                          "type": "MANUAL"
+                        }
+                      },
+                      "errorHandlingOptions": {
+                        "retryOnFailure": {
+                          "value": true
+                        },
+                        "continueOnFailure": {
+                          "value": false
+                        }
+                      }
+                    },
+                    "nextAction": {
+                      "name": "step_7",
+                      "type": "PIECE",
+                      "displayName": "Respond Success",
+                      "valid": true,
+                      "skip": false,
+                      "settings": {
+                        "input": {
+                          "responseType": "json",
+                          "fields": {
+                            "success": true,
+                            "invited": "{{step_2['newEntries']['length']}}"
+                          },
+                          "respond": "stop"
+                        },
+                        "pieceName": "@puchoaistudio/tool-webhook",
+                        "actionName": "return_response",
+                        "pieceVersion": "^2.0.4",
+                        "sampleData": {},
+                        "propertySettings": {
+                          "responseType": {
+                            "type": "MANUAL"
+                          },
+                          "fields": {
+                            "type": "MANUAL",
+                            "schema": {}
+                          },
+                          "respond": {
+                            "type": "MANUAL"
+                          }
+                        },
+                        "errorHandlingOptions": {
+                          "retryOnFailure": {
+                            "value": false
+                          },
+                          "continueOnFailure": {
+                            "value": false
+                          }
+                        }
+                      },
+                      "nextAction": null
+                    }
+                  }
+                }
+              },
+              "nextAction": null
+            },
+            null
+          ],
+          "nextAction": null
+        }
+      }
+    },
+    "valid": true,
+    "agentIds": [],
+    "connectionIds": [],
+    "schemaVersion": "7"
+  },
+  "blogUrl": ""
+}

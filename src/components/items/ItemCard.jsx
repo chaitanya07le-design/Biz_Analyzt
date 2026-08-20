@@ -28,9 +28,15 @@ const ItemCard = ({ item, index, onClick }) => {
                 animate={{ scale: [1, 1.1, 1] }}
                 transition={{ duration: 1, repeat: Infinity }}
                 className="text-red-500"
+                title="Negative Stock"
               >
                 ⚠️
               </motion.span>
+            )}
+            {item.isLowStock && (
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-orange-100 text-orange-700 uppercase tracking-wider">
+                Low Stock
+              </span>
             )}
           </div>
           <div className="flex items-center gap-2">

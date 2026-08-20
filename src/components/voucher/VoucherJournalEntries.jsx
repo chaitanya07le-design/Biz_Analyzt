@@ -5,9 +5,8 @@ const VoucherJournalEntries = ({ entries }) => {
 
   const formatCurrency = (value) => `₹${value.toLocaleString('en-IN')}`;
 
-  const total = entries.reduce((sum, entry) => {
-    return sum + Math.max(entry.debit || 0, entry.credit || 0);
-  }, 0);
+  const totalDebit = entries.reduce((sum, entry) => sum + (entry.debit || 0), 0);
+  const totalCredit = entries.reduce((sum, entry) => sum + (entry.credit || 0), 0);
 
   return (
     <div className="bg-white border border-canvas-faint rounded-lg overflow-hidden">
@@ -41,10 +40,10 @@ const VoucherJournalEntries = ({ entries }) => {
             <tr>
               <td className="px-4 py-3 text-sm font-medium text-ink-default">Total</td>
               <td className="px-4 py-3 text-sm text-ink-default text-right font-medium font-mono">
-                {formatCurrency(total)}
+                {formatCurrency(totalDebit)}
               </td>
               <td className="px-4 py-3 text-sm text-ink-default text-right font-medium font-mono">
-                {formatCurrency(total)}
+                {formatCurrency(totalCredit)}
               </td>
             </tr>
           </tfoot>
@@ -61,10 +60,14 @@ const VoucherJournalEntries = ({ entries }) => {
             </div>
           </div>
         ))}
-        <div className="p-4 bg-canvas-subtle">
+        <div className="p-4 bg-canvas-subtle space-y-1">
           <div className="flex justify-between text-sm font-medium text-ink-default">
-            <span>Total</span>
-            <span>{formatCurrency(total)}</span>
+            <span>Total Debit</span>
+            <span>{formatCurrency(totalDebit)}</span>
+          </div>
+          <div className="flex justify-between text-sm font-medium text-ink-default">
+            <span>Total Credit</span>
+            <span>{formatCurrency(totalCredit)}</span>
           </div>
         </div>
       </div>

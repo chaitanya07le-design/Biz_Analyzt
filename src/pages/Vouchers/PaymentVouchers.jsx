@@ -5,6 +5,7 @@ import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import { Plus, Search, Filter, Download } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useTallyPaymentVouchers from '../../hooks/useTallyPaymentVouchers';
 
 const formatCurrency = (amount) => {
   return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount || 0);
@@ -18,15 +19,16 @@ const formatDate = (dateStr) => {
 
 export default function PaymentVouchers() {
   const { vouchers, loading } = useGoogleSheetsData();
+  const tallyPaymentVouchers = useTallyPaymentVouchers();
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
 
   const paymentVouchers = useMemo(() => {
-    return (vouchers || []).filter(v => v.VoucherType === 'Payment' || v.voucherType === 'Payment');
-  }, [vouchers]);
+    return tallyPaymentVouchers ?? (vouchers || []).filter(v => v.VoucherType === 'Payment' || v.voucherType === 'Payment');
+  }, [vouchers, tallyPaymentVouchers]);
 
   const filtered = paymentVouchers.filter(v => {
-    const party = v.PartyName || v.party || '';
+    const party = v.PartyName || v.partyName || v.party || '';
     const id = v.VoucherID || v.id || '';
     return party.toLowerCase().includes(search.toLowerCase()) ||
       id.toLowerCase().includes(search.toLowerCase());
@@ -69,12 +71,12 @@ export default function PaymentVouchers() {
               {filtered.map((voucher) => {
                 const voucherNo = voucher.VoucherNo || voucher.voucherNo || voucher.VoucherID || voucher.id;
                 const date = voucher.VoucherDate || voucher.date;
-                const party = voucher.PartyName || voucher.party || '';
+                const party = voucher.PartyName || voucher.partyName || voucher.party || '';
                 const amount = parseFloat(voucher.NetAmount || voucher.amount || voucher.GrandTotal) || 0;
                 const status = voucher.Status || voucher.status || 'PAID';
 
                 return (
-                  <tr key={voucher.VoucherID || voucher.id} className="hover:bg-ink-50 cursor-pointer" onClick={() => navigate(`/voucher/${voucher.VoucherID || voucher.id}`)}>
+                  <tr key={voucher.VoucherID || voucher.id} className="hover:bg-ink-50">
                     <td className="px-5 py-3 font-medium text-brand-600">{voucherNo}</td>
                     <td className="px-5 py-3 text-ink-900">{formatDate(date)}</td>
                     <td className="px-5 py-3 text-ink-900">{party}</td>
