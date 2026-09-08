@@ -37,6 +37,15 @@ import TrendCharts from './pages/reports/TrendCharts';
 import GeographicReport from './pages/reports/GeographicReport';
 import LedgerStatement from './pages/reports/LedgerStatement';
 import PendingOrders from './pages/reports/PendingOrders';
+import VoucherAudit from './pages/Reports/VoucherAudit';
+import SalesQuotations from './pages/Reports/SalesQuotations';
+import CustomerPurchaseHistory from './pages/Reports/CustomerPurchaseHistory';
+import SalesRegister from './pages/Reports/SalesRegister';
+import VendorPurchaseHistory from './pages/Reports/VendorPurchaseHistory';
+import GstReconciliation from './pages/Reports/GstReconciliation';
+import ReimbursementAudit from './pages/Reports/ReimbursementAudit';
+import StockBatchesPage from './pages/analytics/StockBatchesPage';
+import ItemStockStatusPage from './pages/analytics/ItemStockStatusPage';
 import SalesVouchers from './pages/Vouchers/SalesVouchers';
 import PurchaseVouchers from './pages/Vouchers/PurchaseVouchers';
 import ReceiptVouchers from './pages/Vouchers/ReceiptVouchers';
@@ -47,6 +56,8 @@ import DebitNoteVouchers from './pages/Vouchers/DebitNoteVouchers';
 import CreditNoteVouchers from './pages/Vouchers/CreditNoteVouchers';
 import DeliveryNoteVouchers from './pages/Vouchers/DeliveryNoteVouchers';
 import ReceiptNoteVouchers from './pages/Vouchers/ReceiptNoteVouchers';
+import PartyWiseSales from './pages/Vouchers/PartyWiseSales';
+import ItemWiseSales from './pages/Vouchers/ItemWiseSales';
 import Parties from './pages/Masters/Parties';
 import Items from './pages/Masters/Items';
 import Groups from './pages/Masters/Groups';
@@ -128,6 +139,8 @@ function AppRoutes() {
           <Route path="vouchers/credit-note" element={<CreditNoteVouchers />} />
           <Route path="vouchers/delivery-note" element={<DeliveryNoteVouchers />} />
           <Route path="vouchers/receipt-note" element={<ReceiptNoteVouchers />} />
+          <Route path="vouchers/party-wise-sales" element={<PartyWiseSales />} />
+          <Route path="vouchers/item-wise-sales" element={<ItemWiseSales />} />
           {/* Masters routes - must come BEFORE :module catch-all */}
           <Route path="masters" element={<Navigate to="/masters/parties" replace />} />
           <Route path="masters/parties" element={<Parties />} />
@@ -163,9 +176,18 @@ function AppRoutes() {
           <Route path="reports/expenses" element={<ExpensesReport />} />
           <Route path="reports/gst-liability" element={<GstLiability />} />
           <Route path="reports/customer" element={<CustomerView />} />
-          <Route path="reports/ledger/:ledgerId" element={<LedgerStatement />} />
+          <Route path="reports/ledger/:ledgerId" element={<LedgerDetail />} />
           <Route path="reports/pending-purchase" element={<PendingOrders type="purchase" />} />
           <Route path="reports/pending-sales" element={<PendingOrders type="sales" />} />
+          <Route path="reports/voucher-audit" element={<VoucherAudit />} />
+          <Route path="reports/sales-quotations" element={<SalesQuotations />} />
+          <Route path="reports/customer-purchase-history" element={<CustomerPurchaseHistory />} />
+          <Route path="reports/sales-register" element={<SalesRegister />} />
+          <Route path="reports/vendor-purchase-history" element={<VendorPurchaseHistory />} />
+          <Route path="reports/gst-reconciliation" element={<GstReconciliation />} />
+          <Route path="reports/reimbursement-audit" element={<ReimbursementAudit />} />
+          <Route path="reports/stock-batches" element={<StockBatchesPage />} />
+          <Route path="reports/item-stock-status" element={<ItemStockStatusPage />} />
           <Route path="sales-team" element={<ComingSoon />} />
           <Route path="settings" element={<Settings />} />
           <Route path="settings/share" element={<ShareSettings />} />

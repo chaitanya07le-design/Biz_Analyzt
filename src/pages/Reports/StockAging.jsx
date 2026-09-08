@@ -6,12 +6,14 @@ import Skeleton from '../../components/shared/Skeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import { useCompany } from '../../context/CompanyContext';
 import useTallyStockBatches from '../../hooks/useTallyStockBatches';
+import useTallyBatchStock from '../../hooks/useTallyBatchStock';
 
 const StockAging = () => {
   const navigate = useNavigate();
   const { currentCompany } = useCompany();
   const { items, stockBatches, itemStockStatus, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
   const tallyBatches = useTallyStockBatches();
+  const tallyBatchStock = useTallyBatchStock();
 
   const [selectedBucket, setSelectedBucket] = useState('all');
   const [showDeadOnly, setShowDeadOnly] = useState(false);
@@ -40,13 +42,38 @@ const StockAging = () => {
   // Future WF-13 workflow will implement batch-wise inventory sync from Tally for tracked items.
   // This badge makes the 5-of-9 split explicit until WF-13 provides real batch data.
   const agingData = useMemo(() => {
-    const sourceBatches = tallyBatches || stockBatches;
+    const sourceBatches = tallyBatchStock || tallyBatches || stockBatches;
     if (!sourceBatches) return [];
 
     const today = new Date();
     const daysAgo30 = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
 
     return sourceBatches.map((batch, index) => {
+      // Template 58 (tallyBatchStock) — new field shape
+      if (tallyBatchStock) {
+        const inwardDate = batch.inwardDate ? new Date(batch.inwardDate) : new Date(0);
+        const ageingDays = Number.isNaN(inwardDate.getTime()) ? 0 : Math.max(0, Math.floor((today - inwardDate) / 86400000));
+        const ageingBucket = ageingDays <= 30 ? '0-30' : ageingDays <= 60 ? '31-60' : ageingDays <= 90 ? '61-90' : ageingDays <= 180 ? '91-180' : '180+';
+        const isDeadStock = ageingDays > 90;
+        return {
+          batchId: batch.id || `tally-batch-${index}`,
+          itemId: batch.id || '',
+          itemName: batch.itemName || '—',
+          brand: '—',
+          batchNo: batch.batchNo || '—',
+          quantity: batch.quantity || 0,
+          value: batch.value || 0,
+          rate: 0,
+          inwardDate: batch.inwardDate || null,
+          ageingDays,
+          ageingBucket,
+          location: batch.godown || '-',
+          isDeadStock,
+          lastSaleDate: '-',
+          salesVelocity: 0,
+        };
+      }
+      // Template 22 (tallyBatches) — old field shape
       if (tallyBatches) {
         const inwardDate = new Date(batch.voucher_date);
         const ageingDays = Number.isNaN(inwardDate.getTime()) ? 0 : Math.max(0, Math.floor((today - inwardDate) / 86400000));
@@ -80,7 +107,7 @@ const StockAging = () => {
         salesVelocity: parseFloat(status.SalesVelocity30d || 0),
       };
     });
-  }, [stockBatches, tallyBatches, itemMap, statusMap]);
+  }, [stockBatches, tallyBatches, tallyBatchStock, itemMap, statusMap]);
 
   const filteredData = useMemo(() => {
     let result = agingData;

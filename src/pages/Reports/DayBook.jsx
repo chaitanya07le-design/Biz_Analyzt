@@ -5,6 +5,7 @@ import Skeleton from '../../components/shared/Skeleton';
 import TableSkeleton from '../../components/shared/TableSkeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import { useCompany } from '../../context/CompanyContext';
+import useTallyDayBook from '../../hooks/useTallyDayBook';
 
 const DayBook = () => {
   const navigate = useNavigate();
@@ -13,8 +14,10 @@ const DayBook = () => {
   const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
   
   const { vouchers, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const tallyEntries = useTallyDayBook();
 
   const allVouchers = useMemo(() => {
+    if (tallyEntries) return tallyEntries;
     if (!vouchers || vouchers.length === 0) {
       return [];
     }
@@ -27,7 +30,7 @@ const DayBook = () => {
       partyName: v.PartyName || v.partyName || '',
       netAmount: parseFloat(v.GrandTotal || v.netAmount || 0),
     })).sort((a, b) => new Date(a.date) - new Date(b.date));
-  }, [vouchers]);
+  }, [vouchers, tallyEntries]);
 
   const filteredVouchers = useMemo(() => {
     return allVouchers.filter(v => {
@@ -108,7 +111,7 @@ const DayBook = () => {
             </button>
             <div>
               <h1 className="text-xl md:text-2xl font-semibold text-ink-default">Day Book</h1>
-              <p className="text-sm text-ink-muted">Chronological list of all vouchers</p>
+              <p className="text-sm text-ink-muted">{tallyEntries ? 'LIVE TALLY · Monthly day-book summary' : 'Chronological list of all vouchers'}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -153,8 +156,8 @@ const DayBook = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.02 }}
-                    onClick={() => handleVoucherClick(voucher.id)}
-                    className="hover:bg-canvas-faint cursor-pointer transition-colors"
+                    onClick={() => !tallyEntries && handleVoucherClick(voucher.id)}
+                    className="hover:bg-canvas-faint transition-colors"
                   >
                     <td className="px-4 py-3 text-sm text-ink-default whitespace-nowrap">
                       {formatDate(voucher.VoucherDate || voucher.date)}

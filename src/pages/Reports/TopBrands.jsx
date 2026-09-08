@@ -3,19 +3,43 @@ import { motion } from 'framer-motion';
 import { Award, TrendingUp, Package, DollarSign, ChevronDown, ChevronUp } from 'lucide-react';
 import Skeleton from '../../components/shared/Skeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import useTallyTopBrands from '../../hooks/useTallyTopBrands';
 import { useCompany } from '../../context/CompanyContext';
 import { useDateRange } from '../../context/DateRangeContext';
 
 const TopBrands = () => {
   const { currentCompany } = useCompany();
   const { dateRange } = useDateRange();
-  const { items, vouchers, voucherLines, itemStockStatus, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { items, vouchers, voucherLines, itemStockStatus, loading: gsLoading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { brands: tallyBrands, brandTransactions: tallyTransactions } = useTallyTopBrands();
 
   const [sortBy, setSortBy] = useState('sales');
   const [limit, setLimit] = useState(10);
   const [selectedBrand, setSelectedBrand] = useState(null);
 
+  const tallyActive = tallyBrands && tallyBrands.length > 0;
+  const tallyTxnKeys = tallyTransactions ? Object.keys(tallyTransactions) : [];
+  console.log('[TopBrands] tallyActive:', tallyActive, 'brands:', tallyBrands?.length, 'txn keys:', tallyTxnKeys.length);
+  if (tallyActive) console.log('[TopBrands] first brand:', tallyBrands[0]?.brand, 'has txns:', tallyTxnKeys.includes(tallyBrands[0]?.brand));
+
   const brandData = useMemo(() => {
+    if (tallyActive) {
+      return tallyBrands.map((b) => ({
+        brand: b.brand || '—',
+        itemCount: b.itemCount || 1,
+        totalStock: 0,
+        stockValue: b.stockValue || 0,
+        salesValue: b.salesValue || 0,
+        salesQty: b.salesQty || 0,
+        purchaseValue: 0,
+        purchaseQty: 0,
+        topItem: b.topItem || '—',
+        salesVelocity30d: b.salesVelocity30d || 0,
+        voucherCount: b.voucherCount || 0,
+        avgRate: b.avgRate || 0,
+      }));
+    }
+
     if (!items || items.length === 0) return [];
 
     const brands = {};
@@ -32,6 +56,8 @@ const TopBrands = () => {
           salesQty: 0,
           purchaseValue: 0,
           purchaseQty: 0,
+          voucherCount: 0,
+          avgRate: 0,
         };
       }
       brands[brand].itemCount += 1;
@@ -81,9 +107,15 @@ const TopBrands = () => {
     }
 
     return Object.values(brands);
-  }, [items, vouchers, voucherLines, itemStockStatus, dateRange]);
+  }, [tallyActive, tallyBrands, items, vouchers, voucherLines, itemStockStatus, dateRange]);
 
   const brandItems = useMemo(() => {
+    if (tallyActive && tallyTransactions) {
+      console.log('[TopBrands brandItems] using tallyTransactions, keys:', Object.keys(tallyTransactions).length);
+      return tallyTransactions;
+    }
+    console.log('[TopBrands brandItems] falling back to Google Sheets, tallyActive:', tallyActive, 'tallyTransactions:', !!tallyTransactions);
+
     if (!items) return {};
     const result = {};
     const voucherMap = new Map();
@@ -125,13 +157,13 @@ const TopBrands = () => {
     });
 
     return result;
-  }, [items, vouchers, voucherLines, itemStockStatus, dateRange]);
+  }, [tallyActive, tallyTransactions, items, vouchers, voucherLines, itemStockStatus, dateRange]);
 
   const sortedBrands = useMemo(() => {
     const sorted = [...brandData];
     switch (sortBy) {
       case 'sales': return sorted.sort((a, b) => b.salesValue - a.salesValue);
-      case 'items': return sorted.sort((a, b) => b.itemCount - a.itemCount);
+      case 'vouchers': return sorted.sort((a, b) => b.voucherCount - a.voucherCount);
       case 'stock': return sorted.sort((a, b) => b.stockValue - a.stockValue);
       case 'margin': return sorted.sort((a, b) => {
         const mA = a.salesValue > 0 ? ((a.salesValue - a.purchaseValue) / a.salesValue) * 100 : 0;
@@ -148,8 +180,12 @@ const TopBrands = () => {
 
   const formatCurrency = (value) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
   const formatNumber = (value) => new Intl.NumberFormat('en-IN').format(value);
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '—';
+    return new Date(dateStr).toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  };
 
-  if (loading) {
+  if (gsLoading) {
     return (
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-canvas-default pb-20 md:pb-6">
         <div className="px-4 py-4 md:px-6 md:py-6">
@@ -199,9 +235,9 @@ const TopBrands = () => {
               <span className="text-sm text-ink-muted">Sort by:</span>
               <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="text-sm border border-canvas-faint rounded-lg px-3 py-1.5 bg-white text-ink-default focus:outline-none focus:ring-2 focus:ring-brand-primary">
                 <option value="sales">Sales Value</option>
-                <option value="items">Item Count</option>
-                <option value="stock">Stock Value</option>
-                <option value="margin">Margin %</option>
+                <option value="vouchers">Voucher Count</option>
+                {!tallyActive && <option value="stock">Stock Value</option>}
+                {!tallyActive && <option value="margin">Margin %</option>}
               </select>
             </div>
             <div className="flex items-center gap-2">
@@ -210,15 +246,16 @@ const TopBrands = () => {
                 <option value={5}>Top 5</option>
                 <option value={10}>Top 10</option>
                 <option value={20}>Top 20</option>
-                <option value={50}>All</option>
+                <option value={brandData.length}>All</option>
               </select>
             </div>
           </div>
 
           <div className="divide-y divide-canvas-faint">
             {topBrands.map((brand, idx) => {
-              const margin = brand.salesValue > 0 ? ((brand.salesValue - brand.purchaseValue) / brand.salesValue) * 100 : 0;
               const salesPercent = totalSales > 0 ? (brand.salesValue / totalSales) * 100 : 0;
+              const txnRows = brandItems[brand.brand] || [];
+              {selectedBrand === brand.brand && console.log('[TopBrands drill-down] brand:', brand.brand, 'txnRows:', txnRows.length)}
               return (
                 <React.Fragment key={brand.brand}>
                   <motion.div
@@ -235,12 +272,14 @@ const TopBrands = () => {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="font-semibold text-ink-default">{brand.brand}</span>
-                          <span className="text-xs text-ink-faint bg-canvas-faint px-2 py-0.5 rounded-full">{brand.itemCount} items</span>
+                          <span className="text-xs text-ink-faint bg-canvas-faint px-2 py-0.5 rounded-full">
+                            {tallyActive ? `${txnRows.length} txns` : `${brand.itemCount} items`}
+                          </span>
                         </div>
                         <div className="flex items-center gap-4 mt-1 text-sm text-ink-muted">
                           <span>Sales: {formatCurrency(brand.salesValue)}</span>
-                          <span>Stock: {formatCurrency(brand.stockValue)}</span>
-                          <span className={margin >= 0 ? 'text-teal-600' : 'text-rose-600'}>Margin: {margin.toFixed(1)}%</span>
+                          {tallyActive && brand.voucherCount > 0 && <span>Vouchers: {brand.voucherCount}</span>}
+                          {!tallyActive && <span>Stock: {formatCurrency(brand.stockValue)}</span>}
                         </div>
                       </div>
                       <div className="text-right">
@@ -261,33 +300,37 @@ const TopBrands = () => {
                       animate={{ opacity: 1 }}
                       className="border-t border-canvas-faint bg-canvas-faint/40 px-4 py-4"
                     >
-                      <h4 className="text-sm font-semibold text-ink-default mb-3">{brand.brand} — All Items</h4>
-                      <div className="bg-white rounded-lg border border-canvas-faint overflow-hidden">
-                        <table className="w-full text-sm">
-                          <thead className="bg-canvas-faint">
-                            <tr>
-                              <th className="px-4 py-2 text-left font-medium text-ink-muted">Item Name</th>
-                              <th className="px-4 py-2 text-left font-medium text-ink-muted">Category</th>
-                              <th className="px-4 py-2 text-right font-medium text-ink-muted">Qty Sold</th>
-                              <th className="px-4 py-2 text-right font-medium text-ink-muted">Sales Value</th>
-                              <th className="px-4 py-2 text-right font-medium text-ink-muted">Closing Stock</th>
-                              <th className="px-4 py-2 text-right font-medium text-ink-muted">Stock Value</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-canvas-faint">
-                            {(brandItems[brand.brand] || []).map(item => (
-                              <tr key={item.id} className="hover:bg-canvas-faint transition-colors">
-                                <td className="px-4 py-2 font-medium text-ink-default">{item.name}</td>
-                                <td className="px-4 py-2 text-ink-muted">{item.category}</td>
-                                <td className="px-4 py-2 text-right text-ink-default">{formatNumber(item.salesQty)} {item.unit}</td>
-                                <td className="px-4 py-2 text-right font-medium text-ink-default">{formatCurrency(item.salesValue)}</td>
-                                <td className="px-4 py-2 text-right text-ink-muted">{formatNumber(item.closingQty)} {item.unit}</td>
-                                <td className="px-4 py-2 text-right text-ink-muted">{formatCurrency(item.stockValue)}</td>
+                      <h4 className="text-sm font-semibold text-ink-default mb-3">{brand.brand} — Sales Transactions</h4>
+                      {txnRows.length === 0 ? (
+                        <div className="bg-white rounded-lg border border-canvas-faint p-6 text-center text-ink-muted text-sm">No transaction details available</div>
+                      ) : (
+                        <div className="bg-white rounded-lg border border-canvas-faint overflow-hidden">
+                          <table className="w-full text-sm">
+                            <thead className="bg-canvas-faint">
+                              <tr>
+                                <th className="px-4 py-2 text-left font-medium text-ink-muted">Date</th>
+                                <th className="px-4 py-2 text-left font-medium text-ink-muted">Party</th>
+                                <th className="px-4 py-2 text-left font-medium text-ink-muted">Voucher</th>
+                                <th className="px-4 py-2 text-right font-medium text-ink-muted">Qty</th>
+                                <th className="px-4 py-2 text-right font-medium text-ink-muted">Rate</th>
+                                <th className="px-4 py-2 text-right font-medium text-ink-muted">Amount</th>
                               </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
+                            </thead>
+                            <tbody className="divide-y divide-canvas-faint">
+                              {txnRows.map((row, ri) => (
+                                <tr key={ri} className="hover:bg-canvas-faint transition-colors">
+                                  <td className="px-4 py-2 text-ink-default">{formatDate(row.date)}</td>
+                                  <td className="px-4 py-2 text-ink-default">{row.partyName || '—'}</td>
+                                  <td className="px-4 py-2 text-ink-muted">{row.voucherNo || '—'}</td>
+                                  <td className="px-4 py-2 text-right text-ink-default">{formatNumber(row.qty)}</td>
+                                  <td className="px-4 py-2 text-right text-ink-default">{formatCurrency(row.rate)}</td>
+                                  <td className="px-4 py-2 text-right font-medium text-ink-default">{formatCurrency(row.amount)}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
                     </motion.div>
                   )}
                 </React.Fragment>

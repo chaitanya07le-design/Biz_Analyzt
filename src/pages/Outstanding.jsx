@@ -86,6 +86,18 @@ const Outstanding = () => {
     return data.map(p => {
       const partyName = p.partyName || p.PartyName || p.name || '';
       const matchingParty = (parties || []).find((party) => (party.PartyName || party.name || '').trim().toLowerCase() === partyName.trim().toLowerCase());
+      const extraBills = useLiveData && activeTab === 'receivable'
+        ? (tallyOutstanding?.customerBills || []).filter((bill) => (bill.customer_name || bill.party_name || '').trim().toLowerCase() === partyName.trim().toLowerCase())
+        : [];
+      const risk = useLiveData && activeTab === 'receivable'
+        ? (tallyOutstanding?.customerRisk || []).find((row) => (row.customer_name || row.party_name || '').trim().toLowerCase() === partyName.trim().toLowerCase())?.risk_level
+        : null;
+      const msme = useLiveData && activeTab === 'payable'
+        ? (tallyOutstanding?.msmePayables || []).some((row) => (row.vendor_name || row.party_name || '').trim().toLowerCase() === partyName.trim().toLowerCase())
+        : false;
+      const earlyDiscount = useLiveData && activeTab === 'payable'
+        ? (tallyOutstanding?.discountPayables || []).find((row) => (row.vendor_name || row.party_name || '').trim().toLowerCase() === partyName.trim().toLowerCase())?.early_payment_discount_pct
+        : null;
       return {
         partyId: p.partyId || p.PartyID || p.id || matchingParty?.PartyID || matchingParty?.id || partyName,
         partyName,
@@ -94,10 +106,14 @@ const Outstanding = () => {
         openingBalance: parseFloat(p.openingBalance || p.OpeningBalance || 0),
         transactionCount: p.transactionCount || 0,
         aging: p.aging || { notDue: 0, overdue0to30: 0, overdue31to60: 0, overdue61to90: 0, over90: 0 },
-        invoiceAging: p.invoiceAging || []
+        invoiceAging: p.invoiceAging || [],
+        extraBills,
+        risk,
+        msme,
+        earlyDiscount,
       };
     });
-  }, [data, parties]);
+  }, [data, parties, useLiveData, activeTab, tallyOutstanding]);
 
   const totals = useMemo(() => {
     return {
@@ -151,7 +167,7 @@ const Outstanding = () => {
   };
 
   const handleViewDetails = (party) => {
-    navigate(`/outstanding/${party.partyId}`);
+    navigate(`/outstanding/${encodeURIComponent(party.partyName)}`, { state: { fromOutstanding: true, outstandingParty: party } });
   };
 
   if (loading) {
@@ -330,7 +346,7 @@ const Outstanding = () => {
                       )}
                       <div>
                         <p className="font-bold text-ink-900 text-lg">{party.partyName}</p>
-                        <p className="text-sm font-medium text-kinetic-neutral">{party.city} • {party.transactionCount} transactions</p>
+                        <p className="text-sm font-medium text-kinetic-neutral">{party.city} • {party.transactionCount} transactions {party.risk && `• ${party.risk} risk`}{party.msme && ' • MSME vendor'}{party.earlyDiscount && ` • ${party.earlyDiscount}% early-payment discount`}</p>
                       </div>
                     </div>
                     <div className="text-right">

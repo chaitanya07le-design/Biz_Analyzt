@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Skeleton from '../../components/shared/Skeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import useTallyPartyDetails from '../../hooks/useTallyPartyDetails';
 import { useCompany } from '../../context/CompanyContext';
 import { useDateRange } from '../../context/DateRangeContext';
 
@@ -13,8 +14,21 @@ const CustomerView = () => {
   const [searchQuery, setSearchQuery] = useState('');
   
   const { parties: apiParties, vouchers, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const tallyParties = useTallyPartyDetails();
 
   const normalizedParties = useMemo(() => {
+    if (tallyParties && tallyParties.length > 0) {
+      return tallyParties.map((t, i) => ({
+        id: t.id || `tally-party-${i}`,
+        name: t.name,
+        type: t.type || 'Customer',
+        city: '',
+        gstin: t.gstin,
+        mobile: t.mobile,
+        email: t.email,
+        balance: t.balance,
+      }));
+    }
     if (!apiParties || apiParties.length === 0) return [];
     return apiParties.map(p => ({
       id: p.PartyID || p.id,
@@ -22,7 +36,7 @@ const CustomerView = () => {
       type: p.PartyType || p.type || '',
       city: p.City || p.city || '',
     }));
-  }, [apiParties]);
+  }, [apiParties, tallyParties]);
 
   const normalizedVouchers = useMemo(() => {
     if (!vouchers || vouchers.length === 0) {

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Skeleton from '../../components/shared/Skeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import useTallyTopReport from '../../hooks/useTallyTopReport';
 import { useCompany } from '../../context/CompanyContext';
 import { useDateRange } from '../../context/DateRangeContext';
 
@@ -11,8 +12,11 @@ const TopReport = () => {
   const { currentCompany } = useCompany();
   const { dateRange } = useDateRange();
   const [activeTab, setActiveTab] = useState('customers');
-  
+
   const { parties: apiParties, vouchers, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { customers: tallyCustomers, products: tallyProducts, vendors: tallyVendors } = useTallyTopReport();
+
+  const tallyActive = tallyCustomers && tallyCustomers.length > 0;
 
   const normalizedParties = useMemo(() => {
     if (!apiParties || apiParties.length === 0) return [];
@@ -78,7 +82,6 @@ const TopReport = () => {
 
     Object.keys(customerData).forEach(partyId => {
       const r = partyReceipts[partyId] || 0;
-      // Outstanding = Total Sales - Receipts (capped at 0 for this basic report metric)
       customerData[partyId].outstanding = Math.max(0, customerData[partyId].totalAmount - r);
     });
 
@@ -97,7 +100,6 @@ const TopReport = () => {
 
     Object.keys(supplierData).forEach(partyId => {
       const p = partyPayments[partyId] || 0;
-      // Outstanding = Total Purchases - Payments
       supplierData[partyId].outstanding = Math.max(0, supplierData[partyId].totalAmount - p);
     });
 
@@ -123,7 +125,24 @@ const TopReport = () => {
     }).format(amount);
   };
 
-  const currentData = activeTab === 'customers' ? topData.topCustomers : topData.topSuppliers;
+  const getTitle = () => {
+    if (activeTab === 'customers') return 'Top Customers';
+    if (activeTab === 'products') return 'Top Products';
+    return 'Top Suppliers';
+  };
+
+  const getCurrentData = () => {
+    if (tallyActive) {
+      if (activeTab === 'customers') return tallyCustomers;
+      if (activeTab === 'products') return tallyProducts || [];
+      return tallyVendors || [];
+    }
+    if (activeTab === 'customers') return topData.topCustomers;
+    if (activeTab === 'products') return [];
+    return topData.topSuppliers;
+  };
+
+  const currentData = getCurrentData();
 
   if (loading) {
     return (
@@ -171,9 +190,7 @@ const TopReport = () => {
               </svg>
             </button>
             <div>
-              <h1 className="text-xl md:text-2xl font-semibold text-ink-default">
-                {activeTab === 'customers' ? 'Top Customers' : 'Top Suppliers'}
-              </h1>
+              <h1 className="text-xl md:text-2xl font-semibold text-ink-default">{getTitle()}</h1>
               <p className="text-sm text-ink-muted">Ranking by transaction volume</p>
             </div>
           </div>
@@ -196,6 +213,18 @@ const TopReport = () => {
             >
               Top Customers
             </button>
+            {tallyActive && (
+              <button
+                onClick={() => setActiveTab('products')}
+                className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  activeTab === 'products'
+                    ? 'bg-brand-primary text-white'
+                    : 'text-ink-muted hover:bg-canvas-faint'
+                }`}
+              >
+                Top Products
+              </button>
+            )}
             <button
               onClick={() => setActiveTab('suppliers')}
               className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
@@ -223,13 +252,27 @@ const TopReport = () => {
                   <th className="px-4 py-3 text-left text-xs font-semibold text-ink-muted uppercase tracking-wide">Party Name</th>
                   <th className="px-4 py-3 text-center text-xs font-semibold text-ink-muted uppercase tracking-wide">Transactions</th>
                   <th className="px-4 py-3 text-right text-xs font-semibold text-ink-muted uppercase tracking-wide">Total Value</th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold text-ink-muted uppercase tracking-wide">Outstanding</th>
+                  {tallyActive && (
+                    <th className="px-4 py-3 text-right text-xs font-semibold text-ink-muted uppercase tracking-wide">% of Total</th>
+                  )}
+                  {!tallyActive && (
+                    <th className="px-4 py-3 text-right text-xs font-semibold text-ink-muted uppercase tracking-wide">Outstanding</th>
+                  )}
                 </tr>
               </thead>
               <tbody className="divide-y divide-canvas-faint">
-                {currentData.map((item, idx) => (
+                {currentData.map((item, idx) => {
+                  const isTally = tallyActive;
+                  const name = isTally ? item.name : item.party?.name;
+                  const city = isTally ? null : item.party?.city;
+                  const txnCount = isTally ? item.transactionCount : item.transactionCount;
+                  const totalAmt = isTally ? item.totalValue : item.totalAmount;
+                  const outstanding = isTally ? 0 : item.outstanding;
+                  const pct = isTally ? item.percentageOfTotal : 0;
+
+                  return (
                   <motion.tr
-                    key={item.party.id}
+                    key={isTally ? item.id : item.party?.id}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.02 }}
@@ -243,22 +286,35 @@ const TopReport = () => {
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <p className="text-sm font-medium text-ink-default">{item.party.name}</p>
-                      <p className="text-xs text-ink-muted">{item.party.city}</p>
+                      <p className="text-sm font-medium text-ink-default">{name}</p>
+                      {city && <p className="text-xs text-ink-muted">{city}</p>}
                     </td>
                     <td className="px-4 py-3 text-center">
-                      <span className="text-sm text-ink-default">{item.transactionCount}</span>
+                      <span className="text-sm text-ink-default">{txnCount}</span>
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <span className="text-sm font-semibold text-ink-default">{formatCurrency(item.totalAmount)}</span>
+                      <span className="text-sm font-semibold text-ink-default">{formatCurrency(totalAmt)}</span>
                     </td>
-                    <td className="px-4 py-3 text-right">
-                      <span className={`text-sm font-medium ${item.outstanding > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                        {formatCurrency(item.outstanding)}
-                      </span>
-                    </td>
+                    {isTally && (
+                      <td className="px-4 py-3 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <div className="w-16 h-2 bg-canvas-faint rounded-full overflow-hidden">
+                            <div className="h-full bg-brand-primary rounded-full" style={{ width: `${Math.min(pct, 100)}%` }} />
+                          </div>
+                          <span className="text-sm text-ink-muted">{pct.toFixed(1)}%</span>
+                        </div>
+                      </td>
+                    )}
+                    {!isTally && (
+                      <td className="px-4 py-3 text-right">
+                        <span className={`text-sm font-medium ${outstanding > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                          {formatCurrency(outstanding)}
+                        </span>
+                      </td>
+                    )}
                   </motion.tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           </div>

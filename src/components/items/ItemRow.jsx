@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import StockIndicator from './StockIndicator';
 
 const ItemRow = ({ item, index, onClick }) => {

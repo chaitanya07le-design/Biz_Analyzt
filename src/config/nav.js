@@ -66,6 +66,11 @@ export const NAV_ITEMS = [
     ],
   },
   {
+    path: '/items',
+    label: 'Items',
+    icon: Package,
+  },
+  {
     path: '/reports',
     label: 'Reports',
     icon: BarChart3,

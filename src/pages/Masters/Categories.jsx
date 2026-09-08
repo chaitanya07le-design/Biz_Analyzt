@@ -2,26 +2,38 @@ import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import EntityDetailModal from '../../components/shared/EntityDetailModal';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import useTallyCategories from '../../hooks/useTallyCategories';
 import { Plus, Search, Tags, Package } from 'lucide-react';
 import { useState, useMemo } from 'react';
 
 export default function Categories() {
   const { itemCategories, itemGroups, items, loading } = useGoogleSheetsData();
+  const tallyCats = useTallyCategories();
+
+  const tallyActive = tallyCats && tallyCats.length > 0;
+
   const [search, setSearch] = useState('');
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const categoriesList = itemCategories || [];
-
   const normalizedCategories = useMemo(() => {
-    return categoriesList.map(c => ({
+    if (tallyActive) {
+      return tallyCats.map((c) => ({
+        id: c.id,
+        name: c.name,
+        groupCount: c.groupCount || 0,
+        itemCount: c.itemCount || 0,
+      }));
+    }
+    return (itemCategories || []).map(c => ({
       id: c.CategoryID || c.id,
       name: c.CategoryName || c.name || '',
+      groupCount: 0,
+      itemCount: 0,
     }));
-  }, [categoriesList]);
+  }, [tallyActive, tallyCats, itemCategories]);
 
   const groupsList = itemGroups || [];
-
   const normalizedGroups = useMemo(() => {
     return groupsList.map(g => ({
       id: g.GroupID || g.id,
@@ -35,13 +47,13 @@ export default function Categories() {
   const getCategoryStats = (categoryId) => {
     const categoryGroups = normalizedGroups.filter(g => g.categoryId === categoryId);
     const groupIds = categoryGroups.map(g => g.id);
-    const itemCount = itemsList.filter(i => 
+    const itemCount = itemsList.filter(i =>
       groupIds.includes(i.ItemGroupID || i.itemGroupId)
     ).length;
     return { groupCount: categoryGroups.length, itemCount };
   };
 
-  const filtered = normalizedCategories.filter(c => 
+  const filtered = normalizedCategories.filter(c =>
     c.name.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -69,13 +81,12 @@ export default function Categories() {
               className="w-full pl-9 pr-4 h-10 bg-ink-50 border border-line rounded-xl text-sm outline-none focus:border-brand-500 focus:bg-white transition-all"
             />
           </div>
-          
           <Button icon={Plus}>New Category</Button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((category) => {
-            const stats = getCategoryStats(category.id);
+            const stats = tallyActive ? { groupCount: category.groupCount, itemCount: category.itemCount } : getCategoryStats(category.id);
             return (
               <div
                 key={category.id}

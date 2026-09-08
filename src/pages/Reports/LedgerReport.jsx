@@ -3,16 +3,23 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Skeleton from '../../components/shared/Skeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import useTallyLedgerReport from '../../hooks/useTallyLedgerReport';
 import { useCompany } from '../../context/CompanyContext';
 import { useDateRange } from '../../context/DateRangeContext';
+
+const ROWS_PER_PAGE = 20;
 
 const LedgerReport = () => {
   const navigate = useNavigate();
   const { currentCompany } = useCompany();
   const { dateRange } = useDateRange();
   const [searchQuery, setSearchQuery] = useState('');
-  
+  const [currentPage, setCurrentPage] = useState(1);
+
   const { ledgers, vouchers, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const tallyLedgers = useTallyLedgerReport();
+
+  const tallyActive = tallyLedgers && tallyLedgers.length > 0;
 
   const normalizedLedgers = useMemo(() => {
     if (!ledgers || ledgers.length === 0) return [];
@@ -25,11 +32,30 @@ const LedgerReport = () => {
     }));
   }, [ledgers]);
 
+  const activeData = useMemo(() => {
+    if (tallyActive) {
+      return tallyLedgers.map((l) => ({
+        id: l.id,
+        name: l.name,
+        group: l.group,
+        type: l.type,
+        balance: l.openingBalance,
+        voucherCount: l.voucherCount,
+        netMovement: l.netMovement,
+      }));
+    }
+    return normalizedLedgers;
+  }, [tallyActive, tallyLedgers, normalizedLedgers]);
+
   const filteredLedgers = useMemo(() => {
-    return normalizedLedgers.filter(l => 
+    return activeData.filter(l =>
       l.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [normalizedLedgers, searchQuery]);
+  }, [activeData, searchQuery]);
+
+  const totalPages = Math.ceil(filteredLedgers.length / ROWS_PER_PAGE);
+  const safePage = Math.min(currentPage, Math.max(1, totalPages));
+  const pagedData = filteredLedgers.slice((safePage - 1) * ROWS_PER_PAGE, safePage * ROWS_PER_PAGE);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {
@@ -41,14 +67,20 @@ const LedgerReport = () => {
   };
 
   const getLedgerTypeColor = (type) => {
+    const t = (type || '').toLowerCase();
     const colors = {
       'asset': 'text-teal-600 bg-teal-light',
       'liability': 'text-rose-600 bg-rose-light',
       'revenue': 'text-indigo-600 bg-indigo-light',
       'expense': 'text-amber-600 bg-amber-light',
-      'equity': 'text-purple-600 bg-purple-50'
+      'equity': 'text-purple-600 bg-purple-50',
+      'income': 'text-indigo-600 bg-indigo-light',
+      'direct income': 'text-indigo-600 bg-indigo-light',
+      'direct expenses': 'text-amber-600 bg-amber-light',
+      'indirect income': 'text-indigo-600 bg-indigo-light',
+      'indirect expenses': 'text-amber-600 bg-amber-light',
     };
-    return colors[type] || 'text-ink-muted bg-ink-50';
+    return colors[t] || 'text-ink-muted bg-ink-50';
   };
 
   const handleLedgerClick = (ledger) => {
@@ -121,7 +153,7 @@ const LedgerReport = () => {
               type="text"
               placeholder="Search ledgers..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
               className="w-full pl-10 pr-4 py-2 bg-white border border-canvas-faint rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
             />
           </div>
@@ -134,7 +166,7 @@ const LedgerReport = () => {
           className="bg-white rounded-lg border border-canvas-faint overflow-hidden"
         >
           <div className="divide-y divide-canvas-faint">
-            {filteredLedgers.map((ledger, idx) => (
+            {pagedData.map((ledger, idx) => (
               <motion.div
                 key={ledger.id}
                 initial={{ opacity: 0, y: 10 }}
@@ -150,18 +182,56 @@ const LedgerReport = () => {
                     </span>
                     <div>
                       <p className="text-sm font-medium text-ink-default">{ledger.name}</p>
-                      <p className="text-xs text-ink-muted">{ledger.group}</p>
+                      <p className="text-xs text-ink-muted">
+                        {ledger.group}
+                        {tallyActive && ledger.voucherCount > 0 && (
+                          <span className="ml-2">· {ledger.voucherCount} vouchers</span>
+                        )}
+                      </p>
                     </div>
                   </div>
                   <div className="text-right">
                     <p className={`text-sm font-semibold ${ledger.balance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                       {formatCurrency(ledger.balance)}
                     </p>
+                    {tallyActive && ledger.netMovement !== 0 && (
+                      <p className={`text-xs ${ledger.netMovement >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {ledger.netMovement >= 0 ? '+' : ''}{formatCurrency(ledger.netMovement)}
+                      </p>
+                    )}
                   </div>
                 </div>
               </motion.div>
             ))}
           </div>
+
+          {filteredLedgers.length === 0 && (
+            <div className="px-4 py-12 text-center">
+              <p className="text-sm text-ink-muted">No ledgers found</p>
+            </div>
+          )}
+
+          {totalPages > 1 && (
+            <div className="px-4 py-3 border-t border-canvas-faint flex items-center justify-between">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={safePage <= 1}
+                className="px-3 py-1.5 text-sm rounded-md border border-canvas-faint text-ink-muted hover:bg-canvas-faint disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                ← Prev
+              </button>
+              <span className="text-sm text-ink-muted">
+                Page {safePage} of {totalPages}
+              </span>
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={safePage >= totalPages}
+                className="px-3 py-1.5 text-sm rounded-md border border-canvas-faint text-ink-muted hover:bg-canvas-faint disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                Next →
+              </button>
+            </div>
+          )}
         </motion.div>
       </div>
     </motion.div>

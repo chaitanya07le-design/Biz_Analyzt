@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import useTallyStockBatches from '../../hooks/useTallyStockBatches';
 import { useCompany } from '../../context/CompanyContext';
 import Skeleton from '../../components/shared/Skeleton';
 
@@ -10,20 +11,42 @@ const StockBatchesPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [locationFilter, setLocationFilter] = useState('all');
   
-  const { stockBatches, items, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { stockBatches: gsBatches, items, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { batches: tallyBatches, loading: tallyLoading } = useTallyStockBatches();
+  const tallyActive = tallyBatches && tallyBatches.length > 0;
 
   const itemMap = useMemo(() => {
+    if (tallyActive) return {};
     if (!items) return {};
     return items.reduce((acc, item) => {
       acc[item.ItemID] = item.ItemName;
       return acc;
     }, {});
-  }, [items]);
+  }, [items, tallyActive]);
 
   const normalizedBatches = useMemo(() => {
-    if (!stockBatches || stockBatches.length === 0) return [];
+    console.log('[StockBatches] normalizedBatches: tallyActive=', tallyActive, 'tallyBatches length=', tallyBatches?.length, 'gsBatches length=', gsBatches?.length);
+    if (tallyActive) {
+      return tallyBatches.map(batch => ({
+        batchId: batch.batchId || batch.BatchID || '—',
+        itemId: batch.itemId || batch.ItemID || '—',
+        itemName: batch.itemName || batch.ItemName || '—',
+        batchNo: batch.batchNo || batch.BatchNo || '—',
+        quantity: batch.quantity || parseFloat(batch.Quantity || 0) || 0,
+        inwardDate: batch.inwardDate ? new Date(batch.inwardDate).toLocaleDateString('en-IN') : (batch.InwardDate ? new Date(batch.InwardDate).toLocaleDateString('en-IN') : '—'),
+        mfgDate: batch.mfgDate || batch.MfgDate || null,
+        expDate: batch.expDate || batch.ExpDate || null,
+        rate: batch.rate || parseFloat(batch.Rate || 0) || 0,
+        value: batch.value || parseFloat(batch.Value || 0) || 0,
+        ageingDays: batch.ageingDays || parseInt(batch.AgeingDays || 0) || 0,
+        ageingBucket: batch.ageingBucket || batch.AgeingBucket || '—',
+        location: batch.location || batch.Location || '—',
+      }));
+    }
+
+    if (!gsBatches || gsBatches.length === 0) return [];
     
-    return stockBatches.map(batch => ({
+    return gsBatches.map(batch => ({
       batchId: batch.BatchID,
       itemId: batch.ItemID,
       itemName: itemMap[batch.ItemID] || batch.ItemID,
@@ -38,10 +61,10 @@ const StockBatchesPage = () => {
       ageingBucket: batch.AgeingBucket,
       location: batch.Location,
     }));
-  }, [stockBatches, itemMap]);
+  }, [tallyActive, tallyBatches, gsBatches, itemMap]);
 
   const locations = useMemo(() => {
-    const locs = [...new Set(normalizedBatches.map(b => b.location))];
+    const locs = [...new Set(normalizedBatches.map(b => b.location).filter(Boolean))];
     return ['all', ...locs.sort()];
   }, [normalizedBatches]);
 
@@ -52,8 +75,8 @@ const StockBatchesPage = () => {
       
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
-        if (!batch.itemName.toLowerCase().includes(query) && 
-            !batch.batchNo.toLowerCase().includes(query)) {
+        if (!(batch.itemName || '').toLowerCase().includes(query) && 
+            !(batch.batchNo || '').toLowerCase().includes(query)) {
           return false;
         }
       }
@@ -63,18 +86,26 @@ const StockBatchesPage = () => {
   }, [ageingFilter, locationFilter, searchQuery, normalizedBatches]);
 
   const ageingSummary = useMemo(() => {
-    const buckets = { '0-30': 0, '31-60': 0, '61-90': 0, '91-180': 0, '180+': 0 };
+    const buckets = { '0-30': 0, '31-60': 0, '61-90': 0, '91-180': 0, '180+': 0, '90+ Days': 0 };
     normalizedBatches.forEach(batch => {
-      if (buckets[batch.ageingBucket] !== undefined) {
-        buckets[batch.ageingBucket] += batch.value;
+      const bucket = batch.ageingBucket;
+      if (buckets.hasOwnProperty(bucket)) {
+        buckets[bucket] += batch.value;
+      } else if (!buckets.hasOwnProperty(bucket) && bucket) {
+        buckets[bucket] = (buckets[bucket] || 0) + batch.value;
       }
     });
-    return buckets;
+    const display = {};
+    Object.entries(buckets).forEach(([k, v]) => { if (v > 0 || k === '0-30') display[k] = v; });
+    if (Object.keys(display).length === 1 && display['0-30'] === 0 && normalizedBatches.length > 0) {
+      return { '0-30': 0, '31-60': 0, '61-90': 0, '91-180': 0, '180+': 0 };
+    }
+    return Object.keys(display).length > 0 ? display : { '0-30': 0, '31-60': 0, '61-90': 0, '91-180': 0, '180+': 0 };
   }, [normalizedBatches]);
 
   const totalValue = filteredBatches.reduce((sum, b) => sum + b.value, 0);
 
-  if (loading) {
+  if ((loading || tallyLoading) && !tallyActive) {
     return (
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-canvas-default pb-20 md:pb-6">
         <div className="px-4 py-4 md:px-6 md:py-6 space-y-4">
@@ -157,27 +188,27 @@ const StockBatchesPage = () => {
               <tbody className="divide-y divide-canvas-faint">
                 {filteredBatches.map((batch, idx) => (
                   <motion.tr
-                    key={batch.batchId}
+                    key={batch.batchId || `batch-${idx}`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.2, delay: idx * 0.02 }}
                     className="hover:bg-canvas-subtle transition-colors"
                   >
-                    <td className="px-4 py-3 text-ink-default">{batch.itemName}</td>
-                    <td className="px-4 py-3 text-ink-muted">{batch.batchNo}</td>
-                    <td className="px-4 py-3 text-ink-default text-right">{batch.quantity}</td>
-                    <td className="px-4 py-3 text-ink-muted">{batch.inwardDate}</td>
+                    <td className="px-4 py-3 text-ink-default">{batch.itemName || '—'}</td>
+                    <td className="px-4 py-3 text-ink-muted">{batch.batchNo || '—'}</td>
+                    <td className="px-4 py-3 text-ink-default text-right">{batch.quantity || 0}</td>
+                    <td className="px-4 py-3 text-ink-muted">{batch.inwardDate || '—'}</td>
                     <td className="px-4 py-3">
                       <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                        batch.ageingBucket === '0-30' ? 'bg-green-100 text-green-700' :
-                        batch.ageingBucket === '31-60' ? 'bg-yellow-100 text-yellow-700' :
-                        batch.ageingBucket === '61-90' ? 'bg-orange-100 text-orange-700' :
+                        (batch.ageingBucket || '').includes('0-30') || batch.ageingDays < 30 ? 'bg-green-100 text-green-700' :
+                        (batch.ageingBucket || '').includes('31-60') || (batch.ageingDays >= 30 && batch.ageingDays < 60) ? 'bg-yellow-100 text-yellow-700' :
+                        (batch.ageingBucket || '').includes('61-90') || (batch.ageingDays >= 60 && batch.ageingDays < 90) ? 'bg-orange-100 text-orange-700' :
                         'bg-red-100 text-red-700'
                       }`}>
                         {batch.ageingDays}d
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-ink-default text-right font-medium">₹{batch.value.toLocaleString('en-IN')}</td>
+                    <td className="px-4 py-3 text-ink-default text-right font-medium">₹{(batch.value || 0).toLocaleString('en-IN')}</td>
                   </motion.tr>
                 ))}
               </tbody>

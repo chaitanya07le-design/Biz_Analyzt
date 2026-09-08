@@ -3,16 +3,31 @@ import { motion } from 'framer-motion';
 import { MapPin, Users, TrendingUp, DollarSign, Building } from 'lucide-react';
 import Skeleton from '../../components/shared/Skeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import useTallyGeographicRollup from '../../hooks/useTallyGeographicRollup';
 import { useCompany } from '../../context/CompanyContext';
 
 const GeographicReport = () => {
   const { currentCompany } = useCompany();
   const { geographicSummary, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const tallyGeo = useTallyGeographicRollup();
 
   const [sortBy, setSortBy] = useState('sales');
   const [selectedState, setSelectedState] = useState('');
 
   const geoData = useMemo(() => {
+    if (tallyGeo && tallyGeo.length > 0) {
+      return tallyGeo.map((t, i) => ({
+        geoId: t.id || `tally-geo-${i}`,
+        state: t.state || 'Unknown',
+        city: t.city || 'Unknown',
+        partyCount: t.partyCount || 0,
+        salesValue: t.salesValue || 0,
+        purchaseValue: t.purchaseValue || 0,
+        outstanding: 0,
+        topCustomers: '-',
+        topItems: '-',
+      }));
+    }
     if (!geographicSummary) return [];
 
     return geographicSummary.map(geo => ({
@@ -26,7 +41,7 @@ const GeographicReport = () => {
       topCustomers: geo.TopCustomers || '-',
       topItems: geo.TopItems || '-',
     }));
-  }, [geographicSummary]);
+  }, [geographicSummary, tallyGeo]);
 
   const stateOptions = useMemo(() => {
     const states = [...new Set(geoData.map(d => d.state))].filter(Boolean).sort();

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Skeleton from '../../components/shared/Skeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import useTallyByItemRollup from '../../hooks/useTallyByItemRollup';
 import { useCompany } from '../../context/CompanyContext';
 import { useDateRange } from '../../context/DateRangeContext';
 
@@ -12,6 +13,7 @@ const ByItem = () => {
   const { dateRange } = useDateRange();
   
   const { items: apiItems, vouchers, voucherLines, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const tallyItemRollup = useTallyByItemRollup();
 
   const normalizedItems = useMemo(() => {
     if (!apiItems || apiItems.length === 0) return [];
@@ -26,6 +28,26 @@ const ByItem = () => {
   }, [apiItems]);
 
   const itemTransactions = useMemo(() => {
+    // Tally by-item rollup (template 60) — when available, use it directly
+    if (tallyItemRollup && tallyItemRollup.length > 0) {
+      return tallyItemRollup.map((t, i) => ({
+        item: {
+          id: t.id || `tally-byitem-${i}`,
+          name: t.itemName,
+          category: '',
+          unit: '',
+          closingQty: 0,
+          closingValue: 0,
+        },
+        qtySold: t.qtySold,
+        qtyPurchased: 0,
+        salesValue: t.salesValue,
+        purchaseValue: 0,
+        count: 0,
+        vouchers: [],
+      })).sort((a, b) => b.salesValue - a.salesValue);
+    }
+
     const transactions = {};
     
     normalizedItems.forEach(item => {
@@ -101,7 +123,7 @@ const ByItem = () => {
       })
       .filter(t => t.count > 0)
       .sort((a, b) => b.salesValue - a.salesValue);
-  }, [normalizedItems, vouchers, voucherLines, dateRange]);
+  }, [normalizedItems, vouchers, voucherLines, dateRange, tallyItemRollup]);
 
   const [expandedItemId, setExpandedItemId] = useState(null);
 

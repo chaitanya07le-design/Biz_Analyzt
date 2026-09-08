@@ -5,6 +5,7 @@ import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import { Plus, Search, Building2 } from 'lucide-react';
 import { useState } from 'react';
 import useTallyParties from '../../hooks/useTallyParties';
+import useTallyPartyDetails from '../../hooks/useTallyPartyDetails';
 
 const formatCurrency = (amount) => {
   return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount || 0);
@@ -12,13 +13,30 @@ const formatCurrency = (amount) => {
 
 export default function Parties() {
   const { parties, loading } = useGoogleSheetsData();
-  const tallyParties = useTallyParties();
+const tallyParties = useTallyParties();
+  const tallyPartyDetails = useTallyPartyDetails();
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
   const [selectedPartyId, setSelectedPartyId] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const partiesList = tallyParties
+  const partiesList = (tallyPartyDetails && tallyPartyDetails.length > 0)
+    ? tallyPartyDetails.map((party) => {
+        const matchingSheetParty = (parties || []).find(
+          (sheetParty) => (sheetParty.PartyName || '').trim().toLowerCase() === (party.name || '').trim().toLowerCase(),
+        );
+        return {
+          PartyID: matchingSheetParty?.PartyID || party.id,
+          PartyName: party.name,
+          PartyType: party.type,
+          GSTIN: party.gstin,
+          Address: party.address,
+          Phone: party.mobile,
+          Email: party.email,
+          OpeningBalance: party.balance,
+        };
+      })
+    : tallyParties
     ? tallyParties.map((party) => {
         const matchingSheetParty = (parties || []).find(
           (sheetParty) => (sheetParty.PartyName || '').trim().toLowerCase() === (party.name || '').trim().toLowerCase(),

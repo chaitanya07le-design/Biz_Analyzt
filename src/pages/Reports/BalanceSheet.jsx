@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Skeleton from '../../components/shared/Skeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import useTallyTrialBalance from '../../hooks/useTallyTrialBalance';
 import { useCompany } from '../../context/CompanyContext';
 import { calculateProfitLoss } from '../../utils/profitLoss';
 
@@ -12,6 +13,7 @@ const BalanceSheet = () => {
   const [asOfDate, setAsOfDate] = useState(new Date().toISOString().split('T')[0]);
   
   const { ledgers, parties, groups, vouchers, voucherLines, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const tallyTrialBalance = useTallyTrialBalance();
 
   const normalizedLedgers = useMemo(() => {
     if (!ledgers || ledgers.length === 0) return [];
@@ -52,6 +54,27 @@ const BalanceSheet = () => {
   }, [normalizedLedgers, groups]);
 
   const reportData = useMemo(() => {
+    // Tally trial balance (template 62) — when available, build balance sheet from it
+    if (tallyTrialBalance && tallyTrialBalance.length > 0) {
+      const currentAssets = [];
+      const currentLiabilities = [];
+      tallyTrialBalance.forEach(row => {
+        const item = { name: row.ledgerName, amount: Math.abs(row.balance), ledgers: [] };
+        if ((row.debit || 0) > (row.credit || 0)) {
+          currentAssets.push(item);
+        } else {
+          currentLiabilities.push(item);
+        }
+      });
+      const totalAssets = currentAssets.reduce((s, a) => s + a.amount, 0);
+      const totalLiabilities = currentLiabilities.reduce((s, l) => s + l.amount, 0);
+      return {
+        assets: { current: currentAssets, fixed: [], total: totalAssets },
+        liabilities: { current: currentLiabilities, capital: [], total: totalLiabilities },
+        netProfit: totalAssets - totalLiabilities,
+      };
+    }
+
     const assets = {
       current: [],
       fixed: [],
@@ -122,7 +145,7 @@ const BalanceSheet = () => {
     }
 
     return { assets, liabilities, netProfit: profitData.netProfit };
-  }, [ledgerWithGroups, partyBalances, vouchers, voucherLines, ledgers, groups]);
+  }, [ledgerWithGroups, partyBalances, vouchers, voucherLines, ledgers, groups, tallyTrialBalance]);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {

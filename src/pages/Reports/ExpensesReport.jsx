@@ -5,6 +5,7 @@ import Skeleton from '../../components/shared/Skeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import { useCompany } from '../../context/CompanyContext';
 import { useDateRange } from '../../context/DateRangeContext';
+import useTallyExpenses from '../../hooks/useTallyExpenses';
 
 const ExpensesReport = () => {
   const navigate = useNavigate();
@@ -12,8 +13,16 @@ const ExpensesReport = () => {
   const { dateRange } = useDateRange();
   
   const { ledgers: apiLedgers, groups, vouchers, voucherLines, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const tallyExpenses = useTallyExpenses();
 
   const expenseData = useMemo(() => {
+    if (tallyExpenses?.expenses?.length) {
+      const directExpenses = tallyExpenses.expenses.filter((item) => /direct/i.test(item.group));
+      const indirectExpenses = tallyExpenses.expenses.filter((item) => !/direct/i.test(item.group));
+      const totalDirect = directExpenses.reduce((sum, item) => sum + item.amount, 0);
+      const totalIndirect = indirectExpenses.reduce((sum, item) => sum + item.amount, 0);
+      return { directExpenses, indirectExpenses, totalDirect, totalIndirect, grandTotal: totalDirect + totalIndirect };
+    }
     const directExpenses = [];
     const indirectExpenses = [];
     let totalDirect = 0;
@@ -91,7 +100,7 @@ const ExpensesReport = () => {
       totalIndirect,
       grandTotal: totalDirect + totalIndirect
     };
-  }, [vouchers, voucherLines, groups, apiLedgers]);
+  }, [vouchers, voucherLines, groups, apiLedgers, tallyExpenses]);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {
@@ -152,7 +161,7 @@ const ExpensesReport = () => {
             </button>
             <div>
               <h1 className="text-xl md:text-2xl font-semibold text-ink-default">Expenses</h1>
-              <p className="text-sm text-ink-muted">Direct and Indirect expense breakdown</p>
+              <p className="text-sm text-ink-muted">Direct and Indirect expense breakdown {tallyExpenses?.expenses?.length ? <span className="font-bold text-brand-primary">· LIVE TALLY</span> : ''}</p>
             </div>
           </div>
         </motion.div>

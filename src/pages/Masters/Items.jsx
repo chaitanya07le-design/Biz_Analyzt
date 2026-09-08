@@ -2,6 +2,7 @@ import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import EntityDetailModal from '../../components/shared/EntityDetailModal';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import useTallyItems from '../../hooks/useTallyItems';
 import { Plus, Search, Package } from 'lucide-react';
 import { useState } from 'react';
 
@@ -11,12 +12,23 @@ const formatCurrency = (amount) => {
 
 export default function Items() {
   const { items, loading } = useGoogleSheetsData();
+  const tallyItems = useTallyItems();
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const itemsList = items || [];
+  const itemsList = tallyItems && tallyItems.length > 0
+    ? tallyItems.map((t, i) => ({
+        ItemID: t.id || `tally-item-${i}`,
+        ItemName: t.name,
+        Category: t.group,
+        OpeningStock: t.stock,
+        Unit: t.unit || 'Nos',
+        SaleRate: t.rate,
+        GST: t.gst,
+      }))
+    : (items || []);
   const categories = [...new Set(itemsList.map(i => i.Category || i.category))];
 
   const filtered = itemsList.filter(i => {
@@ -82,10 +94,10 @@ export default function Items() {
           {filtered.map((item) => {
             const name = item.ItemName || item.name || '';
             const category = item.Category || item.category || '';
-            const stock = parseFloat(item.OpeningStock || item.stock) || 0;
+            const stock = parseFloat(item.OpeningStock ?? item.stock ?? 0) || 0;
             const unit = item.Unit || item.unit || 'Nos';
-            const rate = parseFloat(item.SaleRate || item.rate) || 0;
-            const gst = parseFloat(item.GST || item.gst) || 18;
+            const rate = parseFloat(item.SaleRate ?? item.rate ?? 0) || 0;
+            const gst = parseFloat(item.GST ?? item.gst ?? 0) || 0;
 
             return (
               <div

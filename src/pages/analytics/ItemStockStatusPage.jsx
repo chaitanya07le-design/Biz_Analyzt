@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import useTallyItemStockStatus from '../../hooks/useTallyItemStockStatus';
 import { useCompany } from '../../context/CompanyContext';
 import Skeleton from '../../components/shared/Skeleton';
 
@@ -9,12 +10,32 @@ const ItemStockStatusPage = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   
-  const { itemStockStatus, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { itemStockStatus: gsStatus, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { items: tallyStatus, loading: tallyLoading } = useTallyItemStockStatus();
+  const tallyActive = tallyStatus && tallyStatus.length > 0;
 
   const normalizedData = useMemo(() => {
-    if (!itemStockStatus || itemStockStatus.length === 0) return [];
+    if (tallyActive) {
+      return tallyStatus.map(item => ({
+        statusId: item.statusId || item.StatusID || '—',
+        itemId: item.itemId || item.ItemID || '—',
+        itemName: item.itemName || item.ItemName || '—',
+        currentStock: item.currentStock || parseFloat(item.CurrentStock || 0) || 0,
+        salesVelocity30d: item.salesVelocity30d || parseFloat(item.SalesVelocity30d || 0) || 0,
+        isUnderstock: item.isUnderstock || item.IsUnderstock === 'true' || item.IsUnderstock === true || false,
+        isOverstock: item.isOverstock || item.IsOverstock === 'true' || item.IsOverstock === true || false,
+        isPopular: item.isPopular || item.IsPopular === 'true' || item.IsPopular === true || false,
+        daysOfStock: item.daysOfStock || parseInt(item.DaysOfStock || 0) || 0,
+        reorderLevel: item.reorderLevel || parseFloat(item.ReorderLevel || 0) || 0,
+        stockValue: item.stockValue || parseFloat(item.StockValue || 0) || 0,
+        lastSaleDate: item.lastSaleDate || item.LastSaleDate || null,
+        lastPurchaseDate: item.lastPurchaseDate || item.LastPurchaseDate || null,
+      }));
+    }
+
+    if (!gsStatus || gsStatus.length === 0) return [];
     
-    return itemStockStatus.map(item => ({
+    return gsStatus.map(item => ({
       statusId: item.StatusID,
       itemId: item.ItemID,
       itemName: item.ItemName,
@@ -29,7 +50,7 @@ const ItemStockStatusPage = () => {
       lastSaleDate: item.LastSaleDate,
       lastPurchaseDate: item.LastPurchaseDate,
     }));
-  }, [itemStockStatus]);
+  }, [tallyActive, tallyStatus, gsStatus]);
 
   const filteredData = useMemo(() => {
     return normalizedData.filter(item => {
@@ -41,7 +62,7 @@ const ItemStockStatusPage = () => {
       
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
-        if (!item.itemName.toLowerCase().includes(query)) {
+        if (!(item.itemName || '').toLowerCase().includes(query)) {
           return false;
         }
       }
@@ -59,7 +80,7 @@ const ItemStockStatusPage = () => {
     };
   }, [normalizedData]);
 
-  if (loading) {
+  if ((loading || tallyLoading) && !tallyActive) {
     return (
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-canvas-default pb-20 md:pb-6">
         <div className="px-4 py-4 md:px-6 md:py-6 space-y-4">
@@ -138,14 +159,14 @@ const ItemStockStatusPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredData.map((item, idx) => (
             <motion.div
-              key={item.statusId}
+              key={item.statusId || idx}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2, delay: idx * 0.02 }}
               className="bg-white rounded-lg border border-canvas-faint p-4 hover:border-canvas-border transition-colors"
             >
               <div className="flex items-start justify-between">
-                <h3 className="text-sm font-medium text-ink-default">{item.itemName}</h3>
+                <h3 className="text-sm font-medium text-ink-default">{item.itemName || '—'}</h3>
                 <div className="flex gap-1">
                   {item.isPopular && <span className="text-xs">⭐</span>}
                 </div>
@@ -154,20 +175,20 @@ const ItemStockStatusPage = () => {
               <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
                 <div>
                   <p className="text-ink-muted">Current Stock</p>
-                  <p className="text-ink-default font-medium">{item.currentStock} units</p>
+                  <p className="text-ink-default font-medium">{item.currentStock || 0} units</p>
                 </div>
                 <div>
                   <p className="text-ink-muted">Stock Value</p>
-                  <p className="text-ink-default font-medium">₹{item.stockValue.toLocaleString('en-IN')}</p>
+                  <p className="text-ink-default font-medium">₹{(item.stockValue || 0).toLocaleString('en-IN')}</p>
                 </div>
                 <div>
                   <p className="text-ink-muted">Sales Velocity</p>
-                  <p className="text-ink-default font-medium">{item.salesVelocity30d}/mo</p>
+                  <p className="text-ink-default font-medium">{(item.salesVelocity30d || 0)}/mo</p>
                 </div>
                 <div>
                   <p className="text-ink-muted">Days of Stock</p>
-                  <p className={`font-medium ${item.daysOfStock < 7 ? 'text-red-600' : item.daysOfStock > 90 ? 'text-yellow-600' : 'text-ink-default'}`}>
-                    {item.daysOfStock} days
+                  <p className={`font-medium ${(item.daysOfStock || 0) < 7 ? 'text-red-600' : (item.daysOfStock || 0) > 90 ? 'text-yellow-600' : 'text-ink-default'}`}>
+                    {item.daysOfStock || 0} days
                   </p>
                 </div>
               </div>

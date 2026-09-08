@@ -1,66 +1,45 @@
 import React, { useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
-import { useCompany } from '../../context/CompanyContext';
+import useTallyLedgerDetail from '../../hooks/useTallyLedgerDetail';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Building2, Wallet, TrendingUp, TrendingDown } from 'lucide-react';
+import { ArrowLeft, Building2, Wallet, TrendingUp, CreditCard } from 'lucide-react';
 
 const formatCurrency = (amount) => `₹${Math.abs(amount || 0).toLocaleString('en-IN')}`;
 
 const LedgerDetail = () => {
   const { ledgerId } = useParams();
   const navigate = useNavigate();
-  const { currentCompany } = useCompany();
-  const companyId = currentCompany?.id || 'COMP-0001';
-  const { ledgers, groups, voucherLines, vouchers, bankAccounts, cashAccounts, loading } = useGoogleSheetsData(companyId);
+  const { ledger: tallyLedger, transactions: tallyTransactions, loading: tallyLoading } = useTallyLedgerDetail(ledgerId);
 
   const { ledger, group, transactions, balance } = useMemo(() => {
-    const ledgerData = ledgers.find(l => l.LedgerID === ledgerId || l.id === ledgerId);
-    if (!ledgerData) return { ledger: null, group: null, transactions: [], balance: 0 };
+    if (!tallyLedger) return { ledger: null, group: null, transactions: [], balance: 0 };
 
-    const groupData = groups.find(g => g.GroupID === ledgerData.GroupID || g.id === ledgerData.GroupID);
-
-    const ledgerVoucherLines = (voucherLines || []).filter(
-      line => line.LedgerID === ledgerId || line.LedgerID === ledgerData.LedgerID
-    );
-
-    console.log('DEBUG voucherLines total:', voucherLines?.length);
-    console.log('DEBUG ledgerId:', ledgerId);
-    console.log('DEBUG ledgerData.LedgerID:', ledgerData?.LedgerID);
-    console.log('DEBUG matching lines:', ledgerVoucherLines.length);
-
-    const txns = ledgerVoucherLines.map(line => {
-      const voucher = (vouchers || []).find(v => v.VoucherID === line.VoucherID) || {};
-      return {
-        voucherId: line.VoucherID,
-        voucherNo: voucher.VoucherNo || '',
-        date: voucher.VoucherDate || '',
-        type: voucher.VoucherType || '',
-        particulars: voucher.Narration || line.LineType || '',
-        debit: parseFloat(line.LedgerDebit || 0),
-        credit: parseFloat(line.LedgerCredit || 0),
-      };
-    }).filter(t => t.debit > 0 || t.credit > 0)
-      .sort((a, b) => new Date(a.date) - new Date(b.date));
-
-    let runningBalance = parseFloat(ledgerData.OpeningBalance || 0);
-    txns.forEach(t => {
+    let runningBalance = tallyLedger.openingBalance || 0;
+    const txns = (tallyTransactions || []).map((t, idx) => {
       runningBalance += t.debit - t.credit;
-      t.balance = runningBalance;
+      return {
+        voucherId: `tally-txn-${idx}`,
+        voucherNo: t.voucherNo || '—',
+        date: t.date ? new Date(t.date).toLocaleDateString('en-IN') : '—',
+        type: t.type || '—',
+        particulars: t.particulars || '—',
+        debit: t.debit || 0,
+        credit: t.credit || 0,
+        balance: runningBalance,
+      };
     });
 
-    const accountType = (bankAccounts || []).some(b => b.LedgerID === ledgerData.LedgerID) ? 'bank' :
-                        (cashAccounts || []).some(c => c.LedgerID === ledgerData.LedgerID) ? 'cash' : 'ledger';
+    const accountType = tallyLedger.accountNumber ? 'bank' : 'ledger';
 
-    return { 
-      ledger: { ...ledgerData, accountType }, 
-      group: groupData, 
-      transactions: txns, 
-      balance: runningBalance 
+    return {
+      ledger: { LedgerName: tallyLedger.name, accountType, ...tallyLedger },
+      group: { GroupName: tallyLedger.group },
+      transactions: txns,
+      balance: runningBalance,
     };
-  }, [ledgerId, ledgers, groups, voucherLines, vouchers, bankAccounts, cashAccounts]);
+  }, [tallyLedger, tallyTransactions]);
 
-  if (loading) {
+  if (tallyLoading) {
     return (
       <div className="min-h-screen bg-canvas-default flex items-center justify-center">
         <div className="text-ink-muted">Loading...</div>
@@ -84,8 +63,10 @@ const LedgerDetail = () => {
     );
   }
 
-  const openingBalance = parseFloat(ledger.OpeningBalance || 0);
+  const openingBalance = tallyLedger.openingBalance;
   const closingBalance = balance;
+  const totalDebit = tallyLedger.totalDebit;
+  const totalCredit = tallyLedger.totalCredit;
 
   const getBalanceColor = (bal) => {
     if (bal > 0) return 'text-red-600';
@@ -136,6 +117,33 @@ const LedgerDetail = () => {
       </div>
 
       <div className="px-4 py-4 md:px-6 md:py-6">
+        {tallyLedger.accountNumber && (
+          <div className="bg-white rounded-xl p-4 border border-canvas-faint mb-6">
+            <div className="flex items-center gap-2 mb-3">
+              <CreditCard className="w-4 h-4 text-blue-600" />
+              <span className="text-sm font-medium text-ink-default">Bank Account Details</span>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+              <div>
+                <p className="text-xs text-ink-muted">Account No</p>
+                <p className="font-mono text-ink-default">{tallyLedger.accountNumber}</p>
+              </div>
+              <div>
+                <p className="text-xs text-ink-muted">Bank</p>
+                <p className="text-ink-default">{tallyLedger.bankName}</p>
+              </div>
+              <div>
+                <p className="text-xs text-ink-muted">IFSC</p>
+                <p className="font-mono text-ink-default">{tallyLedger.ifsc}</p>
+              </div>
+              <div>
+                <p className="text-xs text-ink-muted">Branch</p>
+                <p className="text-ink-default">{tallyLedger.branchName}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
           <div className="bg-white rounded-xl p-4 border border-canvas-faint">
             <p className="text-xs text-ink-muted mb-1">Opening Balance</p>
@@ -146,13 +154,13 @@ const LedgerDetail = () => {
           <div className="bg-white rounded-xl p-4 border border-canvas-faint">
             <p className="text-xs text-ink-muted mb-1">Total Debit</p>
             <p className="text-lg font-bold text-red-600">
-              {formatCurrency(transactions.reduce((sum, t) => sum + t.debit, 0))}
+              {formatCurrency(totalDebit)}
             </p>
           </div>
           <div className="bg-white rounded-xl p-4 border border-canvas-faint">
             <p className="text-xs text-ink-muted mb-1">Total Credit</p>
             <p className="text-lg font-bold text-green-600">
-              {formatCurrency(transactions.reduce((sum, t) => sum + t.credit, 0))}
+              {formatCurrency(totalCredit)}
             </p>
           </div>
           <div className="bg-white rounded-xl p-4 border border-canvas-faint">
@@ -180,10 +188,9 @@ const LedgerDetail = () => {
                 </thead>
                 <tbody className="divide-y divide-canvas-faint">
                   {transactions.map((txn, idx) => (
-                    <tr 
-                      key={idx} 
+                    <tr
+                      key={idx}
                       className="hover:bg-canvas-subtle cursor-pointer"
-                      onClick={() => navigate(`/voucher/${txn.voucherId}`)}
                     >
                       <td className="px-4 py-3 text-sm text-ink-default">{txn.date}</td>
                       <td className="px-4 py-3 text-sm text-ink-muted font-mono">{txn.voucherNo || '—'}</td>
@@ -217,10 +224,9 @@ const LedgerDetail = () => {
 
             <div className="md:hidden divide-y divide-canvas-faint">
               {transactions.map((txn, idx) => (
-                <div 
-                  key={idx} 
-                  className="p-4 cursor-pointer hover:bg-canvas-subtle"
-                  onClick={() => navigate(`/voucher/${txn.voucherId}`)}
+                <div
+                  key={idx}
+                  className="p-4"
                 >
                   <div className="flex justify-between items-start mb-2">
                     <div>

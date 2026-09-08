@@ -1,6 +1,7 @@
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import useTallyAccounts from '../../hooks/useTallyAccounts';
 import EntityDetailModal from '../../components/shared/EntityDetailModal';
 import { Plus, Search, Building2, Wallet } from 'lucide-react';
 import { useState, useMemo } from 'react';
@@ -11,6 +12,7 @@ const formatCurrency = (amount) => {
 
 export default function Accounts() {
   const { bankAccounts, cashAccounts, loading } = useGoogleSheetsData();
+  const tallyAccounts = useTallyAccounts();
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
   const [selectedAccount, setSelectedAccount] = useState(null);
@@ -20,6 +22,18 @@ export default function Accounts() {
   const cashAccountsList = cashAccounts || [];
 
   const normalizedAccounts = useMemo(() => {
+    // Tally data overrides Sheets when available
+    if (tallyAccounts && tallyAccounts.length > 0) {
+      return tallyAccounts.map((t, i) => ({
+        id: t.id || `tally-account-${i}`,
+        name: t.name,
+        type: t.type,
+        accountNo: '',
+        branch: '',
+        balance: t.balance || 0,
+      }));
+    }
+    // Sheets fallback
     const bankAccs = bankAccountsList.map(b => ({
       id: b.AccountID,
       name: b.BankName || '',
@@ -39,7 +53,7 @@ export default function Accounts() {
     }));
     
     return [...bankAccs, ...cashAccs];
-  }, [bankAccountsList, cashAccountsList]);
+  }, [bankAccountsList, cashAccountsList, tallyAccounts]);
 
   const filtered = normalizedAccounts.filter(a => {
     const matchesSearch = a.name.toLowerCase().includes(search.toLowerCase()) ||

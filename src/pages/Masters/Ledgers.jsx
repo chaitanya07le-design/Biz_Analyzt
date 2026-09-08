@@ -1,6 +1,7 @@
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import useTallyLedgers from '../../hooks/useTallyLedgers';
 import { Plus, Search, Calculator } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +12,7 @@ const formatCurrency = (amount) => {
 
 export default function Ledgers() {
   const { ledgers, groups, loading } = useGoogleSheetsData();
+  const tallyLedgers = useTallyLedgers();
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
@@ -28,6 +30,18 @@ export default function Ledgers() {
   }, [groupsList]);
 
   const normalizedLedgers = useMemo(() => {
+    // Tally data overrides Sheets when available
+    if (tallyLedgers && tallyLedgers.length > 0) {
+      return tallyLedgers.map((t, i) => ({
+        id: t.id || `tally-ledger-${i}`,
+        name: t.name,
+        group: t.group,
+        groupId: '',
+        type: t.type || 'asset',
+        balance: t.balance || 0,
+      }));
+    }
+    // Sheets fallback
     return ledgersList.map(l => {
       const groupId = l.GroupID || l.groupId || '';
       const group = groupsById[groupId] || {};
@@ -49,7 +63,7 @@ export default function Ledgers() {
         balance: parseFloat(l.OpeningBalance || l.balance || 0),
       };
     });
-  }, [ledgersList, groupsById]);
+  }, [ledgersList, groupsById, tallyLedgers]);
 
   const filtered = normalizedLedgers.filter(l => {
     const matchesSearch = l.name.toLowerCase().includes(search.toLowerCase()) ||

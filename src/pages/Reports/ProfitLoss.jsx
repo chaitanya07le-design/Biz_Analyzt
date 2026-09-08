@@ -6,6 +6,7 @@ import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import { useCompany } from '../../context/CompanyContext';
 import { useDateRange } from '../../context/DateRangeContext';
 import { calculateProfitLoss } from '../../utils/profitLoss';
+import useTallyProfitLoss from '../../hooks/useTallyProfitLoss';
 
 const ProfitLoss = () => {
   const navigate = useNavigate();
@@ -13,8 +14,17 @@ const ProfitLoss = () => {
   const { dateRange, setCustomDateRange } = useDateRange();
   
   const { ledgers, groups, vouchers, voucherLines, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const tallyProfitLoss = useTallyProfitLoss();
 
   const reportData = useMemo(() => {
+    if (tallyProfitLoss) {
+      return {
+        income: { direct: tallyProfitLoss.sales + tallyProfitLoss.directIncome, indirect: tallyProfitLoss.indirectIncome, total: tallyProfitLoss.sales + tallyProfitLoss.directIncome + tallyProfitLoss.indirectIncome, ledgers: { indirect: [] } },
+        expenses: { purchase: tallyProfitLoss.purchases, totalDirect: tallyProfitLoss.purchases + tallyProfitLoss.directExpenses, ledgers: { direct: [], indirect: [] } },
+        grossProfit: tallyProfitLoss.grossProfit,
+        netProfit: tallyProfitLoss.netProfit,
+      };
+    }
     if (!vouchers) return calculateProfitLoss([], voucherLines, ledgers, groups);
     
     let filteredVouchers = vouchers;
@@ -28,7 +38,7 @@ const ProfitLoss = () => {
     }
 
     return calculateProfitLoss(filteredVouchers, voucherLines, ledgers, groups);
-  }, [vouchers, voucherLines, ledgers, groups, dateRange.startDate, dateRange.endDate]);
+  }, [vouchers, voucherLines, ledgers, groups, dateRange.startDate, dateRange.endDate, tallyProfitLoss]);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {
@@ -84,7 +94,7 @@ const ProfitLoss = () => {
             </button>
             <div>
               <h1 className="text-xl md:text-2xl font-semibold text-ink-default">Profit & Loss</h1>
-              <p className="text-sm text-ink-muted">Income vs Expenses</p>
+              <p className="text-sm text-ink-muted">Income vs Expenses {tallyProfitLoss && <span className="font-bold text-brand-primary">· LIVE TALLY</span>}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">

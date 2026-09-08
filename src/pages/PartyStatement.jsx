@@ -4,12 +4,19 @@ import useGoogleSheetsData from '../hooks/useGoogleSheetsData';
 import LedgerHeader from '../components/ledger/LedgerHeader';
 import LedgerBalanceRow from '../components/ledger/LedgerBalanceRow';
 import { motion } from 'framer-motion';
+import useTallyPartyStatement from '../hooks/useTallyPartyStatement';
 
 const LedgerDetail = () => {
   const { partyId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const { parties, vouchers, loading } = useGoogleSheetsData();
+  const requestedPartyName = (() => {
+    try { return decodeURIComponent(partyId || ''); } catch { return partyId || ''; }
+  })();
+  const selectedParty = (parties || []).find((candidate) => candidate.id === partyId || candidate.PartyID === partyId || (candidate.PartyName || candidate.name || '').trim().toLowerCase() === requestedPartyName.trim().toLowerCase());
+  const selectedPartyName = selectedParty?.PartyName || selectedParty?.name || requestedPartyName;
+  const tallyTransactions = useTallyPartyStatement(selectedPartyName);
   const [showAging, setShowAging] = useState(true);
 
   const calculateAging = (party, partyVouchers) => {
@@ -115,7 +122,14 @@ const LedgerDetail = () => {
   };
 
   const { party, transactions, agingData } = useMemo(() => {
-    const partyData = parties.find(p => p.id === partyId || p.PartyID === partyId);
+    const partyData = (parties || []).find(p => p.id === partyId || p.PartyID === partyId || (p.PartyName || p.name || '').trim().toLowerCase() === requestedPartyName.trim().toLowerCase())
+      || (location.state?.outstandingParty ? {
+        PartyID: partyId,
+        PartyName: location.state.outstandingParty.partyName,
+        PartyType: 'Customer',
+        OpeningBalance: 0,
+      } : null)
+      || (requestedPartyName ? { PartyID: partyId, PartyName: requestedPartyName, PartyType: 'Customer', OpeningBalance: 0 } : null);
     if (!partyData) return { party: null, transactions: [], agingData: null };
 
     const partyTransactions = [];
@@ -154,7 +168,7 @@ const LedgerDetail = () => {
     const agingData = calculateAging(partyData, partyVouchers);
 
     return { party: partyData, transactions: partyTransactions, agingData };
-  }, [partyId, parties, vouchers]);
+  }, [partyId, parties, vouchers, requestedPartyName, location.state]);
 
   useEffect(() => {
     if (location.state?.fromOutstanding) {
@@ -191,8 +205,20 @@ const LedgerDetail = () => {
   };
 
   const openingBalance = parseFloat(party.OpeningBalance) || 0;
-  const closingBalance = transactions.length > 0 
-    ? transactions[transactions.length - 1].balance 
+  const outstandingTransactions = (location.state?.outstandingParty?.invoiceAging || []).map((invoice, index) => ({
+    id: `outstanding-invoice-${index}`,
+    date: invoice.date,
+    voucherNo: invoice.voucherNo || '—',
+    type: 'Outstanding Bill',
+    particulars: `Due: ${invoice.dueDate || '—'}${invoice.daysOverdue > 0 ? ` · ${invoice.daysOverdue} days overdue` : ''}`,
+    debit: Number(invoice.outstanding) || 0,
+    credit: 0,
+    amount: Number(invoice.outstanding) || 0,
+    balance: Number(invoice.outstanding) || 0,
+  }));
+  const displayTransactions = tallyTransactions?.length ? tallyTransactions : outstandingTransactions.length ? outstandingTransactions : transactions;
+  const closingBalance = displayTransactions.length > 0 
+    ? displayTransactions[displayTransactions.length - 1].balance 
     : openingBalance;
 
   const getRunningBalanceColor = (balance) => {
@@ -215,6 +241,7 @@ const LedgerDetail = () => {
       }} onBack={handleBack} />
       
       <div className="p-4 md:p-6">
+        {(tallyTransactions?.length || outstandingTransactions.length) && <p className="mb-4 text-xs font-bold text-brand-primary">LIVE TALLY · Outstanding customer invoices</p>}
         {agingData && agingData.totalOutstanding > 0.01 && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -310,7 +337,7 @@ const LedgerDetail = () => {
           </motion.div>
         )}
 
-        {transactions.length > 0 ? (
+        {displayTransactions.length > 0 ? (
           <div className="space-y-4">
             <div className="bg-white border border-canvas-faint rounded-lg overflow-hidden">
               <LedgerBalanceRow 
@@ -325,7 +352,7 @@ const LedgerDetail = () => {
                 Transactions
               </h2>
               <p className="text-xs text-ink-faint">
-                {transactions.length} transactions
+                {displayTransactions.length} transactions
               </p>
             </div>
             
@@ -343,11 +370,11 @@ const LedgerDetail = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-canvas-faint">
-                    {transactions.map((txn, idx) => (
+                    {displayTransactions.map((txn, idx) => (
                       <tr 
                         key={idx} 
                         className="hover:bg-canvas-subtle cursor-pointer"
-                        onClick={() => navigate(`/voucher/${txn.voucherId}`)}
+                        onClick={() => !tallyTransactions && navigate(`/voucher/${txn.voucherId}`)}
                       >
                         <td className="px-4 py-3 text-sm text-ink-default">{txn.date}</td>
                         <td className="px-4 py-3 text-sm text-ink-muted font-mono">{txn.voucherNo || '—'}</td>
@@ -368,11 +395,11 @@ const LedgerDetail = () => {
               </div>
 
               <div className="md:hidden divide-y divide-canvas-faint">
-                {transactions.map((txn, idx) => (
+                {displayTransactions.map((txn, idx) => (
                   <div 
                     key={idx} 
                     className="p-4 cursor-pointer hover:bg-canvas-subtle"
-                    onClick={() => navigate(`/voucher/${txn.voucherId}`)}
+                    onClick={() => !tallyTransactions && navigate(`/voucher/${txn.voucherId}`)}
                   >
                     <div className="flex justify-between items-start mb-2">
                       <div>

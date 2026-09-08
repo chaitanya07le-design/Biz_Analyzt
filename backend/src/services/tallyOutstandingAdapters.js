@@ -48,6 +48,8 @@ const aggregateBills = (rows, type) => {
 
 const adaptOutstanding = (templates) => {
   const billRows = contentOf(templates[37]);
+  const customerBillRows = contentOf(templates[2]);
+  const riskRows = contentOf(templates[4]);
   const payableRows = contentOf(templates[7]);
   return {
     receivables: aggregateBills(billRows.filter((row) => row.balance_type === 'RECEIVABLE'), 'receivable'),
@@ -56,6 +58,10 @@ const adaptOutstanding = (templates) => {
     vendorTotal: toNumber(contentOf(templates[42])[0]?.amount),
     customerAgingRows: contentOf(templates[3]),
     receivablePartyAging: contentOf(templates[32]),
+    customerBills: customerBillRows,
+    customerRisk: riskRows,
+    msmePayables: contentOf(templates[34]),
+    discountPayables: contentOf(templates[35]),
   };
 };
 

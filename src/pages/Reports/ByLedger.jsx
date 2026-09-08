@@ -3,15 +3,22 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Skeleton from '../../components/shared/Skeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import useTallyByLedger from '../../hooks/useTallyByLedger';
 import { useCompany } from '../../context/CompanyContext';
 import { useDateRange } from '../../context/DateRangeContext';
+
+const ROWS_PER_PAGE = 20;
 
 const ByLedger = () => {
   const navigate = useNavigate();
   const { currentCompany } = useCompany();
   const { dateRange } = useDateRange();
-  
+  const [currentPage, setCurrentPage] = useState(1);
+
   const { ledgers: apiLedgers, vouchers, voucherLines, groups, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const tallyLedgers = useTallyByLedger(dateRange?.startDate, dateRange?.endDate);
+
+  const tallyActive = tallyLedgers && tallyLedgers.length > 0;
 
   const normalizedLedgers = useMemo(() => {
     if (!apiLedgers || apiLedgers.length === 0) return [];
@@ -36,7 +43,7 @@ const ByLedger = () => {
 
   const ledgerTransactions = useMemo(() => {
     const transactions = {};
-    
+
     normalizedLedgers.forEach(ledger => {
       transactions[ledger.id] = {
         ledger: ledger,
@@ -75,7 +82,7 @@ const ByLedger = () => {
       if (transactions[ledgerId]) {
         const debit = parseFloat(line.LedgerDebit || 0);
         const credit = parseFloat(line.LedgerCredit || 0);
-        
+
         transactions[ledgerId].debits += debit;
         transactions[ledgerId].credits += credit;
         transactions[ledgerId].count++;
@@ -111,6 +118,32 @@ const ByLedger = () => {
       maximumFractionDigits: 0
     }).format(amount);
   };
+
+  // Determine active data source
+  const activeData = tallyActive
+    ? tallyLedgers.map((l) => ({
+        id: l.id,
+        name: l.name,
+        group: l.group,
+        count: l.voucherCount,
+        debits: l.totalDebit,
+        credits: l.totalCredit,
+        closingBalance: l.totalDebit - l.totalCredit,
+      }))
+    : ledgerTransactions.map((item) => ({
+        id: item.ledger.id,
+        name: item.ledger.name,
+        group: item.ledger.group,
+        count: item.count,
+        debits: item.debits,
+        credits: item.credits,
+        closingBalance: item.closingBalance,
+      }));
+
+  // Pagination
+  const totalPages = Math.ceil(activeData.length / ROWS_PER_PAGE);
+  const safePage = Math.min(currentPage, Math.max(1, totalPages));
+  const pagedData = activeData.slice((safePage - 1) * ROWS_PER_PAGE, safePage * ROWS_PER_PAGE);
 
   if (loading) {
     return (
@@ -173,24 +206,24 @@ const ByLedger = () => {
           <div className="px-4 py-3 bg-gradient-to-r from-brand-50 to-purple-50 border-b border-canvas-faint">
             <div className="flex justify-between items-center">
               <p className="text-sm font-medium text-ink-default">
-                {ledgerTransactions.length} ledgers with transactions
+                {activeData.length} ledgers with transactions
               </p>
             </div>
           </div>
           <div className="divide-y divide-canvas-faint">
-            {ledgerTransactions.map((item, idx) => (
+            {pagedData.map((item, idx) => (
               <motion.div
-                key={item.ledger.id}
+                key={item.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.03 }}
-                onClick={() => navigate(`/reports/ledger/${item.ledger.id}`)}
+                onClick={() => navigate(`/reports/ledger/${item.id}`)}
                 className="px-4 py-3 hover:bg-canvas-faint transition-colors cursor-pointer"
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-ink-default">{item.ledger.name}</p>
-                    <p className="text-xs text-ink-muted">{item.ledger.group}</p>
+                    <p className="text-sm font-medium text-ink-default">{item.name}</p>
+                    <p className="text-xs text-ink-muted">{item.group}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-semibold text-ink-default">{item.count} transactions</p>
@@ -203,9 +236,31 @@ const ByLedger = () => {
             ))}
           </div>
 
-          {ledgerTransactions.length === 0 && (
+          {activeData.length === 0 && (
             <div className="px-4 py-12 text-center">
               <p className="text-sm text-ink-muted">No transactions found</p>
+            </div>
+          )}
+
+          {totalPages > 1 && (
+            <div className="px-4 py-3 border-t border-canvas-faint flex items-center justify-between">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={safePage <= 1}
+                className="px-3 py-1.5 text-sm rounded-md border border-canvas-faint text-ink-muted hover:bg-canvas-faint disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                ← Prev
+              </button>
+              <span className="text-sm text-ink-muted">
+                Page {safePage} of {totalPages}
+              </span>
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={safePage >= totalPages}
+                className="px-3 py-1.5 text-sm rounded-md border border-canvas-faint text-ink-muted hover:bg-canvas-faint disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                Next →
+              </button>
             </div>
           )}
         </motion.div>

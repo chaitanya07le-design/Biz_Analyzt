@@ -5,15 +5,18 @@ import { Package, AlertTriangle, TrendingUp, Star, ArrowDown, ArrowUp } from 'lu
 import Skeleton from '../../components/shared/Skeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import { useCompany } from '../../context/CompanyContext';
+import useTallyStockStatus from '../../hooks/useTallyStockStatus';
 
 const StockStatusReport = () => {
   const navigate = useNavigate();
   const { currentCompany } = useCompany();
   const { items, itemStockStatus, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const tallyStockStatus = useTallyStockStatus();
 
   const [filter, setFilter] = useState('all');
 
   const statusData = useMemo(() => {
+    if (tallyStockStatus) return tallyStockStatus.map((item) => ({ itemId: item.id, itemName: item.name, brand: '—', category: item.locations.join(', ') || '—', currentStock: item.quantity, stockValue: 0, salesVelocity: 0, isUnderstock: item.quantity <= 0, isOverstock: false, isPopular: false, daysOfStock: 0, reorderLevel: 0, lastSale: '-', lastPurchase: '-' }));
     if (!itemStockStatus || !items) return [];
 
     const itemMap = new Map(items.map(i => [i.ItemID, i]));
@@ -38,7 +41,7 @@ const StockStatusReport = () => {
         lastPurchase: status.LastPurchaseDate || '-',
       };
     });
-  }, [itemStockStatus, items]);
+  }, [itemStockStatus, items, tallyStockStatus]);
 
   const filteredData = useMemo(() => {
     let result = statusData;
@@ -108,7 +111,7 @@ const StockStatusReport = () => {
       <div className="px-4 py-4 md:px-6 md:py-6">
         <motion.div className="mb-6" initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
           <h1 className="text-xl md:text-2xl font-semibold text-ink-default">Stock Status Report</h1>
-          <p className="text-sm text-ink-muted mt-1">Overstock, Understock, and Fast-Mover analysis</p>
+          <p className="text-sm text-ink-muted mt-1">Overstock, Understock, and Fast-Mover analysis {tallyStockStatus && <span className="font-bold text-brand-primary">· LIVE TALLY STOCK</span>}</p>
         </motion.div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">

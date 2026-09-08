@@ -1,30 +1,48 @@
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import useTallyGroups from '../../hooks/useTallyGroups';
 import EntityDetailModal from '../../components/shared/EntityDetailModal';
 import { Plus, Search, FolderOpen, ChevronRight } from 'lucide-react';
 import { useState, useMemo } from 'react';
 
 export default function Groups() {
-  const { groups, loading } = useGoogleSheetsData();
+  const { groups: gsGroups, loading } = useGoogleSheetsData();
+  const tallyGrps = useTallyGroups();
+
+  const tallyActive = tallyGrps && tallyGrps.length > 0;
+  const groupsList = tallyActive ? tallyGrps : (gsGroups || []);
+
   const [search, setSearch] = useState('');
   const [expandedGroups, setExpandedGroups] = useState(new Set());
   const [selectedGroupId, setSelectedGroupId] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const groupsList = groups || [];
-
   const normalizedGroups = useMemo(() => {
-    return groupsList.map(g => ({
+    if (tallyActive) {
+      const allNames = new Set(tallyGrps.map((g) => g.name));
+      return tallyGrps.map((g) => ({
+        id: g.id,
+        name: g.name,
+        type: g.type,
+        parentId: g.parentName && allNames.has(g.parentName) ? g.parentName : null,
+        isSystem: false,
+        childCount: g.childGroupCount,
+        ledgerCount: g.ledgerCount,
+      }));
+    }
+    return (gsGroups || []).map(g => ({
       id: g.GroupID || g.id,
       name: g.GroupName || g.name || '',
       type: g.GroupType || g.type || '',
       parentId: g.ParentGroupID || g.parentId || g.ParentID,
       isSystem: g.IsSystem === 'TRUE' || g.isSystem === true,
+      childCount: 0,
+      ledgerCount: 0,
     }));
-  }, [groupsList]);
+  }, [tallyActive, tallyGrps, gsGroups]);
 
-  const filtered = normalizedGroups.filter(g => 
+  const filtered = normalizedGroups.filter(g =>
     g.name.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -58,23 +76,24 @@ export default function Groups() {
   };
 
   const renderGroup = (group, level = 0) => {
-    const children = childGroups(group.id);
-    const hasChildren = children.length > 0;
+    const children = childGroups(group.name);
+    const hasChildren = children.length > 0 && !tallyActive;
+    const tallyHasChildren = tallyActive && group.childCount > 0;
     const isExpanded = expandedGroups.has(group.id);
 
     return (
       <div key={group.id}>
-        <div 
+        <div
           className={`flex items-center justify-between px-4 py-3 hover:bg-ink-50 cursor-pointer transition-colors ${level > 0 ? 'ml-6 border-l-2 border-canvas-faint' : ''}`}
           onClick={(e) => {
-            if (hasChildren && !e.detail || e.detail === 1) {
+            if ((hasChildren || tallyHasChildren) && (!e.detail || e.detail === 1)) {
               toggleGroup(group.id);
             }
           }}
           onDoubleClick={() => handleGroupClick(group)}
         >
           <div className="flex items-center gap-3">
-            {hasChildren ? (
+            {hasChildren || tallyHasChildren ? (
               <ChevronRight className={`w-4 h-4 text-ink-400 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
             ) : (
               <div className="w-4" />
@@ -82,7 +101,7 @@ export default function Groups() {
             <FolderOpen className="w-5 h-5 text-brand-500" />
             <div>
               <p className="text-sm font-medium text-ink-900">{group.name}</p>
-              <p className="text-xs text-ink-500">{group.type}</p>
+              <p className="text-xs text-ink-500">{group.type}{tallyActive && group.ledgerCount > 0 ? ` · ${group.ledgerCount} ledgers` : ''}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -126,7 +145,6 @@ export default function Groups() {
               className="w-full pl-9 pr-4 h-10 bg-ink-50 border border-line rounded-xl text-sm outline-none focus:border-brand-500 focus:bg-white transition-all"
             />
           </div>
-          
           <Button icon={Plus}>New Group</Button>
         </div>
 

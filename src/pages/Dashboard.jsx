@@ -10,6 +10,7 @@ import { useCompany } from '../context/CompanyContext';
 import { useDateRange } from '../context/DateRangeContext';
 import { calculateProfitLoss } from '../utils/profitLoss';
 import useTallyDashboardTemplates from '../hooks/useTallyDashboardTemplates';
+import useTallyDashboardSummary from '../hooks/useTallyDashboardSummary';
 
 const formatCurrency = (value) => '₹' + (value || 0).toLocaleString('en-IN');
 const formatDate = (dateStr) => {
@@ -24,6 +25,7 @@ const Dashboard = () => {
   const { dateRange } = useDateRange();
   const [showPromoBanner, setShowPromoBanner] = useState(true);
   const { templates: tallyTemplates, dashboard: tallyDashboard, loading: tallyLoading, error: tallyError } = useTallyDashboardTemplates();
+  const tallySummary = useTallyDashboardSummary();
   
   const {
     ledgers,
@@ -254,6 +256,17 @@ const Dashboard = () => {
       netProfit: tallyDashboard?.netProfit,
     } : {}),
   };
+  // Override with template 57 dashboard summary when available
+  if (tallySummary) {
+    displayMetrics.totalSales = tallySummary.totalSales || displayMetrics.totalSales;
+    displayMetrics.totalPurchases = tallySummary.totalPurchases || displayMetrics.totalPurchases;
+    displayMetrics.totalReceivables = tallySummary.totalReceivables || displayMetrics.totalReceivables;
+    displayMetrics.totalPayables = tallySummary.totalPayables || displayMetrics.totalPayables;
+    displayMetrics.cashInHand = tallySummary.cashInHand ?? displayMetrics.cashInHand;
+    displayMetrics.bankBalance = tallySummary.bankBalance ?? displayMetrics.bankBalance;
+    displayMetrics.grossProfit = tallySummary.grossProfit || displayMetrics.grossProfit;
+    displayMetrics.netProfit = tallySummary.netProfit || displayMetrics.netProfit;
+  }
 
   const displayKpis = kpis.map((kpi) => {
     const liveKpi = {

@@ -4,29 +4,43 @@ import { useNavigate } from 'react-router-dom';
 import { Users, TrendingUp, TrendingDown, UserX, Clock } from 'lucide-react';
 import Skeleton from '../../components/shared/Skeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import useTallyCustomerMovementRollup from '../../hooks/useTallyCustomerMovementRollup';
 import { useCompany } from '../../context/CompanyContext';
 
 const CustomerMovementReport = () => {
   const navigate = useNavigate();
   const { currentCompany } = useCompany();
   const { customerMovement, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const tallyMovement = useTallyCustomerMovementRollup();
 
   const [statusFilter, setStatusFilter] = useState('all');
   const [sortBy, setSortBy] = useState('recent');
 
   const movementData = useMemo(() => {
+    if (tallyMovement && tallyMovement.length > 0) {
+      return tallyMovement.map((t, i) => ({
+        partyId: t.id || `tally-move-${i}`,
+        partyName: t.partyName || 'Unknown',
+        partyType: 'Customer',
+        firstTxn: '-',
+        lastTxn: '-',
+        salesValue: t.salesValue || 0,
+        purchaseValue: 0,
+        txnCount: t.txnCount || 0,
+        daysSinceLastTxn: t.daysSinceLastTxn || 0,
+        status: t.status || (t.daysSinceLastTxn <= 30 ? 'Active' : t.daysSinceLastTxn <= 90 ? 'Dormant' : 'Churned'),
+        salesPerson: '-',
+        city: '-',
+        state: '-',
+      }));
+    }
     if (!customerMovement) return [];
-
     return customerMovement.map(cm => {
       const days = Math.abs(parseInt(cm.DaysSinceLastTxn || 0));
       let computedStatus;
-      if (days <= 30) {
-        computedStatus = 'Active';
-      } else if (days <= 90) {
-        computedStatus = 'Dormant';
-      } else {
-        computedStatus = 'Churned';
-      }
+      if (days <= 30) { computedStatus = 'Active'; }
+      else if (days <= 90) { computedStatus = 'Dormant'; }
+      else { computedStatus = 'Churned'; }
       return {
         partyId: cm.PartyID,
         partyName: cm.PartyName || 'Unknown',
@@ -43,7 +57,7 @@ const CustomerMovementReport = () => {
         state: cm.State || '-',
       };
     });
-  }, [customerMovement]);
+  }, [customerMovement, tallyMovement]);
 
   const filteredData = useMemo(() => {
     let result = movementData;

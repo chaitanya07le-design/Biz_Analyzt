@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Skeleton from '../../components/shared/Skeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import useTallyPartyStatement from '../../hooks/useTallyPartyStatement';
 import { useCompany } from '../../context/CompanyContext';
 import { useDateRange } from '../../context/DateRangeContext';
 
@@ -19,12 +20,28 @@ const LedgerStatement = () => {
     return ledgers.find(l => (l.LedgerID || l.id) === ledgerId);
   }, [ledgers, ledgerId]);
 
+  const tallyTransactions = useTallyPartyStatement(ledger?.LedgerName || ledger?.name);
+
   const ledgerGroup = useMemo(() => {
     if (!groups || !ledger) return null;
     return groups.find(g => g.GroupID === ledger?.GroupID);
   }, [groups, ledger]);
 
   const transactions = useMemo(() => {
+    // Use Tally data when available
+    if (tallyTransactions && tallyTransactions.length > 0) {
+      return tallyTransactions.map((txn, idx) => ({
+        date: txn.date,
+        voucherNo: txn.voucherNo || '—',
+        voucherType: txn.type || 'Journal',
+        voucherId: txn.id || `tally-txn-${idx}`,
+        debit: txn.debit || 0,
+        credit: txn.credit || 0,
+        particulars: txn.particulars || '—',
+        balance: txn.balance || 0,
+      }));
+    }
+
     if (!vouchers || !voucherLines || !ledgerId) return [];
 
     const voucherMap = new Map();
@@ -70,7 +87,7 @@ const LedgerStatement = () => {
       }
       return { ...txn, balance: runningBalance };
     });
-  }, [vouchers, voucherLines, ledgerId, dateRange, ledger, ledgerGroup]);
+  }, [vouchers, voucherLines, ledgerId, dateRange, ledger, ledgerGroup, tallyTransactions]);
 
   const totals = useMemo(() => {
     return transactions.reduce((acc, txn) => ({
