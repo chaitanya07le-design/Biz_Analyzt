@@ -46,6 +46,7 @@ import GstReconciliation from './pages/Reports/GstReconciliation';
 import ReimbursementAudit from './pages/Reports/ReimbursementAudit';
 import StockBatchesPage from './pages/analytics/StockBatchesPage';
 import ItemStockStatusPage from './pages/analytics/ItemStockStatusPage';
+import CustomerMovementPage from './pages/analytics/CustomerMovementPage';
 import SalesVouchers from './pages/Vouchers/SalesVouchers';
 import PurchaseVouchers from './pages/Vouchers/PurchaseVouchers';
 import ReceiptVouchers from './pages/Vouchers/ReceiptVouchers';
@@ -188,6 +189,7 @@ function AppRoutes() {
           <Route path="reports/reimbursement-audit" element={<ReimbursementAudit />} />
           <Route path="reports/stock-batches" element={<StockBatchesPage />} />
           <Route path="reports/item-stock-status" element={<ItemStockStatusPage />} />
+          <Route path="reports/customer-movement-analytics" element={<CustomerMovementPage />} />
           <Route path="sales-team" element={<ComingSoon />} />
           <Route path="settings" element={<Settings />} />
           <Route path="settings/share" element={<ShareSettings />} />

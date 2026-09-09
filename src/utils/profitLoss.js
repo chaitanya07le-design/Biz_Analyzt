@@ -125,18 +125,6 @@ export function calculateProfitLoss(vouchers, voucherLines, ledgers, groups) {
   const grossProfit = totalIncome - totalDirectExpenses;
   const netProfit = grossProfit + indirectIncomeGroupTotal - indirectExpenseGroupTotal;
 
-  console.log('=== P&L Calculation Debug ===');
-  console.log('Sales Total (voucher-level):', salesTotal);
-  console.log('Purchase Total (voucher-level):', purchaseTotal);
-  console.log('Direct Expenses Group (ledger-join):', directExpenseGroupTotal);
-  console.log('Indirect Expenses Group (ledger-join):', indirectExpenseGroupTotal);
-  console.log('Indirect Income Group (ledger-join):', indirectIncomeGroupTotal);
-  console.log('Total Income:', totalIncome);
-  console.log('Total Direct Expenses:', totalDirectExpenses);
-  console.log('Gross Profit:', grossProfit);
-  console.log('Net Profit:', netProfit);
-  console.log('============================');
-
   return {
     income: {
       direct: salesTotal,

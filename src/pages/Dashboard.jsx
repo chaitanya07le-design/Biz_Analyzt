@@ -11,6 +11,7 @@ import { useDateRange } from '../context/DateRangeContext';
 import { calculateProfitLoss } from '../utils/profitLoss';
 import useTallyDashboardTemplates from '../hooks/useTallyDashboardTemplates';
 import useTallyDashboardSummary from '../hooks/useTallyDashboardSummary';
+import useTallyDashboardFull from '../hooks/useTallyDashboardFull';
 
 const formatCurrency = (value) => '₹' + (value || 0).toLocaleString('en-IN');
 const formatDate = (dateStr) => {
@@ -26,6 +27,7 @@ const Dashboard = () => {
   const [showPromoBanner, setShowPromoBanner] = useState(true);
   const { templates: tallyTemplates, dashboard: tallyDashboard, loading: tallyLoading, error: tallyError } = useTallyDashboardTemplates();
   const tallySummary = useTallyDashboardSummary();
+  const { data: tallyFull, loading: tallyFullLoading } = useTallyDashboardFull();
   
   const {
     ledgers,
@@ -102,11 +104,11 @@ const Dashboard = () => {
         totalPayables: dashboardSummary.totalPayables || 0,
         grossProfit: plData.grossProfit,
         netProfit: plData.netProfit,
-        stockValue: (itemStockStatus || []).reduce((sum, item) => 
+        stockValue: tallyFull?.stockSummary?.totalStockValue || (itemStockStatus || []).reduce((sum, item) => 
           sum + (parseFloat(item.StockValue || 0) || 0), 0
         ),
-        partyCount: dashboardSummary.partyCount || parties?.length || 0,
-        itemCount: dashboardSummary.itemCount || items?.length || 0,
+        partyCount: tallyFull?.partyCount || dashboardSummary.partyCount || parties?.length || 0,
+        itemCount: tallyFull?.itemCount || dashboardSummary.itemCount || items?.length || 0,
         voucherCount: dashboardSummary.voucherCount || filteredVouchers.length,
         cashAccountCount: dashboardSummary.cashAccountCount || 1,
         bankAccountCount: dashboardSummary.bankAccountCount || 1,
@@ -167,8 +169,8 @@ const Dashboard = () => {
       grossProfit: plData.grossProfit,
       netProfit: plData.netProfit,
       stockValue,
-      partyCount: parties?.length || 0,
-      itemCount: items?.length || 0,
+      partyCount: tallyFull?.partyCount || parties?.length || 0,
+      itemCount: tallyFull?.itemCount || items?.length || 0,
       voucherCount: filteredVouchers.length,
       cashAccountCount,
       bankAccountCount,
@@ -256,6 +258,7 @@ const Dashboard = () => {
       netProfit: tallyDashboard?.netProfit,
     } : {}),
   };
+
   // Override with template 57 dashboard summary when available
   if (tallySummary) {
     displayMetrics.totalSales = tallySummary.totalSales || displayMetrics.totalSales;
@@ -319,6 +322,15 @@ const Dashboard = () => {
   }, [parties, tallyTemplates, displayMetrics.totalPayables]);
 
   const topItems = useMemo(() => {
+    if (tallyFull?.topSellingItems?.length > 0) {
+      return tallyFull.topSellingItems.map((item, idx) => ({
+        itemId: `tally-top-${idx}`,
+        name: item.name || '—',
+        totalQty: item.count || 0,
+        totalValue: item.value || 0,
+      }));
+    }
+
     const salesVoucherIds = new Set(
       filteredVouchers
         .filter(v => v.VoucherType === 'Sales' || v.type === 'Sales')
@@ -349,9 +361,17 @@ const Dashboard = () => {
       })
       .sort((a, b) => b.totalValue - a.totalValue)
       .slice(0, 5);
-  }, [filteredVouchers, filteredVoucherLines, items]);
+  }, [tallyFull, filteredVouchers, filteredVoucherLines, items]);
 
   const recentTransactions = useMemo(() => {
+    if (tallyFull?.recentTransactions?.length > 0) {
+      return tallyFull.recentTransactions.map(t => ({
+        type: t.type || '—',
+        party: t.party || '—',
+        amount: t.amount || 0,
+        date: t.date || null,
+      }));
+    }
     return filteredVouchers
       .slice()
       .sort((a, b) => new Date(b.VoucherDate || b.date) - new Date(a.VoucherDate || a.date))
@@ -362,7 +382,7 @@ const Dashboard = () => {
         amount: parseFloat(v.GrandTotal || v.NetAmount || v.amount) || 0,
         date: v.VoucherDate || v.date,
       }));
-  }, [filteredVouchers]);
+  }, [tallyFull, filteredVouchers]);
 
   if (loading) {
     return (
@@ -509,24 +529,24 @@ const Dashboard = () => {
 
         {(hasTallyTemplate(10) || hasTallyTemplate(11)) && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {hasTallyTemplate(10) && (
+            {hasTallyTemplate(10) && tallyDashboard?.salesComparison && (
               <div className="bg-white rounded-2xl border border-slate-100 shadow-card p-5">
                 <p className="text-xs font-bold text-kinetic-neutral uppercase tracking-widest">Sales comparison</p>
                 <div className="mt-3 flex items-end justify-between gap-4">
-                  <div><p className="text-sm text-ink-muted">Today</p><p className="text-xl font-extrabold text-ink-900">{formatCurrency(tallyDashboard?.salesComparison?.todaySales)}</p></div>
-                  <div><p className="text-sm text-ink-muted">Last week</p><p className="text-xl font-extrabold text-ink-900">{formatCurrency(tallyDashboard?.salesComparison?.lastWeekSales)}</p></div>
-                  <span className="text-sm font-bold text-kinetic-primary">{tallyDashboard?.salesComparison?.salesDifferencePercent || 0}%</span>
+                  <div><p className="text-sm text-ink-muted">Today</p><p className="text-xl font-extrabold text-ink-900">{formatCurrency(tallyDashboard.salesComparison.todaySales)}</p></div>
+                  <div><p className="text-sm text-ink-muted">Last week</p><p className="text-xl font-extrabold text-ink-900">{formatCurrency(tallyDashboard.salesComparison.lastWeekSales)}</p></div>
+                  <span className="text-sm font-bold text-kinetic-primary">{tallyDashboard.salesComparison.salesDifferencePercent || 0}%</span>
                 </div>
               </div>
             )}
-            {hasTallyTemplate(11) && (
+            {hasTallyTemplate(11) && tallyDashboard?.weeklyMis && (
               <div className="bg-white rounded-2xl border border-slate-100 shadow-card p-5">
                 <p className="text-xs font-bold text-kinetic-neutral uppercase tracking-widest">Weekly MIS</p>
                 <div className="mt-3 grid grid-cols-2 gap-3 text-sm">
-                  <div><p className="text-ink-muted">Sales</p><p className="font-extrabold text-ink-900">{formatCurrency(tallyDashboard?.weeklyMis?.weeklySales)}</p></div>
-                  <div><p className="text-ink-muted">Net cash flow</p><p className="font-extrabold text-ink-900">{formatCurrency(tallyDashboard?.weeklyMis?.netCashFlow)}</p></div>
-                  <div><p className="text-ink-muted">Top customer</p><p className="font-bold text-ink-900 truncate">{tallyDashboard?.weeklyMis?.topCustomerName || '—'}</p></div>
-                  <div><p className="text-ink-muted">Top vendor</p><p className="font-bold text-ink-900 truncate">{tallyDashboard?.weeklyMis?.topVendorName || '—'}</p></div>
+                  <div><p className="text-ink-muted">Sales</p><p className="font-extrabold text-ink-900">{formatCurrency(tallyDashboard.weeklyMis.weeklySales)}</p></div>
+                  <div><p className="text-ink-muted">Net cash flow</p><p className="font-extrabold text-ink-900">{formatCurrency(tallyDashboard.weeklyMis.netCashFlow)}</p></div>
+                  <div><p className="text-ink-muted">Top customer</p><p className="font-bold text-ink-900 truncate">{tallyDashboard.weeklyMis.topCustomerName || '—'}</p></div>
+                  <div><p className="text-ink-muted">Top vendor</p><p className="font-bold text-ink-900 truncate">{tallyDashboard.weeklyMis.topVendorName || '—'}</p></div>
                 </div>
               </div>
             )}

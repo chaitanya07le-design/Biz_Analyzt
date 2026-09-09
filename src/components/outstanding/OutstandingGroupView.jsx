@@ -2,17 +2,59 @@ import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ExpandableTree from '../shared/ExpandableTree';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import useTallyOutstandingGroupView from '../../hooks/useTallyOutstandingGroupView';
 import { useCompany } from '../../context/CompanyContext';
 
 const OutstandingGroupView = ({ activeTab }) => {
   const navigate = useNavigate();
   const { currentCompany } = useCompany();
   const { outstandingReceivables, outstandingPayables, parties, ledgers } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { receivables: tallyReceivables, payables: tallyPayables, loading: tallyLoading } = useTallyOutstandingGroupView();
+  const tallyActive = (tallyReceivables && tallyReceivables.length > 0) || (tallyPayables && tallyPayables.length > 0);
 
   const data = activeTab === 'receivable' ? outstandingReceivables : outstandingPayables;
   const groupType = activeTab === 'receivable' ? 'Sundry Debtors' : 'Sundry Creditors';
 
   const treeData = useMemo(() => {
+    // Tally mode: template 91 provides party-level data with aging
+    if (tallyActive) {
+      const tallyData = activeTab === 'receivable' ? (tallyReceivables || []) : (tallyPayables || []);
+      
+      // Group by first letter or by a common property for tree view
+      const groups = {};
+      tallyData.forEach((item) => {
+        const firstLetter = (item.partyName || '?')[0].toUpperCase();
+        if (!groups[firstLetter]) groups[firstLetter] = [];
+        groups[firstLetter].push(item);
+      });
+
+      return Object.entries(groups).sort().map(([letter, items]) => ({
+        id: `group-tally-${letter}`,
+        name: letter,
+        children: items.map((item) => ({
+          id: item.partyId,
+          name: item.partyName,
+          data: {
+            partyId: item.partyId,
+            partyName: item.partyName,
+            totalOutstanding: item.totalOutstanding,
+            notDue: item.agingNotDue,
+            aging0to30: item.aging0to30,
+            aging31to60: item.aging31to60,
+            aging61to90: item.aging61to90,
+            aging90plus: item.aging90plus,
+            creditLimit: item.creditLimit,
+            creditDays: item.creditDays,
+            openingBalance: item.openingBalance,
+          },
+        })),
+        totalOutstanding: items.reduce((sum, i) => sum + i.totalOutstanding, 0),
+        totalOverdue: items.reduce((sum, i) => sum + i.totalOutstanding - i.agingNotDue, 0),
+        partyCount: items.length,
+      })).sort((a, b) => b.totalOutstanding - a.totalOutstanding);
+    }
+
+    // Google Sheets fallback
     if (!ledgers || ledgers.length === 0) return [];
     
     const relevantLedgers = ledgers.filter(l => 
@@ -64,7 +106,7 @@ const OutstandingGroupView = ({ activeTab }) => {
     }).sort((a, b) => b.totalOutstanding - a.totalOutstanding);
 
     return result;
-  }, [data, groupType, ledgers, parties]);
+  }, [tallyActive, tallyReceivables, tallyPayables, activeTab, data, groupType, ledgers, parties]);
 
   const handlePartyClick = (node) => {
     if (node.data) {
@@ -115,7 +157,7 @@ const OutstandingGroupView = ({ activeTab }) => {
     );
   };
 
-  if (treeData.length === 0) {
+  if (treeData.length === 0 && !tallyLoading) {
     return (
       <div className="bg-white rounded-lg border border-canvas-faint p-12 text-center">
         <svg className="w-12 h-12 text-ink-faint mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

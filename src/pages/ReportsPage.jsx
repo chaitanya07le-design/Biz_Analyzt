@@ -123,6 +123,14 @@ const ReportsPage = () => {
       disabled: false,
     },
     {
+      id: 'customer-movement-analytics',
+      title: 'Customer Movement Analytics',
+      description: 'Active/Dormant/Churned with sales/purchase totals',
+      icon: 'customer',
+      path: '/reports/customer-movement-analytics',
+      disabled: false,
+    },
+    {
       id: 'trends',
       title: 'Sales/Purchase Trends',
       description: 'Historical trend charts',

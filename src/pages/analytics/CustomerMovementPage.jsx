@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
+import useTallyCustomerMovement from '../../hooks/useTallyCustomerMovement';
 import { useCompany } from '../../context/CompanyContext';
 import Skeleton from '../../components/shared/Skeleton';
 
@@ -10,12 +11,33 @@ const CustomerMovementPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [stateFilter, setStateFilter] = useState('all');
   
-  const { customerMovement, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { customerMovement: gsMovement, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  const { customers: tallyMovement, loading: tallyLoading } = useTallyCustomerMovement();
+  const tallyActive = tallyMovement && tallyMovement.length > 0;
 
   const normalizedData = useMemo(() => {
-    if (!customerMovement || customerMovement.length === 0) return [];
+    if (tallyActive) {
+      return tallyMovement.map((cust) => ({
+        movementId: cust.movementId || '—',
+        partyId: cust.partyId || '—',
+        partyName: cust.partyName || '—',
+        partyType: cust.partyType || '—',
+        firstTransactionDate: cust.firstTransactionDate || null,
+        lastTransactionDate: cust.lastTransactionDate || null,
+        totalSalesValue: cust.totalSalesValue || 0,
+        totalPurchaseValue: cust.totalPurchaseValue || 0,
+        transactionCount: cust.transactionCount || 0,
+        daysSinceLastTxn: cust.daysSinceLastTxn || 0,
+        status: cust.status || '—',
+        salesPerson: cust.salesPerson || 'Unassigned',
+        city: cust.city || null,
+        state: cust.state || null,
+      }));
+    }
+
+    if (!gsMovement || gsMovement.length === 0) return [];
     
-    return customerMovement.map(cust => ({
+    return gsMovement.map(cust => ({
       movementId: cust.MovementID,
       partyId: cust.PartyID,
       partyName: cust.PartyName,
@@ -31,7 +53,7 @@ const CustomerMovementPage = () => {
       city: cust.City,
       state: cust.State,
     }));
-  }, [customerMovement]);
+  }, [tallyActive, tallyMovement, gsMovement]);
 
   const states = useMemo(() => {
     const stateList = [...new Set(normalizedData.map(c => c.state))];
@@ -76,7 +98,7 @@ const CustomerMovementPage = () => {
   const totalSales = filteredData.reduce((sum, c) => sum + c.totalSalesValue, 0);
   const totalPurchases = filteredData.reduce((sum, c) => sum + c.totalPurchaseValue, 0);
 
-  if (loading) {
+  if ((loading || tallyLoading) && !tallyActive) {
     return (
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-canvas-default pb-20 md:pb-6">
         <div className="px-4 py-4 md:px-6 md:py-6 space-y-4">

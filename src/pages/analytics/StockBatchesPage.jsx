@@ -25,7 +25,6 @@ const StockBatchesPage = () => {
   }, [items, tallyActive]);
 
   const normalizedBatches = useMemo(() => {
-    console.log('[StockBatches] normalizedBatches: tallyActive=', tallyActive, 'tallyBatches length=', tallyBatches?.length, 'gsBatches length=', gsBatches?.length);
     if (tallyActive) {
       return tallyBatches.map(batch => ({
         batchId: batch.batchId || batch.BatchID || '—',

@@ -8,7 +8,7 @@ const router = express.Router();
 
 const DASHBOARD_TEMPLATE_IDS = [1, 5, 10, 11, 13, 14, 23, 30];
 const OUTSTANDING_TEMPLATE_IDS = [2, 3, 4, 7, 32, 34, 35, 37, 41, 42];
-const CASH_BANK_TEMPLATE_IDS = [17, 27, 38];
+const CASH_BANK_TEMPLATE_IDS = [17, 27, 38, 50, 84];
 const AUTH_REFRESH_BUFFER_MS = 60 * 1000;
 const TEMPLATE_CACHE_TTL_MS = 2 * 60 * 1000;
 
@@ -263,16 +263,86 @@ router.post('/parties/templates', async (req, res) => {
 router.post('/sales-vouchers/templates', async (req, res) => {
   try {
     const auth = await getTallyAuth();
-    const [salesTransactions, salesVouchers] = await Promise.all([executeTemplate(18, auth), executeTemplate(23, auth)]);
-    const rows = [...(salesTransactions.content || []), ...(salesVouchers.content || [])];
-    const vouchers = [...new Map(rows.map((row, index) => {
-      const voucherNo = row.invoice_no || row.invoice_number || `tally-sales-${index}`;
-      const date = row.invoice_date || row.voucher_date;
-      return [`${voucherNo}-${date || ''}`, { id: `tally-sales-${index}`, voucherNo, date, party: row.customer_name || row.party_name || '—', amount: Number.parseFloat(row.total_invoice_value || row.invoice_value || 0) || 0, status: 'POSTED', items: row.items || 0 }];
-    })).values()];
+
+    // Fetch T51 (line items, PartyID, narration) and T23 (HSN, CGST/SGST/IGST, GSTIN) concurrently
+    // T51 needs a broad date range to get all vouchers
+    const [t51Result, t23Result] = await Promise.all([
+      executeTemplate(51, auth, { cust_from_date: '2024-04-01', cust_to_date: '2030-03-31' }),
+      executeTemplate(23, auth),
+    ]);
+
+    const t51Rows = t51Result.content || [];
+    const t23Rows = t23Result.content || [];
+
+    // Build T23 lookup map keyed by invoice_number for O(1) join
+    const t23Map = {};
+    t23Rows.forEach((row) => {
+      const key = (row.invoice_number || '').trim();
+      if (key) t23Map[key] = row;
+    });
+
+    // Group T51 rows by voucher_number — each voucher has multiple line item rows
+    const voucherMap = new Map();
+    t51Rows.forEach((row, index) => {
+      const voucherNo = (row.voucher_number || `tally-sales-${index}`).trim();
+      if (!voucherMap.has(voucherNo)) {
+        // First row for this voucher — build the header
+        const t23 = t23Map[voucherNo] || {};
+        voucherMap.set(voucherNo, {
+          id: `tally-sales-${voucherMap.size}`,
+          voucherNo,
+          date: row.voucher_date || null,
+          party: row.party_name || '—',
+          partyId: row.party_id || null,
+          amount: Number.parseFloat(row.net_amount_inr || row.gross_total_inr || 0) || 0,
+          grossTotal: Number.parseFloat(row.gross_total_inr || 0) || 0,
+          totalGst: Number.parseFloat(row.total_gst_inr || 0) || 0,
+          roundOff: Number.parseFloat(row.round_off_inr || 0) || 0,
+          status: row.is_cancelled_flag === 1 ? 'CANCELLED' : 'POSTED',
+          narration: row.narration || '',
+          referenceNumber: row.reference_number || '',
+          salesPerson: row.sales_person || null,
+          // From T23: GST breakdown + GSTIN + HSN
+          gstin: t23.gstin || null,
+          hsnCode: t23.hsn_sac_code || null,
+          placeOfSupply: t23.place_of_supply || null,
+          taxableAmount: Number.parseFloat(t23.taxable_amount || row.gross_total_inr || 0) || 0,
+          cgst: Number.parseFloat(t23.cgst_amount || 0) || 0,
+          sgst: Number.parseFloat(t23.sgst_amount || 0) || 0,
+          igst: Number.parseFloat(t23.igst_amount || 0) || 0,
+          cess: Number.parseFloat(t23.cess_amount || 0) || 0,
+          period: t23.period || null,
+          // Line items array — will be populated below
+          lineItems: [],
+        });
+      }
+
+      // Push line item into the voucher
+      const voucher = voucherMap.get(voucherNo);
+      if (row.item_name) {
+        voucher.lineItems.push({
+          itemId: row.item_id || null,
+          itemName: row.item_name || '—',
+          unit: row.unit || '—',
+          quantity: Number.parseFloat(row.quantity || 0) || 0,
+          rate: Number.parseFloat(row.rate_per_unit || 0) || 0,
+          amount: Number.parseFloat(row.amount_inr || 0) || 0,
+          gstRate: Number.parseFloat(row.gst_rate_percent || 0) || 0,
+          gstAmount: Number.parseFloat(row.gst_amount_inr || 0) || 0,
+          ledgerName: row.ledger_name || null,
+        });
+      }
+    });
+
+    const vouchers = [...voucherMap.values()].map((v) => ({
+      ...v,
+      items: v.lineItems.length, // count of line items
+    }));
+
     res.json({ success: true, data: { vouchers } });
   } catch (error) { res.status(502).json({ success: false, error: error.message }); }
 });
+
 
 router.post('/purchase-vouchers/template', async (req, res) => {
   try {
@@ -366,6 +436,79 @@ router.post('/party-statement/template', async (req, res) => {
         });
     }
     res.json({ success: true, data: { transactions } });
+  } catch (error) { res.status(502).json({ success: false, error: error.message }); }
+});
+
+router.post('/party-statement/full', async (req, res) => {
+  const partyName = String(req.body?.partyName || '').trim().toLowerCase();
+  if (!partyName) return res.status(400).json({ success: false, error: 'partyName is required.' });
+  try {
+    const auth = await getTallyAuth();
+    
+    // Call both templates concurrently
+    // Template 48: Master fields, Template 28: Transactions
+    const [ledgersResult, txnsResult, billsResult] = await Promise.all([
+      executeTemplate(48, auth),
+      executeTemplate(28, auth, { ledger_name: partyName }), // Tally expects the parameter
+      executeTemplate(2, auth) // Fallback for outstanding bills if no transactions
+    ]);
+    
+    // Process Ledger Master (Template 48)
+    const allLedgers = ledgersResult.content || [];
+    const matchedLedger = allLedgers.find(row => 
+      String(row.ledger_name || '').trim().toLowerCase() === partyName
+    ) || {};
+    
+    const ledger = {
+      id: matchedLedger.LedgerID || null,
+      name: matchedLedger.ledger_name || partyName,
+      group: matchedLedger.parent_group_name || '—',
+      type: matchedLedger.group_type || '—',
+      openingBalance: Number.parseFloat(matchedLedger.opening_balance_inr || 0) || 0,
+      closingBalance: Number.parseFloat(matchedLedger.ClosingBalance || 0) || 0,
+      nature: matchedLedger.Nature || '—',
+      statementType: matchedLedger.StatementType || '—'
+    };
+
+    // Process Transactions (Template 28)
+    // Sometimes template 28 returns all transactions if the parameter is ignored, so we still filter.
+    const rows = txnsResult.content || [];
+    let transactions = rows
+      .filter((row) => [row.party_ledger, row.ledger_name].some((value) => String(value || '').trim().toLowerCase() === partyName))
+      .slice(0, 2000)
+      .map((row, index) => ({ 
+        id: `tally-party-transaction-${index}`, 
+        date: row.date, 
+        voucherNo: row.voucher_number || '—', 
+        type: row.voucher_type || 'Journal', 
+        particulars: row.narration || row.ledger_name || '—', 
+        debit: Number.parseFloat(row.debit) || 0, 
+        credit: Number.parseFloat(row.credit) || 0, 
+        amount: (Number.parseFloat(row.debit) || 0) - (Number.parseFloat(row.credit) || 0), 
+        balance: Number.parseFloat(row.closing_balance) || 0 
+      }));
+      
+    // Fallback if no transactions found
+    if (transactions.length === 0) {
+      transactions = (billsResult.content || [])
+        .filter((row) => String(row.customer_name || row.party_name || '').trim().toLowerCase() === partyName)
+        .map((row, index) => {
+          const outstanding = Number.parseFloat(row.outstanding_balance || row.outstanding_amount || row.receivable_amount || 0) || 0;
+          return { 
+            id: `tally-party-bill-${index}`, 
+            date: row.bill_date || row.reference_date || row.voucher_date, 
+            voucherNo: row.ref_no || row.voucher_number || row.bill_no || '—', 
+            type: 'Outstanding Bill', 
+            particulars: `Due: ${row.due_date || '—'}`, 
+            debit: outstanding, 
+            credit: 0, 
+            amount: outstanding, 
+            balance: outstanding 
+          };
+        });
+    }
+    
+    res.json({ success: true, data: { ledger, transactions } });
   } catch (error) { res.status(502).json({ success: false, error: error.message }); }
 });
 
@@ -1289,6 +1432,281 @@ router.post('/item-stock-status/template', async (req, res) => {
 
     console.log('[Template 89] items:', items.length);
     res.json({ success: true, data: { items } });
+  } catch (error) { res.status(502).json({ success: false, error: error.message }); }
+});
+
+// Template 90 — Customer Movement
+router.post('/customer-movement/template', async (req, res) => {
+  try {
+    const auth = await getTallyAuth();
+    const rows = (await executeTemplate(90, auth)).content || [];
+    console.log('[Template 90] total rows:', rows.length);
+    console.log('[Template 90] field keys:', JSON.stringify(Object.keys(rows[0] || {})));
+
+    const customers = rows.map((row) => ({
+      movementId: row.MovementID || '—',
+      partyId: row.PartyID || '—',
+      partyName: row.PartyName || '—',
+      partyType: row.PartyType || '—',
+      firstTransactionDate: row.FirstTransactionDate || null,
+      lastTransactionDate: row.LastTransactionDate || null,
+      totalSalesValue: Number.parseFloat(row.TotalSalesValue || 0) || 0,
+      totalPurchaseValue: Number.parseFloat(row.TotalPurchaseValue || 0) || 0,
+      transactionCount: parseInt(row.TransactionCount || 0) || 0,
+      daysSinceLastTxn: parseInt(row.DaysSinceLastTxn || 0) || 0,
+      status: row.Status || '—',
+      salesPerson: row.SalesPerson || null,
+      city: row.City || null,
+      state: row.State || null,
+    }));
+
+    console.log('[Template 90] customers:', customers.length);
+    res.json({ success: true, data: { customers } });
+  } catch (error) { res.status(502).json({ success: false, error: error.message }); }
+});
+
+// Template 91 — Outstanding Group View
+router.post('/outstanding-group-view/template', async (req, res) => {
+  try {
+    const auth = await getTallyAuth();
+    const rows = (await executeTemplate(91, auth)).content || [];
+    console.log('[Template 91] total rows:', rows.length);
+    console.log('[Template 91] field keys:', JSON.stringify(Object.keys(rows[0] || {})));
+
+    const receivables = [];
+    const payables = [];
+
+    rows.forEach((row) => {
+      const mapped = {
+        partyId: row.PartyID || '—',
+        partyName: row.PartyName || '—',
+        totalOutstanding: Number.parseFloat(row.totalOutstanding || 0) || 0,
+        agingNotDue: Number.parseFloat(row.agingNotDue || 0) || 0,
+        aging0to30: Number.parseFloat(row.aging0to30 || 0) || 0,
+        aging31to60: Number.parseFloat(row.aging31to60 || 0) || 0,
+        aging61to90: Number.parseFloat(row.aging61to90 || 0) || 0,
+        aging90plus: Number.parseFloat(row.aging90plus || 0) || 0,
+        creditLimit: Number.parseFloat(row.creditLimit || 0) || 0,
+        creditDays: parseInt(row.creditDays || 0) || 0,
+        openingBalance: Number.parseFloat(row.OpeningBalance || 0) || 0,
+      };
+
+      const groupType = (row.groupType || '').toLowerCase();
+      if (groupType === 'receivable') {
+        receivables.push(mapped);
+      } else if (groupType === 'payable') {
+        payables.push(mapped);
+      }
+    });
+
+    console.log('[Template 91] receivables:', receivables.length, 'payables:', payables.length);
+    res.json({ success: true, data: { receivables, payables } });
+  } catch (error) { res.status(502).json({ success: false, error: error.message }); }
+});
+
+// Dashboard Full — merge all 17 templates
+router.post('/dashboard/full', async (req, res) => {
+  try {
+    const auth = await getTallyAuth();
+    const results = await Promise.allSettled([
+      executeTemplate(87, auth),  // itemCount + stockSummary
+      executeTemplate(49, auth),  // partyCount
+      executeTemplate(81, auth),  // topCustomers, topVendors, topSellingItems
+      executeTemplate(86, auth),  // categoryBreakdown
+      executeTemplate(76, auth),  // openOrders + pendingOrders
+      executeTemplate(18, auth),  // recentTransactions (sales data sorted by date DESC, top 5)
+      executeTemplate(39, auth),  // salesTrend daily
+      executeTemplate(84, auth),  // bankAccountDetails
+    ]);
+
+    const getRows = (idx) => (results[idx].status === 'fulfilled' ? (results[idx].value?.content || []) : []);
+
+    // 0: Template 87 — itemCount + stockSummary
+    const t87Rows = getRows(0);
+    const itemCount = t87Rows.length;
+    const stockSummary = {
+      totalItems: itemCount,
+      totalStockValue: t87Rows.reduce((sum, r) => sum + (Number.parseFloat(r.StockValue || 0) || 0), 0),
+      totalCurrentStock: t87Rows.reduce((sum, r) => sum + (Number.parseFloat(r.CurrentStock || 0) || 0), 0),
+      understockCount: t87Rows.filter(r => r.IsUnderstock === 'true' || r.IsUnderstock === true).length,
+      overstockCount: t87Rows.filter(r => r.IsOverstock === 'true' || r.IsOverstock === true).length,
+      popularCount: t87Rows.filter(r => r.IsPopular === 'true' || r.IsPopular === true).length,
+    };
+
+    // 1: Template 49 — partyCount
+    const t49Rows = getRows(1);
+    const partyCount = t49Rows.length;
+
+    // 2: Template 81 — top customers, vendors, products
+    const t81Rows = getRows(2);
+    const topCustomers = t81Rows.filter(r => (r.EntityType || '').toLowerCase() === 'customer')
+      .map(r => ({ name: r['Name/PartyName'] || '—', value: Number.parseFloat(r.totalValue || 0) || 0, count: parseInt(r.transactionCount || 0) || 0 }))
+      .slice(0, 5);
+    const topVendors = t81Rows.filter(r => (r.EntityType || '').toLowerCase() === 'vendor')
+      .map(r => ({ name: r['Name/PartyName'] || '—', value: Number.parseFloat(r.totalValue || 0) || 0, count: parseInt(r.transactionCount || 0) || 0 }))
+      .slice(0, 5);
+    const topSellingItems = t81Rows.filter(r => (r.EntityType || '').toLowerCase() === 'product')
+      .map(r => ({ name: r['Name/PartyName'] || '—', value: Number.parseFloat(r.totalValue || 0) || 0, count: parseInt(r.transactionCount || 0) || 0 }))
+      .slice(0, 5);
+
+    // 3: Template 86 — categoryBreakdown
+    const t86Rows = getRows(3);
+    const catMap = {};
+    t86Rows.forEach(r => {
+      const cn = r.CategoryName || '—';
+      if (!catMap[cn]) catMap[cn] = { name: cn, itemCount: 0, groupCount: 0, groupSet: new Set() };
+      catMap[cn].itemCount = parseInt(r.ItemCount || catMap[cn].itemCount || 0) || catMap[cn].itemCount;
+      if (r.GroupID) catMap[cn].groupSet.add(r.GroupID);
+    });
+    const categoryBreakdown = Object.values(catMap).map(c => ({ name: c.name, itemCount: c.itemCount, groupCount: c.groupSet.size }));
+
+    // 4: Template 76 — openOrders
+    const t76Rows = getRows(4);
+    const openOrders = t76Rows.map(r => ({
+      number: r.number || r.order_number || '—',
+      date: r.date || r.voucher_date || null,
+      party: r.party || r.party_name || '—',
+      amount: Number.parseFloat(r.amount || 0) || 0,
+      status: r.status || r.dispatch_status || '—',
+      pendingQty: Number.parseFloat(r.pendingQty || r.pending_qty || 0) || 0,
+    }));
+
+    // 5: Template 18 — recentTransactions (sales data sorted by date DESC)
+    const t18Rows = getRows(5);
+    const recentTransactions = t18Rows
+      .sort((a, b) => new Date(b.invoice_date || b.date || 0) - new Date(a.invoice_date || a.date || 0))
+      .slice(0, 5)
+      .map(r => ({
+        type: 'Sales',
+        party: r.customer_name || r.party_name || r.party || '—',
+        amount: Number.parseFloat(r.total_invoice_value || r.amount || 0) || 0,
+        date: r.invoice_date || r.date || null,
+        voucherNo: r.invoice_no || r.voucher_number || r.voucherNo || '—',
+      }));
+
+    // 6: Template 39 — salesTrend
+    const t39Rows = getRows(6);
+    const salesTrend = t39Rows.map(r => ({
+      date: r.date || null,
+      salesAmount: Number.parseFloat(r.sales_amount || 0) || 0,
+      invoiceCount: parseInt(r.invoice_count || 0) || 0,
+    }));
+
+    // 7: Template 84 — bankAccountDetails
+    const t84Rows = getRows(7);
+    const bankAccounts = t84Rows.filter(r => r.AccountNumber)
+      .map(r => ({
+        name: r.LedgerName || '—',
+        accountNo: r.AccountNumber || null,
+        bankName: r.BankName || null,
+        ifsc: r.IFSC || null,
+        branch: r.BranchName || null,
+        balance: Number.parseFloat(r.ClosingBalance || r.OpeningBalance || 0) || 0,
+      }));
+
+    console.log('[Dashboard Full] itemCount:', itemCount, 'partyCount:', partyCount,
+      'topCustomers:', topCustomers.length, 'topVendors:', topVendors.length, 'topItems:', topSellingItems.length,
+      'categories:', categoryBreakdown.length, 'orders:', openOrders.length,
+      'transactions:', recentTransactions.length, 'trend:', salesTrend.length, 'banks:', bankAccounts.length);
+
+    res.json({ success: true, data: {
+      itemCount, stockSummary, partyCount,
+      topCustomers, topVendors, topSellingItems,
+      categoryBreakdown, openOrders,
+      recentTransactions, salesTrend, bankAccounts,
+    }});
+  } catch (error) { res.status(502).json({ success: false, error: error.message }); }
+});
+
+// Outstanding Full — merge template 68 + 49 for party contact details
+router.post('/outstanding/full', async (req, res) => {
+  try {
+    const auth = await getTallyAuth();
+    const [t68Result, t49Result] = await Promise.allSettled([
+      executeTemplate(68, auth),
+      executeTemplate(49, auth),
+    ]);
+
+    const t68Rows = (t68Result.status === 'fulfilled' ? t68Result.value.content : []) || [];
+    const t49Rows = (t49Result.status === 'fulfilled' ? t49Result.value.content : []) || [];
+
+    console.log('[Outstanding Full] t68 rows:', t68Rows.length, 't49 rows:', t49Rows.length);
+
+    const normalizeName = (name) => {
+      return (name || '')
+        .toLowerCase()
+        .replace(/\s+/g, ' ')
+        .replace(/\s*\(\s*/g, '(')
+        .replace(/\s*\)\s*/g, ')')
+        .replace(/\s*-\s*/g, '-')
+        .replace(/\s*\.\s*/g, '.')
+        .trim();
+    };
+
+    // Build party details lookup from template 49 by normalized party_name
+    const partyDetailMap = {};
+    t49Rows.forEach((row) => {
+      const key = normalizeName(row.party_name);
+      if (key) {
+        partyDetailMap[key] = {
+          phone: row.phone_number || null,
+          email: row.email || null,
+          address: row.full_address || null,
+          gstin: row.gstin || null,
+          pan: row.PAN || null,
+          creditLimit: Number.parseFloat(row.creditLimit || 0) || 0,
+          creditDays: parseInt(row.creditDays || 0) || 0,
+          salesPerson: row.salesPerson || null,
+          city: row.city || null,
+          state: row.state || null,
+          pin: row.PIN || null,
+          openingBalance: Number.parseFloat(row.openingBalance || 0) || 0,
+          partyType: row.party_type || null,
+          contactPerson: row.contact_person || null,
+        };
+      }
+    });
+
+    // Merge template 68 rows with template 49 party details
+    const mergedReceivables = t68Rows.map((row) => {
+      const nameKey = normalizeName(row.customer_name);
+      const partyDetail = partyDetailMap[nameKey] || {};
+
+      return {
+        partyName: row.customer_name || '—',
+        phone: row.customer_phone || partyDetail.phone || null,
+        email: row.customer_email || partyDetail.email || null,
+        address: partyDetail.address || null,
+        gstin: partyDetail.gstin || null,
+        pan: partyDetail.pan || null,
+        billReference: row.bill_reference || null,
+        billDate: row.bill_date || null,
+        outstandingBalance: Number.parseFloat(row.outstanding_balance || 0) || 0,
+        creditPeriod: partyDetail.creditDays || parseInt(row.credit_period || 0) || 0,
+        creditDays: partyDetail.creditDays || parseInt(row.credit_period || 0) || 0,
+        creditLimit: partyDetail.creditLimit || 0,
+        dueDate: row.due_date || null,
+        overdueDays: parseInt(row.overdue_days || 0) || 0,
+        overdueRatio: Number.parseFloat(row.overdue_ratio || 0) || 0,
+        bucket0to30: Number.parseFloat(row.bucket_0_30 || 0) || 0,
+        bucket31to60: Number.parseFloat(row.bucket_31_60 || 0) || 0,
+        bucket61to90: Number.parseFloat(row.bucket_61_90 || 0) || 0,
+        bucketAbove90: Number.parseFloat(row.bucket_above_90 || 0) || 0,
+        risk: row.risk || null,
+        salesPerson: partyDetail.salesPerson || null,
+        city: partyDetail.city || null,
+        state: partyDetail.state || null,
+        pin: partyDetail.pin || null,
+        openingBalance: partyDetail.openingBalance || 0,
+        partyType: partyDetail.partyType || null,
+        contactPerson: partyDetail.contactPerson || null,
+        voucherNumber: row.voucher_number || null,
+        voucherGuid: row.voucher_guid || null,
+      };
+    });
+
+    console.log('[Outstanding Full] merged receivables:', mergedReceivables.length);
+    res.json({ success: true, data: { receivables: mergedReceivables } });
   } catch (error) { res.status(502).json({ success: false, error: error.message }); }
 });
 

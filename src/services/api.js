@@ -17,11 +17,11 @@ class ApiService {
 
       const data = await response.json();
       
-      if (!data.success) {
+      if (!data.success && data.status !== 'success') {
         throw new Error(data.error || 'API request failed');
       }
 
-      return data.data;
+      return data.data !== undefined ? data.data : data.content;
     } catch (error) {
       console.error(`API Error [${endpoint}]:`, error);
       throw error;
@@ -207,6 +207,7 @@ class ApiService {
   async getTallyExpenses() { return this.post('/tally/expenses/templates', {}); }
   async getTallyStockStatus() { return this.post('/tally/stock-status/template', {}); }
   async getTallyPartyStatement(partyName) { return this.post('/tally/party-statement/template', { partyName }); }
+  async getTallyPartyStatementFull(partyName) { return this.post('/tally/party-statement/full', { partyName }); }
   async getTallyVoucherAudit() { return this.post('/tally/voucher-audit/template', {}); }
   async getTallySalesQuotations() { return this.post('/tally/sales-quotations/template', {}); }
   async getTallyCustomerPurchaseHistory() { return this.post('/tally/customer-purchase-history/template', {}); }
@@ -240,6 +241,10 @@ class ApiService {
   async getTallyItemsPage() { return this.post('/tally/items-page/template', {}); }
   async getTallyStockBatches() { return this.post('/tally/stock-batches/template', {}); }
   async getTallyItemStockStatus() { return this.post('/tally/item-stock-status/template', {}); }
+  async getTallyCustomerMovement() { return this.post('/tally/customer-movement/template', {}); }
+  async getTallyOutstandingGroupView() { return this.post('/tally/outstanding-group-view/template', {}); }
+  async getTallyDashboardFull() { return this.post('/tally/dashboard/full', {}); }
+  async getTallyOutstandingFull() { return this.post('/tally/outstanding/full', {}); }
 
   async getOutstandingReceivables(companyId) {
     return this.get(`/outstanding/receivable?companyId=${companyId}`);

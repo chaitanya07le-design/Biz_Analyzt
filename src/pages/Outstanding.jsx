@@ -7,6 +7,7 @@ import useGoogleSheetsData from '../hooks/useGoogleSheetsData';
 import { useCompany } from '../context/CompanyContext';
 import { settingsService } from '../services/settingsService';
 import useTallyOutstanding from '../hooks/useTallyOutstanding';
+import useTallyOutstandingFull from '../hooks/useTallyOutstandingFull';
 import { 
   AlertCircle, 
   ChevronDown, 
@@ -72,6 +73,29 @@ const Outstanding = () => {
 
   const { outstandingReceivables, outstandingPayables, parties, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
   const { outstanding: tallyOutstanding, templates: tallyTemplates, loading: tallyLoading, error: tallyError } = useTallyOutstanding();
+  const { data: tallyFull, loading: tallyFullLoading } = useTallyOutstandingFull();
+
+  const normalizeName = (name) => {
+    return (name || '')
+      .toLowerCase()
+      .replace(/\s+/g, ' ')
+      .replace(/\s*\(\s*/g, '(')
+      .replace(/\s*\)\s*/g, ')')
+      .replace(/\s*-\s*/g, '-')
+      .replace(/\s*\.\s*/g, '.')
+      .trim();
+  };
+
+  // Build contact details map from merged data (template 68 + 49)
+  const contactMap = useMemo(() => {
+    if (!tallyFull?.receivables) return {};
+    const map = {};
+    tallyFull.receivables.forEach((item) => {
+      const key = normalizeName(item.partyName);
+      map[key] = item;
+    });
+    return map;
+  }, [tallyFull]);
 
   const hasLiveReceivables = tallyTemplates[37]?.status === 'success';
   const hasLivePayables = tallyTemplates[7]?.status === 'success';
@@ -85,12 +109,14 @@ const Outstanding = () => {
     
     return data.map(p => {
       const partyName = p.partyName || p.PartyName || p.name || '';
+      const nameKey = normalizeName(partyName);
+      const tallyContact = contactMap[nameKey] || {};
       const matchingParty = (parties || []).find((party) => (party.PartyName || party.name || '').trim().toLowerCase() === partyName.trim().toLowerCase());
       const extraBills = useLiveData && activeTab === 'receivable'
         ? (tallyOutstanding?.customerBills || []).filter((bill) => (bill.customer_name || bill.party_name || '').trim().toLowerCase() === partyName.trim().toLowerCase())
         : [];
       const risk = useLiveData && activeTab === 'receivable'
-        ? (tallyOutstanding?.customerRisk || []).find((row) => (row.customer_name || row.party_name || '').trim().toLowerCase() === partyName.trim().toLowerCase())?.risk_level
+        ? (tallyOutstanding?.customerRisk || []).find((row) => (row.customer_name || row.party_name || '').trim().toLowerCase() === partyName.trim().toLowerCase())?.risk_level || tallyContact.risk
         : null;
       const msme = useLiveData && activeTab === 'payable'
         ? (tallyOutstanding?.msmePayables || []).some((row) => (row.vendor_name || row.party_name || '').trim().toLowerCase() === partyName.trim().toLowerCase())
@@ -99,11 +125,21 @@ const Outstanding = () => {
         ? (tallyOutstanding?.discountPayables || []).find((row) => (row.vendor_name || row.party_name || '').trim().toLowerCase() === partyName.trim().toLowerCase())?.early_payment_discount_pct
         : null;
       return {
-        partyId: p.partyId || p.PartyID || p.id || matchingParty?.PartyID || matchingParty?.id || partyName,
+        partyId: p.partyId || p.PartyID || p.id || tallyContact.billReference || matchingParty?.PartyID || matchingParty?.id || partyName,
         partyName,
-        city: p.city || p.City || matchingParty?.City || matchingParty?.city || '',
+        phone: tallyContact.phone || matchingParty?.Phone || matchingParty?.phone || '',
+        email: tallyContact.email || matchingParty?.Email || matchingParty?.email || '',
+        address: tallyContact.address || matchingParty?.Address || matchingParty?.address || '',
+        gstin: tallyContact.gstin || matchingParty?.GSTIN || matchingParty?.gstin || '',
+        pan: tallyContact.pan || matchingParty?.PAN || matchingParty?.pan || '',
+        city: p.city || p.City || tallyContact.city || matchingParty?.City || matchingParty?.city || '',
+        state: tallyContact.state || null,
+        pin: tallyContact.pin || null,
         totalOutstanding: parseFloat(p.totalOutstanding || p.TotalOutstanding || 0),
-        openingBalance: parseFloat(p.openingBalance || p.OpeningBalance || 0),
+        openingBalance: parseFloat(p.openingBalance || p.OpeningBalance || tallyContact.openingBalance || 0),
+        creditLimit: tallyContact.creditLimit || 0,
+        creditDays: tallyContact.creditDays || 0,
+        salesPerson: tallyContact.salesPerson || null,
         transactionCount: p.transactionCount || 0,
         aging: p.aging || { notDue: 0, overdue0to30: 0, overdue31to60: 0, overdue61to90: 0, over90: 0 },
         invoiceAging: p.invoiceAging || [],
@@ -113,7 +149,7 @@ const Outstanding = () => {
         earlyDiscount,
       };
     });
-  }, [data, parties, useLiveData, activeTab, tallyOutstanding]);
+  }, [data, parties, useLiveData, activeTab, tallyOutstanding, contactMap]);
 
   const totals = useMemo(() => {
     return {
@@ -167,7 +203,26 @@ const Outstanding = () => {
   };
 
   const handleViewDetails = (party) => {
-    navigate(`/outstanding/${encodeURIComponent(party.partyName)}`, { state: { fromOutstanding: true, outstandingParty: party } });
+    navigate(`/outstanding/${encodeURIComponent(party.partyName)}`, {
+      state: {
+        fromOutstanding: true,
+        outstandingParty: party,
+        contactDetails: {
+          city: party.city || null,
+          gstin: party.gstin || null,
+          creditLimit: party.creditLimit || 0,
+          phone: party.phone || null,
+          email: party.email || null,
+          address: party.address || null,
+          pan: party.pan || null,
+          creditDays: party.creditDays || 0,
+          salesPerson: party.salesPerson || null,
+          state: party.state || null,
+          pin: party.pin || null,
+          openingBalance: party.openingBalance || 0,
+        },
+      },
+    });
   };
 
   if (loading) {

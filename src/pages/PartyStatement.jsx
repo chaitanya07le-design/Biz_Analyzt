@@ -4,7 +4,7 @@ import useGoogleSheetsData from '../hooks/useGoogleSheetsData';
 import LedgerHeader from '../components/ledger/LedgerHeader';
 import LedgerBalanceRow from '../components/ledger/LedgerBalanceRow';
 import { motion } from 'framer-motion';
-import useTallyPartyStatement from '../hooks/useTallyPartyStatement';
+import useTallyPartyStatementFull from '../hooks/useTallyPartyStatementFull';
 
 const LedgerDetail = () => {
   const { partyId } = useParams();
@@ -16,7 +16,7 @@ const LedgerDetail = () => {
   })();
   const selectedParty = (parties || []).find((candidate) => candidate.id === partyId || candidate.PartyID === partyId || (candidate.PartyName || candidate.name || '').trim().toLowerCase() === requestedPartyName.trim().toLowerCase());
   const selectedPartyName = selectedParty?.PartyName || selectedParty?.name || requestedPartyName;
-  const tallyTransactions = useTallyPartyStatement(selectedPartyName);
+  const { ledger: tallyLedger, transactions: tallyTransactions, loading: tallyLoading } = useTallyPartyStatementFull(selectedPartyName);
   const [showAging, setShowAging] = useState(true);
 
   const calculateAging = (party, partyVouchers) => {
@@ -204,7 +204,7 @@ const LedgerDetail = () => {
     navigate(-1);
   };
 
-  const openingBalance = parseFloat(party.OpeningBalance) || 0;
+  const openingBalance = tallyLedger?.openingBalance != null ? tallyLedger.openingBalance : (parseFloat(party.OpeningBalance) || 0);
   const outstandingTransactions = (location.state?.outstandingParty?.invoiceAging || []).map((invoice, index) => ({
     id: `outstanding-invoice-${index}`,
     date: invoice.date,
@@ -217,7 +217,8 @@ const LedgerDetail = () => {
     balance: Number(invoice.outstanding) || 0,
   }));
   const displayTransactions = tallyTransactions?.length ? tallyTransactions : outstandingTransactions.length ? outstandingTransactions : transactions;
-  const closingBalance = displayTransactions.length > 0 
+  const closingBalance = tallyLedger?.closingBalance != null ? tallyLedger.closingBalance
+    : displayTransactions.length > 0 
     ? displayTransactions[displayTransactions.length - 1].balance 
     : openingBalance;
 
@@ -229,15 +230,19 @@ const LedgerDetail = () => {
 
   const formatCurrency = (amount) => `₹${Math.abs(amount).toLocaleString('en-IN')}`;
 
+  const contactDetails = location.state?.contactDetails || {};
+
   return (
     <div className="min-h-screen bg-canvas-default">
       <LedgerHeader party={{ 
         ...party, 
         name: party.PartyName || party.name, 
-        city: party.City || party.city,
-        type: party.PartyType || party.type,
-        gstin: party.GSTIN || party.gstin,
-        creditLimit: party.CreditLimit ? parseFloat(party.CreditLimit) : party.creditLimit ? parseFloat(party.creditLimit) : 0
+        city: contactDetails.city || party.City || party.city || 'Not available',
+        type: tallyLedger?.type || party.PartyType || party.type,
+        group: tallyLedger?.group || party.Group || party.group || '',
+        gstin: contactDetails.gstin || party.GSTIN || party.gstin || 'Not available',
+        creditLimit: contactDetails.creditLimit || (party.CreditLimit ? parseFloat(party.CreditLimit) : 0) || (party.creditLimit ? parseFloat(party.creditLimit) : 0),
+        ledgerId: tallyLedger?.id || party.PartyID || party.id || null
       }} onBack={handleBack} />
       
       <div className="p-4 md:p-6">
