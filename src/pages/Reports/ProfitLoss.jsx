@@ -7,6 +7,7 @@ import { useCompany } from '../../context/CompanyContext';
 import { useDateRange } from '../../context/DateRangeContext';
 import { calculateProfitLoss } from '../../utils/profitLoss';
 import useTallyProfitLoss from '../../hooks/useTallyProfitLoss';
+import useTallyProfitLossFull from '../../hooks/useTallyProfitLossFull';
 
 const ProfitLoss = () => {
   const navigate = useNavigate();
@@ -15,8 +16,55 @@ const ProfitLoss = () => {
   
   const { ledgers, groups, vouchers, voucherLines, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
   const tallyProfitLoss = useTallyProfitLoss();
+  const { data: tallyFull, loading: tallyFullLoading } = useTallyProfitLossFull();
+  const tallyActive = !!tallyFull?.summary;
 
   const reportData = useMemo(() => {
+    // Tally full (templates 30+48) — detailed breakdown available
+    if (tallyActive && tallyFull?.summary) {
+      const s = tallyFull.summary;
+      return {
+        income: {
+          direct: s.sales + s.directIncome,
+          indirect: s.indirectIncome,
+          total: s.sales + s.directIncome + s.indirectIncome,
+          breakdown: tallyFull.revenueStreams || [],
+          ledgers: { indirect: [], direct: tallyFull.revenueStreams || [] },
+        },
+        expenses: {
+          purchase: s.purchases,
+          totalDirect: s.purchases + s.directExpenses,
+          totalIndirect: s.indirectExpenses,
+          breakdown: tallyFull.expenseBreakdown || [],
+          depreciation: tallyFull.depreciation || [],
+          financeCosts: tallyFull.financeCosts || [],
+          employeeCosts: tallyFull.employeeCosts || [],
+          ledgers: {
+            direct: (tallyFull.expenseBreakdown || []).filter(e => {
+              const n = (e.name || '').toLowerCase();
+              const g = (e.groupName || '').toLowerCase();
+              // Explicitly indirect by group classification
+              if (g.includes('indirect')) return false;
+              if (g.includes('purchase') || g.includes('direct')) return true;
+              return !n.includes('depreciation') && !n.includes('amortis') && !n.includes('finance') && !n.includes('interest') && !n.includes('bank charg') && !n.includes('employ') && !n.includes('salar') && !n.includes('wage') && !n.includes('staff');
+            }),
+            indirect: (tallyFull.expenseBreakdown || []).filter(e => {
+              const n = (e.name || '').toLowerCase();
+              const g = (e.groupName || '').toLowerCase();
+              // Explicitly indirect by group classification
+              if (g.includes('indirect')) return true;
+              return n.includes('depreciation') || n.includes('amortis') || n.includes('finance') || n.includes('interest') || n.includes('bank charg') || n.includes('employ') || n.includes('salar') || n.includes('wage') || n.includes('staff');
+            }),
+          },
+        },
+        grossProfit: s.grossProfit,
+        netProfit: s.netProfit,
+        openingStock: s.openingStock,
+        closingStock: s.closingStock,
+      };
+    }
+
+    // Old Tally summary (template 30 only)
     if (tallyProfitLoss) {
       return {
         income: { direct: tallyProfitLoss.sales + tallyProfitLoss.directIncome, indirect: tallyProfitLoss.indirectIncome, total: tallyProfitLoss.sales + tallyProfitLoss.directIncome + tallyProfitLoss.indirectIncome, ledgers: { indirect: [] } },
@@ -38,7 +86,7 @@ const ProfitLoss = () => {
     }
 
     return calculateProfitLoss(filteredVouchers, voucherLines, ledgers, groups);
-  }, [vouchers, voucherLines, ledgers, groups, dateRange.startDate, dateRange.endDate, tallyProfitLoss]);
+  }, [tallyActive, tallyFull, tallyProfitLoss, vouchers, voucherLines, ledgers, groups, dateRange.startDate, dateRange.endDate]);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {
@@ -49,7 +97,7 @@ const ProfitLoss = () => {
     }).format(amount);
   };
 
-  if (loading) {
+  if ((loading || tallyFullLoading) && !tallyActive) {
     return (
       <motion.div
         initial={{ opacity: 0 }}
@@ -198,7 +246,20 @@ const ProfitLoss = () => {
             </div>
             <div className="px-4 py-3">
               <p className="text-xs font-medium text-ink-muted uppercase tracking-wide mb-3">Indirect Expenses (Debit)</p>
-              {(reportData.expenses.ledgers.indirect || []).map(item => (
+              {(reportData.expenses.ledgers.indirect || []).filter(item => {
+                const n = (item.name || '').toLowerCase();
+                const hasDepSection = reportData.expenses.depreciation.length > 0;
+                const hasFinSection = reportData.expenses.financeCosts.length > 0;
+                const hasEmpSection = reportData.expenses.employeeCosts.length > 0;
+                const isDepItem = n.includes('depreciation') || n.includes('amortis');
+                const isFinItem = n.includes('finance') || n.includes('interest') || n.includes('bank charg');
+                const isEmpItem = n.includes('employ') || n.includes('salar') || n.includes('wage') || n.includes('staff');
+                // Skip items that have dedicated sub-sections below
+                if (hasDepSection && isDepItem) return false;
+                if (hasFinSection && isFinItem) return false;
+                if (hasEmpSection && isEmpItem) return false;
+                return true;
+              }).map(item => (
                 <div key={item.id} className="flex justify-between py-1.5">
                   <span className="text-sm text-ink-default">{item.name}</span>
                   <span className="text-sm font-medium text-ink-default">{formatCurrency(item.amount)}</span>
@@ -208,6 +269,39 @@ const ProfitLoss = () => {
                 <div className="flex justify-between py-1.5">
                   <span className="text-sm text-ink-muted">No indirect expenses</span>
                   <span className="text-sm font-medium text-ink-muted">{formatCurrency(0)}</span>
+                </div>
+              )}
+              {tallyActive && reportData.expenses.depreciation.length > 0 && (
+                <div className="mt-3 pt-3 border-t border-canvas-faint">
+                  <p className="text-xs font-semibold text-ink-muted uppercase tracking-wide mb-2">Depreciation</p>
+                  {reportData.expenses.depreciation.map((item, idx) => (
+                    <div key={`dep-${idx}`} className="flex justify-between py-1">
+                      <span className="text-sm text-ink-default">{item.name}</span>
+                      <span className="text-sm text-ink-default">{formatCurrency(item.amount)}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {tallyActive && reportData.expenses.financeCosts.length > 0 && (
+                <div className="mt-3 pt-3 border-t border-canvas-faint">
+                  <p className="text-xs font-semibold text-ink-muted uppercase tracking-wide mb-2">Finance Costs</p>
+                  {reportData.expenses.financeCosts.map((item, idx) => (
+                    <div key={`fin-${idx}`} className="flex justify-between py-1">
+                      <span className="text-sm text-ink-default">{item.name}</span>
+                      <span className="text-sm text-ink-default">{formatCurrency(item.amount)}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {tallyActive && reportData.expenses.employeeCosts.length > 0 && (
+                <div className="mt-3 pt-3 border-t border-canvas-faint">
+                  <p className="text-xs font-semibold text-ink-muted uppercase tracking-wide mb-2">Employee Costs</p>
+                  {reportData.expenses.employeeCosts.map((item, idx) => (
+                    <div key={`emp-${idx}`} className="flex justify-between py-1">
+                      <span className="text-sm text-ink-default">{item.name}</span>
+                      <span className="text-sm text-ink-default">{formatCurrency(item.amount)}</span>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>

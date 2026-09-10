@@ -264,6 +264,66 @@ const ExpensesReport = () => {
             </div>
           </div>
         </motion.div>
+
+        {tallyExpenses?.today?.length > 0 && (
+          <motion.div
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="bg-white rounded-lg border border-canvas-faint overflow-hidden"
+          >
+            <div className="px-4 py-3 bg-gradient-to-r from-blue-50 to-blue-100 border-b border-canvas-faint">
+              <h2 className="font-semibold text-ink-default">Today's Transactions</h2>
+              <p className="text-xs text-ink-muted">{new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })} · {tallyExpenses.today.length} transactions</p>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-canvas-faint border-b border-canvas-faint">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-ink-muted uppercase tracking-wide">Voucher No</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-ink-muted uppercase tracking-wide">Type</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-ink-muted uppercase tracking-wide">Party</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-ink-muted uppercase tracking-wide">Notes</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-ink-muted uppercase tracking-wide">Bill Ref</th>
+                    <th className="px-4 py-3 text-right text-xs font-semibold text-ink-muted uppercase tracking-wide">Amount</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-canvas-faint">
+                  {tallyExpenses.today.map((item, idx) => (
+                    <motion.tr
+                      key={item.id}
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: idx * 0.02 }}
+                      onClick={() => {
+                        const vId = item.voucherId || '';
+                        navigate(`/tally-voucher/${item.expenseType}/${encodeURIComponent(item.voucherNo)}${vId ? '/' + encodeURIComponent(vId) : ''}`);
+                      }}
+                      className="hover:bg-canvas-faint transition-colors cursor-pointer"
+                    >
+                      <td className="px-4 py-3 text-sm text-ink-default font-medium">{item.voucherNo}</td>
+                      <td className="px-4 py-3">
+                        <span className={`inline-flex px-2 py-1 rounded text-xs font-medium ${
+                          item.expenseType === 'Sales' ? 'text-blue-600 bg-blue-50' :
+                          item.expenseType === 'Purchase' ? 'text-purple-600 bg-purple-50' :
+                          item.expenseType === 'Payment' ? 'text-red-600 bg-red-50' :
+                          item.expenseType === 'Receipt' ? 'text-green-600 bg-green-50' :
+                          'text-gray-600 bg-gray-50'
+                        }`}>
+                          {item.expenseType}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-sm text-ink-default">{item.partyName}</td>
+                      <td className="px-4 py-3 text-sm text-ink-default max-w-xs truncate">{item.notes || '—'}</td>
+                      <td className="px-4 py-3 text-sm text-ink-default">{item.billReference || '—'}</td>
+                      <td className="px-4 py-3 text-sm text-ink-default text-right font-medium whitespace-nowrap">{formatCurrency(item.amount)}</td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </motion.div>
+        )}
       </div>
     </motion.div>
   );

@@ -1,32 +1,63 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Skeleton from '../../components/shared/Skeleton';
+import VoucherPagination, { DEFAULT_PAGE_SIZE } from '../../components/voucher/VoucherPagination';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import useTallyPartyDetails from '../../hooks/useTallyPartyDetails';
 import { useCompany } from '../../context/CompanyContext';
 import { useDateRange } from '../../context/DateRangeContext';
+import api from '../../services/api';
 
 const CustomerView = () => {
   const navigate = useNavigate();
   const { currentCompany } = useCompany();
   const { dateRange } = useDateRange();
   const [searchQuery, setSearchQuery] = useState('');
-  
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = DEFAULT_PAGE_SIZE;
+  const [tallyTxns, setTallyTxns] = useState(null);
+
   const { parties: apiParties, vouchers, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
   const tallyParties = useTallyPartyDetails();
+
+  // Fetch Tally customer transactions (Sales + Receipts) when Tally is active
+  useEffect(() => {
+    if (tallyParties && tallyParties.length > 0) {
+      let active = true;
+      api.getTallyCustomerTransactions()
+        .then((data) => { if (active) setTallyTxns(data); })
+        .catch(() => {});
+      return () => { active = false; };
+    }
+  }, [tallyParties]);
+
+  // Reset page on search change
+  useEffect(() => { setCurrentPage(1); }, [searchQuery]);
 
   const normalizedParties = useMemo(() => {
     if (tallyParties && tallyParties.length > 0) {
       return tallyParties.map((t, i) => ({
         id: t.id || `tally-party-${i}`,
-        name: t.name,
+        name: t.name || '—',
         type: t.type || 'Customer',
-        city: '',
-        gstin: t.gstin,
-        mobile: t.mobile,
-        email: t.email,
-        balance: t.balance,
+        city: t.city || '',
+        state: t.state || '',
+        pin: t.pin || '',
+        gstin: t.gstin || '',
+        mobile: t.mobile || '',
+        email: t.email || '',
+        pan: t.pan || '',
+        creditLimit: t.creditLimit || 0,
+        creditDays: t.creditDays || 0,
+        salesPerson: t.salesPerson || '',
+        openingBalance: t.openingBalance || 0,
+        balance: t.balance || 0,
+        status: t.status || 'Active',
+        contactPerson: t.contactPerson || '',
+        parentGroup: t.parentGroup || '',
+        incomeTaxNumber: t.incomeTaxNumber || '',
+        address: t.address || '',
       }));
     }
     if (!apiParties || apiParties.length === 0) return [];
@@ -66,41 +97,97 @@ const CustomerView = () => {
 
   const customerData = useMemo(() => {
     const customers = normalizedParties.filter(p => p.type === 'Customer');
-    const customerSummary = {};
+    const tallyActive = tallyTxns && tallyParties && tallyParties.length > 0;
+
+    const customerSummary = [];
+    const nameIndex = new Map();
 
     customers.forEach(customer => {
-      customerSummary[customer.id] = {
+      const summary = {
         party: customer,
         totalSales: 0,
         totalReceipts: 0,
-        outstanding: 0,
+        outstanding: customer.openingBalance || customer.balance || 0,
         transactionCount: 0,
         lastTransaction: null
       };
+      customerSummary.push(summary);
+
+      // Build name lookup (case-insensitive) for Tally matching
+      const normName = customer.name.toLowerCase().trim();
+      if (normName) nameIndex.set(normName, summary);
     });
 
-    normalizedVouchers.sales.forEach(voucher => {
-      if (customerSummary[voucher.partyId]) {
-        customerSummary[voucher.partyId].totalSales += voucher.netAmount;
-        customerSummary[voucher.partyId].transactionCount++;
-        customerSummary[voucher.partyId].outstanding += voucher.outstanding || 0;
-        if (!customerSummary[voucher.partyId].lastTransaction || new Date(voucher.date) > new Date(customerSummary[voucher.partyId].lastTransaction)) {
-          customerSummary[voucher.partyId].lastTransaction = voucher.date;
+    if (tallyActive && tallyTxns) {
+      // Join Tally transactions by party_name
+      const salesBy = tallyTxns.salesByParty || {};
+      const receiptsBy = tallyTxns.receiptsByParty || {};
+
+      Object.keys(salesBy).forEach(partyName => {
+        const norm = partyName.toLowerCase().trim();
+        const found = nameIndex.get(norm);
+        if (found) {
+          found.totalSales += salesBy[partyName].totalSales;
+          found.transactionCount += salesBy[partyName].transactionCount;
+          const lt = salesBy[partyName].lastTransaction;
+          if (lt && (!found.lastTransaction || new Date(lt) > new Date(found.lastTransaction))) {
+            found.lastTransaction = lt;
+          }
         }
-      }
-    });
+      });
 
-    normalizedVouchers.receipts.forEach(voucher => {
-      if (customerSummary[voucher.partyId]) {
-        customerSummary[voucher.partyId].totalReceipts += voucher.grossTotal;
-      }
-    });
+      Object.keys(receiptsBy).forEach(partyName => {
+        const norm = partyName.toLowerCase().trim();
+        const found = nameIndex.get(norm);
+        if (found) {
+          found.totalReceipts += receiptsBy[partyName];
+        }
+      });
+    } else {
+      // Google Sheets fallback: join by PartyID
+      const gsMap = {};
+      customerSummary.forEach(c => { gsMap[c.party.id] = c; });
 
-    return Object.values(customerSummary)
-      .filter(c => c.transactionCount > 0 || c.party.openingBalance > 0)
-      .filter(c => c.party.name.toLowerCase().includes(searchQuery.toLowerCase()))
-      .sort((a, b) => b.totalSales - a.totalSales);
-  }, [normalizedParties, normalizedVouchers, searchQuery]);
+      normalizedVouchers.sales.forEach(voucher => {
+        if (gsMap[voucher.partyId]) {
+          gsMap[voucher.partyId].totalSales += voucher.netAmount;
+          gsMap[voucher.partyId].transactionCount++;
+          gsMap[voucher.partyId].outstanding += voucher.outstanding || 0;
+          if (!gsMap[voucher.partyId].lastTransaction || new Date(voucher.date) > new Date(gsMap[voucher.partyId].lastTransaction)) {
+            gsMap[voucher.partyId].lastTransaction = voucher.date;
+          }
+        }
+      });
+
+      normalizedVouchers.receipts.forEach(voucher => {
+        if (gsMap[voucher.partyId]) {
+          gsMap[voucher.partyId].totalReceipts += voucher.grossTotal;
+        }
+      });
+    }
+
+    let result = customerSummary;
+
+    // When Tally active: show ALL customers (not just those with transactions)
+    if (!tallyActive) {
+      result = result.filter(c => c.transactionCount > 0 || c.party.openingBalance > 0);
+    }
+
+    // Search filter
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(c =>
+        c.party.name.toLowerCase().includes(q) ||
+        (c.party.city || '').toLowerCase().includes(q) ||
+        (c.party.gstin || '').toLowerCase().includes(q)
+      );
+    }
+
+    return result.sort((a, b) => b.totalSales - a.totalSales);
+  }, [normalizedParties, normalizedVouchers, searchQuery, tallyTxns, tallyParties]);
+
+  const totalPages = Math.max(1, Math.ceil(customerData.length / pageSize));
+  const paginatedCustomers = customerData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {
@@ -161,7 +248,7 @@ const CustomerView = () => {
             </button>
             <div>
               <h1 className="text-xl md:text-2xl font-semibold text-ink-default">Customer View</h1>
-              <p className="text-sm text-ink-muted">Customer-wise transaction summary</p>
+              <p className="text-sm text-ink-muted">Customer-wise transaction summary {tallyParties && tallyParties.length > 0 ? <span className="font-bold text-brand-primary">· LIVE TALLY</span> : ''}</p>
             </div>
           </div>
         </motion.div>
@@ -204,18 +291,37 @@ const CustomerView = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-canvas-faint">
-                {customerData.map((item, idx) => (
+                {paginatedCustomers.map((item, idx) => (
                   <motion.tr
                     key={item.party.id}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.02 }}
-                    onClick={() => navigate(`/outstanding/${item.party.id}`)}
+                    onClick={() => navigate(`/outstanding/${encodeURIComponent(item.party.name)}`, {
+                        state: {
+                          fromOutstanding: true,
+                          outstandingParty: item,
+                          contactDetails: {
+                            city: item.party.city || null,
+                            gstin: item.party.gstin || null,
+                            creditLimit: item.party.creditLimit || 0,
+                            phone: item.party.mobile || null,
+                            email: item.party.email || null,
+                            address: item.party.address || null,
+                            pan: item.party.pan || null,
+                            creditDays: item.party.creditDays || 0,
+                            salesPerson: item.party.salesPerson || null,
+                            state: item.party.state || null,
+                            pin: item.party.pin || null,
+                            openingBalance: item.party.openingBalance || 0,
+                          },
+                        },
+                      })}
                     className="hover:bg-canvas-faint cursor-pointer transition-colors"
                   >
                     <td className="px-4 py-3">
                       <p className="text-sm font-medium text-ink-default">{item.party.name}</p>
-                      <p className="text-xs text-ink-muted">{item.party.city} • {item.party.gstin || 'No GST'}</p>
+                      <p className="text-xs text-ink-muted">{[item.party.city, item.party.state].filter(Boolean).join(', ') || '—'} • {item.party.gstin || 'No GST'}</p>
                     </td>
                     <td className="px-4 py-3 text-right">
                       <span className="text-sm font-medium text-ink-default">{formatCurrency(item.totalSales)}</span>
@@ -246,6 +352,16 @@ const CustomerView = () => {
             </div>
           )}
         </motion.div>
+
+        {customerData.length > 0 && (
+          <VoucherPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalRecords={customerData.length}
+            pageSize={pageSize}
+            onPageChange={setCurrentPage}
+          />
+        )}
 
         <motion.div
           initial={{ y: 10, opacity: 0 }}

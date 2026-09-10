@@ -204,10 +204,13 @@ class ApiService {
   async getTallyPurchaseVouchers() { return this.post('/tally/purchase-vouchers/template', {}); }
   async getTallyProfitLoss() { return this.post('/tally/profit-loss/template', {}); }
   async getTallyDayBook() { return this.post('/tally/day-book/template', {}); }
+  async getTallyDayBookMonth(month) { return this.post('/tally/day-book/month-vouchers', { month }); }
+  async getTallyVoucherDetail(voucherNo, voucherType, voucherId = null) { return this.post('/tally/voucher-detail', { voucherNo, voucherType, voucherId }); }
   async getTallyExpenses() { return this.post('/tally/expenses/templates', {}); }
   async getTallyStockStatus() { return this.post('/tally/stock-status/template', {}); }
   async getTallyPartyStatement(partyName) { return this.post('/tally/party-statement/template', { partyName }); }
   async getTallyPartyStatementFull(partyName) { return this.post('/tally/party-statement/full', { partyName }); }
+  async getTallyCustomerTransactions() { return this.post('/tally/customer-transactions/template', {}); }
   async getTallyVoucherAudit() { return this.post('/tally/voucher-audit/template', {}); }
   async getTallySalesQuotations() { return this.post('/tally/sales-quotations/template', {}); }
   async getTallyCustomerPurchaseHistory() { return this.post('/tally/customer-purchase-history/template', {}); }
@@ -239,12 +242,17 @@ class ApiService {
   async getTallyGroups() { return this.post('/tally/groups/template', {}); }
   async getTallyCategories() { return this.post('/tally/categories/template', {}); }
   async getTallyItemsPage() { return this.post('/tally/items-page/template', {}); }
+  async getTallyItemDetail(itemId) { return this.post('/tally/item-detail/template', { itemId }); }
   async getTallyStockBatches() { return this.post('/tally/stock-batches/template', {}); }
   async getTallyItemStockStatus() { return this.post('/tally/item-stock-status/template', {}); }
+  async getTallyStockStatusFull() { return this.post('/tally/stock-status/full', {}); }
   async getTallyCustomerMovement() { return this.post('/tally/customer-movement/template', {}); }
   async getTallyOutstandingGroupView() { return this.post('/tally/outstanding-group-view/template', {}); }
   async getTallyDashboardFull() { return this.post('/tally/dashboard/full', {}); }
   async getTallyOutstandingFull() { return this.post('/tally/outstanding/full', {}); }
+  async getTallyByItemFull() { return this.post('/tally/by-item/full', {}); }
+  async getTallyTrialBalanceFull(fromDate, toDate, prevFromDate, prevToDate) { return this.post('/tally/trial-balance/full', { fromDate, toDate, prevFromDate, prevToDate }); }
+  async getTallyProfitLossFull() { return this.post('/tally/profit-loss/full', {}); }
 
   async getOutstandingReceivables(companyId) {
     return this.get(`/outstanding/receivable?companyId=${companyId}`);

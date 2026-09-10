@@ -125,7 +125,7 @@ const LedgerDetail = () => {
     const partyData = (parties || []).find(p => p.id === partyId || p.PartyID === partyId || (p.PartyName || p.name || '').trim().toLowerCase() === requestedPartyName.trim().toLowerCase())
       || (location.state?.outstandingParty ? {
         PartyID: partyId,
-        PartyName: location.state.outstandingParty.partyName,
+        PartyName: location.state.outstandingParty.party?.name || location.state.outstandingParty.partyName,
         PartyType: 'Customer',
         OpeningBalance: 0,
       } : null)
@@ -379,7 +379,13 @@ const LedgerDetail = () => {
                       <tr 
                         key={idx} 
                         className="hover:bg-canvas-subtle cursor-pointer"
-                        onClick={() => !tallyTransactions && navigate(`/voucher/${txn.voucherId}`)}
+                        onClick={() => {
+                          if (tallyTransactions) {
+                            navigate(`/tally-voucher/${txn.type}/${encodeURIComponent(txn.voucherNo)}`);
+                          } else {
+                            navigate(`/voucher/${txn.voucherId}`);
+                          }
+                        }}
                       >
                         <td className="px-4 py-3 text-sm text-ink-default">{txn.date}</td>
                         <td className="px-4 py-3 text-sm text-ink-muted font-mono">{txn.voucherNo || '—'}</td>
@@ -404,7 +410,13 @@ const LedgerDetail = () => {
                   <div 
                     key={idx} 
                     className="p-4 cursor-pointer hover:bg-canvas-subtle"
-                    onClick={() => !tallyTransactions && navigate(`/voucher/${txn.voucherId}`)}
+                    onClick={() => {
+                          if (tallyTransactions) {
+                            navigate(`/tally-voucher/${txn.type}/${encodeURIComponent(txn.voucherNo)}`);
+                          } else {
+                            navigate(`/voucher/${txn.voucherId}`);
+                          }
+                        }}
                   >
                     <div className="flex justify-between items-start mb-2">
                       <div>

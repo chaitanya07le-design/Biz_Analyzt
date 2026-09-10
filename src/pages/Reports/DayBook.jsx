@@ -156,11 +156,17 @@ const DayBook = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.02 }}
-                    onClick={() => !tallyEntries && handleVoucherClick(voucher.id)}
+                    onClick={() => {
+                      if (tallyEntries && voucher.monthKey) {
+                        navigate(`/reports/day-book/month/${voucher.monthKey}`);
+                      } else if (!tallyEntries) {
+                        handleVoucherClick(voucher.id);
+                      }
+                    }}
                     className="hover:bg-canvas-faint transition-colors"
                   >
                     <td className="px-4 py-3 text-sm text-ink-default whitespace-nowrap">
-                      {formatDate(voucher.VoucherDate || voucher.date)}
+                      {voucher.monthKey ? voucher.date : formatDate(voucher.VoucherDate || voucher.date)}
                     </td>
                     <td className="px-4 py-3">
                       <span className={`inline-flex px-2 py-1 rounded text-xs font-medium ${getCategoryColor(voucher.category)}`}>

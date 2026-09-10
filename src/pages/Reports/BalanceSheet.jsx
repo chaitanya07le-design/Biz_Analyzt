@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Skeleton from '../../components/shared/Skeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import useTallyTrialBalance from '../../hooks/useTallyTrialBalance';
+import useTallyTrialBalanceFull from '../../hooks/useTallyTrialBalanceFull';
 import { useCompany } from '../../context/CompanyContext';
 import { calculateProfitLoss } from '../../utils/profitLoss';
 
@@ -14,6 +15,15 @@ const BalanceSheet = () => {
   
   const { ledgers, parties, groups, vouchers, voucherLines, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
   const tallyTrialBalance = useTallyTrialBalance();
+
+  // Compute financial year dates from asOfDate
+  const fromDate = `${asOfDate.substring(0,4)}-04-01`;
+  const toDate = asOfDate;
+  const prevFromDate = `${parseInt(asOfDate.substring(0,4))-1}-04-01`;
+  const prevToDate = asOfDate.replace(/^\d{4}/, String(parseInt(asOfDate.substring(0,4))-1));
+
+  const { data: tallyFull, loading: tallyFullLoading } = useTallyTrialBalanceFull(fromDate, toDate, prevFromDate, prevToDate);
+  const tallyActive = tallyFull?.entries && tallyFull.entries.length > 0;
 
   const normalizedLedgers = useMemo(() => {
     if (!ledgers || ledgers.length === 0) return [];
@@ -54,7 +64,55 @@ const BalanceSheet = () => {
   }, [normalizedLedgers, groups]);
 
   const reportData = useMemo(() => {
-    // Tally trial balance (template 62) — when available, build balance sheet from it
+    // Tally full (templates 62+85+dual-period) — when available, build classified balance sheet
+    if (tallyActive) {
+      const entries = tallyFull.entries;
+      const assets = { current: [], fixed: [], total: 0 };
+      const liabilities = { current: [], capital: [], total: 0 };
+
+      entries.forEach((row) => {
+        const item = {
+          name: row.ledgerName,
+          amount: Math.abs(row.balance),
+          nature: row.nature,
+          parentGroup: row.parentGroup,
+          statementType: row.statementType,
+          balance: row.balance,
+          previousBalance: row.previousBalance,
+          change: row.change,
+          changePct: row.changePct,
+          grouped: row.parentGroup || row.groupName || '—',
+        };
+
+        const nature = (row.nature || '').toLowerCase();
+        const stmtType = (row.statementType || '').toLowerCase();
+
+        if (nature === 'asset' || (stmtType === 'balance sheet' && row.balance > 0)) {
+          if (row.balance > 0) {
+            assets.current.push(item);
+            assets.total += Math.abs(row.balance);
+          }
+        } else if (nature === 'liability' || nature === 'equity') {
+          liabilities.current.push(item);
+          liabilities.total += Math.abs(row.balance);
+        } else if (row.balance > 0) {
+          assets.current.push(item);
+          assets.total += Math.abs(row.balance);
+        } else {
+          liabilities.current.push(item);
+          liabilities.total += Math.abs(row.balance);
+        }
+      });
+
+      return {
+        assets,
+        liabilities,
+        netProfit: assets.total - liabilities.total,
+        hasClassification: true,
+      };
+    }
+
+    // Fallback: old Tally trial balance (no classification)
     if (tallyTrialBalance && tallyTrialBalance.length > 0) {
       const currentAssets = [];
       const currentLiabilities = [];
@@ -145,7 +203,20 @@ const BalanceSheet = () => {
     }
 
     return { assets, liabilities, netProfit: profitData.netProfit };
-  }, [ledgerWithGroups, partyBalances, vouchers, voucherLines, ledgers, groups, tallyTrialBalance]);
+  }, [tallyActive, tallyFull, tallyTrialBalance, ledgerWithGroups, partyBalances, vouchers, voucherLines, ledgers, groups]);
+
+  const [showAllAssets, setShowAllAssets] = useState(false);
+  const [showAllLiabilities, setShowAllLiabilities] = useState(false);
+
+  const allAssets = [...reportData.assets.current, ...reportData.assets.fixed]
+    .sort((a, b) => Math.abs(b.amount) - Math.abs(a.amount));
+  const allLiabilities = [...reportData.liabilities.current, ...reportData.liabilities.capital]
+    .sort((a, b) => Math.abs(b.amount) - Math.abs(a.amount));
+
+  const displayAssets = showAllAssets ? allAssets : allAssets.slice(0, 5);
+  const displayLiabilities = showAllLiabilities ? allLiabilities : allLiabilities.slice(0, 5);
+  const hiddenAssetCount = allAssets.length - 5;
+  const hiddenLiabilityCount = allLiabilities.length - 5;
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {
@@ -156,7 +227,7 @@ const BalanceSheet = () => {
     }).format(Math.abs(amount));
   };
 
-  if (loading) {
+  if ((loading || tallyFullLoading) && !tallyActive) {
     return (
       <motion.div
         initial={{ opacity: 0 }}
@@ -222,29 +293,27 @@ const BalanceSheet = () => {
           <div className="bg-white rounded-lg border border-canvas-faint overflow-hidden">
             <div className="px-4 py-3 bg-gradient-to-r from-teal-light to-teal-100 border-b border-canvas-faint">
               <h2 className="font-semibold text-ink-default">Assets</h2>
+              <p className="text-xs text-ink-muted">{allAssets.length} items • {formatCurrency(reportData.assets.total)}</p>
             </div>
             <div className="divide-y divide-canvas-faint">
-              {reportData.assets.current.length > 0 && (
-                <div className="px-4 py-3">
-                  <p className="text-xs font-medium text-ink-muted uppercase tracking-wide mb-2">Current Assets</p>
-                  {reportData.assets.current.map((item, idx) => (
-                    <div key={idx} className="flex justify-between py-1.5">
-                      <span className="text-sm text-ink-default">{item.name}</span>
-                      <span className="text-sm font-medium text-ink-default">{formatCurrency(item.amount)}</span>
+              <div className="px-4 py-3">
+                {displayAssets.map((item, idx) => (
+                  <div key={idx} className="flex justify-between py-1.5 items-center">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-xs text-ink-faint w-6 text-right flex-shrink-0">#{idx + 1}</span>
+                      <span className="text-sm text-ink-default truncate">{item.name}</span>
                     </div>
-                  ))}
-                </div>
-              )}
-              {reportData.assets.fixed.length > 0 && (
-                <div className="px-4 py-3">
-                  <p className="text-xs font-medium text-ink-muted uppercase tracking-wide mb-2">Fixed Assets</p>
-                  {reportData.assets.fixed.map((item, idx) => (
-                    <div key={idx} className="flex justify-between py-1.5">
-                      <span className="text-sm text-ink-default">{item.name}</span>
-                      <span className="text-sm font-medium text-ink-default">{formatCurrency(item.amount)}</span>
-                    </div>
-                  ))}
-                </div>
+                    <span className="text-sm font-medium text-ink-default ml-2 flex-shrink-0">{formatCurrency(item.amount)}</span>
+                  </div>
+                ))}
+              </div>
+              {allAssets.length > 5 && (
+                <button
+                  onClick={() => setShowAllAssets(!showAllAssets)}
+                  className="w-full px-4 py-2 text-sm text-brand-primary hover:bg-brand-50 transition-colors text-left"
+                >
+                  {showAllAssets ? '− Show Less' : `+ Show All Assets (${hiddenAssetCount} more)`}
+                </button>
               )}
               <div className="px-4 py-3 bg-teal-light">
                 <div className="flex justify-between">
@@ -258,29 +327,27 @@ const BalanceSheet = () => {
           <div className="bg-white rounded-lg border border-canvas-faint overflow-hidden">
             <div className="px-4 py-3 bg-gradient-to-r from-rose-light to-rose-100 border-b border-canvas-faint">
               <h2 className="font-semibold text-ink-default">Liabilities</h2>
+              <p className="text-xs text-ink-muted">{allLiabilities.length} items • {formatCurrency(reportData.liabilities.total)}</p>
             </div>
             <div className="divide-y divide-canvas-faint">
-              {reportData.liabilities.current.length > 0 && (
-                <div className="px-4 py-3">
-                  <p className="text-xs font-medium text-ink-muted uppercase tracking-wide mb-2">Current Liabilities</p>
-                  {reportData.liabilities.current.map((item, idx) => (
-                    <div key={idx} className="flex justify-between py-1.5">
-                      <span className="text-sm text-ink-default">{item.name}</span>
-                      <span className="text-sm font-medium text-ink-default">{formatCurrency(item.amount)}</span>
+              <div className="px-4 py-3">
+                {displayLiabilities.map((item, idx) => (
+                  <div key={idx} className="flex justify-between py-1.5 items-center">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-xs text-ink-faint w-6 text-right flex-shrink-0">#{idx + 1}</span>
+                      <span className="text-sm text-ink-default truncate">{item.name}</span>
                     </div>
-                  ))}
-                </div>
-              )}
-              {reportData.liabilities.capital.length > 0 && (
-                <div className="px-4 py-3">
-                  <p className="text-xs font-medium text-ink-muted uppercase tracking-wide mb-2">Capital & Reserves</p>
-                  {reportData.liabilities.capital.map((item, idx) => (
-                    <div key={idx} className="flex justify-between py-1.5">
-                      <span className="text-sm text-ink-default">{item.name}</span>
-                      <span className="text-sm font-medium text-ink-default">{formatCurrency(item.amount)}</span>
-                    </div>
-                  ))}
-                </div>
+                    <span className="text-sm font-medium text-ink-default ml-2 flex-shrink-0">{formatCurrency(item.amount)}</span>
+                  </div>
+                ))}
+              </div>
+              {allLiabilities.length > 5 && (
+                <button
+                  onClick={() => setShowAllLiabilities(!showAllLiabilities)}
+                  className="w-full px-4 py-2 text-sm text-brand-primary hover:bg-brand-50 transition-colors text-left"
+                >
+                  {showAllLiabilities ? '− Show Less' : `+ Show All Liabilities (${hiddenLiabilityCount} more)`}
+                </button>
               )}
               <div className="px-4 py-3 bg-rose-light">
                 <div className="flex justify-between">

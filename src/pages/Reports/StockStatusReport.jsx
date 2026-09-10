@@ -16,7 +16,22 @@ const StockStatusReport = () => {
   const [filter, setFilter] = useState('all');
 
   const statusData = useMemo(() => {
-    if (tallyStockStatus) return tallyStockStatus.map((item) => ({ itemId: item.id, itemName: item.name, brand: '—', category: item.locations.join(', ') || '—', currentStock: item.quantity, stockValue: 0, salesVelocity: 0, isUnderstock: item.quantity <= 0, isOverstock: false, isPopular: false, daysOfStock: 0, reorderLevel: 0, lastSale: '-', lastPurchase: '-' }));
+    if (tallyStockStatus) return tallyStockStatus.map((item) => ({
+      itemId: item.itemId || item.statusId || '',
+      itemName: item.itemName || '—',
+      brand: item.brand || '—',
+      category: item.location || '—',
+      currentStock: item.currentStock || 0,
+      stockValue: item.stockValue || 0,
+      salesVelocity: item.salesVelocity30d || 0,
+      isUnderstock: item.isUnderstock || false,
+      isOverstock: item.isOverstock || false,
+      isPopular: item.isPopular || false,
+      daysOfStock: item.daysOfStock || 0,
+      reorderLevel: item.reorderLevel || 0,
+      lastSale: item.lastSaleDate || '-',
+      lastPurchase: item.lastPurchaseDate || '-',
+    }));
     if (!itemStockStatus || !items) return [];
 
     const itemMap = new Map(items.map(i => [i.ItemID, i]));
@@ -213,7 +228,7 @@ const StockStatusReport = () => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: idx * 0.01 }}
                     className="hover:bg-canvas-subtle cursor-pointer"
-                    onClick={() => navigate(`/items/${row.itemId}`)}
+                    onClick={() => navigate(`/items/${row.itemId}`, { state: row })}
                   >
                     <td className="px-4 py-3 font-medium text-ink-default">{row.itemName}</td>
                     <td className="px-4 py-3 text-ink-muted">{row.brand}</td>

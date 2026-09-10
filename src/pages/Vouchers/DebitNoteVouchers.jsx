@@ -19,12 +19,25 @@ export default function DebitNoteVouchers() {
 
   const dnVouchers = useMemo(() => {
     if (tallyVouchers && tallyVouchers.length > 0) {
-      return tallyVouchers.filter((v) => (v.type || '').toLowerCase() === 'debit note').map((v) => ({ ...v, VoucherID: v.id || v.VoucherID, VoucherNo: v.voucherNo || v.VoucherNo, VoucherDate: v.date || v.VoucherDate, VoucherType: 'Debit Note', PartyName: v.party || v.PartyName, NetAmount: v.amount, Status: v.status || 'POSTED' }));
+      return tallyVouchers.filter((v) => (v.type || '').toLowerCase() === 'debit note').map((v) => {
+        const lineItems = v.lineItems || [];
+        const gstLedgers = lineItems.filter((item) => {
+          const name = (item.ledgerName || '').toLowerCase();
+          return name.includes('cgst') || name.includes('sgst') || name.includes('igst') || name.includes('gst');
+        });
+        const taxReversal = gstLedgers.reduce((sum, item) => sum + (item.debitAmount || 0), 0);
+        return {
+          ...v, VoucherID: v.id || v.VoucherID, VoucherNo: v.voucherNo || v.VoucherNo,
+          VoucherDate: v.date || v.VoucherDate, VoucherType: 'Debit Note',
+          PartyName: v.party || v.PartyName, NetAmount: v.amount, Status: v.status || 'POSTED',
+          _dnDetails: { taxReversal, reason: v.narration || '', originalInvoiceRef: v.referenceNo || '', lineCount: lineItems.length, lineItems },
+        };
+      });
     }
     return (vouchers || []).filter((v) => v.VoucherType === 'Debit Note');
   }, [vouchers, tallyVouchers]);
 
   const partyList = useMemo(() => [...new Set(dnVouchers.map((v) => v.PartyName || '').filter(Boolean))].sort(), [dnVouchers]);
 
-  return <VoucherReportLayout title="Debit Note Vouchers" data={dnVouchers} loading={loading} columns={columns} tallyData={tallyVouchers && tallyVouchers.length > 0 ? dnVouchers : null} isTallyPage={tallyVouchers && tallyVouchers.length > 0} partyList={partyList} onRowClick={(row) => navigate(`/voucher/${row.VoucherID || row.id}`)} />;
+  return <VoucherReportLayout title="Debit Note Vouchers" data={dnVouchers} loading={loading} columns={columns} tallyData={tallyVouchers && tallyVouchers.length > 0 ? dnVouchers : null} isTallyPage={tallyVouchers && tallyVouchers.length > 0} partyList={partyList} onRowClick={(row) => navigate(`/voucher/${row.VoucherID || row.id}`, { state: row._dnDetails || null })} />;
 }

@@ -1,14 +1,17 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import useTallyLedgerDetail from '../../hooks/useTallyLedgerDetail';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Building2, Wallet, TrendingUp, CreditCard } from 'lucide-react';
+import VoucherPagination, { DEFAULT_PAGE_SIZE } from '../../components/voucher/VoucherPagination';
 
 const formatCurrency = (amount) => `₹${Math.abs(amount || 0).toLocaleString('en-IN')}`;
 
 const LedgerDetail = () => {
   const { ledgerId } = useParams();
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = DEFAULT_PAGE_SIZE;
   const { ledger: tallyLedger, transactions: tallyTransactions, loading: tallyLoading } = useTallyLedgerDetail(ledgerId);
 
   const { ledger, group, transactions, balance } = useMemo(() => {
@@ -22,6 +25,8 @@ const LedgerDetail = () => {
         voucherNo: t.voucherNo || '—',
         date: t.date ? new Date(t.date).toLocaleDateString('en-IN') : '—',
         type: t.type || '—',
+        rawType: t.type || '—',
+        rawVoucherNo: t.voucherNo || '—',
         particulars: t.particulars || '—',
         debit: t.debit || 0,
         credit: t.credit || 0,
@@ -38,6 +43,9 @@ const LedgerDetail = () => {
       balance: runningBalance,
     };
   }, [tallyLedger, tallyTransactions]);
+
+  const totalPages = Math.max(1, Math.ceil(transactions.length / pageSize));
+  const paginatedTransactions = transactions.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   if (tallyLoading) {
     return (
@@ -187,9 +195,10 @@ const LedgerDetail = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-canvas-faint">
-                  {transactions.map((txn, idx) => (
+                  {paginatedTransactions.map((txn, idx) => (
                     <tr
                       key={idx}
+                      onClick={() => navigate(`/tally-voucher/${txn.rawType}/${encodeURIComponent(txn.rawVoucherNo)}`)}
                       className="hover:bg-canvas-subtle cursor-pointer"
                     >
                       <td className="px-4 py-3 text-sm text-ink-default">{txn.date}</td>
@@ -223,10 +232,11 @@ const LedgerDetail = () => {
             </div>
 
             <div className="md:hidden divide-y divide-canvas-faint">
-              {transactions.map((txn, idx) => (
+              {paginatedTransactions.map((txn, idx) => (
                 <div
                   key={idx}
-                  className="p-4"
+                  className="p-4 cursor-pointer hover:bg-canvas-subtle"
+                  onClick={() => navigate(`/tally-voucher/${txn.rawType}/${encodeURIComponent(txn.rawVoucherNo)}`)}
                 >
                   <div className="flex justify-between items-start mb-2">
                     <div>
@@ -257,6 +267,15 @@ const LedgerDetail = () => {
             </svg>
             <p className="text-ink-muted">No transactions found</p>
           </div>
+        )}
+        {transactions.length > pageSize && (
+          <VoucherPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalRecords={transactions.length}
+            pageSize={pageSize}
+            onPageChange={setCurrentPage}
+          />
         )}
       </div>
     </motion.div>

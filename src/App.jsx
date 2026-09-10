@@ -22,6 +22,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import BalanceSheet from './pages/reports/BalanceSheet';
 import ProfitLoss from './pages/reports/ProfitLoss';
 import DayBook from './pages/reports/DayBook';
+import DayBookMonth from './pages/reports/DayBookMonth';
+import TallyVoucherDetail from './pages/TallyVoucherDetail';
 import LedgerReport from './pages/reports/LedgerReport';
 import ByLedger from './pages/reports/ByLedger';
 import ByItem from './pages/reports/ByItem';
@@ -32,6 +34,7 @@ import TopBrands from './pages/reports/TopBrands';
 import StockAging from './pages/reports/StockAging';
 import CustomerMovementReport from './pages/reports/CustomerMovementReport';
 import StockStatusReport from './pages/reports/StockStatusReport';
+import StockDetail from './pages/StockDetail';
 import SyncLogPage from './pages/reports/SyncLogPage';
 import TrendCharts from './pages/reports/TrendCharts';
 import GeographicReport from './pages/reports/GeographicReport';
@@ -128,6 +131,7 @@ function AppRoutes() {
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="voucher/:voucherId" element={<VoucherDetail />} />
+          <Route path="tally-voucher/:voucherType/*" element={<TallyVoucherDetail />} />
           {/* Vouchers routes - must come BEFORE :module catch-all */}
           <Route path="vouchers" element={<Navigate to="/vouchers/sales" replace />} />
           <Route path="vouchers/sales" element={<SalesVouchers />} />
@@ -158,11 +162,12 @@ function AppRoutes() {
           <Route path="outstanding" element={<Outstanding />} />
           <Route path="outstanding/:partyId" element={<PartyStatement />} />
           <Route path="items" element={<ItemsPage />} />
-          <Route path="items/:itemId" element={<ComingSoon />} />
+          <Route path="items/:itemId" element={<StockDetail />} />
           <Route path="reports" element={<ReportsPage />} />
           <Route path="reports/balance-sheet" element={<BalanceSheet />} />
           <Route path="reports/profit-loss" element={<ProfitLoss />} />
           <Route path="reports/day-book" element={<DayBook />} />
+          <Route path="reports/day-book/month/:monthKey" element={<DayBookMonth />} />
           <Route path="reports/ledger" element={<LedgerReport />} />
           <Route path="reports/by-ledger" element={<ByLedger />} />
           <Route path="reports/by-item" element={<ByItem />} />
