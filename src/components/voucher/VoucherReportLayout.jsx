@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Card from '../ui/Card';
 import StatusPill from '../ui/StatusPill';
 import VoucherFilters from './VoucherFilters';
@@ -33,6 +34,17 @@ export default function VoucherReportLayout({
   const [filters, setFilters] = useState({});
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setSortOrder] = useState('asc');
+  const navigate = useNavigate();
+
+  const handleRowClick = (row) => {
+    if (isTallyPage) {
+      const vNo = row.VoucherNo || row.voucherNo || '—';
+      const vType = row.VoucherType || row.type || 'Unknown';
+      navigate(`/tally-voucher/${vType}/${encodeURIComponent(vNo)}`);
+    } else if (onRowClick) {
+      onRowClick(row);
+    }
+  };
 
   const filteredData = useMemo(() => {
     let result = activeData;
@@ -83,19 +95,20 @@ export default function VoucherReportLayout({
   const sortedData = useMemo(() => {
     if (!sortBy) return filteredData;
     return [...filteredData].sort((a, b) => {
-      let va, vb;
-      if (sortBy === 'date') {
+      let va = a[sortBy] ?? a[sortBy.toLowerCase()] ?? '';
+      let vb = b[sortBy] ?? b[sortBy.toLowerCase()] ?? '';
+      
+      if (sortBy === 'date' || sortBy === 'VoucherDate') {
         va = new Date(a.VoucherDate || a.date || 0).getTime();
         vb = new Date(b.VoucherDate || b.date || 0).getTime();
       } else if (sortBy === 'party') {
         va = (a.PartyName || a.party || '').toLowerCase();
         vb = (b.PartyName || b.party || '').toLowerCase();
-      } else if (sortBy === 'amount') {
+      } else if (sortBy === 'amount' || sortBy === 'NetAmount') {
         va = parseFloat(a.NetAmount || a.amount || a.GrandTotal) || 0;
         vb = parseFloat(b.NetAmount || b.amount || b.GrandTotal) || 0;
-      } else {
-        return 0;
       }
+      
       if (va < vb) return sortOrder === 'asc' ? -1 : 1;
       if (va > vb) return sortOrder === 'asc' ? 1 : -1;
       return 0;
@@ -210,8 +223,8 @@ export default function VoucherReportLayout({
                 paginatedData.map((row, idx) => (
                   <tr
                     key={row.VoucherID || row.id || idx}
-                    className={`hover:bg-ink-50 transition-colors ${onRowClick ? 'cursor-pointer' : ''} ${!tallyData && onRowClick ? '' : ''}`}
-                    onClick={() => onRowClick && onRowClick(row)}
+                    className={`hover:bg-ink-50 transition-colors ${isTallyPage || onRowClick ? 'cursor-pointer' : ''}`}
+                    onClick={() => handleRowClick(row)}
                   >
                     {columns.map((col) => (
                       <td

@@ -189,16 +189,13 @@ router.post('/payment-vouchers/template', async (req, res) => {
     // Fetch T53 (contains all Receipt and Payment vouchers with full ledger details)
     const result = await executeTemplate(53, auth, { cust_from_date: '2024-04-01', cust_to_date: '2030-03-31' });
     const allRows = result.content || [];
-    
-    // Filter to only include Payment vouchers
-    const paymentRows = allRows.filter(row => 
-      String(row.voucher_type || '').trim().toLowerCase() === 'payment'
-    );
 
     // Group rows by voucher_number — each voucher has multiple ledger entries (debit/credit)
     const voucherMap = new Map();
     
-    paymentRows.forEach((row, index) => {
+    allRows.forEach((row, index) => {
+      if (String(row.voucher_type || '').trim().toLowerCase() !== 'payment') return;
+      
       const voucherNo = (row.voucher_number || `tally-payment-${index}`).trim();
       
       if (!voucherMap.has(voucherNo)) {
@@ -258,6 +255,8 @@ router.post('/pending-sales/template', async (req, res) => {
       orderedQty: Number.parseFloat(row.ordered_qty) || 0,
       dispatchedQty: Number.parseFloat(row.dispatched_qty) || 0,
       pendingQty: Number.parseFloat(row.pending_qty) || 0,
+      voucherType: row.voucher_type || null,
+      email: row.email || null,
     }));
     res.json({ success: true, data: { orders } });
   } catch (error) {
@@ -276,9 +275,62 @@ router.post('/trends/templates', async (req, res) => {
 router.post('/gst-liability/template', async (req, res) => {
   try {
     const auth = await getTallyAuth();
-    const result = await executeTemplate(25, auth);
-    const taxes = (result.content || []).map((row) => ({ name: row.ledger_name, balance: Number.parseFloat(row.net_tax_liability) || 0, inwardItc: Number.parseFloat(row.inward_itc) || 0, outwardTax: Number.parseFloat(row.outward_tax) || 0 }));
+    const result = await executeTemplate(74, auth);
+    const taxes = (result.content || []).map((row) => ({
+      name: row.ledger_name,
+      balance: Number.parseFloat(row.net_tax_liability_inr) || 0,
+      inwardItc: Number.parseFloat(row.inward_itc_inr) || 0,
+      outwardTax: Number.parseFloat(row.outward_tax_inr) || 0,
+      gstin: row.gstin || '—',
+      period: row.period || '—',
+      returnFilingStatus: row.return_filing_status || '—',
+      paymentStatus: row.payment_status || '—',
+      dueDate: row.due_date || null,
+    }));
     res.json({ success: true, data: { taxes } });
+  } catch (error) { res.status(502).json({ success: false, error: error.message }); }
+});
+
+// Template 23 — GST vouchers for a specific month (GST Liability drill-down)
+router.post('/gst-month-vouchers', async (req, res) => {
+  try {
+    const { month } = req.body; // e.g., "Apr 2024"
+    if (!month) return res.status(400).json({ success: false, error: 'month is required' });
+
+    const auth = await getTallyAuth();
+    const result = await executeTemplate(23, auth);
+    const t23Rows = result.content || [];
+
+    // Match month: "Apr 2024" → filter by YYYY-MM
+    const MONTH_ABBR = {jan:'01',feb:'02',mar:'03',apr:'04',may:'05',jun:'06',jul:'07',aug:'08',sep:'09',oct:'10',nov:'11',dec:'12'};
+    const [monthStr, yearStr] = month.toLowerCase().split(' ');
+    const targetPrefix = `${yearStr}-${MONTH_ABBR[(monthStr||'').slice(0,3)] || '00'}-`;
+    const seen = new Set();
+    const vouchers = [];
+
+    t23Rows.forEach((row) => {
+      const invNo = (row.invoice_number || '').trim();
+      const d = (row.invoice_date || '').toString().slice(0, 10); // "2024-04-02"
+      if (!invNo || seen.has(invNo) || !d.startsWith(targetPrefix)) return;
+      seen.add(invNo);
+      vouchers.push({
+        id: invNo,
+        invoiceNo: invNo,
+        date: row.invoice_date || null,
+        partyName: row.party_name || '—',
+        gstin: row.gstin || '—',
+        taxableAmount: Number.parseFloat(row.taxable_amount || 0) || 0,
+        cgst: Number.parseFloat(row.cgst_amount || 0) || 0,
+        sgst: Number.parseFloat(row.sgst_amount || 0) || 0,
+        igst: Number.parseFloat(row.igst_amount || 0) || 0,
+        cess: Number.parseFloat(row.cess_amount || 0) || 0,
+        hsnSac: row.hsn_sac_code || '—',
+        placeOfSupply: row.place_of_supply || '—',
+        totalInvoiceValue: Number.parseFloat(row.invoice_value || 0) || 0,
+      });
+    });
+
+    res.json({ success: true, data: { month, vouchers, count: vouchers.length } });
   } catch (error) { res.status(502).json({ success: false, error: error.message }); }
 });
 
@@ -605,7 +657,8 @@ router.post('/day-book/month-vouchers', async (req, res) => {
 // Voucher detail by voucherNo + type (for DayBook drill-down → individual voucher view)
 router.post('/voucher-detail', async (req, res) => {
   try {
-    const { voucherNo, voucherType, voucherId } = req.body;
+    const { voucherId, voucherNo, voucherType } = req.body;
+    console.log(`[Voucher Detail] Requested type: "${voucherType}", no: "${voucherNo}", id: "${voucherId}"`);
     if (!voucherNo || !voucherType) {
       return res.status(400).json({ success: false, error: 'voucherNo and voucherType are required' });
     }
@@ -697,52 +750,16 @@ router.post('/voucher-detail', async (req, res) => {
         placeOfSupply: t23.place_of_supply || null,
         lineItems,
       }});
-    } else if (voucherType === 'Debit Note' || voucherType === 'Credit Note') {
+    } else if (voucherType === 'Journal' || voucherType === 'Debit Note' || voucherType === 'Credit Note') {
       // Template 54 — Journal, Debit Note, Credit Note (ledger-level entries, NOT inventory line items)
       const t54Result = await executeTemplate(54, auth, broadRange);
       const t54Rows = t54Result.content || [];
 
       // Filter rows for this exact voucher
-      const rows = t54Rows.filter((r) => (r.voucher_number || '').trim() === voucherNo);
-      if (rows.length === 0) return res.status(404).json({ success: false, error: 'Voucher not found' });
-
-      const firstRow = rows[0];
-      const ledgerEntries = rows
-        .filter((r) => r.ledger_name)
-        .map((r) => ({
-          ledgerName: r.ledger_name || '—',
-          debit: Number.parseFloat(r.debit_amount_inr || 0) || 0,
-          credit: Number.parseFloat(r.credit_amount_inr || 0) || 0,
-        }))
-        .sort((a, b) => (b.debit + b.credit) - (a.debit + a.credit));
-
-      res.json({ success: true, data: {
-        voucherNo,
-        voucherType,
-        date: firstRow.voucher_date || null,
-        party: firstRow.party_name || '—',
-        narration: firstRow.narration || '',
-        status: firstRow.is_cancelled_flag === true || firstRow.is_cancelled_flag === 'true' ? 'CANCELLED' : 'POSTED',
-        netAmount: Number.parseFloat(firstRow.total_amount_inr || 0) || 0,
-        ledgerEntries,
-      }});
-    } else if (voucherType === 'Payment' || voucherType === 'Receipt') {
-      // Template 53 — Payment and Receipt vouchers (ledger-level entries)
-      const t53Result = await executeTemplate(53, auth, broadRange);
-      const t53Rows = t53Result.content || [];
-
-      const rows = t53Rows.filter((r) => {
+      const targetVno = voucherNo === '—' ? '' : voucherNo;
+      const rows = t54Rows.filter((r, i) => {
         const vno = (r.voucher_number || '').trim();
-        const vtype = (r.voucher_type || '').trim().toLowerCase();
-        const d = (r.voucher_date || '').toString().slice(0, 10);
-        // voucherId is a composite key: "Payment|TRF|2026-09-10"
-        if (voucherId) {
-          const parts = voucherId.split('|');
-          if (parts.length === 3) {
-            return vtype === parts[0].toLowerCase() && vno === parts[1] && d === parts[2];
-          }
-        }
-        return vno === voucherNo && vtype === voucherType.toLowerCase();
+        return vno === targetVno || voucherNo === `tally-jncn-${i}`;
       });
       if (rows.length === 0) return res.status(404).json({ success: false, error: 'Voucher not found' });
 
@@ -760,11 +777,125 @@ router.post('/voucher-detail', async (req, res) => {
         voucherNo,
         voucherType,
         date: firstRow.voucher_date || null,
-        party: firstRow.party_name || '—',
+        party: firstRow.party_name || (ledgerEntries.length > 0 ? ledgerEntries[0].ledgerName : '—'),
+        narration: firstRow.narration || '',
+        status: firstRow.is_cancelled_flag === true || firstRow.is_cancelled_flag === 'true' ? 'CANCELLED' : 'POSTED',
+        netAmount: Number.parseFloat(firstRow.total_amount_inr || 0) || 0,
+        ledgerEntries,
+      }});
+    } else if (voucherType === 'Payment' || voucherType === 'Receipt') {
+      // Template 53 — Payment and Receipt vouchers (ledger-level entries)
+      const t53Result = await executeTemplate(53, auth, broadRange);
+      const t53Rows = t53Result.content || [];
+
+      const targetVno = voucherNo === '—' ? '' : voucherNo;
+      const rows = t53Rows.filter((r, i) => {
+        const vno = (r.voucher_number || '').trim();
+        const vtype = (r.voucher_type || '').trim().toLowerCase();
+        const d = (r.voucher_date || '').toString().slice(0, 10);
+        // voucherId is a composite key: "Payment|TRF|2026-09-10"
+        if (voucherId) {
+          const parts = voucherId.split('|');
+          if (parts.length === 3) {
+            return vtype === parts[0].toLowerCase() && vno === parts[1] && d === parts[2];
+          }
+        }
+        return (vno === targetVno || voucherNo === `tally-rcpt-pay-${i}` || voucherNo === `tally-payment-${i}`) && vtype === voucherType.toLowerCase();
+      });
+      if (rows.length === 0) return res.status(404).json({ success: false, error: 'Voucher not found' });
+
+      const firstRow = rows[0];
+      const ledgerEntries = rows
+        .filter((r) => r.ledger_name)
+        .map((r) => ({
+          ledgerName: r.ledger_name || '—',
+          debit: Number.parseFloat(r.debit_amount_inr || 0) || 0,
+          credit: Number.parseFloat(r.credit_amount_inr || 0) || 0,
+        }))
+        .sort((a, b) => (b.debit + b.credit) - (a.debit + a.credit));
+
+      res.json({ success: true, data: {
+        voucherNo,
+        voucherType,
+        date: firstRow.voucher_date || null,
+        party: firstRow.party_name || (ledgerEntries.length > 0 ? ledgerEntries[0].ledgerName : '—'),
         narration: firstRow.narration || '',
         status: firstRow.is_cancelled_flag === 1 ? 'CANCELLED' : 'PAID',
         netAmount: Math.abs(Number.parseFloat(firstRow.total_amount_inr || 0) || 0),
         ledgerEntries,
+      }});
+    } else if (voucherType === 'Contra') {
+      // Template 79 — Contra vouchers
+      const t79Result = await executeTemplate(79, auth, broadRange);
+      const t79Rows = t79Result.content || [];
+
+      const targetVno = voucherNo === '—' ? '' : voucherNo;
+      const rows = t79Rows.filter((r, i) => {
+        const vno = (r.VoucherNo || '').trim();
+        return vno === targetVno || voucherNo === `tally-contra-${i}`;
+      });
+      if (rows.length === 0) return res.status(404).json({ success: false, error: 'Voucher not found' });
+
+      const firstRow = rows[0];
+      const amount = Number.parseFloat(firstRow.GrandTotal || 0) || 0;
+      const ledgerEntries = [];
+      if (firstRow.fromAccount) ledgerEntries.push({ ledgerName: firstRow.fromAccount, credit: amount, debit: 0 });
+      if (firstRow.toAccount) ledgerEntries.push({ ledgerName: firstRow.toAccount, debit: amount, credit: 0 });
+
+      res.json({ success: true, data: {
+        voucherNo,
+        voucherType,
+        date: firstRow.VoucherDate || null,
+        party: firstRow.fromAccount || '—',
+        narration: firstRow.Narration || '',
+        status: firstRow.Status || 'POSTED',
+        netAmount: amount,
+        ledgerEntries,
+      }});
+    } else if (voucherType === 'Delivery Note') {
+      const t78Result = await executeTemplate(78, auth, broadRange);
+      const t78Rows = t78Result.content || [];
+
+      const targetVno = voucherNo === '—' ? '' : voucherNo;
+      const rows = t78Rows.filter((r, i) => {
+        const vno = (r.VoucherNo || '').trim();
+        return vno === targetVno || voucherNo === `tally-dn-${i}`;
+      });
+      if (rows.length === 0) return res.status(404).json({ success: false, error: 'Voucher not found' });
+
+      const firstRow = rows[0];
+      res.json({ success: true, data: {
+        voucherNo,
+        voucherType,
+        date: firstRow.VoucherDate || null,
+        party: firstRow.PartyName || '—',
+        narration: firstRow.Narration || '',
+        status: firstRow.Status || 'POSTED',
+        netAmount: Number.parseFloat(firstRow.GrandTotal || 0) || 0,
+        ledgerEntries: [],
+      }});
+    } else if (voucherType === 'Receipt Note') {
+      const t64Result = await executeTemplate(64, auth, broadRange);
+      const t64Rows = t64Result.content || [];
+
+      const targetVno = voucherNo === '—' ? '' : voucherNo;
+      const rows = t64Rows.filter((r, i) => {
+        const vno = (r.voucher_number || r.voucherNo || '').trim();
+        const vtype = (r.voucher_type || r.voucherType || '').toLowerCase();
+        return (vno === targetVno || voucherNo === `tally-rn-${i}`) && vtype === 'receipt note';
+      });
+      if (rows.length === 0) return res.status(404).json({ success: false, error: 'Voucher not found' });
+
+      const firstRow = rows[0];
+      res.json({ success: true, data: {
+        voucherNo,
+        voucherType,
+        date: firstRow.voucher_date || firstRow.date || null,
+        party: firstRow.party_name || firstRow.partyName || '—',
+        narration: firstRow.narration || firstRow.lineNarration || '',
+        status: firstRow.isCancelled === 'Yes' || firstRow.is_cancelled_flag === 1 ? 'CANCELLED' : 'POSTED',
+        netAmount: Number.parseFloat(firstRow.total_amount_inr || firstRow.amount_inr || firstRow.amount || 0) || 0,
+        ledgerEntries: [],
       }});
     } else {
       // Purchase, Debit Note, etc.
@@ -1165,47 +1296,607 @@ router.post('/reimbursement-audit/template', async (req, res) => {
 router.post('/ledgers/template', async (req, res) => {
   try {
     const auth = await getTallyAuth();
-    const rows = (await executeTemplate(48, auth)).content || [];
-    const ledgers = rows.map((row, index) => ({
-      id: `tally-ledger-${index}`,
-      name: row.ledger_name || '—',
-      group: row.parent_group_name || row.under_group_name || '—',
-      type: (row.group_type || '').toLowerCase(),
-      balance: Number.parseFloat(row.opening_balance_inr || 0) || 0,
-    }));
+
+    // Fetch T48 (master) and T83 (analytics) concurrently
+    const [t48Result, t83Result] = await Promise.allSettled([
+      executeTemplate(48, auth),
+      executeTemplate(83, auth),
+    ]);
+
+    const t48Rows = t48Result.status === 'fulfilled' ? (t48Result.value.content || []) : [];
+    const t83Rows = t83Result.status === 'fulfilled' ? (t83Result.value.content || []) : [];
+
+    // Map T83 rows by lowercase LedgerName for quick lookup
+    const t83Map = new Map();
+    t83Rows.forEach(row => {
+      const name = String(row.LedgerName || '').trim().toLowerCase();
+      if (name) t83Map.set(name, row);
+    });
+
+    const ledgers = t48Rows.map((row, index) => {
+      const name = String(row.ledger_name || '').trim();
+      const nameLower = name.toLowerCase();
+      const analytics = t83Map.get(nameLower) || {};
+
+      return {
+        id: row.LedgerID || `tally-ledger-${index}`,
+        name: name || '—',
+        group: row.parent_group_name || row.under_group_name || analytics.GroupName || '—',
+        type: (row.group_type || '').toLowerCase(),
+        balance: Number.parseFloat(analytics.ClosingBalance || row.opening_balance_inr || 0) || 0,
+        // Master fields from T48
+        LedgerID: row.LedgerID || null,
+        CompanyID: row.CompanyID || null,
+        GroupID: row.GroupID || analytics.GroupID || null,
+        isActive: row.IsActive === 1 || String(row.IsActive).toLowerCase() === 'true',
+        statementType: row.StatementType || null,
+        nature: row.Nature || null,
+        isSystemLedger: row.is_system_ledger === 1 || String(row.is_system_ledger).toLowerCase() === 'true',
+        openingBalance: Number.parseFloat(analytics.OpeningBalance || row.opening_balance_inr || 0) || 0,
+        // Analytics from T83
+        closingBalance: Number.parseFloat(analytics.ClosingBalance || 0) || 0,
+        totalDebit: Number.parseFloat(analytics.totalDebit || 0) || 0,
+        totalCredit: Number.parseFloat(analytics.totalCredit || 0) || 0,
+        netMovement: Number.parseFloat(analytics.netMovement || 0) || 0,
+        voucherCount: parseInt(analytics.voucherCount || 0) || 0,
+        lastVoucherDate: analytics.lastVoucherDate || null,
+      };
+    });
+
     res.json({ success: true, data: { ledgers } });
   } catch (error) { res.status(502).json({ success: false, error: error.message }); }
+});
+
+// ── Shared ledger detail builder ─────────────────────────────────────────
+const buildLedgerDetail = async (auth, masterRow, analyticsRow) => {
+  const analytics = analyticsRow || {};
+  return {
+    LedgerName: masterRow.ledger_name || '—',
+    Group: masterRow.parent_group_name || masterRow.under_group_name || analytics.GroupName || null,
+    GroupID: masterRow.GroupID || analytics.GroupID || null,
+    Type: masterRow.group_type || null,
+    LedgerID: masterRow.LedgerID || null,
+    CompanyID: masterRow.CompanyID || null,
+    IsActive: masterRow.IsActive === 1 || String(masterRow.IsActive).toLowerCase() === 'true',
+    StatementType: masterRow.StatementType || null,
+    Nature: masterRow.Nature || null,
+    IsSystemLedger: masterRow.is_system_ledger === 1 || String(masterRow.is_system_ledger).toLowerCase() === 'true',
+    OpeningBalance: Number.parseFloat(analytics.OpeningBalance || masterRow.opening_balance_inr || 0) || 0,
+    ClosingBalance: Number.parseFloat(analytics.ClosingBalance || 0) || 0,
+    TotalDebit: Number.parseFloat(analytics.totalDebit || 0) || 0,
+    TotalCredit: Number.parseFloat(analytics.totalCredit || 0) || 0,
+    NetMovement: Number.parseFloat(analytics.netMovement || 0) || 0,
+    VoucherCount: parseInt(analytics.voucherCount || 0) || 0,
+    LastVoucherDate: analytics.lastVoucherDate || null,
+  };
+};
+
+// ── Ledger Detail by Name ─────────────────────────────────────────────────
+router.post('/ledger-by-name', async (req, res) => {
+  const ledgerName = String(req.body?.ledgerName || '').trim();
+  if (!ledgerName) return res.status(400).json({ success: false, error: 'ledgerName is required.' });
+  try {
+    const auth = await getTallyAuth();
+    const [t48Result, t83Result] = await Promise.allSettled([
+      executeTemplate(48, auth),
+      executeTemplate(83, auth),
+    ]);
+    const t48Rows = t48Result.status === 'fulfilled' ? (t48Result.value.content || []) : [];
+    const t83Rows = t83Result.status === 'fulfilled' ? (t83Result.value.content || []) : [];
+    const nameLower = ledgerName.toLowerCase();
+    const masterRow = t48Rows.find(r => String(r.ledger_name || '').trim().toLowerCase() === nameLower);
+    const analyticsRow = t83Rows.find(r => String(r.LedgerName || '').trim().toLowerCase() === nameLower);
+    if (!masterRow && !analyticsRow) return res.status(404).json({ success: false, error: 'Ledger not found in Tally.' });
+    const data = await buildLedgerDetail(auth, masterRow || {}, analyticsRow || {});
+    res.json({ success: true, data });
+  } catch (error) { res.status(502).json({ success: false, error: error.message }); }
+});
+
+// ── Ledger Detail by Tally ID ─────────────────────────────────────────────
+router.post('/ledger-by-tally-id', async (req, res) => {
+  const tallyId = String(req.body?.tallyId || '').trim();
+  if (!tallyId) return res.status(400).json({ success: false, error: 'tallyId is required.' });
+  try {
+    const auth = await getTallyAuth();
+    const t48Rows = (await executeTemplate(48, auth)).content || [];
+    let matchedRow = t48Rows.find(r => r.LedgerID === tallyId);
+    if (!matchedRow) {
+      const idxMatch = tallyId.match(/tally-ledger-(\d+)$/);
+      if (idxMatch) matchedRow = t48Rows[parseInt(idxMatch[1], 10)] || null;
+    }
+    if (!matchedRow) return res.status(404).json({ success: false, error: 'Ledger not found in Tally.' });
+    const ledgerName = String(matchedRow.ledger_name || '').trim();
+    const t83Rows = (await executeTemplate(83, auth)).content || [];
+    const analyticsRow = t83Rows.find(r => String(r.LedgerName || '').trim().toLowerCase() === ledgerName.toLowerCase()) || {};
+    const data = await buildLedgerDetail(auth, matchedRow, analyticsRow);
+    res.json({ success: true, data });
+  } catch (error) { res.status(502).json({ success: false, error: error.message }); }
+});
+
+// ── Ledger Detail + Transactions (used by LedgerDetail.jsx) ──────────────
+// api.getTallyLedgerDetail(ledgerId, ledgerName) → POST /tally/ledger-detail/template
+router.post('/ledger-detail/template', async (req, res) => {
+  const rawId   = String(req.body?.ledgerId   || '').trim();
+  const rawName = String(req.body?.ledgerName || '').trim();
+  if (!rawId && !rawName) return res.status(400).json({ success: false, error: 'ledgerId or ledgerName required.' });
+
+  try {
+    const auth = await getTallyAuth();
+
+    // 1. Fetch Master (T48) & Analytics (T83) first
+    const [t48Result, t83Result] = await Promise.allSettled([
+      executeTemplate(48, auth),
+      executeTemplate(83, auth),
+    ]);
+
+    const t48Rows = t48Result.status === 'fulfilled' ? (t48Result.value.content || []) : [];
+    const t83Rows = t83Result.status === 'fulfilled' ? (t83Result.value.content || []) : [];
+
+    // 2. Find master row
+    let masterRow = null;
+    if (rawId) {
+      masterRow = t48Rows.find(r => r.LedgerID === rawId);
+      if (!masterRow) {
+        const idxMatch = rawId.match(/tally-ledger-(\d+)$/);
+        if (idxMatch) masterRow = t48Rows[parseInt(idxMatch[1], 10)] || null;
+      }
+    }
+    if (!masterRow && rawName) {
+      const nl = rawName.toLowerCase();
+      masterRow = t48Rows.find(r => String(r.ledger_name || '').trim().toLowerCase() === nl);
+    }
+
+    if (!masterRow) return res.status(404).json({ success: false, error: 'Ledger not found in Tally.' });
+
+    const ledgerName = String(masterRow.ledger_name || '').trim();
+    const nameLower  = ledgerName.toLowerCase();
+    const analyticsRow = t83Rows.find(r => String(r.LedgerName || '').trim().toLowerCase() === nameLower) || {};
+    const masterDetail = await buildLedgerDetail(auth, masterRow, analyticsRow);
+
+    // 3. Fetch Transactions (T28) SPECIFICALLY for this ledger
+    const searchName = masterDetail.LedgerName || ledgerName;
+    let t28Rows = [];
+    try {
+      const t28Result = await executeTemplate(28, auth, { ledger_name: searchName });
+      t28Rows = t28Result.content || [];
+    } catch (e) {
+      console.error('Error fetching T28 for ledger', searchName, e);
+    }
+
+    // Build transaction lines using T28
+    const isDebitNature = masterDetail.Nature === 'Expense' || masterDetail.Nature === 'Asset';
+    let runningBalance = Number.parseFloat(masterDetail.OpeningBalance || 0) || 0;
+    
+    const transactions = t28Rows.map((row) => {
+      const debit = Number.parseFloat(row.debit || 0) || 0;
+      const credit = Number.parseFloat(row.credit || 0) || 0;
+      
+      if (isDebitNature) {
+        runningBalance += debit - credit;
+      } else {
+        runningBalance += credit - debit;
+      }
+      
+      return {
+        date: row.date || row.voucher_date || null,
+        voucherNo: row.voucher_number || row.voucherNo || '—',
+        type: row.voucher_type || row.type || '—',
+        particulars: row.narration || row.particulars || '—',
+        debit,
+        credit,
+        balance: Math.round(runningBalance * 100) / 100,
+      };
+    });
+
+    const computedTotalDebit = transactions.reduce((sum, t) => sum + t.debit, 0);
+    const computedTotalCredit = transactions.reduce((sum, t) => sum + t.credit, 0);
+    const finalBalance = transactions.length > 0 ? transactions[transactions.length - 1].balance : masterDetail.ClosingBalance;
+
+    res.json({
+      success: true,
+      data: {
+        ledger: {
+          name:           masterDetail.LedgerName,
+          group:          masterDetail.Group,
+          type:           (masterDetail.Nature || masterDetail.Type || '').toLowerCase(),
+          openingBalance: masterDetail.OpeningBalance,
+          closingBalance: finalBalance,
+          totalDebit:     computedTotalDebit > 0 ? computedTotalDebit : masterDetail.TotalDebit,
+          totalCredit:    computedTotalCredit > 0 ? computedTotalCredit : masterDetail.TotalCredit,
+          voucherCount:   masterDetail.VoucherCount,
+          isActive:       masterDetail.IsActive,
+          statementType:  masterDetail.StatementType,
+          nature:         masterDetail.Nature,
+          ...masterDetail,
+        },
+        transactions,
+      },
+    });
+  } catch (error) { res.status(502).json({ success: false, error: error.message }); }
+});
+
+// ── Voucher Detail ───────────────────────────────────────────────
+router.post('/voucher-detail', async (req, res) => {
+  const { voucherNo, voucherType, voucherId } = req.body;
+  if (!voucherNo) return res.status(400).json({ success: false, error: 'voucherNo required' });
+
+  try {
+    const auth = await getTallyAuth();
+    // Use Template 18 (Voucher Register) to find the voucher
+    let tData = await executeTemplate(18, auth, { cust_from_date: '2024-04-01', cust_to_date: '2030-03-31' });
+    let rows = tData.content || [];
+    
+    // Find all rows for this voucher
+    let voucherRows = rows.filter((r, i) => {
+      const isMatch = (r.voucher_number === voucherNo || r.voucherNo === voucherNo) ||
+                      (voucherNo === `tally-rcpt-pay-${i}`) ||
+                      (voucherNo === `tally-payment-${i}`) ||
+                      (voucherNo === `tally-rn-${i}`) ||
+                      (voucherNo === `tally-dn-${i}`) ||
+                      (voucherNo === `tally-jncn-${i}`) ||
+                      (voucherNo === `tally-contra-${i}`) ||
+                      (voucherNo === `tally-vch-${i}`);
+                      
+      const isTypeMatch = (!voucherType || (r.voucher_type || r.voucherType || r.voucher_type_name || '').toLowerCase() === voucherType.toLowerCase());
+      
+      return isMatch && isTypeMatch;
+    });
+    
+    if (!voucherRows.length) {
+      // Fallback for other specific vouchers types
+      let fbData = { content: [] };
+      const vt = (voucherType || '').toLowerCase();
+      if (vt === 'delivery note') {
+        fbData = await executeTemplate(78, auth, { cust_from_date: '2024-04-01', cust_to_date: '2030-03-31' });
+      } else if (vt === 'contra') {
+        fbData = await executeTemplate(79, auth, { cust_from_date: '2024-04-01', cust_to_date: '2030-03-31' });
+      } else if (vt === 'payment' || vt === 'receipt') {
+        fbData = await executeTemplate(53, auth, { cust_from_date: '2024-04-01', cust_to_date: '2030-03-31' });
+      } else if (vt === 'journal' || vt === 'debit note' || vt === 'credit note') {
+        fbData = await executeTemplate(54, auth, { cust_from_date: '2024-04-01', cust_to_date: '2030-03-31' });
+      } else if (vt === 'purchase') {
+        fbData = await executeTemplate(20, auth, { cust_from_date: '2024-04-01', cust_to_date: '2030-03-31' }); // Template 20 is typically Purchase Register
+      }
+      
+      rows = fbData.content || [];
+      voucherRows = rows.filter((r, i) => {
+        const isMatch = (r.voucher_number === voucherNo || r.voucherNo === voucherNo || r.referenceNo === voucherNo || r.VoucherNo === voucherNo) ||
+                        (voucherNo === `tally-rcpt-pay-${i}`) ||
+                        (voucherNo === `tally-payment-${i}`) ||
+                        (voucherNo === `tally-rn-${i}`) ||
+                        (voucherNo === `tally-dn-${i}`) ||
+                        (voucherNo === `tally-jncn-${i}`) ||
+                        (voucherNo === `tally-contra-${i}`) ||
+                        (voucherNo === `tally-vch-${i}`);
+                        
+        const isTypeMatch = (!voucherType || (r.voucher_type || r.voucherType || r.VoucherType || r.voucher_type_name || '').toLowerCase() === voucherType.toLowerCase());
+        
+        if (isMatch) {
+           console.log(`[Voucher Detail] Found match at index ${i} with type ${r.voucher_type}, isTypeMatch: ${isTypeMatch}`);
+        }
+        return isMatch && isTypeMatch;
+      });
+    }
+    
+    if (!voucherRows.length) {
+      console.log(`[Voucher Detail] 404 NOT FOUND for type: "${voucherType}", no: "${voucherNo}"`);
+      return res.status(404).json({ success: false, error: 'Voucher not found' });
+    }
+
+    const firstRow = voucherRows[0];
+    const voucher = {
+      id: firstRow.voucher_id || voucherId || `tally-vch-${voucherNo}`,
+      voucherNo: firstRow.voucher_number || firstRow.voucherNo || firstRow.VoucherNo || voucherNo,
+      type: firstRow.voucher_type || firstRow.voucherType || firstRow.VoucherType || firstRow.voucher_type_name || voucherType,
+      date: firstRow.voucher_date || firstRow.date,
+      partyName: firstRow.party_name || firstRow.partyName || '—',
+      netAmount: Number.parseFloat(firstRow.amount_inr || firstRow.amount || firstRow.net_amount_inr || 0) || 0,
+      narration: firstRow.narration || '',
+      lineItems: voucherRows.map((r, i) => {
+        let amt = Number.parseFloat(r.amount_inr || r.amount || 0) || 0;
+        let isDebit = r.is_deemed_positive === 'Yes' || r.is_debit === 'Yes' || r.is_debit === true;
+        
+        if (r.debitAmount && Number.parseFloat(r.debitAmount) > 0) {
+          amt = Number.parseFloat(r.debitAmount);
+          isDebit = true;
+        } else if (r.creditAmount && Number.parseFloat(r.creditAmount) > 0) {
+          amt = Number.parseFloat(r.creditAmount);
+          isDebit = false;
+        }
+        return {
+          id: `line-${i}`,
+          ledgerName: r.ledger_name || r.particulars || '—',
+          amount: amt,
+          debit: isDebit ? amt : 0,
+          credit: !isDebit ? amt : 0,
+          isDebit: isDebit,
+        };
+      })
+    };
+
+    res.json({ success: true, data: voucher });
+  } catch (error) {
+    res.status(502).json({ success: false, error: error.message });
+  }
+});
+
+router.post('/test-t64-types', async (req, res) => {
+  try {
+    const auth = await getTallyAuth();
+    const t18Data = await executeTemplate(18, auth, { cust_from_date: '2024-04-01', cust_to_date: '2030-03-31' });
+    const types = [...new Set((t18Data.content || []).map(r => r.voucher_type_name))];
+    res.json({ success: true, types, keys: t18Data.content.length > 0 ? Object.keys(t18Data.content[0]) : [] });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+router.post('/receipt-note-vouchers/template', async (req, res) => {
+  try {
+    const auth = await getTallyAuth();
+    const t64Data = await executeTemplate(64, auth, {
+      cust_from_date: req.body.fromDate || '2024-04-01',
+      cust_to_date: req.body.toDate || '2030-03-31',
+    });
+    
+    const rows = t64Data.content || [];
+    const vouchers = [];
+    rows.forEach((row, index) => {
+      // Group by voucher_number or VoucherID
+      if ((row.voucher_type || row.voucherType || '').toLowerCase() !== 'receipt note') return;
+      
+      const vNo = row.voucher_number || row.voucherNo || `tally-rn-${index}`;
+      vouchers.push({
+        id: vNo,
+        voucherNo: vNo,
+        date: row.voucher_date || row.date || null,
+        partyId: row.party_id || row.partyId || null,
+        party: row.party_name || row.partyName || '—',
+        amount: Number.parseFloat(row.total_amount_inr || row.amount_inr || row.amount || 0) || 0,
+        narration: row.narration || row.lineNarration || '',
+        status: row.isCancelled === 'Yes' || row.is_cancelled_flag === 1 ? 'CANCELLED' : 'POSTED',
+        voucherType: 'Receipt Note',
+        referenceNo: row.referenceNo || '—',
+      });
+    });
+
+    res.json({ success: true, data: { vouchers } });
+  } catch (error) {
+    res.status(502).json({ success: false, error: error.message });
+  }
 });
 
 router.post('/items/template', async (req, res) => {
   try {
     const auth = await getTallyAuth();
-    const rows = (await executeTemplate(55, auth)).content || [];
-    const items = rows.map((row, index) => ({
-      id: `tally-item-${index}`,
-      name: row.item_name || '—',
-      group: row.item_stock_group_name || row.stock_group_name || '—',
-      stock: Number.parseFloat(row.current_stock_quantity || 0) || 0,
-      unit: row.unit_of_measure || 'Nos',
-      rate: Number.parseFloat(row.sale_rate_inr || 0) || 0,
-      gst: Number.parseFloat(row.gst_rate_percent || 0) || 0,
-    }));
+    
+    // Fetch T55 (master) and T87 (analytics) concurrently
+    const [t55Result, t87Result] = await Promise.allSettled([
+      executeTemplate(55, auth),
+      executeTemplate(87, auth)
+    ]);
+
+    const t55Rows = t55Result.status === 'fulfilled' ? (t55Result.value.content || []) : [];
+    const t87Rows = t87Result.status === 'fulfilled' ? (t87Result.value.content || []) : [];
+
+    // Map T87 rows by lowercase ItemName for quick lookup
+    const t87Map = new Map();
+    t87Rows.forEach(row => {
+      const name = String(row.ItemName || '').trim().toLowerCase();
+      if (name) t87Map.set(name, row);
+    });
+
+    const items = t55Rows.map((row, index) => {
+      const name = String(row.item_name || '').trim();
+      const nameLower = name.toLowerCase();
+      const analytics = t87Map.get(nameLower) || {};
+
+      return {
+        id: row.ItemID || row.item_id || `tally-item-${index}`,
+        name: name || '—',
+        group: row.item_stock_group_name || row.stock_group_name || analytics.GroupID || '—',
+        stock: Number.parseFloat(row.current_stock_quantity || 0) || 0,
+        unit: row.unit_of_measure || analytics.Unit || 'Nos',
+        rate: Number.parseFloat(row.sale_rate_inr || 0) || Number.parseFloat(analytics.SaleRate || 0) || 0,
+        gst: Number.parseFloat(row.gst_rate_percent || 0) || Number.parseFloat(analytics.GST || 0) || 0,
+        brand: row.Brand || row.brand || analytics.Brand || null,
+        hsn: row.hsn_code || row.HSN || analytics.HSN || null,
+        categoryId: row.CategoryID || analytics.CategoryID || null,
+        subCategory: row.SubCategory || null,
+        minStockLevel: Number.parseFloat(row.MinStockLevel || analytics.MinStockLevel || 0) || 0,
+        maxStockLevel: Number.parseFloat(row.MaxStockLevel || analytics.MaxStockLevel || 0) || 0,
+        reorderLevel: Number.parseFloat(row.reorder_level || row.ReorderLevel || analytics.ReorderLevel || 0) || 0,
+        isActive: row.IsActive !== undefined ? (row.IsActive === 1 || String(row.IsActive).toLowerCase() === 'true') : true,
+        openingStock: Number.parseFloat(row.opening_stock_quantity || row.openingStock || 0) || 0,
+        purchaseRate: Number.parseFloat(row.purchase_rate_inr || row.purchaseRate || 0) || 0,
+        stockValue: Number.parseFloat(row.current_stock_value_inr || analytics.StockValue || 0) || 0,
+        mrp: Number.parseFloat(row.MRP || 0) || 0,
+        
+        // Analytics fields from T87
+        salesVelocity: Number.parseFloat(analytics.SalesVelocity30d || 0) || 0,
+        isUnderstock: analytics.IsUnderstock === 1 || String(analytics.IsUnderstock).toLowerCase() === 'true',
+        isOverstock: analytics.IsOverstock === 1 || String(analytics.IsOverstock).toLowerCase() === 'true',
+        isPopular: analytics.IsPopular === 1 || String(analytics.IsPopular).toLowerCase() === 'true',
+        daysOfStock: Number.parseFloat(analytics.DaysOfStock || 0) || 0,
+        lastSaleDate: analytics.LastSaleDate || null,
+        lastPurchaseDate: analytics.LastPurchaseDate || null,
+      };
+    });
+
     res.json({ success: true, data: { items } });
+  } catch (error) { 
+    res.status(502).json({ success: false, error: error.message }); 
+  }
+});
+
+// ── Item Detail by Name ───────────────────────────────────────────────────
+router.post('/item-by-name', async (req, res) => {
+  const itemName = String(req.body?.itemName || '').trim();
+  if (!itemName) return res.status(400).json({ success: false, error: 'itemName is required.' });
+
+  try {
+    const auth = await getTallyAuth();
+    const [t55Result, t87Result] = await Promise.allSettled([
+      executeTemplate(55, auth),
+      executeTemplate(87, auth)
+    ]);
+
+    const t55Rows = t55Result.status === 'fulfilled' ? (t55Result.value.content || []) : [];
+    const t87Rows = t87Result.status === 'fulfilled' ? (t87Result.value.content || []) : [];
+
+    const nameLower = itemName.toLowerCase();
+    const masterRow = t55Rows.find(r => String(r.item_name || '').trim().toLowerCase() === nameLower) || {};
+    const analyticsRow = t87Rows.find(r => String(r.ItemName || '').trim().toLowerCase() === nameLower) || {};
+
+    if (!masterRow.item_name && !analyticsRow.ItemName) {
+      return res.status(404).json({ success: false, error: 'Item not found in Tally.' });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        ItemName: masterRow.item_name || analyticsRow.ItemName || itemName,
+        Category: masterRow.item_stock_group_name || masterRow.stock_group_name || analyticsRow.GroupID || null,
+        Unit: masterRow.unit_of_measure || analyticsRow.Unit || 'Nos',
+        SaleRate: Number.parseFloat(masterRow.sale_rate_inr || 0) || Number.parseFloat(analyticsRow.SaleRate || 0) || 0,
+        GST: Number.parseFloat(masterRow.gst_rate_percent || 0) || Number.parseFloat(analyticsRow.GST || 0) || 0,
+        Brand: masterRow.Brand || masterRow.brand || analyticsRow.Brand || null,
+        HSN: masterRow.hsn_code || masterRow.HSN || analyticsRow.HSN || null,
+        CategoryID: masterRow.CategoryID || analyticsRow.CategoryID || null,
+        SubCategory: masterRow.SubCategory || null,
+        MinStockLevel: Number.parseFloat(masterRow.MinStockLevel || analyticsRow.MinStockLevel || 0) || 0,
+        MaxStockLevel: Number.parseFloat(masterRow.MaxStockLevel || analyticsRow.MaxStockLevel || 0) || 0,
+        ReorderLevel: Number.parseFloat(masterRow.reorder_level || masterRow.ReorderLevel || analyticsRow.ReorderLevel || 0) || 0,
+        IsActive: masterRow.IsActive !== undefined ? (masterRow.IsActive === 1 || String(masterRow.IsActive).toLowerCase() === 'true') : true,
+        OpeningStock: Number.parseFloat(masterRow.opening_stock_quantity || masterRow.openingStock || 0) || 0,
+        PurchaseRate: Number.parseFloat(masterRow.purchase_rate_inr || masterRow.purchaseRate || 0) || 0,
+        StockValue: Number.parseFloat(masterRow.current_stock_value_inr || analyticsRow.StockValue || 0) || 0,
+        MRP: Number.parseFloat(masterRow.MRP || 0) || 0,
+        SalesVelocity30d: Number.parseFloat(analyticsRow.SalesVelocity30d || 0) || 0,
+        IsUnderstock: analyticsRow.IsUnderstock === 1 || String(analyticsRow.IsUnderstock).toLowerCase() === 'true',
+        IsOverstock: analyticsRow.IsOverstock === 1 || String(analyticsRow.IsOverstock).toLowerCase() === 'true',
+        IsPopular: analyticsRow.IsPopular === 1 || String(analyticsRow.IsPopular).toLowerCase() === 'true',
+        DaysOfStock: Number.parseFloat(analyticsRow.DaysOfStock || 0) || 0,
+        LastSaleDate: analyticsRow.LastSaleDate || null,
+        LastPurchaseDate: analyticsRow.LastPurchaseDate || null,
+      }
+    });
+  } catch (error) { res.status(502).json({ success: false, error: error.message }); }
+});
+
+// ── Item Detail by Tally ID ───────────────────────────────────────────────
+router.post('/item-by-tally-id', async (req, res) => {
+  const tallyId = String(req.body?.tallyId || '').trim();
+  if (!tallyId) return res.status(400).json({ success: false, error: 'tallyId is required.' });
+
+  try {
+    const auth = await getTallyAuth();
+    const rows = (await executeTemplate(55, auth)).content || [];
+
+    let matchedRow = rows.find(r => r.ItemID === tallyId || r.item_id === tallyId);
+    if (!matchedRow) {
+      const idxMatch = tallyId.match(/tally-item-(\d+)$/);
+      if (idxMatch) {
+        const idx = parseInt(idxMatch[1], 10);
+        matchedRow = rows[idx] || null;
+      }
+    }
+
+    if (!matchedRow) {
+      return res.status(404).json({ success: false, error: 'Item not found in Tally.' });
+    }
+
+    const itemName = String(matchedRow.item_name || '').trim();
+    if (!itemName) return res.status(404).json({ success: false, error: 'Item name missing.' });
+
+    // Re-use the name lookup logic
+    const t87Rows = (await executeTemplate(87, auth)).content || [];
+    const nameLower = itemName.toLowerCase();
+    const analyticsRow = t87Rows.find(r => String(r.ItemName || '').trim().toLowerCase() === nameLower) || {};
+
+    res.json({
+      success: true,
+      data: {
+        ItemName: matchedRow.item_name || itemName,
+        Category: matchedRow.item_stock_group_name || matchedRow.stock_group_name || analyticsRow.GroupID || null,
+        Unit: matchedRow.unit_of_measure || analyticsRow.Unit || 'Nos',
+        SaleRate: Number.parseFloat(matchedRow.sale_rate_inr || 0) || Number.parseFloat(analyticsRow.SaleRate || 0) || 0,
+        GST: Number.parseFloat(matchedRow.gst_rate_percent || 0) || Number.parseFloat(analyticsRow.GST || 0) || 0,
+        Brand: matchedRow.Brand || matchedRow.brand || analyticsRow.Brand || null,
+        HSN: matchedRow.hsn_code || matchedRow.HSN || analyticsRow.HSN || null,
+        CategoryID: matchedRow.CategoryID || analyticsRow.CategoryID || null,
+        SubCategory: matchedRow.SubCategory || null,
+        MinStockLevel: Number.parseFloat(matchedRow.MinStockLevel || analyticsRow.MinStockLevel || 0) || 0,
+        MaxStockLevel: Number.parseFloat(matchedRow.MaxStockLevel || analyticsRow.MaxStockLevel || 0) || 0,
+        ReorderLevel: Number.parseFloat(matchedRow.reorder_level || matchedRow.ReorderLevel || analyticsRow.ReorderLevel || 0) || 0,
+        IsActive: matchedRow.IsActive !== undefined ? (matchedRow.IsActive === 1 || String(matchedRow.IsActive).toLowerCase() === 'true') : true,
+        OpeningStock: Number.parseFloat(matchedRow.opening_stock_quantity || matchedRow.openingStock || 0) || 0,
+        PurchaseRate: Number.parseFloat(matchedRow.purchase_rate_inr || matchedRow.purchaseRate || 0) || 0,
+        StockValue: Number.parseFloat(matchedRow.current_stock_value_inr || analyticsRow.StockValue || 0) || 0,
+        MRP: Number.parseFloat(matchedRow.MRP || 0) || 0,
+        SalesVelocity30d: Number.parseFloat(analyticsRow.SalesVelocity30d || 0) || 0,
+        IsUnderstock: analyticsRow.IsUnderstock === 1 || String(analyticsRow.IsUnderstock).toLowerCase() === 'true',
+        IsOverstock: analyticsRow.IsOverstock === 1 || String(analyticsRow.IsOverstock).toLowerCase() === 'true',
+        IsPopular: analyticsRow.IsPopular === 1 || String(analyticsRow.IsPopular).toLowerCase() === 'true',
+        DaysOfStock: Number.parseFloat(analyticsRow.DaysOfStock || 0) || 0,
+        LastSaleDate: analyticsRow.LastSaleDate || null,
+        LastPurchaseDate: analyticsRow.LastPurchaseDate || null,
+      }
+    });
   } catch (error) { res.status(502).json({ success: false, error: error.message }); }
 });
 
 router.post('/accounts/template', async (req, res) => {
   try {
     const auth = await getTallyAuth();
-    const rows = (await executeTemplate(50, auth)).content || [];
-    const accounts = rows.map((row, index) => ({
-      id: `tally-account-${index}`,
-      name: row.ledger_name || '—',
-      type: row.account_type === 'Cash' ? 'Cash' : 'Bank',
-      balance: Number.parseFloat(row.current_balance_inr || 0) || 0,
-      accountNo: row.bank_account_number || '',
-      branch: row.branch_name || '',
-    }));
+    
+    // Fetch T48 (Ledgers Master) and T84 (Bank Details) concurrently
+    const [t48Result, t84Result] = await Promise.allSettled([
+      executeTemplate(48, auth),
+      executeTemplate(84, auth)
+    ]);
+
+    const t48Rows = t48Result.status === 'fulfilled' ? (t48Result.value.content || []) : [];
+    const t84Rows = t84Result.status === 'fulfilled' ? (t84Result.value.content || []) : [];
+
+    // Map T84 rows by LedgerID and LedgerName for quick lookup
+    const t84Map = new Map();
+    t84Rows.forEach(row => {
+      if (row.LedgerID) t84Map.set(row.LedgerID, row);
+      const name = String(row.LedgerName || row.ledger_name || '').trim().toLowerCase();
+      if (name) t84Map.set(name, row);
+    });
+
+    // Filter T48 to only include Bank and Cash accounts
+    const accountRows = t48Rows.filter(row => {
+      const parent = (row.parent_group_name || row.group_type || row.under_group_name || row.Nature || '').toLowerCase();
+      return parent.includes('bank') || parent.includes('cash');
+    });
+
+    const accounts = accountRows.map((row, index) => {
+      const name = String(row.ledger_name || row.LedgerName || '').trim();
+      const nameLower = name.toLowerCase();
+      const parent = (row.parent_group_name || row.group_type || row.under_group_name || row.Nature || '').toLowerCase();
+      
+      const bankDetail = t84Map.get(row.LedgerID) || t84Map.get(nameLower) || {};
+
+      return {
+        id: row.LedgerID || `tally-account-${index}`,
+        AccountID: row.LedgerID || `tally-account-${index}`,
+        CompanyID: row.CompanyID || null,
+        LedgerID: row.LedgerID || null,
+        name: name || '—',
+        type: parent.includes('cash') ? 'Cash' : 'Bank',
+        balance: Number.parseFloat(row.closing_balance || row.ClosingBalance || bankDetail.ClosingBalance || 0) || 0,
+        accountNo: bankDetail.AccountNumber || '',
+        branch: bankDetail.BranchName || '',
+        bankName: bankDetail.BankName || '',
+        ifsc: bankDetail.IFSC || '',
+        isActive: row.IsActive !== undefined ? (row.IsActive === 1 || String(row.IsActive).toLowerCase() === 'true') : true,
+        location: bankDetail.BranchName || '', // Location fallback for banks
+      };
+    });
+
     res.json({ success: true, data: { accounts } });
   } catch (error) { res.status(502).json({ success: false, error: error.message }); }
 });
@@ -1364,19 +2055,168 @@ router.post('/by-item-rollup/template', async (req, res) => {
   } catch (error) { res.status(502).json({ success: false, error: error.message }); }
 });
 
-// Template 61 — Geographic rollup (computed)
+// Template 61 — Geographic rollup
 router.post('/geographic-rollup/template', async (req, res) => {
   try {
     const auth = await getTallyAuth();
     const rows = (await executeTemplate(61, auth)).content || [];
-    const geo = rows.map((row, index) => ({
-      id: `tally-geo-${index}`,
-      state: row.state || '—',
-      city: row.city || '—',
-      partyCount: parseInt(row.customer_count || 0) || 0,
-      salesValue: Number.parseFloat(row.total_sales_inr || 0) || 0,
-      purchaseValue: Number.parseFloat(row.total_purchases_inr || 0) || 0,
-    }));
+    const geo = rows.map((row, index) => {
+      let topCustomers = [];
+      try { topCustomers = typeof row.ledgerDetails === 'string' ? JSON.parse(row.ledgerDetails) : (row.ledgerDetails || []); } catch (e) { topCustomers = []; }
+      return {
+        id: `tally-geo-${index}`,
+        state: row.State || '—',
+        city: row.City || 'Multiple',
+        partyCount: parseInt(row.PartyCount || 0) || 0,
+        salesValue: Number.parseFloat(row.TotalSalesValue || 0) || 0,
+        purchaseValue: Number.parseFloat(row.TotalPurchaseValue || 0) || 0,
+        outstanding: Number.parseFloat(row.NetAmount || 0) || 0,
+        topCustomers: topCustomers.map((c) => c.ledgerName || c.LedgerName || '—').join(', ') || '—',
+        topItems: '—',
+        period: row.period || null,
+        lastTransactionDate: row.LastTransactionDate || null,
+      };
+    });
+    res.json({ success: true, data: { geo } });
+  } catch (error) { res.status(502).json({ success: false, error: error.message }); }
+});
+
+// Template 49 + 51 + 52 — Geographic full (city-level aggregation by party_name)
+router.post('/geographic/full', async (req, res) => {
+  try {
+    const auth = await getTallyAuth();
+    const broadRange = { cust_from_date: '2024-04-01', cust_to_date: '2030-03-31' };
+
+    const [t49Result, t51Result, t52Result] = await Promise.allSettled([
+      executeTemplate(49, auth),
+      executeTemplate(51, auth, broadRange),
+      executeTemplate(52, auth, broadRange),
+    ]);
+
+    const t49Rows = (t49Result.status === 'fulfilled' ? t49Result.value.content : []) || [];
+    const t51Rows = (t51Result.status === 'fulfilled' ? t51Result.value.content : []) || [];
+    const t52Rows = (t52Result.status === 'fulfilled' ? t52Result.value.content : []) || [];
+
+    // Build T49 party lookup: normalized_name → { city, state, balance, gstin, fullName }
+    const normalizeCity = (rawCity) => {
+      if (!rawCity) return '';
+      let c = rawCity.trim();
+      // Take first segment before comma, pipe, or newline
+      const firstComma = c.search(/[,|\n]/);
+      if (firstComma > 0) c = c.substring(0, firstComma).trim();
+      // Remove common prefixes that aren't city names (c/o, dist-, nr., opp., plot no., shed no., d.no.)
+      c = c.replace(/^(dist[\s-]+|nr\.?\s+|opp\.?\s+|plot\s+no\.?\s*[\d,\/-]+\s*,?\s*|shed\s+no\.?\s*[\d,\/-]+\s*,?\s*|c\/o\s+|d\.?no\.?\s*[\d,\/-]+\s*,?\s*)/i, '').trim();
+      // If the cleaned name is very short (< 3 chars), keep the original
+      if (c.length < 3) return rawCity.trim();
+      // Title-case: uppercase first letter, lowercase rest
+      c = c.charAt(0).toUpperCase() + c.slice(1).toLowerCase();
+      return c;
+    };
+
+    const partyMap = {};
+    t49Rows.forEach((r) => {
+      const name = (r.party_name || '').trim();
+      if (!name) return;
+      const key = name.toLowerCase();
+      const city = normalizeCity(r.city || '');
+      const state = (r.state || '').trim();
+      if (!city && !state) return; // skip parties without location
+      partyMap[key] = {
+        fullName: name,
+        city: city || 'Unknown',
+        state: state || 'Unknown',
+        balance: Number.parseFloat(r.openingBalance || 0) || 0,
+        gstin: r.gstin || null,
+      };
+    });
+
+    // Aggregate T51 sales by party_name (deduplicated by voucher_number)
+    const salesByParty = {};
+    const seenSales = new Set();
+    t51Rows.forEach((r) => {
+      const name = (r.party_name || '').trim();
+      const vno = (r.voucher_number || '').trim();
+      if (!name) return;
+      const key = `${name.toLowerCase()}|${vno}`;
+      if (seenSales.has(key)) return;
+      seenSales.add(key);
+      const nk = name.toLowerCase();
+      if (!salesByParty[nk]) salesByParty[nk] = { totalSales: 0, txnCount: 0, lastDate: null };
+      salesByParty[nk].totalSales += Number.parseFloat(r.net_amount_inr || r.gross_total_inr || 0) || 0;
+      salesByParty[nk].txnCount += 1;
+      const d = r.voucher_date || r.date || null;
+      if (d && (!salesByParty[nk].lastDate || new Date(d) > new Date(salesByParty[nk].lastDate))) {
+        salesByParty[nk].lastDate = d;
+      }
+    });
+
+    // Aggregate T52 purchases by party_name (deduplicated by voucher_number)
+    const purchByParty = {};
+    const seenPurch = new Set();
+    t52Rows.forEach((r) => {
+      const name = (r.party_name || '').trim();
+      const vno = (r.voucher_number || '').trim();
+      if (!name) return;
+      const key = `${name.toLowerCase()}|${vno}`;
+      if (seenPurch.has(key)) return;
+      seenPurch.add(key);
+      const nk = name.toLowerCase();
+      if (!purchByParty[nk]) purchByParty[nk] = { totalPurchase: 0, txnCount: 0 };
+      purchByParty[nk].totalPurchase += Number.parseFloat(r.grossTotal || 0) || 0;
+      purchByParty[nk].txnCount += 1;
+    });
+
+    // Merge by city: group all parties in the same (state, city)
+    const cityMap = {};
+    Object.entries(partyMap).forEach(([normName, pty]) => {
+      const cityKey = `${pty.state}|${pty.city}`;
+      if (!cityMap[cityKey]) {
+        cityMap[cityKey] = {
+          state: pty.state,
+          city: pty.city,
+          partyCount: 0,
+          salesValue: 0,
+          purchaseValue: 0,
+          outstanding: 0,
+          topCustomers: [], // will store { name, totalValue } for sorting
+        };
+      }
+      const c = cityMap[cityKey];
+      c.partyCount += 1;
+      c.outstanding += Math.abs(pty.balance);
+
+      const sales = salesByParty[normName] || {};
+      const purch = purchByParty[normName] || {};
+      c.salesValue += sales.totalSales || 0;
+      c.purchaseValue += purch.totalPurchase || 0;
+
+      const totalTxnValue = (sales.totalSales || 0) + (purch.totalPurchase || 0);
+      if (totalTxnValue > 0) {
+        c.topCustomers.push({ name: pty.fullName, totalValue: totalTxnValue });
+      }
+    });
+
+    // Convert to array, sort topCustomers, stringify names
+    const geo = Object.entries(cityMap)
+      .filter(([k, c]) => c.salesValue > 0 || c.purchaseValue > 0 || c.outstanding > 0)
+      .map(([key, c], index) => {
+        c.topCustomers.sort((a, b) => b.totalValue - a.totalValue);
+        const top5Names = c.topCustomers.slice(0, 5).map(t => t.name).join(', ');
+        return {
+          id: `tally-geo-full-${index}`,
+          state: c.state,
+          city: c.city,
+          partyCount: c.partyCount,
+          salesValue: Math.round(c.salesValue * 100) / 100,
+          purchaseValue: Math.round(c.purchaseValue * 100) / 100,
+          outstanding: Math.round(c.outstanding * 100) / 100,
+          topCustomers: top5Names || '—',
+          topItems: '—',
+          period: null,
+          lastTransactionDate: null,
+        };
+      });
+
     res.json({ success: true, data: { geo } });
   } catch (error) { res.status(502).json({ success: false, error: error.message }); }
 });
@@ -1594,18 +2434,21 @@ router.post('/delivery-note-vouchers/template', async (req, res) => {
     console.log('[Template 78] total rows:', rows.length);
     console.log('[Template 78] field keys:', JSON.stringify(Object.keys(rows[0] || {})));
 
-    const vouchers = rows.map((row, index) => ({
-      id: `tally-dn-${index}`,
-      voucherNo: row.VoucherNo || '—',
-      date: row.VoucherDate || null,
-      partyId: row.PartyID || null,
-      party: row.PartyName || '—',
-      amount: Number.parseFloat(row.GrandTotal || 0) || 0,
-      narration: row.Narration || '',
-      status: row.Status || 'Active',
-      voucherType: row.VoucherType || 'Delivery Note',
-      referenceNo: row.referenceNo || '—',
-    }));
+    const vouchers = rows.map((row, index) => {
+      const vNo = row.VoucherNo || `tally-dn-${index}`;
+      return {
+        id: vNo,
+        voucherNo: vNo,
+        date: row.VoucherDate || null,
+        partyId: row.PartyID || null,
+        party: row.PartyName || '—',
+        amount: Number.parseFloat(row.GrandTotal || 0) || 0,
+        narration: row.Narration || '',
+        status: row.Status || 'Active',
+        voucherType: row.VoucherType || 'Delivery Note',
+        referenceNo: row.referenceNo || '—',
+      };
+    });
 
     res.json({ success: true, data: { vouchers } });
   } catch (error) { res.status(502).json({ success: false, error: error.message }); }
@@ -1625,11 +2468,12 @@ router.post('/contra-vouchers/template', async (req, res) => {
     // Deduplicate: group line-item rows into unique vouchers
     const voucherMap = {};
     rows.forEach((row, index) => {
+      const vNo = row.VoucherNo || `tally-contra-${index}`;
       const key = `${row.VoucherDate || ''}|${row.Narration || ''}|${row.GrandTotal || '0'}`;
       if (!voucherMap[key]) {
         voucherMap[key] = {
-          id: `tally-contra-${index}`,
-          voucherNo: row.VoucherNo || '—',
+          id: vNo,
+          voucherNo: vNo,
           date: row.VoucherDate || null,
           amount: Number.parseFloat(row.GrandTotal || 0) || 0,
           narration: row.Narration || '',
@@ -1650,6 +2494,49 @@ router.post('/contra-vouchers/template', async (req, res) => {
     const vouchers = Object.values(voucherMap).map((v) => ({
       ...v,
       particulars: v.ledgers.length ? v.ledgers.join(' ↔ ') : v.narration,
+    }));
+
+    res.json({ success: true, data: { vouchers } });
+  } catch (error) { res.status(502).json({ success: false, error: error.message }); }
+});
+
+// Template 54 — Journal, Debit Note, Credit Note vouchers
+router.post('/journal-dn-cn-vouchers/template', async (req, res) => {
+  try {
+    const auth = await getTallyAuth();
+    const rows = (await executeTemplate(54, auth, {
+      cust_from_date: req.body?.fromDate || '2024-01-01',
+      cust_to_date: req.body?.toDate || '2026-12-31',
+    })).content || [];
+
+    // Group line-item rows into unique vouchers
+    const voucherMap = {};
+    rows.forEach((row, index) => {
+      const vtype = (row.voucher_type || '').trim();
+      const niceType = vtype.charAt(0).toUpperCase() + vtype.slice(1).toLowerCase();
+      if (!['Journal', 'Debit Note', 'Credit Note'].includes(niceType)) return;
+
+      const vNo = row.voucher_number || `tally-jncn-${index}`;
+      const key = `${row.voucher_date || ''}|${vNo}|${niceType}`;
+      if (!voucherMap[key]) {
+        voucherMap[key] = {
+          id: vNo,
+          voucherNo: vNo,
+          date: row.voucher_date || null,
+          partyName: row.party_name || '—',
+          voucherType: niceType,
+          amount: Number.parseFloat(row.total_amount_inr || 0) || 0,
+          narration: row.narration || '',
+          status: row.is_cancelled_flag === 1 || String(row.is_cancelled_flag).toLowerCase() === 'true' ? 'CANCELLED' : 'POSTED',
+          ledgers: [],
+        };
+      }
+      if (row.ledger_name) voucherMap[key].ledgers.push(row.ledger_name);
+    });
+
+    const vouchers = Object.values(voucherMap).map((v) => ({
+      ...v,
+      particulars: v.partyName !== '—' && v.partyName ? v.partyName : (v.ledgers.length ? v.ledgers.join(', ') : v.narration),
     }));
 
     res.json({ success: true, data: { vouchers } });
@@ -2198,22 +3085,24 @@ router.post('/stock-status/full', async (req, res) => {
 
     // Merge T89 analytics with T87 item master fields
     const items = t89Rows.map((row) => {
-      const t87 = t87Map[row.itemId] || t87Map[(row.itemName || '').trim().toLowerCase()] || {};
+      const rid = (row.ItemID || '').trim();
+      const rname = (row.ItemName || '').trim().toLowerCase();
+      const t87 = t87Map[rid] || t87Map[rname] || {};
       return {
         // T89 analytics
-        statusId: row.statusId || null,
-        itemId: row.itemId || null,
-        itemName: row.itemName || '—',
-        currentStock: Number.parseFloat(row.currentStock || 0) || 0,
-        salesVelocity30d: Number.parseFloat(row.salesVelocity30d || 0) || 0,
-        isUnderstock: row.isUnderstock === true || row.isUnderstock === 'true',
-        isOverstock: row.isOverstock === true || row.isOverstock === 'true',
-        isPopular: row.isPopular === true || row.isPopular === 'true',
-        daysOfStock: Number.parseFloat(row.daysOfStock || 0) || 0,
-        reorderLevel: Number.parseFloat(row.reorderLevel || 0) || 0,
-        stockValue: Number.parseFloat(row.stockValue || 0) || 0,
-        lastSaleDate: row.lastSaleDate || null,
-        lastPurchaseDate: row.lastPurchaseDate || null,
+        statusId: row.StatusID || null,
+        itemId: row.ItemID || null,
+        itemName: row.ItemName || '—',
+        currentStock: Number.parseFloat(row.CurrentStock || 0) || 0,
+        salesVelocity30d: Number.parseFloat(row.SalesVelocity30d || 0) || 0,
+        isUnderstock: row.IsUnderstock === 'true' || row.IsUnderstock === true,
+        isOverstock: row.IsOverstock === 'true' || row.IsOverstock === true,
+        isPopular: row.IsPopular === 'true' || row.IsPopular === true,
+        daysOfStock: Number.parseFloat(row.DaysOfStock || 0) || 0,
+        reorderLevel: Number.parseFloat(row.ReorderLevel || 0) || 0,
+        stockValue: Number.parseFloat(row.StockValue || 0) || 0,
+        lastSaleDate: row.LastSaleDate || null,
+        lastPurchaseDate: row.LastPurchaseDate || null,
         // T87 item master
         hsn: t87.HSN || '—',
         unit: t87.Unit || '—',
@@ -2802,6 +3691,211 @@ router.post('/profit-loss/full', async (req, res) => {
       employeeCosts: Object.values(employeeCosts).sort((a, b) => b.amount - a.amount),
     }});
   } catch (error) { res.status(502).json({ success: false, error: error.message }); }
+});
+
+// ── Shared date formatter for party detail routes ───────────────────────
+const formatPartyDate = (raw) => {
+  if (!raw) return null;
+  const d = new Date(raw);
+  if (isNaN(d.getTime())) return raw;
+  return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+};
+
+// ── Party Detail by Name ────────────────────────────────────────────────
+// Used by dataRoutes /parties/:partyId to enrich modal with full Tally data
+router.post('/party-by-name', async (req, res) => {
+  const partyName = String(req.body?.partyName || '').trim();
+  if (!partyName) return res.status(400).json({ success: false, error: 'partyName is required.' });
+
+  try {
+    const auth = await getTallyAuth();
+    const broadRange = { cust_from_date: '2024-04-01', cust_to_date: '2030-03-31' };
+
+    // T49: party master (contact, GSTIN, address, credit terms)
+    // T51: sales transactions by party
+    // T53: receipt/payment transactions by party
+    const [t49Result, t51Result, t53Result] = await Promise.allSettled([
+      executeTemplate(49, auth),
+      executeTemplate(51, auth, broadRange),
+      executeTemplate(53, auth, broadRange),
+    ]);
+
+    const t49Rows = (t49Result.status === 'fulfilled' ? t49Result.value.content : []) || [];
+    const t51Rows = (t51Result.status === 'fulfilled' ? t51Result.value.content : []) || [];
+    const t53Rows = (t53Result.status === 'fulfilled' ? t53Result.value.content : []) || [];
+
+    const nameLower = partyName.toLowerCase();
+
+    // Find master record from T49
+    const masterRow = t49Rows.find(r =>
+      String(r.party_name || '').trim().toLowerCase() === nameLower
+    ) || {};
+
+    // Build transaction history from T51 (sales — deduplicate by voucher_number)
+    const seenSales = new Set();
+    const salesTxns = [];
+    t51Rows
+      .filter(r => String(r.party_name || '').trim().toLowerCase() === nameLower)
+      .forEach(r => {
+        const vno = r.voucher_number || '';
+        if (seenSales.has(vno)) return;
+        seenSales.add(vno);
+        salesTxns.push({
+          date: formatPartyDate(r.voucher_date),
+          voucherNo: vno || '—',
+          voucherType: r.voucher_type || 'Sales',
+          amount: Number.parseFloat(r.net_amount_inr || r.gross_total_inr || 0) || 0,
+          status: r.is_cancelled_flag === 1 ? 'CANCELLED' : 'POSTED',
+        });
+      });
+
+    // Build transaction history from T53 (receipts/payments)
+    const seenRcpt = new Set();
+    const rcptTxns = [];
+    t53Rows
+      .filter(r => String(r.party_name || '').trim().toLowerCase() === nameLower)
+      .forEach(r => {
+        const vno = r.voucher_number || '';
+        if (seenRcpt.has(vno)) return;
+        seenRcpt.add(vno);
+        rcptTxns.push({
+          date: formatPartyDate(r.voucher_date),
+          voucherNo: vno || '—',
+          voucherType: r.voucher_type || 'Receipt',
+          amount: Math.abs(Number.parseFloat(r.total_amount_inr || 0) || 0),
+          status: r.is_cancelled_flag === 1 ? 'CANCELLED' : 'POSTED',
+        });
+      });
+
+    const transactions = [...salesTxns, ...rcptTxns]
+      .sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
+
+    // Build type label
+    const pt = String(masterRow.party_type || '').toLowerCase();
+    let partyType = 'Customer';
+    if (pt.includes('creditor') || pt.includes('supplier') || pt.includes('vendor') || pt.includes('payable')) partyType = 'Supplier';
+
+    res.json({
+      success: true,
+      data: {
+        PartyName: masterRow.party_name || partyName,
+        PartyType: partyType,
+        GSTIN: masterRow.gstin || null,
+        Address: masterRow.full_address || null,
+        City: masterRow.city || null,
+        State: masterRow.state || null,
+        PIN: masterRow.PIN || null,
+        Phone: masterRow.phone_number || null,
+        Email: masterRow.email || null,
+        ContactPerson: masterRow.contact_person || null,
+        PAN: masterRow.PAN || null,
+        CreditLimit: Number.parseFloat(masterRow.creditLimit || 0) || 0,
+        CreditDays: parseInt(masterRow.creditDays || 0) || 0,
+        SalesPerson: masterRow.salesPerson || null,
+        OpeningBalance: Number.parseFloat(masterRow.openingBalance || masterRow.opening_balance_inr || 0) || 0,
+        Status: masterRow.Status || 'Active',
+        ParentGroup: masterRow.parent_group_name || null,
+        transactions,
+      },
+    });
+  } catch (error) {
+    res.status(502).json({ success: false, error: error.message });
+  }
+});
+
+// ── Party Detail by Tally ID ────────────────────────────────────────────
+// Fallback for dataRoutes when partyId is a Tally ID (not a GS PartyID)
+router.post('/party-by-tally-id', async (req, res) => {
+  const tallyId = String(req.body?.tallyId || '').trim();
+  if (!tallyId) return res.status(400).json({ success: false, error: 'tallyId is required.' });
+
+  try {
+    const auth = await getTallyAuth();
+    const rows = (await executeTemplate(49, auth)).content || [];
+
+    // Match by PartyID field OR by index (tally-party-detail-N)
+    let matchedRow = rows.find(r => r.PartyID === tallyId);
+    if (!matchedRow) {
+      const idxMatch = tallyId.match(/tally-party-detail-(\d+)$/);
+      if (idxMatch) {
+        const idx = parseInt(idxMatch[1], 10);
+        matchedRow = rows[idx] || null;
+      }
+    }
+
+    if (!matchedRow) {
+      return res.status(404).json({ success: false, error: 'Party not found in Tally.' });
+    }
+
+    const partyName = String(matchedRow.party_name || '').trim();
+    if (!partyName) return res.status(404).json({ success: false, error: 'Party name missing.' });
+
+    const broadRange = { cust_from_date: '2024-04-01', cust_to_date: '2030-03-31' };
+    const [t51Result, t53Result] = await Promise.allSettled([
+      executeTemplate(51, auth, broadRange),
+      executeTemplate(53, auth, broadRange),
+    ]);
+
+    const t51Rows = (t51Result.status === 'fulfilled' ? t51Result.value.content : []) || [];
+    const t53Rows = (t53Result.status === 'fulfilled' ? t53Result.value.content : []) || [];
+    const nameLower = partyName.toLowerCase();
+
+    const seenSales = new Set();
+    const salesTxns = t51Rows
+      .filter(r => String(r.party_name || '').trim().toLowerCase() === nameLower)
+      .reduce((acc, r) => {
+        const vno = r.voucher_number || '';
+        if (!seenSales.has(vno)) {
+          seenSales.add(vno);
+          acc.push({ date: formatPartyDate(r.voucher_date), voucherNo: vno || '—', voucherType: r.voucher_type || 'Sales', amount: Number.parseFloat(r.net_amount_inr || r.gross_total_inr || 0) || 0, status: r.is_cancelled_flag === 1 ? 'CANCELLED' : 'POSTED' });
+        }
+        return acc;
+      }, []);
+
+    const seenRcpt = new Set();
+    const rcptTxns = t53Rows
+      .filter(r => String(r.party_name || '').trim().toLowerCase() === nameLower)
+      .reduce((acc, r) => {
+        const vno = r.voucher_number || '';
+        if (!seenRcpt.has(vno)) {
+          seenRcpt.add(vno);
+          acc.push({ date: formatPartyDate(r.voucher_date), voucherNo: vno || '—', voucherType: r.voucher_type || 'Receipt', amount: Math.abs(Number.parseFloat(r.total_amount_inr || 0) || 0), status: r.is_cancelled_flag === 1 ? 'CANCELLED' : 'POSTED' });
+        }
+        return acc;
+      }, []);
+
+    const transactions = [...salesTxns, ...rcptTxns].sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
+
+    const pt = String(matchedRow.party_type || '').toLowerCase();
+    let PartyType = 'Customer';
+    if (pt.includes('creditor') || pt.includes('supplier') || pt.includes('vendor') || pt.includes('payable')) PartyType = 'Supplier';
+
+    res.json({
+      success: true,
+      data: {
+        PartyName: partyName,
+        PartyType,
+        GSTIN: matchedRow.gstin || null,
+        Address: matchedRow.full_address || null,
+        City: matchedRow.city || null,
+        State: matchedRow.state || null,
+        PIN: matchedRow.PIN || null,
+        Phone: matchedRow.phone_number || null,
+        Email: matchedRow.email || null,
+        ContactPerson: matchedRow.contact_person || null,
+        PAN: matchedRow.PAN || null,
+        CreditLimit: Number.parseFloat(matchedRow.creditLimit || 0) || 0,
+        CreditDays: parseInt(matchedRow.creditDays || 0) || 0,
+        SalesPerson: matchedRow.salesPerson || null,
+        OpeningBalance: Number.parseFloat(matchedRow.openingBalance || matchedRow.opening_balance_inr || 0) || 0,
+        Status: matchedRow.Status || 'Active',
+        ParentGroup: matchedRow.parent_group_name || null,
+        transactions,
+      },
+    });
+  } catch (error) {
+    res.status(502).json({ success: false, error: error.message });
+  }
 });
 
 module.exports = router;

@@ -25,12 +25,16 @@ export default function Accounts() {
     // Tally data overrides Sheets when available
     if (tallyAccounts && tallyAccounts.length > 0) {
       return tallyAccounts.map((t, i) => ({
-        id: t.id || `tally-account-${i}`,
+        id: t.AccountID || t.LedgerID || t.id || `tally-account-${i}`,
         name: t.name,
         type: t.type,
-        accountNo: '',
-        branch: '',
+        accountNo: t.accountNo || '',
+        branch: t.branch || '',
         balance: t.balance || 0,
+        bankName: t.bankName || '',
+        ifsc: t.ifsc || '',
+        isActive: t.isActive,
+        location: t.location || '',
       }));
     }
     // Sheets fallback

@@ -19,19 +19,26 @@ const CustomerMovementReport = () => {
   const movementData = useMemo(() => {
     if (tallyMovement && tallyMovement.length > 0) {
       return tallyMovement.map((t, i) => ({
-        partyId: t.id || `tally-move-${i}`,
+        partyId: t.partyId || `tally-move-${i}`,
         partyName: t.partyName || 'Unknown',
-        partyType: 'Customer',
-        firstTxn: '-',
-        lastTxn: '-',
-        salesValue: t.salesValue || 0,
-        purchaseValue: 0,
-        txnCount: t.txnCount || 0,
+        partyType: t.partyType || 'Customer',
+        firstTxn: t.firstTransactionDate || '-',
+        lastTxn: t.lastTransactionDate || '-',
+        salesValue: t.totalSalesValue || 0,
+        purchaseValue: t.totalPurchaseValue || 0,
+        txnCount: t.transactionCount || 0,
         daysSinceLastTxn: t.daysSinceLastTxn || 0,
-        status: t.status || (t.daysSinceLastTxn <= 30 ? 'Active' : t.daysSinceLastTxn <= 90 ? 'Dormant' : 'Churned'),
-        salesPerson: '-',
-        city: '-',
-        state: '-',
+        status: (() => {
+          const rawStatus = (t.status || '').toString().toLowerCase();
+          if (rawStatus === 'active' || rawStatus === 'new') return 'Active';
+          if (rawStatus === 'dormant') return 'Dormant';
+          if (rawStatus.includes('churn') || rawStatus === 'dead') return 'Churned';
+          if (rawStatus.includes('no transaction')) return 'No Transactions';
+          return 'Inactive';
+        })(),
+        salesPerson: t.salesPerson || '-',
+        city: t.city || '-',
+        state: t.state || '-',
       }));
     }
     if (!customerMovement) return [];
@@ -89,10 +96,12 @@ const CustomerMovementReport = () => {
     const active = movementData.filter(d => d.status === 'Active').length;
     const dormant = movementData.filter(d => d.status === 'Dormant').length;
     const churned = movementData.filter(d => d.status === 'Churned').length;
+    const inactive = movementData.filter(d => d.status === 'Inactive').length;
+    const noTxns = movementData.filter(d => d.status === 'No Transactions').length;
     const totalSales = movementData.reduce((sum, d) => sum + d.salesValue, 0);
     const avgTxn = total > 0 ? movementData.reduce((sum, d) => sum + d.txnCount, 0) / total : 0;
 
-    return { total, active, dormant, churned, totalSales, avgTxn };
+    return { total, active, dormant, churned, inactive, noTxns, totalSales, avgTxn };
   }, [movementData]);
 
   const formatCurrency = (value) => {
@@ -114,6 +123,8 @@ const CustomerMovementReport = () => {
     'Active': 'bg-teal-light text-teal-700',
     'Dormant': 'bg-amber-light text-amber-700',
     'Churned': 'bg-rose-light text-rose-700',
+    'Inactive': 'bg-gray-100 text-gray-600',
+    'No Transactions': 'bg-slate-100 text-slate-500',
   };
 
   if (loading) {
@@ -121,8 +132,8 @@ const CustomerMovementReport = () => {
       <motion.div className="min-h-screen bg-canvas-default pb-20 md:pb-6">
         <div className="px-4 py-4 md:px-6 md:py-6">
           <Skeleton variant="text" className="w-48 h-7" />
-          <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
-            {[1, 2, 3, 4].map(i => (
+          <div className="mt-6 grid grid-cols-2 md:grid-cols-6 gap-3">
+            {[1, 2, 3, 4, 5, 6].map(i => (
               <Skeleton key={i} variant="rounded" className="h-24" />
             ))}
           </div>
@@ -143,7 +154,7 @@ const CustomerMovementReport = () => {
           <p className="text-sm text-ink-muted mt-1">Track customer activity, dormancy, and churn patterns</p>
         </motion.div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-3 mb-6">
           <motion.div
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -213,6 +224,42 @@ const CustomerMovementReport = () => {
             </div>
             <div className="text-lg font-bold text-rose-700">{summaryStats.churned}</div>
           </motion.div>
+
+          <motion.div
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            onClick={() => setStatusFilter(statusFilter === 'inactive' ? 'all' : 'inactive')}
+            className={`rounded-xl p-4 border cursor-pointer transition-all hover:shadow-md ${
+              statusFilter === 'inactive'
+                ? 'bg-gray-100 border-gray-400 ring-2 ring-gray-200'
+                : 'bg-white border-gray-200 bg-gray-50'
+            }`}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <UserX className="w-4 h-4 text-gray-500" />
+              <span className="text-xs text-ink-muted">Inactive</span>
+            </div>
+            <div className="text-lg font-bold text-gray-700">{summaryStats.inactive}</div>
+          </motion.div>
+
+          <motion.div
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.35 }}
+            onClick={() => setStatusFilter(statusFilter === 'noTxns' ? 'all' : 'noTxns')}
+            className={`rounded-xl p-4 border cursor-pointer transition-all hover:shadow-md ${
+              statusFilter === 'noTxns'
+                ? 'bg-slate-100 border-slate-400 ring-2 ring-slate-200'
+                : 'bg-white border-slate-200 bg-slate-50'
+            }`}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <UserX className="w-4 h-4 text-slate-500" />
+              <span className="text-xs text-ink-muted">No Transactions</span>
+            </div>
+            <div className="text-lg font-bold text-slate-700">{summaryStats.noTxns}</div>
+          </motion.div>
         </div>
 
         <motion.div
@@ -233,6 +280,8 @@ const CustomerMovementReport = () => {
                 <option value="active">Active</option>
                 <option value="dormant">Dormant</option>
                 <option value="churned">Churned/At Risk</option>
+                <option value="inactive">Inactive</option>
+                <option value="noTxns">No Transactions</option>
               </select>
             </div>
 
@@ -273,7 +322,7 @@ const CustomerMovementReport = () => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: idx * 0.01 }}
                     className="hover:bg-canvas-subtle cursor-pointer"
-                    onClick={() => navigate(`/outstanding/${row.partyId}`)}
+                    onClick={() => navigate(`/outstanding/${encodeURIComponent(row.partyName)}`)}
                   >
                     <td className="px-4 py-3 font-medium text-ink-default">{row.partyName}</td>
                     <td className="px-4 py-3 text-ink-muted">{row.city}, {row.state}</td>

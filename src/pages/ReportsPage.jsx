@@ -195,6 +195,14 @@ const ReportsPage = () => {
       disabled: false,
     },
     {
+      id: 'gst-liability',
+      title: 'GST Liability',
+      description: 'Tax ledger balances, ITC input credit, and output tax summary',
+      icon: 'gst',
+      path: '/reports/gst-liability',
+      disabled: false,
+    },
+    {
       id: 'gst-reconciliation',
       title: 'GST Reconciliation',
       description: 'GSTR-2B reconciliation for a date range from Tally',

@@ -3,7 +3,7 @@ import Button from '../../components/ui/Button';
 import EntityDetailModal from '../../components/shared/EntityDetailModal';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import useTallyItems from '../../hooks/useTallyItems';
-import { Plus, Search, Package } from 'lucide-react';
+import { Search, Package } from 'lucide-react';
 import { useState } from 'react';
 
 const formatCurrency = (amount) => {
@@ -17,6 +17,9 @@ export default function Items() {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
 
   const itemsList = tallyItems && tallyItems.length > 0
     ? tallyItems.map((t, i) => ({
@@ -39,6 +42,19 @@ export default function Items() {
     return matchesSearch && matchesCategory;
   });
 
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const paginatedItems = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const handleCategoryChange = (cat) => {
+    setCategoryFilter(cat);
+    setCurrentPage(1);
+  };
+
   const handleItemClick = (itemId) => {
     setSelectedItemId(itemId);
     setModalOpen(true);
@@ -55,7 +71,7 @@ export default function Items() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div className="flex gap-2 flex-wrap">
             <button
-              onClick={() => setCategoryFilter('all')}
+              onClick={() => handleCategoryChange('all')}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 categoryFilter === 'all' ? 'bg-brand-50 text-brand-700' : 'text-ink-600 hover:bg-ink-100'
               }`}
@@ -65,7 +81,7 @@ export default function Items() {
             {categories.map(cat => (
               <button
                 key={cat}
-                onClick={() => setCategoryFilter(cat)}
+                onClick={() => handleCategoryChange(cat)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   categoryFilter === cat ? 'bg-brand-50 text-brand-700' : 'text-ink-600 hover:bg-ink-100'
                 }`}
@@ -82,16 +98,15 @@ export default function Items() {
                 type="text"
                 placeholder="Search items..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={handleSearchChange}
                 className="w-full pl-9 pr-4 h-10 bg-ink-50 border border-line rounded-xl text-sm outline-none focus:border-brand-500 focus:bg-white transition-all"
               />
             </div>
-            <Button icon={Plus}>New Item</Button>
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {filtered.map((item) => {
+          {paginatedItems.map((item) => {
             const name = item.ItemName || item.name || '';
             const category = item.Category || item.category || '';
             const stock = parseFloat(item.OpeningStock ?? item.stock ?? 0) || 0;
@@ -134,6 +149,28 @@ export default function Items() {
             );
           })}
         </div>
+
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-4 mt-6">
+            <Button 
+              variant="secondary" 
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </Button>
+            <span className="text-sm text-ink-600">
+              Page {currentPage} of {totalPages}
+            </span>
+            <Button 
+              variant="secondary" 
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </Button>
+          </div>
+        )}
       </Card>
 
       <EntityDetailModal

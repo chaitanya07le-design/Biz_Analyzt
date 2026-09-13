@@ -398,25 +398,48 @@ router.get('/sync-log', createDataRoute('SyncLog', 'CompanyID'));
 router.get('/geographic-summary', createDataRoute('GeographicSummary', 'CompanyID'));
 
 router.get('/parties/:partyId', async (req, res) => {
+  const PORT = process.env.PORT || 5001;
+  const TALLY_BASE = `http://localhost:${PORT}/api/tally`;
+
+  const callTally = async (endpoint, body) => {
+    try {
+      const r = await fetch(`${TALLY_BASE}/${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (!r.ok) return null;
+      const j = await r.json();
+      return j.success ? j.data : null;
+    } catch (_) { return null; }
+  };
+
   try {
     const { partyId } = req.params;
     const { companyId } = req.query;
 
+    // Step 1: Try Google Sheets lookup
     const [parties, vouchers] = await Promise.all([
       fetchSheetData('Parties'),
       fetchSheetData('Vouchers'),
     ]);
 
     const party = parties.find(p => p.PartyID === partyId);
+
+    // Step 2: If NOT in Google Sheets → use Tally directly (skip GS entirely)
     if (!party) {
-      return res.status(404).json({ success: false, error: 'Party not found' });
+      const tallyData = await callTally('party-by-tally-id', { tallyId: partyId });
+      if (!tallyData) {
+        return res.status(404).json({ success: false, error: 'Party not found in Tally or Google Sheets.' });
+      }
+      return res.json({ success: true, data: tallyData });
     }
 
     if (companyId && party.CompanyID !== companyId) {
       return res.status(403).json({ success: false, error: 'Party does not belong to this company' });
     }
 
-    const partyVouchers = vouchers.filter(v => 
+    const partyVouchers = vouchers.filter(v =>
       v.PartyID === partyId && v.IsDeleted !== 'TRUE'
     ).map(v => ({
       voucherId: v.VoucherID,
@@ -427,12 +450,34 @@ router.get('/parties/:partyId', async (req, res) => {
       status: v.Status,
     })).sort((a, b) => new Date(a.date) - new Date(b.date));
 
+    // Step 3: Found in GS — enrich with Tally master data
+    const tallyData = await callTally('party-by-name', { partyName: party.PartyName });
+
+    const mergedTransactions = tallyData?.transactions?.length > 0
+      ? tallyData.transactions
+      : partyVouchers;
+
     res.json({
       success: true,
       data: {
         ...party,
-        transactions: partyVouchers,
-      }
+        GSTIN: tallyData?.GSTIN || party.GSTIN || null,
+        Address: tallyData?.Address || party.Address || null,
+        City: tallyData?.City || party.City || null,
+        State: tallyData?.State || party.State || null,
+        PIN: tallyData?.PIN || party.PIN || null,
+        Phone: tallyData?.Phone || party.Phone || null,
+        Email: tallyData?.Email || party.Email || null,
+        ContactPerson: tallyData?.ContactPerson || party.ContactPerson || null,
+        PAN: tallyData?.PAN || party.PAN || null,
+        CreditLimit: tallyData?.CreditLimit ?? parseFloat(party.CreditLimit || 0),
+        CreditDays: tallyData?.CreditDays ?? parseInt(party.CreditDays || 0),
+        SalesPerson: tallyData?.SalesPerson || party.SalesPerson || null,
+        OpeningBalance: tallyData?.OpeningBalance ?? parseFloat(party.OpeningBalance || 0),
+        Status: tallyData?.Status || party.Status || 'Active',
+        ParentGroup: tallyData?.ParentGroup || party.ParentGroup || null,
+        transactions: mergedTransactions,
+      },
     });
   } catch (error) {
     console.error('Error fetching party detail:', error);
@@ -441,6 +486,22 @@ router.get('/parties/:partyId', async (req, res) => {
 });
 
 router.get('/items/:itemId', async (req, res) => {
+  const PORT = process.env.PORT || 5001;
+  const TALLY_BASE = `http://localhost:${PORT}/api/tally`;
+
+  const callTally = async (endpoint, body) => {
+    try {
+      const r = await fetch(`${TALLY_BASE}/${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (!r.ok) return null;
+      const j = await r.json();
+      return j.success ? j.data : null;
+    } catch (_) { return null; }
+  };
+
   try {
     const { itemId } = req.params;
     const { companyId } = req.query;
@@ -452,8 +513,14 @@ router.get('/items/:itemId', async (req, res) => {
     ]);
 
     const item = items.find(i => i.ItemID === itemId);
+
+    // If not in Google Sheets -> use Tally directly
     if (!item) {
-      return res.status(404).json({ success: false, error: 'Item not found' });
+      const tallyData = await callTally('item-by-tally-id', { tallyId: itemId });
+      if (!tallyData) {
+        return res.status(404).json({ success: false, error: 'Item not found in Tally or Google Sheets.' });
+      }
+      return res.json({ success: true, data: { ...tallyData, purchaseHistory: [], salesHistory: [] } });
     }
 
     if (companyId && item.CompanyID !== companyId) {
@@ -490,10 +557,37 @@ router.get('/items/:itemId', async (req, res) => {
     purchaseHistory.sort((a, b) => new Date(a.date) - new Date(b.date));
     salesHistory.sort((a, b) => new Date(a.date) - new Date(b.date));
 
+    // Enrich with Tally data
+    const tallyData = await callTally('item-by-name', { itemName: item.ItemName });
+
     res.json({
       success: true,
       data: {
         ...item,
+        ItemName: tallyData?.ItemName || item.ItemName,
+        Category: tallyData?.Category || item.Category || null,
+        Unit: tallyData?.Unit || item.Unit || 'Nos',
+        SaleRate: tallyData?.SaleRate ?? parseFloat(item.SaleRate || 0),
+        GST: tallyData?.GST ?? parseFloat(item.GST || 0),
+        Brand: tallyData?.Brand || item.Brand || null,
+        HSN: tallyData?.HSN || item.HSN || null,
+        CategoryID: tallyData?.CategoryID || item.CategoryID || null,
+        SubCategory: tallyData?.SubCategory || item.SubCategory || null,
+        MinStockLevel: tallyData?.MinStockLevel ?? parseFloat(item.MinStockLevel || 0),
+        MaxStockLevel: tallyData?.MaxStockLevel ?? parseFloat(item.MaxStockLevel || 0),
+        ReorderLevel: tallyData?.ReorderLevel ?? parseFloat(item.ReorderLevel || 0),
+        IsActive: tallyData?.IsActive ?? (item.IsActive !== 'FALSE'),
+        OpeningStock: tallyData?.OpeningStock ?? parseFloat(item.OpeningStock || 0),
+        PurchaseRate: tallyData?.PurchaseRate ?? parseFloat(item.PurchaseRate || 0),
+        StockValue: tallyData?.StockValue ?? 0,
+        MRP: tallyData?.MRP ?? 0,
+        SalesVelocity30d: tallyData?.SalesVelocity30d ?? 0,
+        IsUnderstock: tallyData?.IsUnderstock ?? false,
+        IsOverstock: tallyData?.IsOverstock ?? false,
+        IsPopular: tallyData?.IsPopular ?? false,
+        DaysOfStock: tallyData?.DaysOfStock ?? 0,
+        LastSaleDate: tallyData?.LastSaleDate || null,
+        LastPurchaseDate: tallyData?.LastPurchaseDate || null,
         purchaseHistory,
         salesHistory,
       }
@@ -544,6 +638,21 @@ router.get('/items/:itemId', async (req, res) => {
   });
 
 router.get('/bank-accounts/:accountId', async (req, res) => {
+  const PORT = process.env.PORT || 5001;
+  const TALLY_BASE = `http://localhost:${PORT}/api/tally`;
+  const callTally = async (endpoint, body) => {
+    try {
+      const r = await fetch(`${TALLY_BASE}/${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (!r.ok) return null;
+      const j = await r.json();
+      return j.success ? j.data : null;
+    } catch (_) { return null; }
+  };
+
   try {
     const { accountId } = req.params;
     const { companyId } = req.query;
@@ -555,8 +664,31 @@ router.get('/bank-accounts/:accountId', async (req, res) => {
     ]);
 
     const account = bankAccounts.find(b => b.AccountID === accountId);
+    
+    // If NOT in Google Sheets -> use Tally directly
     if (!account) {
-      return res.status(404).json({ success: false, error: 'Bank account not found' });
+      const accountsData = await callTally('accounts/template', {});
+      const accounts = accountsData?.accounts || [];
+      const acc = accounts.find(a => a.id === accountId || a.AccountID === accountId) || {};
+
+      const tallyData = await callTally('ledger-detail/template', { 
+        ledgerId: accountId, 
+        ledgerName: acc.name 
+      });
+      if (!tallyData) {
+        return res.status(404).json({ success: false, error: 'Bank account not found' });
+      }
+
+      const mapped = {
+        BankName: acc.bankName || tallyData.ledger?.name || 'Bank Account',
+        AccountNumber: acc.accountNo || '',
+        IFSC: acc.ifsc || '',
+        BranchName: acc.branch || '',
+        AccountType: 'Bank',
+        OpeningBalance: tallyData.ledger?.openingBalance || 0,
+        transactions: tallyData.transactions || []
+      };
+      return res.json({ success: true, data: mapped });
     }
 
     if (companyId && account.CompanyID !== companyId) {
@@ -593,6 +725,21 @@ router.get('/bank-accounts/:accountId', async (req, res) => {
 });
 
 router.get('/cash-accounts/:accountId', async (req, res) => {
+  const PORT = process.env.PORT || 5001;
+  const TALLY_BASE = `http://localhost:${PORT}/api/tally`;
+  const callTally = async (endpoint, body) => {
+    try {
+      const r = await fetch(`${TALLY_BASE}/${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (!r.ok) return null;
+      const j = await r.json();
+      return j.success ? j.data : null;
+    } catch (_) { return null; }
+  };
+
   try {
     const { accountId } = req.params;
     const { companyId } = req.query;
@@ -604,8 +751,28 @@ router.get('/cash-accounts/:accountId', async (req, res) => {
     ]);
 
     const account = cashAccounts.find(c => c.AccountID === accountId);
+    
+    // If NOT in Google Sheets -> use Tally directly
     if (!account) {
-      return res.status(404).json({ success: false, error: 'Cash account not found' });
+      const accountsData = await callTally('accounts/template', {});
+      const accounts = accountsData?.accounts || [];
+      const acc = accounts.find(a => a.id === accountId || a.AccountID === accountId) || {};
+
+      const tallyData = await callTally('ledger-detail/template', { 
+        ledgerId: accountId, 
+        ledgerName: acc.name 
+      });
+      if (!tallyData) {
+        return res.status(404).json({ success: false, error: 'Cash account not found' });
+      }
+
+      const mapped = {
+        AccountName: acc.name || tallyData.ledger?.name || 'Cash Account',
+        Location: acc.location || acc.branch || '',
+        OpeningBalance: tallyData.ledger?.openingBalance || 0,
+        transactions: tallyData.transactions || []
+      };
+      return res.json({ success: true, data: mapped });
     }
 
     if (companyId && account.CompanyID !== companyId) {
@@ -924,5 +1091,7 @@ router.get('/outstanding/:type', async (req, res) => {
     });
   }
 });
+
+
 
 module.exports = router;

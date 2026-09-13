@@ -26,6 +26,7 @@ export default function ContraVouchers() {
       amount: row.amount || 0,
       status: row.status || 'Active',
       id: row.id || null,
+      VoucherType: 'Contra',
     }));
   }, [tallyData]);
 
@@ -37,5 +38,5 @@ export default function ContraVouchers() {
 
   const partyList = useMemo(() => [...new Set(contraVouchers.map((v) => v.PartyName || '').filter(Boolean))].sort(), [contraVouchers]);
 
-  return <VoucherReportLayout title="Contra Vouchers" data={activeData} tallyData={tallyMapped} loading={loading} columns={columns} partyList={partyList} onRowClick={(row) => navigate(`/voucher/${row.VoucherID || row.id}`)} />;
+  return <VoucherReportLayout title="Contra Vouchers" data={activeData} tallyData={tallyMapped} isTallyPage={tallyMapped && tallyMapped.length > 0} loading={loading} columns={columns} partyList={partyList} onRowClick={(row) => navigate(`/voucher/${row.VoucherID || row.id}`)} />;
 }

@@ -26,6 +26,7 @@ export default function DeliveryNoteVouchers() {
       amount: row.amount || 0,
       status: row.status || 'Active',
       VoucherID: row.id || null,
+      VoucherType: 'Delivery Note',
     }));
   }, [tallyData]);
 
@@ -37,5 +38,5 @@ export default function DeliveryNoteVouchers() {
 
   const partyList = useMemo(() => [...new Set(dnVouchers.map((v) => v.PartyName || '').filter(Boolean))].sort(), [dnVouchers]);
 
-  return <VoucherReportLayout title="Delivery Note Vouchers" data={activeData} tallyData={tallyMapped} loading={loading} columns={columns} partyList={partyList} onRowClick={(row) => navigate(`/voucher/${row.VoucherID || row.id}`)} />;
+  return <VoucherReportLayout title="Delivery Note Vouchers" data={activeData} tallyData={tallyMapped} isTallyPage={tallyMapped && tallyMapped.length > 0} loading={loading} columns={columns} partyList={partyList} onRowClick={(row) => navigate(`/voucher/${row.VoucherID || row.id}`)} />;
 }

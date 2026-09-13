@@ -45,7 +45,7 @@ export const NAV_ITEMS = [
       { path: '/vouchers/receipt', label: 'Receipt', icon: ArrowDownCircle },
       { path: '/vouchers/payment', label: 'Payment', icon: ArrowUpCircle },
       { path: '/vouchers/delivery-note', label: 'Delivery Note', icon: Truck },
-      { path: '/vouchers/receipt-note', label: 'Receipt Note', icon: ArrowDownCircle },
+
       { path: '/vouchers/journal', label: 'Journal', icon: FileSpreadsheet },
       { path: '/vouchers/contra', label: 'Contra', icon: RefreshCw },
       { path: '/vouchers/debit-note', label: 'Debit Note', icon: CreditCard },

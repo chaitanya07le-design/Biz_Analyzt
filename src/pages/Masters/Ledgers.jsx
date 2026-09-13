@@ -145,7 +145,6 @@ export default function Ledgers() {
                 className="w-full pl-9 pr-4 h-10 bg-ink-50 border border-line rounded-xl text-sm outline-none focus:border-brand-500 focus:bg-white transition-all"
               />
             </div>
-            <Button icon={Plus}>New Ledger</Button>
           </div>
         </div>
 

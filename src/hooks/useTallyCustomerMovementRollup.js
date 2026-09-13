@@ -5,7 +5,7 @@ export default function useTallyCustomerMovementRollup() {
   const [data, setData] = useState(null);
   useEffect(() => {
     let active = true;
-    api.getTallyCustomerMovementRollup().then((d) => active && setData(d?.movement || [])).catch(() => setData([]));
+    api.getTallyCustomerMovement().then((d) => active && setData(d?.customers || [])).catch(() => setData([]));
     return () => { active = false; };
   }, []);
   return data;

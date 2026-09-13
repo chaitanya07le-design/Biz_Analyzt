@@ -1,16 +1,18 @@
 import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { useCompany } from '../../context/CompanyContext';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import useTallyGstLiability from '../../hooks/useTallyGstLiability';
 
 const GstLiability = () => {
   const { currentCompany } = useCompany();
+  const navigate = useNavigate();
   const { ledgers, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
   const tallyTaxes = useTallyGstLiability();
 
   const gstData = useMemo(() => {
-    if (tallyTaxes) return tallyTaxes.map((tax) => ({ id: tax.name, name: tax.name, balance: tax.balance }));
+    if (tallyTaxes) return tallyTaxes.map((tax) => ({ id: tax.name, name: tax.name, balance: tax.balance, inwardItc: tax.inwardItc || 0, outwardTax: tax.outwardTax || 0, gstin: tax.gstin || '—', period: tax.period || '—', returnFilingStatus: tax.returnFilingStatus || '—', paymentStatus: tax.paymentStatus || '—', dueDate: tax.dueDate || null }));
     if (!ledgers) return [];
     
     return ledgers
@@ -28,10 +30,14 @@ const GstLiability = () => {
         id: l.LedgerID || l.id,
         name: l.LedgerName || l.name,
         balance: parseFloat(l.OpeningBalance || l.Balance || l.balance) || 0,
+        inwardItc: 0,
+        outwardTax: 0,
       }));
   }, [ledgers, tallyTaxes]);
 
   const totalLiability = gstData.reduce((sum, item) => sum + Math.abs(item.balance), 0);
+  const totalItc = gstData.reduce((sum, item) => sum + (item.inwardItc || 0), 0);
+  const totalOutputTax = gstData.reduce((sum, item) => sum + (item.outwardTax || 0), 0);
 
   if (loading) {
     return (
@@ -47,14 +53,24 @@ const GstLiability = () => {
       animate={{ opacity: 1 }}
       className="min-h-screen bg-canvas-default pb-20 md:pb-6"
     >
-      <div className="bg-white border-b border-canvas-faint sticky top-0 z-20">
+      <div className="bg-white border-b border-canvas-faint">
         <div className="px-4 py-4 md:px-6 md:py-4">
           <div className="flex flex-col gap-4">
             <h1 className="text-xl font-semibold text-ink-default">GST Liability</h1>
-            <div className="p-4 bg-brand-50 rounded-lg border border-brand-100">
-              <p className="text-sm text-brand-600 mb-1 font-medium">Total Liability</p>
-              <h2 className="text-3xl font-bold text-brand-700">₹{totalLiability.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</h2>
-            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="p-4 bg-brand-50 rounded-lg border border-brand-100">
+                <p className="text-sm text-brand-600 mb-1 font-medium">Total Liability</p>
+                <h2 className="text-3xl font-bold text-brand-700">₹{totalLiability.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</h2>
+              </div>
+              <div className="p-4 bg-teal-light rounded-lg border border-teal-100">
+                <p className="text-sm text-teal-700 mb-1 font-medium">Total ITC (Input)</p>
+                <h2 className="text-3xl font-bold text-teal-700">₹{totalItc.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</h2>
+              </div>
+              <div className="p-4 bg-amber-light rounded-lg border border-amber-100">
+                <p className="text-sm text-amber-700 mb-1 font-medium">Total Output Tax</p>
+                <h2 className="text-3xl font-bold text-amber-700">₹{totalOutputTax.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</h2>
+</div>
+      </div>
           </div>
         </div>
       </div>
@@ -66,23 +82,54 @@ const GstLiability = () => {
               <thead>
                 <tr className="bg-canvas-subtle border-b border-canvas-faint">
                   <th className="py-3 px-4 text-xs font-semibold text-ink-muted uppercase tracking-wider">Tax Ledger</th>
-                  <th className="py-3 px-4 text-xs font-semibold text-ink-muted uppercase tracking-wider text-right">Balance Amount</th>
+                  <th className="py-3 px-4 text-xs font-semibold text-ink-muted uppercase tracking-wider">GSTIN</th>
+                  <th className="py-3 px-4 text-xs font-semibold text-ink-muted uppercase tracking-wider">Period</th>
+                  <th className="py-3 px-4 text-xs font-semibold text-ink-muted uppercase tracking-wider text-right">ITC (Input)</th>
+                  <th className="py-3 px-4 text-xs font-semibold text-ink-muted uppercase tracking-wider text-right">Output Tax</th>
+                  <th className="py-3 px-4 text-xs font-semibold text-ink-muted uppercase tracking-wider text-right">Balance</th>
+                  <th className="py-3 px-4 text-xs font-semibold text-ink-muted uppercase tracking-wider">Filing Status</th>
+                  <th className="py-3 px-4 text-xs font-semibold text-ink-muted uppercase tracking-wider">Payment Status</th>
+                  <th className="py-3 px-4 text-xs font-semibold text-ink-muted uppercase tracking-wider">Due Date</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-canvas-faint">
                 {gstData.length > 0 ? (
                   gstData.map((item, idx) => (
-                    <tr key={item.id || idx} className="hover:bg-canvas-subtle/50 transition-colors">
+                    <tr key={item.id || idx} onClick={() => { if (item.period && item.period !== '—') navigate(`/reports/gst-liability/month/${encodeURIComponent(item.period)}`); }}
+                      className="hover:bg-canvas-subtle/50 transition-colors cursor-pointer">
                       <td className="py-3 px-4 text-sm font-medium text-ink-default">{item.name}</td>
+                      <td className="py-3 px-4 text-sm text-ink-muted font-mono text-xs">{item.gstin || '—'}</td>
+                      <td className="py-3 px-4 text-sm text-ink-muted">{item.period || '—'}</td>
+                      <td className="py-3 px-4 text-sm font-medium text-teal-700 text-right">₹{Math.abs(item.inwardItc).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</td>
+                      <td className="py-3 px-4 text-sm font-medium text-amber-700 text-right">₹{Math.abs(item.outwardTax).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</td>
                       <td className="py-3 px-4 text-sm font-semibold text-ink-default text-right">
-                        ₹{Math.abs(item.balance).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        ₹{Math.abs(item.balance).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                         {item.balance < 0 ? ' (Dr)' : ' (Cr)'}
                       </td>
+                      <td className="py-3 px-4 text-sm">
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          (item.returnFilingStatus || '').toLowerCase().includes('filed') ? 'bg-teal-light text-teal-700' :
+                          (item.returnFilingStatus || '').toLowerCase().includes('pending') ? 'bg-amber-light text-amber-700' :
+                          'bg-gray-100 text-gray-600'
+                        }`}>
+                          {item.returnFilingStatus || '—'}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-sm">
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          (item.paymentStatus || '').toLowerCase().includes('paid') ? 'bg-teal-light text-teal-700' :
+                          (item.paymentStatus || '').toLowerCase().includes('pending') ? 'bg-amber-light text-amber-700' :
+                          'bg-gray-100 text-gray-600'
+                        }`}>
+                          {item.paymentStatus || '—'}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-sm text-ink-muted">{item.dueDate ? new Date(item.dueDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}</td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="2" className="py-8 text-center text-ink-muted">
+                    <td colSpan="9" className="py-8 text-center text-ink-muted">
                       No GST liability data found. Check Duties & Taxes ledgers.
                     </td>
                   </tr>

@@ -97,6 +97,55 @@ const TrendCharts = () => {
     return { totalSales, totalPurchase, grossProfit, grossMargin };
   }, [dailyData, monthlyData, chartType]);
 
+  // MoM & YoY growth from monthlyData (already computed from T39+T40)
+  const growthStats = useMemo(() => {
+    if (!monthlyData || monthlyData.length < 2) return null;
+    const sorted = [...monthlyData].sort((a, b) => a.month.localeCompare(b.month));
+    const latest = sorted[sorted.length - 1];
+    const previous = sorted[sorted.length - 2];
+    const momSales = previous.sales > 0 ? ((latest.sales - previous.sales) / previous.sales) * 100 : 0;
+    const momPurchase = previous.purchase > 0 ? ((latest.purchase - previous.purchase) / previous.purchase) * 100 : 0;
+    const avgMonthlySales = monthlyData.reduce((s, m) => s + m.sales, 0) / monthlyData.length;
+    const avgMonthlyPurchase = monthlyData.reduce((s, m) => s + m.purchase, 0) / monthlyData.length;
+
+    // YoY: compare latest month with same month 12 months ago
+    const [y, mo] = latest.month.split('-');
+    const prevYearMonth = `${parseInt(y) - 1}-${mo}`;
+    const prevYearEntry = monthlyData.find(m => m.month === prevYearMonth);
+    const yoySales = prevYearEntry && prevYearEntry.sales > 0 ? ((latest.sales - prevYearEntry.sales) / prevYearEntry.sales) * 100 : null;
+
+    return { momSales, momPurchase, avgMonthlySales, avgMonthlyPurchase, yoySales, latestMonth: latest.month, previousMonth: previous.month };
+  }, [monthlyData]);
+
+  // YoY comparison table: each month vs same month 12 months prior
+  const yoyData = useMemo(() => {
+    if (!monthlyData || monthlyData.length < 13) return [];
+    const byMonth = {};
+    monthlyData.forEach(m => { byMonth[m.month] = m; });
+    const current = monthlyData.filter(m => m.month >= '2025-04'); // last 12-24 months
+    return current.map(m => {
+      const [y, mo] = m.month.split('-');
+      const prevMonth = `${parseInt(y) - 1}-${mo}`;
+      const prev = byMonth[prevMonth];
+      const yoySales = prev && prev.sales > 0 ? ((m.sales - prev.sales) / prev.sales) * 100 : null;
+      const yoyPurchase = prev && prev.purchase > 0 ? ((m.purchase - prev.purchase) / prev.purchase) * 100 : null;
+      return { month: m.month, salesThisYear: m.sales, salesLastYear: prev?.sales || 0, yoySales, purchaseThisYear: m.purchase, purchaseLastYear: prev?.purchase || 0, yoyPurchase };
+    });
+  }, [monthlyData]);
+
+  // 3-month moving average for sales trend line
+  const movingAverage = useMemo(() => {
+    if (!monthlyData || monthlyData.length < 3) return [];
+    const sorted = [...monthlyData].sort((a, b) => a.month.localeCompare(b.month));
+    const result = [];
+    for (let i = 2; i < sorted.length; i++) {
+      const avg = (sorted[i-2].sales + sorted[i-1].sales + sorted[i].sales) / 3;
+      result.push({ month: sorted[i].month, average: avg, actual: sorted[i].sales });
+    }
+    const maxAvg = Math.max(...result.map(r => r.average), 1);
+    return result.map(r => ({ ...r, normAvg: r.average / maxAvg, normActual: r.actual / maxAvg }));
+  }, [monthlyData]);
+
   const formatCurrency = (value) => {
     if (value >= 10000000) return `₹${(value / 10000000).toFixed(1)}Cr`;
     if (value >= 100000) return `₹${(value / 100000).toFixed(1)}L`;
@@ -212,6 +261,98 @@ const TrendCharts = () => {
           </motion.div>
         </div>
 
+        {growthStats && (
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+            <motion.div
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="bg-white rounded-xl p-4 border border-canvas-faint"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <BarChart3 className="w-4 h-4 text-ink-muted" />
+                <span className="text-xs text-ink-muted">Avg Monthly Sales</span>
+              </div>
+              <div className="text-lg font-bold text-ink-default">{formatCurrency(growthStats.avgMonthlySales)}</div>
+            </motion.div>
+
+            <motion.div
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.32 }}
+              className="bg-white rounded-xl p-4 border border-canvas-faint"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                {growthStats.momSales >= 0 ? (
+                  <TrendingUp className="w-4 h-4 text-teal-600" />
+                ) : (
+                  <TrendingDown className="w-4 h-4 text-rose-600" />
+                )}
+                <span className="text-xs text-ink-muted">MoM Sales Growth</span>
+              </div>
+              <div className={`text-lg font-bold ${growthStats.momSales >= 0 ? 'text-teal-700' : 'text-rose-700'}`}>
+                {growthStats.momSales >= 0 ? '↑' : '↓'} {Math.abs(growthStats.momSales).toFixed(1)}%
+              </div>
+              <div className="text-xs text-ink-muted mt-1">{growthStats.previousMonth.slice(0,7)} → {growthStats.latestMonth.slice(0,7)}</div>
+            </motion.div>
+
+            <motion.div
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.34 }}
+              className="bg-white rounded-xl p-4 border border-canvas-faint"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                {growthStats.yoySales != null && growthStats.yoySales >= 0 ? (
+                  <TrendingUp className="w-4 h-4 text-teal-600" />
+                ) : (
+                  <TrendingDown className="w-4 h-4 text-rose-600" />
+                )}
+                <span className="text-xs text-ink-muted">YoY Sales Growth</span>
+              </div>
+              <div className={`text-lg font-bold ${growthStats.yoySales != null && growthStats.yoySales >= 0 ? 'text-teal-700' : 'text-rose-700'}`}>
+                {growthStats.yoySales != null
+                  ? `${growthStats.yoySales >= 0 ? '↑' : '↓'} ${Math.abs(growthStats.yoySales).toFixed(1)}%`
+                  : '—'}
+              </div>
+              <div className="text-xs text-ink-muted mt-1">vs 12 months ago</div>
+            </motion.div>
+
+            <motion.div
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.36 }}
+              className="bg-white rounded-xl p-4 border border-canvas-faint"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                {growthStats.momPurchase >= 0 ? (
+                  <TrendingUp className="w-4 h-4 text-amber-600" />
+                ) : (
+                  <TrendingDown className="w-4 h-4 text-amber-600" />
+                )}
+                <span className="text-xs text-ink-muted">MoM Purchase</span>
+              </div>
+              <div className={`text-lg font-bold ${growthStats.momPurchase >= 0 ? 'text-amber-700' : 'text-rose-700'}`}>
+                {growthStats.momPurchase >= 0 ? '↑' : '↓'} {Math.abs(growthStats.momPurchase).toFixed(1)}%
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.38 }}
+              className="bg-white rounded-xl p-4 border border-canvas-faint"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <Calendar className="w-4 h-4 text-purple-600" />
+                <span className="text-xs text-ink-muted">Latest Month</span>
+              </div>
+              <div className="text-lg font-bold text-ink-default">{formatMonth(growthStats.latestMonth)}</div>
+              <div className="text-xs text-ink-muted mt-1">Sales: {formatCurrency(monthlyData[monthlyData.length - 1]?.sales || 0)}</div>
+            </motion.div>
+          </div>
+        )}
+
         <motion.div
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -281,6 +422,56 @@ const TrendCharts = () => {
           </div>
         </motion.div>
 
+        {movingAverage.length > 0 && (
+          <motion.div
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.35 }}
+            className="bg-white rounded-xl border border-canvas-faint mb-6"
+          >
+            <div className="px-4 py-3 border-b border-canvas-faint">
+              <h3 className="font-medium text-ink-default">3-Month Sales Moving Average</h3>
+              <p className="text-xs text-ink-muted">Trend line smoothing monthly fluctuations</p>
+            </div>
+            <div className="p-4">
+              <div className="flex items-end gap-4">
+                <div className="text-xs text-ink-muted flex flex-col justify-between h-48 py-2">
+                  <span>100%</span><span>50%</span><span>0%</span>
+                </div>
+                <svg className="flex-1 h-48" viewBox={`0 0 ${movingAverage.length * 20 + 20} 100`} preserveAspectRatio="none">
+                  {/* Grid lines */}
+                  <line x1="0" y1="25" x2={movingAverage.length * 20 + 20} y2="25" stroke="#e5e7eb" strokeWidth="0.5" />
+                  <line x1="0" y1="50" x2={movingAverage.length * 20 + 20} y2="50" stroke="#e5e7eb" strokeWidth="0.5" />
+                  <line x1="0" y1="75" x2={movingAverage.length * 20 + 20} y2="75" stroke="#e5e7eb" strokeWidth="0.5" />
+
+                  {/* Moving average line */}
+                  <polyline
+                    fill="none"
+                    stroke="#8b5cf6"
+                    strokeWidth="2"
+                    points={movingAverage.map((m, i) => `${i * 20 + 10},${100 - m.normAvg * 100}`).join(' ')}
+                  />
+
+                  {/* Actual dots */}
+                  {movingAverage.map((m, i) => (
+                    <circle key={i} cx={i * 20 + 10} cy={100 - m.normActual * 100} r="2" fill="#8b5cf6" opacity="0.3" />
+                  ))}
+                </svg>
+              </div>
+              <div className="flex gap-4 mt-2 items-center justify-center">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-3 h-0.5 rounded-full bg-brand-600" />
+                  <span className="text-xs text-ink-muted">3-Mo Moving Avg</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 rounded-full bg-brand-600 opacity-30" />
+                  <span className="text-xs text-ink-muted">Actual Sales</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
         <motion.div
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -327,6 +518,52 @@ const TrendCharts = () => {
             </table>
           </div>
         </motion.div>
+
+        {yoyData.length > 0 && (
+          <motion.div
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="bg-white rounded-xl border border-canvas-faint mt-6"
+          >
+            <div className="px-4 py-3 border-b border-canvas-faint">
+              <h3 className="font-medium text-ink-default">Year-over-Year Comparison</h3>
+              <p className="text-xs text-ink-muted">Monthly performance vs same month last year</p>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-canvas-subtle text-ink-muted">
+                  <tr>
+                    <th className="px-4 py-3 font-medium">Month</th>
+                    <th className="px-4 py-3 font-medium text-right">This Year Sales</th>
+                    <th className="px-4 py-3 font-medium text-right">Last Year Sales</th>
+                    <th className="px-4 py-3 font-medium text-right">YoY Change</th>
+                    <th className="px-4 py-3 font-medium text-right">This Year Purchase</th>
+                    <th className="px-4 py-3 font-medium text-right">Last Year Purchase</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-canvas-faint">
+                  {yoyData.map((d, idx) => (
+                    <tr key={idx} className="hover:bg-canvas-subtle">
+                      <td className="px-4 py-3 font-medium">{formatMonth(d.month)}</td>
+                      <td className="px-4 py-3 text-right text-teal-600">{formatCurrency(d.salesThisYear)}</td>
+                      <td className="px-4 py-3 text-right text-ink-muted">{formatCurrency(d.salesLastYear)}</td>
+                      <td className="px-4 py-3 text-right">
+                        {d.yoySales != null ? (
+                          <span className={`font-medium ${d.yoySales >= 0 ? 'text-teal-600' : 'text-rose-600'}`}>
+                            {d.yoySales >= 0 ? '▲' : '▼'} {Math.abs(d.yoySales).toFixed(1)}%
+                          </span>
+                        ) : <span className="text-ink-muted">—</span>}
+                      </td>
+                      <td className="px-4 py-3 text-right text-rose-600">{formatCurrency(d.purchaseThisYear)}</td>
+                      <td className="px-4 py-3 text-right text-ink-muted">{formatCurrency(d.purchaseLastYear)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </motion.div>
+        )}
       </div>
     </motion.div>
   );

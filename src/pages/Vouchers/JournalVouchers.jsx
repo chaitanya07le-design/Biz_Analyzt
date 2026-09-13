@@ -19,9 +19,23 @@ export default function JournalVouchers() {
 
   const journalVouchers = useMemo(() => {
     if (tallyVouchers && tallyVouchers.length > 0) {
-      return tallyVouchers.filter((v) => (v.type || '').toLowerCase() === 'journal').map((v) => ({ ...v, VoucherID: v.id || v.VoucherID, VoucherNo: v.voucherNo || v.VoucherNo, VoucherDate: v.date || v.VoucherDate, VoucherType: 'Journal', PartyName: v.party || v.particulars || v.PartyName || '—', NetAmount: v.amount, Status: v.status || 'POSTED' }));
+      return tallyVouchers.filter((v) => (v.type || '').toLowerCase() === 'journal').map((v) => ({ 
+        ...v, 
+        VoucherID: v.id || v.VoucherID, 
+        VoucherNo: v.voucherNo || v.VoucherNo, 
+        VoucherDate: v.date || v.VoucherDate, 
+        VoucherType: 'Journal', 
+        PartyName: v.party || v.particulars || v.partyName || '—', 
+        party: v.party || v.particulars || v.partyName || '—', // Ensure the 'party' key is set for the column
+        NetAmount: v.amount, 
+        Status: v.status || 'POSTED' 
+      }));
     }
-    return (vouchers || []).filter((v) => v.VoucherType === 'Journal').map((v) => ({ ...v, PartyName: v.Narration || v.PartyName || 'Journal Entry' }));
+    return (vouchers || []).filter((v) => v.VoucherType === 'Journal').map((v) => ({ 
+      ...v, 
+      PartyName: v.Narration || v.PartyName || 'Journal Entry',
+      party: v.Narration || v.PartyName || 'Journal Entry'
+    }));
   }, [vouchers, tallyVouchers]);
 
   const partyList = useMemo(() => [...new Set(journalVouchers.map((v) => v.PartyName || '').filter(Boolean))].sort(), [journalVouchers]);

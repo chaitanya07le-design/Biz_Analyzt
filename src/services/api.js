@@ -198,6 +198,7 @@ class ApiService {
 
   async getTallyTrends() { return this.post('/tally/trends/templates', {}); }
   async getTallyGstLiability() { return this.post('/tally/gst-liability/template', {}); }
+  async getTallyGstMonthVouchers(month) { return this.post('/tally/gst-month-vouchers', { month }); }
   async getTallyStockBatches() { return this.post('/tally/stock-batches/template', {}); }
   async getTallyParties() { return this.post('/tally/parties/templates', {}); }
   async getTallySalesVouchers() { return this.post('/tally/sales-vouchers/templates', {}); }
@@ -227,6 +228,7 @@ class ApiService {
   async getTallyCustomerMovementRollup() { return this.post('/tally/customer-movement-rollup/template', {}); }
   async getTallyByItemRollup() { return this.post('/tally/by-item-rollup/template', {}); }
   async getTallyGeographicRollup() { return this.post('/tally/geographic-rollup/template', {}); }
+  async getTallyGeographicFull() { return this.post('/tally/geographic/full', {}); }
   async getTallyPartyDetails() { return this.post('/tally/party-details/template', {}); }
   async getTallyAgingReport() { return this.post('/tally/aging-report/template', {}); }
   async getTallyBatchStock() { return this.post('/tally/batch-stock/template', {}); }
@@ -234,6 +236,7 @@ class ApiService {
   async getTallyItemPartyWiseSales() { return this.post('/tally/item-party-wise-sales/template', {}); }
   async getTallyDeliveryNoteVouchers(fromDate, toDate) { return this.post('/tally/delivery-note-vouchers/template', { fromDate, toDate }); }
   async getTallyContraVouchers(fromDate, toDate) { return this.post('/tally/contra-vouchers/template', { fromDate, toDate }); }
+  async getTallyReceiptNoteVouchers(fromDate, toDate) { return this.post('/tally/receipt-note-vouchers/template', { fromDate, toDate }); }
   async getTallyTopBrands() { return this.post('/tally/top-brands/template', {}); }
   async getTallyTopReport() { return this.post('/tally/top-report/template', {}); }
   async getTallyByLedger(fromDate, toDate) { return this.post('/tally/by-ledger/template', { fromDate, toDate }); }

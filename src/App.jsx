@@ -38,8 +38,10 @@ import StockDetail from './pages/StockDetail';
 import SyncLogPage from './pages/reports/SyncLogPage';
 import TrendCharts from './pages/reports/TrendCharts';
 import GeographicReport from './pages/reports/GeographicReport';
+import GeographicStateDetail from './pages/reports/GeographicStateDetail';
 import LedgerStatement from './pages/reports/LedgerStatement';
 import PendingOrders from './pages/reports/PendingOrders';
+import PendingOrderDetail from './pages/reports/PendingOrderDetail';
 import VoucherAudit from './pages/Reports/VoucherAudit';
 import SalesQuotations from './pages/Reports/SalesQuotations';
 import CustomerPurchaseHistory from './pages/Reports/CustomerPurchaseHistory';
@@ -78,6 +80,7 @@ import DateSettings from './pages/Settings/DateSettings';
 import DefaultScreenSettings from './pages/Settings/DefaultScreenSettings';
 import CurrencySettings from './pages/Settings/CurrencySettings';
 import GstLiability from './pages/Reports/GstLiability';
+import GstMonthDetail from './pages/Reports/GstMonthDetail';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -179,12 +182,15 @@ function AppRoutes() {
           <Route path="reports/sync-log" element={<SyncLogPage />} />
           <Route path="reports/trends" element={<TrendCharts />} />
           <Route path="reports/geographic" element={<GeographicReport />} />
+          <Route path="reports/geographic/:state" element={<GeographicStateDetail />} />
           <Route path="reports/expenses" element={<ExpensesReport />} />
           <Route path="reports/gst-liability" element={<GstLiability />} />
+          <Route path="reports/gst-liability/month/:month" element={<GstMonthDetail />} />
           <Route path="reports/customer" element={<CustomerView />} />
           <Route path="reports/ledger/:ledgerId" element={<LedgerDetail />} />
           <Route path="reports/pending-purchase" element={<PendingOrders type="purchase" />} />
           <Route path="reports/pending-sales" element={<PendingOrders type="sales" />} />
+          <Route path="reports/pending-sales/:orderNumber" element={<PendingOrderDetail />} />
           <Route path="reports/voucher-audit" element={<VoucherAudit />} />
           <Route path="reports/sales-quotations" element={<SalesQuotations />} />
           <Route path="reports/customer-purchase-history" element={<CustomerPurchaseHistory />} />

@@ -1,15 +1,19 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { MapPin, Users, TrendingUp, DollarSign, Building } from 'lucide-react';
 import Skeleton from '../../components/shared/Skeleton';
 import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import useTallyGeographicRollup from '../../hooks/useTallyGeographicRollup';
+import useTallyTopReport from '../../hooks/useTallyTopReport';
 import { useCompany } from '../../context/CompanyContext';
 
 const GeographicReport = () => {
   const { currentCompany } = useCompany();
+  const navigate = useNavigate();
   const { geographicSummary, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
   const tallyGeo = useTallyGeographicRollup();
+  const { customers: topCustomers, products: topProducts } = useTallyTopReport();
 
   const [sortBy, setSortBy] = useState('sales');
   const [selectedState, setSelectedState] = useState('');
@@ -23,9 +27,10 @@ const GeographicReport = () => {
         partyCount: t.partyCount || 0,
         salesValue: t.salesValue || 0,
         purchaseValue: t.purchaseValue || 0,
-        outstanding: 0,
-        topCustomers: '-',
-        topItems: '-',
+        outstanding: t.outstanding || 0,
+        topCustomers: t.topCustomers || '—',
+        topItems: t.topItems || '—',
+        period: t.period || null,
       }));
     }
     if (!geographicSummary) return [];
@@ -237,7 +242,21 @@ const GeographicReport = () => {
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.4 + idx * 0.02 }}
-                  className="px-4 py-4 hover:bg-canvas-subtle"
+                  className="px-4 py-4 hover:bg-canvas-subtle cursor-pointer"
+                  onClick={() => {
+                    const stateName = row.state;
+                    const cities = filteredData.filter(d => d.state === stateName);
+                    const agg = {
+                      totalCities: cities.length,
+                      totalCustomers: cities.reduce((s, c) => s + c.partyCount, 0),
+                      totalSales: cities.reduce((s, c) => s + c.salesValue, 0),
+                      totalPurchase: cities.reduce((s, c) => s + c.purchaseValue, 0),
+                      totalOutstanding: cities.reduce((s, c) => s + c.outstanding, 0),
+                    };
+                    navigate(`/reports/geographic/${encodeURIComponent(stateName)}`, {
+                      state: { stateName, cities, aggregated: agg, topCustomers: [], topProducts: topProducts || [] },
+                    });
+                  }}
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
@@ -285,6 +304,32 @@ const GeographicReport = () => {
             Showing {filteredData.length} of {geoData.length} locations
           </div>
         </motion.div>
+
+        {/* Top Items from Template 81 */}
+        {topProducts && topProducts.length > 0 && (
+          <motion.div
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="bg-white rounded-xl border border-canvas-faint mb-6"
+          >
+            <div className="px-4 py-3 border-b border-canvas-faint">
+              <h2 className="font-semibold text-ink-default">Top Products</h2>
+              <p className="text-xs text-ink-muted">By total sales value across all regions</p>
+            </div>
+            <div className="divide-y divide-canvas-faint">
+              {topProducts.slice(0, 10).map((product, idx) => (
+                <div key={product.id || idx} className="px-4 py-3 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs font-bold text-ink-muted w-6">{idx + 1}</span>
+                    <span className="text-sm font-medium text-ink-default">{product.name}</span>
+                  </div>
+                  <span className="text-sm font-medium text-teal-700">{formatCurrency(product.totalValue)}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
       </div>
     </motion.div>
   );
