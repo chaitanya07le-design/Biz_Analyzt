@@ -14,6 +14,8 @@ import ReportPage from './pages/ReportPage';
 import CashBankPage from './pages/CashBankPage';
 import Outstanding from './pages/Outstanding';
 import ReportsPage from './pages/ReportsPage';
+import MastersPage from './pages/MastersPage';
+import VouchersPage from './pages/VouchersPage';
 import ItemsPage from './pages/ItemsPage';
 import Settings from './pages/Settings';
 import ComingSoon from './pages/ComingSoon';
@@ -52,16 +54,7 @@ import ReimbursementAudit from './pages/Reports/ReimbursementAudit';
 import StockBatchesPage from './pages/analytics/StockBatchesPage';
 import ItemStockStatusPage from './pages/analytics/ItemStockStatusPage';
 import CustomerMovementPage from './pages/analytics/CustomerMovementPage';
-import SalesVouchers from './pages/Vouchers/SalesVouchers';
-import PurchaseVouchers from './pages/Vouchers/PurchaseVouchers';
-import ReceiptVouchers from './pages/Vouchers/ReceiptVouchers';
-import PaymentVouchers from './pages/Vouchers/PaymentVouchers';
-import JournalVouchers from './pages/Vouchers/JournalVouchers';
-import ContraVouchers from './pages/Vouchers/ContraVouchers';
-import DebitNoteVouchers from './pages/Vouchers/DebitNoteVouchers';
-import CreditNoteVouchers from './pages/Vouchers/CreditNoteVouchers';
-import DeliveryNoteVouchers from './pages/Vouchers/DeliveryNoteVouchers';
-import ReceiptNoteVouchers from './pages/Vouchers/ReceiptNoteVouchers';
+import VoucherListView from './pages/Vouchers/VoucherListView';
 import PartyWiseSales from './pages/Vouchers/PartyWiseSales';
 import ItemWiseSales from './pages/Vouchers/ItemWiseSales';
 import Parties from './pages/Masters/Parties';
@@ -136,21 +129,21 @@ function AppRoutes() {
           <Route path="voucher/:voucherId" element={<VoucherDetail />} />
           <Route path="tally-voucher/:voucherType/*" element={<TallyVoucherDetail />} />
           {/* Vouchers routes - must come BEFORE :module catch-all */}
-          <Route path="vouchers" element={<Navigate to="/vouchers/sales" replace />} />
-          <Route path="vouchers/sales" element={<SalesVouchers />} />
-          <Route path="vouchers/purchase" element={<PurchaseVouchers />} />
-          <Route path="vouchers/receipt" element={<ReceiptVouchers />} />
-          <Route path="vouchers/payment" element={<PaymentVouchers />} />
-          <Route path="vouchers/journal" element={<JournalVouchers />} />
-          <Route path="vouchers/contra" element={<ContraVouchers />} />
-          <Route path="vouchers/debit-note" element={<DebitNoteVouchers />} />
-          <Route path="vouchers/credit-note" element={<CreditNoteVouchers />} />
-          <Route path="vouchers/delivery-note" element={<DeliveryNoteVouchers />} />
-          <Route path="vouchers/receipt-note" element={<ReceiptNoteVouchers />} />
+          <Route path="vouchers" element={<VouchersPage />} />
+          <Route path="vouchers/sales" element={<VoucherListView type="sales" />} />
+          <Route path="vouchers/purchase" element={<VoucherListView type="purchase" />} />
+          <Route path="vouchers/receipt" element={<VoucherListView type="receipt" />} />
+          <Route path="vouchers/payment" element={<VoucherListView type="payment" />} />
+          <Route path="vouchers/journal" element={<VoucherListView type="journal" />} />
+          <Route path="vouchers/contra" element={<VoucherListView type="contra" />} />
+          <Route path="vouchers/debit-note" element={<VoucherListView type="debit-note" />} />
+          <Route path="vouchers/credit-note" element={<VoucherListView type="credit-note" />} />
+          <Route path="vouchers/delivery-note" element={<VoucherListView type="delivery-note" />} />
+          <Route path="vouchers/receipt-note" element={<VoucherListView type="receipt-note" />} />
           <Route path="vouchers/party-wise-sales" element={<PartyWiseSales />} />
           <Route path="vouchers/item-wise-sales" element={<ItemWiseSales />} />
           {/* Masters routes - must come BEFORE :module catch-all */}
-          <Route path="masters" element={<Navigate to="/masters/parties" replace />} />
+          <Route path="masters" element={<MastersPage />} />
           <Route path="masters/parties" element={<Parties />} />
           <Route path="masters/items" element={<Items />} />
           <Route path="masters/groups" element={<Groups />} />

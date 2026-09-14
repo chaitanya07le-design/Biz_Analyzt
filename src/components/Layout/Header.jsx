@@ -14,7 +14,7 @@ export default function Header({ subtitle, actions }) {
   const hasNotificationsActive = Object.values(notificationSettings || {}).some(v => v === true);
 
   return (
-    <header className="sticky top-0 z-30 h-16 px-4 md:px-6 flex items-center justify-between bg-white border-b border-line">
+    <header className="sticky top-0 z-30 h-16 pl-14 pr-4 md:px-6 flex items-center justify-between bg-white border-b border-line">
       <div className="flex items-center gap-4">
         <div className="flex flex-col justify-center">
           <h1 className="text-base md:text-lg font-semibold text-ink-900 leading-none">{title}</h1>

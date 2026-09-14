@@ -108,19 +108,27 @@ export const NAV_ITEMS = [
 ]
 
 export function titleForPath(pathname) {
+  let bestMatch = 'Dashboard'
+  let bestMatchLength = 0
+
   for (const item of NAV_ITEMS) {
-    if (item.path === pathname) {
-      return item.label
+    if (pathname === item.path) return item.label
+    if (pathname.startsWith(item.path + '/') && item.path.length > bestMatchLength) {
+      bestMatch = item.label
+      bestMatchLength = item.path.length
     }
+    
     if (item.children) {
       for (const child of item.children) {
-        if (child.path === pathname) {
-          return child.label
+        if (pathname === child.path) return child.label
+        if (pathname.startsWith(child.path + '/') && child.path.length > bestMatchLength) {
+          bestMatch = child.label
+          bestMatchLength = child.path.length
         }
       }
     }
   }
-  return 'Dashboard'
+  return bestMatch
 }
 
 export function findNavItem(pathname) {

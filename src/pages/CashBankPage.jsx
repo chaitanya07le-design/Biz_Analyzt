@@ -15,88 +15,23 @@ const CashBankPage = () => {
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   
-  const { ledgers, bankAccounts: apiBankAccounts, cashAccounts: apiCashAccounts, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
-  const { cashBank: tallyCashBank } = useTallyCashBank();
+  // Only fetch basic company details if needed, skip fallback ledgers/accounts
+  const { cashBank: tallyCashBank, loading: tallyLoading } = useTallyCashBank();
+  
+  const loading = tallyLoading;
   
   const accounts = useMemo(() => {
-    const allAccounts = [];
-    
-    if (apiBankAccounts && apiBankAccounts.length > 0) {
-      allAccounts.push(...apiBankAccounts.map(b => ({
-        id: b.BankID || b.AccountID || b.id,
-        name: b.BankName || b.AccountName || b.name || b.AccountNo || b.AccountNumber || 'Bank Account',
-        group: 'Bank Accounts',
-        balance: parseFloat(b.OpeningBalance || b.CurrentBalance || b.balance || 0),
-        type: 'bank',
-        accountNumber: b.AccountNo || b.AccountNumber || '',
-        ifsc: b.IFSCCode || b.ifsc || '',
-        bankName: b.BankName || b.bankName || '',
-        accountType: b.AccountType || b.accountType || '',
-        lastTransaction: b.LastTransaction || b.lastTransaction || '',
-      })));
-    }
-    
-    if (apiCashAccounts && apiCashAccounts.length > 0) {
-      allAccounts.push(...apiCashAccounts.map(c => ({
-        id: c.CashID || c.AccountID || c.id,
-        name: c.CashType || c.AccountName || c.name || 'Cash Account',
-        group: 'Cash-in-Hand',
-        balance: parseFloat(c.OpeningBalance || c.CurrentBalance || c.balance || 0),
-        type: 'cash',
-        lastTransaction: c.LastTransaction || c.lastTransaction || '',
-      })));
-    }
-    
-    if (allAccounts.length === 0 && ledgers && ledgers.length > 0) {
-      allAccounts.push(...ledgers.filter(l => 
-        l.Group === 'Cash-in-Hand' || l.Group === 'Bank Accounts' ||
-        l.group === 'Cash-in-Hand' || l.group === 'Bank Accounts'
-      ).map(l => ({
-        id: l.LedgerID || l.id,
-        name: l.LedgerName || l.name,
-        group: l.Group || l.group,
-        balance: parseFloat(l.OpeningBalance || l.balance || 0),
-        type: l.Group === 'Bank Accounts' ? 'bank' : 'cash',
-        accountNumber: l.AccountNumber || l.accountNumber || '',
-        ifsc: l.IFSCCode || l.ifsc || '',
-        bankName: l.BankName || l.bankName || '',
-        accountType: l.AccountType || l.accountType || '',
-        lastTransaction: l.LastTransaction || l.lastTransaction || '',
-      })));
-    }
-    
-    const tallyAccounts = tallyCashBank?.accounts || [];
-    const tallyBalances = new Map(tallyAccounts.map((account) => [String(account.name).trim().toLowerCase(), account.closingBalance]));
-    const mergedAccounts = allAccounts.map((account) => ({
-      ...account,
-      balance: tallyBalances.has(String(account.name).trim().toLowerCase()) ? tallyBalances.get(String(account.name).trim().toLowerCase()) : account.balance,
-    }));
-    const existingNames = new Set(mergedAccounts.map((account) => String(account.name).trim().toLowerCase()));
-    const tallyOnlyAccounts = tallyAccounts
-      .filter((account) => !existingNames.has(String(account.name).trim().toLowerCase()))
-      .map((account, index) => ({
-        id: `tally-account-${index}`,
-        name: account.name,
-        group: account.group === 'Bank Accounts' ? 'Bank Accounts' : 'Cash-in-Hand',
-        balance: account.closingBalance,
-        type: account.group === 'Bank Accounts' ? 'bank' : 'cash',
-        accountNumber: '',
-        ifsc: '',
-        bankName: '',
-        accountType: '',
-        lastTransaction: '',
-      }));
-    return [...mergedAccounts, ...tallyOnlyAccounts];
-  }, [ledgers, apiBankAccounts, apiCashAccounts, tallyCashBank]);
+    return tallyCashBank?.accounts || [];
+  }, [tallyCashBank]);
 
-  const cashAccounts = accounts.filter(a => a.group === 'Cash-in-Hand');
-  const bankAccounts = accounts.filter(a => a.group === 'Bank Accounts');
+  const cashAccounts = accounts.filter(a => a.group === 'Cash-in-Hand' || (a.group || '').toLowerCase().includes('cash'));
+  const bankAccounts = accounts.filter(a => a.group === 'Bank Accounts' || (a.group || '').toLowerCase().includes('bank'));
 
-  const totalCash = cashAccounts.reduce((sum, a) => sum + a.balance, 0);
-  const totalBank = bankAccounts.reduce((sum, a) => sum + a.balance, 0);
+  const totalCash = cashAccounts.reduce((sum, a) => sum + (a.closingBalance || a.balance || 0), 0);
+  const totalBank = bankAccounts.reduce((sum, a) => sum + (a.closingBalance || a.balance || 0), 0);
   const grandTotal = totalCash + totalBank;
 
-  const negativeAccounts = accounts.filter(a => a.balance < 0);
+  const negativeAccounts = accounts.filter(a => (a.closingBalance || a.balance || 0) < 0);
 
   const handleAccountClick = (account) => {
     setSelectedAccount(account);

@@ -92,8 +92,14 @@ const executeTemplate = async (templateNo, auth, variables = {}) => {
       if (response.data?.status !== 'success') {
         throw new Error(response.data?.message || `Tally template ${templateNo} did not succeed.`);
       }
+      if (response.data?.message === 'Connection not established') {
+        throw new Error('Tally Connector Agent is disconnected. Please ensure the agent is running and connected.');
+      }
       templateCache.set(cacheKey, { data: response.data, expiresAt: Date.now() + TEMPLATE_CACHE_TTL_MS });
       return response.data;
+    }).catch(err => {
+      console.error(`[executeTemplate] Error fetching template ${templateNo}:`, err.message, err.response?.data);
+      throw err;
     });
   templateRequests.set(cacheKey, request);
 
@@ -124,6 +130,13 @@ router.post('/dashboard/templates', async (req, res) => {
   }
 
   const results = await Promise.allSettled(templateNos.map((templateNo) => executeTemplate(templateNo, auth)));
+  
+  // Check for critical connection errors
+  const connectionError = results.find(r => r.status === 'rejected' && r.reason?.message?.includes('disconnected'));
+  if (connectionError) {
+    return res.status(502).json({ success: false, error: connectionError.reason.message });
+  }
+
   const templates = Object.fromEntries(results.map((result, index) => {
     const templateNo = templateNos[index];
     return [templateNo, result.status === 'fulfilled'
@@ -155,6 +168,12 @@ router.post('/outstanding/templates', async (req, res) => {
   }
 
   const results = await Promise.allSettled(OUTSTANDING_TEMPLATE_IDS.map((templateNo) => executeTemplate(templateNo, auth)));
+  
+  const connectionError = results.find(r => r.status === 'rejected' && r.reason?.message?.includes('disconnected'));
+  if (connectionError) {
+    return res.status(502).json({ success: false, error: connectionError.reason.message });
+  }
+
   const templates = Object.fromEntries(results.map((result, index) => {
     const templateNo = OUTSTANDING_TEMPLATE_IDS[index];
     return [templateNo, result.status === 'fulfilled'
@@ -171,6 +190,12 @@ router.post('/cash-bank/templates', async (req, res) => {
   try {
     const auth = await getTallyAuth();
     const results = await Promise.allSettled(CASH_BANK_TEMPLATE_IDS.map((templateNo) => executeTemplate(templateNo, auth)));
+    
+    const connectionError = results.find(r => r.status === 'rejected' && r.reason?.message?.includes('disconnected'));
+    if (connectionError) {
+      return res.status(502).json({ success: false, error: connectionError.reason.message });
+    }
+
     const templates = Object.fromEntries(results.map((result, index) => {
       const templateNo = CASH_BANK_TEMPLATE_IDS[index];
       return [templateNo, result.status === 'fulfilled' ? { status: 'success', data: result.value } : { status: 'error', error: result.reason?.message || 'Tally template request failed.' }];
@@ -657,16 +682,18 @@ router.post('/day-book/month-vouchers', async (req, res) => {
 // Voucher detail by voucherNo + type (for DayBook drill-down → individual voucher view)
 router.post('/voucher-detail', async (req, res) => {
   try {
-    const { voucherId, voucherNo, voucherType } = req.body;
+    let { voucherId, voucherNo, voucherType } = req.body;
+    voucherNo = (voucherNo || '').trim();
     console.log(`[Voucher Detail] Requested type: "${voucherType}", no: "${voucherNo}", id: "${voucherId}"`);
     if (!voucherNo || !voucherType) {
       return res.status(400).json({ success: false, error: 'voucherNo and voucherType are required' });
     }
 
     const auth = await getTallyAuth();
-    const broadRange = { cust_from_date: '2024-04-01', cust_to_date: '2030-03-31' };
+    const broadRange = { cust_from_date: '2000-01-01', cust_to_date: '2030-03-31' };
+    const vTypeStr = (voucherType || '').toLowerCase().trim();
 
-    if (voucherType === 'Sales') {
+    if (vTypeStr === 'sales') {
       const [t51Result, t23Result] = await Promise.allSettled([
         executeTemplate(51, auth, broadRange),
         executeTemplate(23, auth),
@@ -682,7 +709,12 @@ router.post('/voucher-detail', async (req, res) => {
       });
 
       // Find matching voucher rows
-      const rows = t51Rows.filter((r) => (r.voucher_number || '').trim() === voucherNo);
+      const targetVno = voucherNo === '—' ? '' : voucherNo;
+      const rows = t51Rows.filter((r, i) => {
+        const vno = (r.voucher_number || '').trim();
+        if (voucherId && (r.voucher_id || r.VoucherID || r.id) && (r.voucher_id || r.VoucherID || r.id).toString() === voucherId) return true;
+        return vno === targetVno || voucherNo === `tally-sales-${i}`;
+      });
       if (rows.length === 0) return res.status(404).json({ success: false, error: 'Voucher not found' });
 
       const t23 = t23Map[voucherNo] || {};
@@ -750,7 +782,7 @@ router.post('/voucher-detail', async (req, res) => {
         placeOfSupply: t23.place_of_supply || null,
         lineItems,
       }});
-    } else if (voucherType === 'Journal' || voucherType === 'Debit Note' || voucherType === 'Credit Note') {
+    } else if (vTypeStr === 'journal' || vTypeStr === 'debit note' || vTypeStr === 'credit note') {
       // Template 54 — Journal, Debit Note, Credit Note (ledger-level entries, NOT inventory line items)
       const t54Result = await executeTemplate(54, auth, broadRange);
       const t54Rows = t54Result.content || [];
@@ -759,6 +791,7 @@ router.post('/voucher-detail', async (req, res) => {
       const targetVno = voucherNo === '—' ? '' : voucherNo;
       const rows = t54Rows.filter((r, i) => {
         const vno = (r.voucher_number || '').trim();
+        if (voucherId && (r.voucher_id || r.VoucherID || r.id) && (r.voucher_id || r.VoucherID || r.id).toString() === voucherId) return true;
         return vno === targetVno || voucherNo === `tally-jncn-${i}`;
       });
       if (rows.length === 0) return res.status(404).json({ success: false, error: 'Voucher not found' });
@@ -783,7 +816,7 @@ router.post('/voucher-detail', async (req, res) => {
         netAmount: Number.parseFloat(firstRow.total_amount_inr || 0) || 0,
         ledgerEntries,
       }});
-    } else if (voucherType === 'Payment' || voucherType === 'Receipt') {
+    } else if (vTypeStr === 'payment' || vTypeStr === 'receipt') {
       // Template 53 — Payment and Receipt vouchers (ledger-level entries)
       const t53Result = await executeTemplate(53, auth, broadRange);
       const t53Rows = t53Result.content || [];
@@ -793,14 +826,14 @@ router.post('/voucher-detail', async (req, res) => {
         const vno = (r.voucher_number || '').trim();
         const vtype = (r.voucher_type || '').trim().toLowerCase();
         const d = (r.voucher_date || '').toString().slice(0, 10);
-        // voucherId is a composite key: "Payment|TRF|2026-09-10"
         if (voucherId) {
           const parts = voucherId.split('|');
           if (parts.length === 3) {
             return vtype === parts[0].toLowerCase() && vno === parts[1] && d === parts[2];
           }
+          if ((r.voucher_id || r.VoucherID || r.id) && (r.voucher_id || r.VoucherID || r.id).toString() === voucherId) return true;
         }
-        return (vno === targetVno || voucherNo === `tally-rcpt-pay-${i}` || voucherNo === `tally-payment-${i}`) && vtype === voucherType.toLowerCase();
+        return (vno === targetVno || voucherNo === `tally-rcpt-pay-${i}` || voucherNo === `tally-payment-${i}`) && (vTypeStr === '' || vtype === vTypeStr || vtype.includes(vTypeStr));
       });
       if (rows.length === 0) return res.status(404).json({ success: false, error: 'Voucher not found' });
 
@@ -824,7 +857,7 @@ router.post('/voucher-detail', async (req, res) => {
         netAmount: Math.abs(Number.parseFloat(firstRow.total_amount_inr || 0) || 0),
         ledgerEntries,
       }});
-    } else if (voucherType === 'Contra') {
+    } else if (vTypeStr === 'contra') {
       // Template 79 — Contra vouchers
       const t79Result = await executeTemplate(79, auth, broadRange);
       const t79Rows = t79Result.content || [];
@@ -832,6 +865,7 @@ router.post('/voucher-detail', async (req, res) => {
       const targetVno = voucherNo === '—' ? '' : voucherNo;
       const rows = t79Rows.filter((r, i) => {
         const vno = (r.VoucherNo || '').trim();
+        if (voucherId && (r.voucher_id || r.VoucherID || r.id) && (r.voucher_id || r.VoucherID || r.id).toString() === voucherId) return true;
         return vno === targetVno || voucherNo === `tally-contra-${i}`;
       });
       if (rows.length === 0) return res.status(404).json({ success: false, error: 'Voucher not found' });
@@ -852,13 +886,14 @@ router.post('/voucher-detail', async (req, res) => {
         netAmount: amount,
         ledgerEntries,
       }});
-    } else if (voucherType === 'Delivery Note') {
+    } else if (vTypeStr === 'delivery note') {
       const t78Result = await executeTemplate(78, auth, broadRange);
       const t78Rows = t78Result.content || [];
 
       const targetVno = voucherNo === '—' ? '' : voucherNo;
       const rows = t78Rows.filter((r, i) => {
         const vno = (r.VoucherNo || '').trim();
+        if (voucherId && (r.voucher_id || r.VoucherID || r.id) && (r.voucher_id || r.VoucherID || r.id).toString() === voucherId) return true;
         return vno === targetVno || voucherNo === `tally-dn-${i}`;
       });
       if (rows.length === 0) return res.status(404).json({ success: false, error: 'Voucher not found' });
@@ -874,7 +909,7 @@ router.post('/voucher-detail', async (req, res) => {
         netAmount: Number.parseFloat(firstRow.GrandTotal || 0) || 0,
         ledgerEntries: [],
       }});
-    } else if (voucherType === 'Receipt Note') {
+    } else if (vTypeStr === 'receipt note') {
       const t64Result = await executeTemplate(64, auth, broadRange);
       const t64Rows = t64Result.content || [];
 
@@ -882,6 +917,7 @@ router.post('/voucher-detail', async (req, res) => {
       const rows = t64Rows.filter((r, i) => {
         const vno = (r.voucher_number || r.voucherNo || '').trim();
         const vtype = (r.voucher_type || r.voucherType || '').toLowerCase();
+        if (voucherId && (r.voucher_id || r.VoucherID || r.id) && (r.voucher_id || r.VoucherID || r.id).toString() === voucherId) return true;
         return (vno === targetVno || voucherNo === `tally-rn-${i}`) && vtype === 'receipt note';
       });
       if (rows.length === 0) return res.status(404).json({ success: false, error: 'Voucher not found' });
@@ -919,7 +955,12 @@ router.post('/voucher-detail', async (req, res) => {
         if (key) t44Map[key] = row;
       });
 
-      const rows = t52Rows.filter((r) => (r.voucher_number || '').trim() === voucherNo);
+      const targetVno = voucherNo === '—' ? '' : voucherNo;
+      const rows = t52Rows.filter((r, i) => {
+        const vno = (r.voucher_number || '').trim();
+        if (voucherId && (r.voucher_id || r.VoucherID || r.id) && (r.voucher_id || r.VoucherID || r.id).toString() === voucherId) return true;
+        return vno === targetVno || voucherNo === `tally-purchase-${i}`;
+      });
       if (rows.length === 0) return res.status(404).json({ success: false, error: 'Voucher not found' });
 
       const t72 = t72Map[voucherNo] || {};
@@ -960,6 +1001,17 @@ router.post('/voucher-detail', async (req, res) => {
       }});
     }
   } catch (error) { res.status(502).json({ success: false, error: error.message }); }
+});
+
+router.post('/test-t12', async (req, res) => {
+  try {
+    const auth = await getTallyAuth();
+    const t12 = await executeTemplate(12, auth);
+    const t6 = await executeTemplate(6, auth);
+    res.json({ t12: t12.content, t6: t6.content });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
 router.post('/expenses/templates', async (req, res) => {
@@ -2362,18 +2414,34 @@ router.post('/dashboard-summary/template', async (req, res) => {
   const toDate = (req.body || {}).toDate || '2026-12-31';
   try {
     const auth = await getTallyAuth();
-    const rows = (await executeTemplate(57, auth, { cust_from_date: fromDate, cust_to_date: toDate })).content || [];
-    console.log('[Template 57] field keys:', JSON.stringify(Object.keys(rows[0] || {})));
-    console.log('[Template 57] total rows:', rows.length);
+    
+    // Execute Templates 57 (KPIs), 71 (Revenue), and 14 (Cash/Bank)
+    const [t57, t71, t14] = await Promise.all([
+      executeTemplate(57, auth, { cust_from_date: fromDate, cust_to_date: toDate }).catch(() => ({ content: [] })),
+      executeTemplate(71, auth, { cust_from_date: fromDate, cust_to_date: toDate }).catch(() => ({ content: [] })),
+      executeTemplate(14, auth).catch(() => ({ content: [] }))
+    ]);
+    
+    const rows57 = t57.content || [];
+    const rows71 = t71.content || [];
+    const rows14 = t14.content || [];
+    
+    // Parse Revenue from 71 or fallback to 57
+    const revenueStr = rows71[0]?.revenue || rows71[0]?.total_revenue || rows71[0]?.sales || rows57[0]?.total_sales || rows57[0]?.sales || 0;
+    
+    // Parse Cash/Bank from 14 or fallback to 57
+    const cashBalance = Number.parseFloat(rows14[0]?.cash_balance || rows14[0]?.cash || rows14[0]?.cash_in_hand || rows57[0]?.cash_in_hand || 0) || 0;
+    const bankBalance = Number.parseFloat(rows14[0]?.bank_balance || rows14[0]?.bank || rows57[0]?.bank_balance || 0) || 0;
+
     const summary = {
-      totalSales: Number.parseFloat(rows[0]?.total_sales || rows[0]?.sales || 0) || 0,
-      totalPurchases: Number.parseFloat(rows[0]?.total_purchases || rows[0]?.purchases || 0) || 0,
-      totalReceivables: Number.parseFloat(rows[0]?.total_receivables || rows[0]?.receivables || 0) || 0,
-      totalPayables: Number.parseFloat(rows[0]?.total_payables || rows[0]?.payables || 0) || 0,
-      cashInHand: Number.parseFloat(rows[0]?.cash_in_hand || rows[0]?.cash || 0) || 0,
-      bankBalance: Number.parseFloat(rows[0]?.bank_balance || rows[0]?.bank || 0) || 0,
-      grossProfit: Number.parseFloat(rows[0]?.gross_profit || 0) || 0,
-      netProfit: Number.parseFloat(rows[0]?.net_profit || 0) || 0,
+      totalSales: Number.parseFloat(revenueStr || 0) || 0,
+      totalPurchases: Number.parseFloat(rows57[0]?.total_purchases || rows57[0]?.purchases || 0) || 0,
+      totalReceivables: Number.parseFloat(rows57[0]?.total_receivables || rows57[0]?.receivables || 0) || 0,
+      totalPayables: Number.parseFloat(rows57[0]?.total_payables || rows57[0]?.payables || 0) || 0,
+      cashInHand: cashBalance,
+      bankBalance: bankBalance,
+      grossProfit: Number.parseFloat(rows57[0]?.gross_profit || 0) || 0,
+      netProfit: Number.parseFloat(rows57[0]?.net_profit || 0) || 0,
     };
     res.json({ success: true, data: { summary } });
   } catch (error) { res.status(502).json({ success: false, error: error.message }); }
@@ -3185,7 +3253,7 @@ router.post('/outstanding-group-view/template', async (req, res) => {
     });
 
     console.log('[Template 91] receivables:', receivables.length, 'payables:', payables.length);
-    res.json({ success: true, data: { receivables, payables } });
+    res.json({ success: true, data: { receivables, payables, raw: rows.slice(0, 5) } });
   } catch (error) { res.status(502).json({ success: false, error: error.message }); }
 });
 

@@ -71,7 +71,7 @@ const EntityDetailModal = ({ isOpen, onClose, entityType, entityId, companyId: p
 
   const renderPartyContent = () => (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2">
           <div className="flex items-start gap-2">
             <MapPin className="w-4 h-4 text-ink-muted mt-0.5 flex-shrink-0" />
@@ -82,14 +82,14 @@ const EntityDetailModal = ({ isOpen, onClose, entityType, entityId, companyId: p
           </div>
           {data.Phone && (
             <div className="flex items-center gap-2">
-              <Phone className="w-4 h-4 text-ink-muted" />
-              <p className="text-sm text-ink-default">{data.Phone}</p>
+              <Phone className="w-4 h-4 text-ink-muted flex-shrink-0" />
+              <p className="text-sm text-ink-default break-all">{data.Phone}</p>
             </div>
           )}
           {data.Email && (
             <div className="flex items-center gap-2">
-              <Mail className="w-4 h-4 text-ink-muted" />
-              <p className="text-sm text-ink-default">{data.Email}</p>
+              <Mail className="w-4 h-4 text-ink-muted flex-shrink-0" />
+              <p className="text-sm text-ink-default break-all">{data.Email}</p>
             </div>
           )}
         </div>
@@ -117,7 +117,7 @@ const EntityDetailModal = ({ isOpen, onClose, entityType, entityId, companyId: p
       {data.transactions?.length > 0 && (
         <div>
           <h3 className="text-sm font-medium text-ink-muted uppercase tracking-wider mb-2">Transaction History</h3>
-          <div className="max-h-64 overflow-y-auto rounded-lg border border-canvas-faint">
+          <div className="max-h-64 overflow-auto rounded-lg border border-canvas-faint">
             <table className="w-full text-sm">
               <thead className="bg-canvas-subtle sticky top-0">
                 <tr>

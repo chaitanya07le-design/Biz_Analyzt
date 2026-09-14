@@ -12,7 +12,6 @@ const ExpensesReport = () => {
   const { currentCompany } = useCompany();
   const { dateRange } = useDateRange();
   
-  const { ledgers: apiLedgers, groups, vouchers, voucherLines, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
   const tallyExpenses = useTallyExpenses();
 
   const expenseData = useMemo(() => {
@@ -23,84 +22,15 @@ const ExpensesReport = () => {
       const totalIndirect = indirectExpenses.reduce((sum, item) => sum + item.amount, 0);
       return { directExpenses, indirectExpenses, totalDirect, totalIndirect, grandTotal: totalDirect + totalIndirect };
     }
-    const directExpenses = [];
-    const indirectExpenses = [];
-    let totalDirect = 0;
-    let totalIndirect = 0;
-
-    if (!vouchers || !voucherLines || !groups || !apiLedgers) {
-      return {
-        directExpenses,
-        indirectExpenses,
-        totalDirect,
-        totalIndirect,
-        grandTotal: totalDirect + totalIndirect
-      };
-    }
-
-    const groupMap = new Map();
-    groups.forEach(g => {
-      groupMap.set(g.GroupID, g);
-    });
-
-    const ledgerMap = new Map();
-    apiLedgers.forEach(l => {
-      ledgerMap.set(l.LedgerID, l);
-    });
-
-    const expenseMap = new Map();
-
-    voucherLines.forEach(line => {
-      if (line.LineType !== 'Ledger') return;
-      if (!line.LedgerID) return;
-
-      const ledger = ledgerMap.get(line.LedgerID);
-      if (!ledger) return;
-
-      const group = groupMap.get(ledger.GroupID);
-      if (!group) return;
-
-      if (group.StatementType !== 'P&L' || group.Nature !== 'Expense') return;
-
-      const amount = parseFloat(line.LedgerDebit || 0);
-      const key = ledger.LedgerID;
-      
-      if (!expenseMap.has(key)) {
-        expenseMap.set(key, {
-          id: ledger.LedgerID,
-          name: ledger.LedgerName,
-          groupName: group.GroupName,
-          amount: 0
-        });
-      }
-      expenseMap.get(key).amount += amount;
-    });
-
-    expenseMap.forEach(item => {
-      const expenseItem = {
-        id: item.id,
-        name: item.name,
-        group: item.groupName,
-        amount: item.amount
-      };
-
-      if (item.groupName === 'Direct Expenses') {
-        directExpenses.push(expenseItem);
-        totalDirect += item.amount;
-      } else if (item.groupName === 'Indirect Expenses') {
-        indirectExpenses.push(expenseItem);
-        totalIndirect += item.amount;
-      }
-    });
-
+    
     return {
-      directExpenses: directExpenses.sort((a, b) => b.amount - a.amount),
-      indirectExpenses: indirectExpenses.sort((a, b) => b.amount - a.amount),
-      totalDirect,
-      totalIndirect,
-      grandTotal: totalDirect + totalIndirect
+      directExpenses: [],
+      indirectExpenses: [],
+      totalDirect: 0,
+      totalIndirect: 0,
+      grandTotal: 0
     };
-  }, [vouchers, voucherLines, groups, apiLedgers, tallyExpenses]);
+  }, [tallyExpenses]);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {
@@ -115,7 +45,7 @@ const ExpensesReport = () => {
     return ((amount / total) * 100).toFixed(1);
   };
 
-  if (loading) {
+  if (!tallyExpenses) {
     return (
       <motion.div
         initial={{ opacity: 0 }}

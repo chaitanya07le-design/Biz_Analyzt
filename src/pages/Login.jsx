@@ -247,10 +247,26 @@ const Login = () => {
               </button>
             </form>
 
-            <div className="mt-4 text-center">
-              <p className="text-xs text-ink-600">
-                Demo: demo@bizanalyzt.com / demo123
-              </p>
+            <div className="mt-4 relative">
+              <select
+                className="w-full h-[48px] px-4 appearance-none rounded-xl border border-canvas-faint bg-slate-50 text-ink-600 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-kinetic-primary/50 transition-all cursor-pointer"
+                onChange={(e) => {
+                  if (e.target.value === 'demo') {
+                    setEmail('demo@bizanalyzt.com');
+                    setPassword('demo123');
+                  }
+                  e.target.value = '';
+                }}
+                defaultValue=""
+              >
+                <option value="" disabled>Select an account to auto-fill...</option>
+                <option value="demo">Demo Account (demo@bizanalyzt.com)</option>
+              </select>
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-ink-400">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
             </div>
           </div>
 

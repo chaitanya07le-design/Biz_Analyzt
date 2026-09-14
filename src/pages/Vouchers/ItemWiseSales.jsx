@@ -65,5 +65,5 @@ export default function ItemWiseSales() {
 
   const activeData = tallyItemSales ?? itemSales;
 
-  return <VoucherReportLayout title="Item-wise Sales Report" data={activeData} tallyData={tallyItemSales} loading={loading} columns={columns} emptyMessage="No sales line items found" />;
+  return <VoucherReportLayout title="Item-wise Sales Report" showBackButton={true} data={activeData} tallyData={tallyItemSales} loading={loading} columns={columns} emptyMessage="No sales line items found" />;
 }

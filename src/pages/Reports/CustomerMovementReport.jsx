@@ -3,18 +3,19 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Users, TrendingUp, TrendingDown, UserX, Clock } from 'lucide-react';
 import Skeleton from '../../components/shared/Skeleton';
-import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
 import useTallyCustomerMovementRollup from '../../hooks/useTallyCustomerMovementRollup';
 import { useCompany } from '../../context/CompanyContext';
 
 const CustomerMovementReport = () => {
   const navigate = useNavigate();
   const { currentCompany } = useCompany();
-  const { customerMovement, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
   const tallyMovement = useTallyCustomerMovementRollup();
 
   const [statusFilter, setStatusFilter] = useState('all');
   const [sortBy, setSortBy] = useState('recent');
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const loading = !tallyMovement;
 
   const movementData = useMemo(() => {
     if (tallyMovement && tallyMovement.length > 0) {
@@ -41,30 +42,8 @@ const CustomerMovementReport = () => {
         state: t.state || '-',
       }));
     }
-    if (!customerMovement) return [];
-    return customerMovement.map(cm => {
-      const days = Math.abs(parseInt(cm.DaysSinceLastTxn || 0));
-      let computedStatus;
-      if (days <= 30) { computedStatus = 'Active'; }
-      else if (days <= 90) { computedStatus = 'Dormant'; }
-      else { computedStatus = 'Churned'; }
-      return {
-        partyId: cm.PartyID,
-        partyName: cm.PartyName || 'Unknown',
-        partyType: cm.PartyType || 'Customer',
-        firstTxn: cm.FirstTransactionDate,
-        lastTxn: cm.LastTransactionDate,
-        salesValue: parseFloat(cm.TotalSalesValue || 0),
-        purchaseValue: parseFloat(cm.TotalPurchaseValue || 0),
-        txnCount: parseInt(cm.TransactionCount || 0),
-        daysSinceLastTxn: days,
-        status: computedStatus,
-        salesPerson: cm.SalesPerson || '-',
-        city: cm.City || '-',
-        state: cm.State || '-',
-      };
-    });
-  }, [customerMovement, tallyMovement]);
+    return [];
+  }, [tallyMovement]);
 
   const filteredData = useMemo(() => {
     let result = movementData;
@@ -149,9 +128,15 @@ const CustomerMovementReport = () => {
       className="min-h-screen bg-canvas-default pb-20 md:pb-6"
     >
       <div className="px-4 py-4 md:px-6 md:py-6">
-        <motion.div className="mb-6" initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
-          <h1 className="text-xl md:text-2xl font-semibold text-ink-default">Customer Movement Analysis</h1>
+        <motion.div className="mb-6 flex items-center gap-3" initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
+          
+          <button onClick={() => window.history.back()} className="p-2 hover:bg-canvas-faint rounded-lg transition-colors">
+            <svg className="w-5 h-5 text-ink-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+          </button>
+          <div>
+            <h1 className="text-xl md:text-2xl font-semibold text-ink-default">Customer Movement Analysis</h1>
           <p className="text-sm text-ink-muted mt-1">Track customer activity, dormancy, and churn patterns</p>
+          </div>
         </motion.div>
 
         <div className="grid grid-cols-2 md:grid-cols-6 gap-3 mb-6">

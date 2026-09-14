@@ -227,6 +227,18 @@ const ReportPage = () => {
     }
   };
 
+  const monthlyChartData = useMemo(() => {
+    const months = {};
+    filteredData.forEach(v => {
+      const date = new Date(v.date);
+      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      months[monthKey] = (months[monthKey] || 0) + v.netAmount;
+    });
+    return Object.entries(months)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([month, amount]) => ({ month, amount }));
+  }, [filteredData]);
+
   if (!config) {
     navigate('/dashboard', { replace: true });
     return null;
@@ -257,18 +269,6 @@ const ReportPage = () => {
     { name: 'Paid', value: filteredData.reduce((sum, v) => sum + (v.netAmount - v.outstanding), 0), color: '#10B981' },
     { name: 'Outstanding', value: filteredData.reduce((sum, v) => sum + v.outstanding, 0), color: '#EF4444' },
   ];
-
-  const monthlyChartData = useMemo(() => {
-    const months = {};
-    filteredData.forEach(v => {
-      const date = new Date(v.date);
-      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-      months[monthKey] = (months[monthKey] || 0) + v.netAmount;
-    });
-    return Object.entries(months)
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([month, amount]) => ({ month, amount }));
-  }, [filteredData]);
 
   if (!config) {
     return null;

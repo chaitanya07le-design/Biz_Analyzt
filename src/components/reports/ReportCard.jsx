@@ -52,7 +52,7 @@ const ReportCard = ({ title, description, icon, onClick, disabled }) => {
   return (
     <div 
       onClick={disabled ? null : onClick}
-      className={`bg-white rounded-lg border border-canvas-faint p-5 ${
+      className={`bg-white rounded-lg border border-canvas-faint p-5 flex flex-col flex-1 h-full w-full ${
         disabled 
           ? 'opacity-50 cursor-not-allowed' 
           : 'cursor-pointer hover:shadow-md hover:border-brand-primary transition-all'

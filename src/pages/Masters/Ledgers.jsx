@@ -91,7 +91,7 @@ export default function Ledgers() {
     <div className="space-y-6">
       <Card>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setTypeFilter('all')}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${

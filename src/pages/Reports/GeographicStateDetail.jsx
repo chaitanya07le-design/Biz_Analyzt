@@ -29,7 +29,7 @@ const GeographicStateDetail = () => {
       <div className="px-4 py-4 md:px-6 md:py-6 space-y-4">
         <motion.div initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="flex items-center gap-3">
           <button onClick={() => navigate('/reports/geographic')} className="p-2 hover:bg-canvas-faint rounded-lg transition-colors">
-            <ArrowLeft className="w-5 h-5 text-ink-muted" />
+            <svg className="w-5 h-5 text-ink-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
           </button>
           <div>
             <h1 className="text-xl md:text-2xl font-semibold text-ink-default">{stateName}</h1>

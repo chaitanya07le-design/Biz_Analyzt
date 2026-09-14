@@ -124,9 +124,15 @@ const StockStatusReport = () => {
       className="min-h-screen bg-canvas-default pb-20 md:pb-6"
     >
       <div className="px-4 py-4 md:px-6 md:py-6">
-        <motion.div className="mb-6" initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
-          <h1 className="text-xl md:text-2xl font-semibold text-ink-default">Stock Status Report</h1>
+        <motion.div className="mb-6 flex items-center gap-3" initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
+          
+          <button onClick={() => window.history.back()} className="p-2 hover:bg-canvas-faint rounded-lg transition-colors">
+            <svg className="w-5 h-5 text-ink-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+          </button>
+          <div>
+            <h1 className="text-xl md:text-2xl font-semibold text-ink-default">Stock Status Report</h1>
           <p className="text-sm text-ink-muted mt-1">Overstock, Understock, and Fast-Mover analysis {tallyStockStatus && <span className="font-bold text-brand-primary">· LIVE TALLY STOCK</span>}</p>
+          </div>
         </motion.div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">

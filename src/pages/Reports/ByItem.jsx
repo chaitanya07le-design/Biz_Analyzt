@@ -127,7 +127,7 @@ const ByItem = () => {
           </div>
         </motion.div>
 
-        <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }} className="grid grid-cols-3 md:grid-cols-4 gap-3">
+        <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
           <div className="bg-white rounded-lg border border-canvas-faint p-3 text-center">
             <p className="text-xs text-ink-muted mb-1">Total Items</p>
             <p className="text-lg font-semibold text-ink-default">{itemTransactions.length}</p>

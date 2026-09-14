@@ -159,14 +159,14 @@ const DayBookMonth = () => {
         )}
 
         <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="bg-white rounded-lg border border-canvas-faint p-4">
-          <div className="flex justify-between items-center">
-            <div>
+          <div className="flex justify-between items-center gap-2">
+            <div className="min-w-0">
               <p className="text-sm text-ink-muted">Total Vouchers</p>
               <p className="text-lg font-semibold text-ink-default">{vouchers ? vouchers.length : 0}</p>
             </div>
-            <div className="text-right">
+            <div className="text-right min-w-0">
               <p className="text-sm text-ink-muted">Total Amount</p>
-              <p className="text-lg font-semibold text-brand-primary">
+              <p className="text-[1.1rem] sm:text-lg md:text-xl font-semibold text-brand-primary break-words" title={formatCurrency((vouchers || []).reduce((sum, v) => sum + (v.netAmount || 0), 0))}>
                 {formatCurrency((vouchers || []).reduce((sum, v) => sum + (v.netAmount || 0), 0))}
               </p>
             </div>

@@ -6,7 +6,7 @@ import { PartyCardSkeleton } from '../components/shared/ListSkeleton';
 import useGoogleSheetsData from '../hooks/useGoogleSheetsData';
 import { useCompany } from '../context/CompanyContext';
 import { settingsService } from '../services/settingsService';
-import useTallyOutstanding from '../hooks/useTallyOutstanding';
+import useTallyOutstandingGroupView from '../hooks/useTallyOutstandingGroupView';
 import useTallyOutstandingFull from '../hooks/useTallyOutstandingFull';
 import { 
   AlertCircle, 
@@ -71,9 +71,14 @@ const Outstanding = () => {
     }
   }, [currentCompany?.id]);
 
-  const { outstandingReceivables, outstandingPayables, parties, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
-  const { outstanding: tallyOutstanding, templates: tallyTemplates, loading: tallyLoading, error: tallyError } = useTallyOutstanding();
+  // Use GoogleSheetsData ONLY for some settings fallbacks (if needed), but ignore outstanding tables
+  const { parties } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
+  
+  // Use strictly native Tally Templates (T91 and T68) for Outstanding Data
+  const { receivables: groupReceivables, payables: groupPayables, loading: tallyLoading } = useTallyOutstandingGroupView();
   const { data: tallyFull, loading: tallyFullLoading } = useTallyOutstandingFull();
+
+  const loading = tallyLoading || tallyFullLoading;
 
   const normalizeName = (name) => {
     return (name || '')
@@ -97,12 +102,37 @@ const Outstanding = () => {
     return map;
   }, [tallyFull]);
 
-  const hasLiveReceivables = tallyTemplates[37]?.status === 'success';
-  const hasLivePayables = tallyTemplates[7]?.status === 'success';
-  const useLiveData = activeTab === 'receivable' ? hasLiveReceivables : hasLivePayables;
-  const data = useLiveData
-    ? (activeTab === 'receivable' ? tallyOutstanding?.receivables : tallyOutstanding?.payables)
-    : (activeTab === 'receivable' ? outstandingReceivables : outstandingPayables);
+  // Group bill-wise data (tallyFull.receivables) by party to calculate true outstanding
+  const groupedTallyReceivables = useMemo(() => {
+    if (!tallyFull?.receivables) return null;
+    const map = {};
+    tallyFull.receivables.forEach(row => {
+      const party = row.partyName || '—';
+      if (!map[party]) {
+        map[party] = {
+          ...row,
+          totalOutstanding: 0,
+          agingNotDue: 0,
+          aging0to30: 0,
+          aging31to60: 0,
+          aging61to90: 0,
+          aging90plus: 0
+        };
+      }
+      map[party].totalOutstanding += (row.outstandingBalance || 0);
+      map[party].aging0to30 += (row.bucket0to30 || 0);
+      map[party].aging31to60 += (row.bucket31to60 || 0);
+      map[party].aging61to90 += (row.bucket61to90 || 0);
+      map[party].aging90plus += (row.bucketAbove90 || 0);
+      
+      const isDue = (row.bucket0to30 || row.bucket31to60 || row.bucket61to90 || row.bucketAbove90);
+      if (!isDue) map[party].agingNotDue += (row.outstandingBalance || 0);
+    });
+    return Object.values(map);
+  }, [tallyFull?.receivables]);
+
+  // Exclusively use Native Tally data
+  const data = activeTab === 'receivable' ? (groupedTallyReceivables || groupReceivables || []) : (groupPayables || []);
 
   const normalizedData = useMemo(() => {
     if (!data || data.length === 0) return [];
@@ -112,17 +142,17 @@ const Outstanding = () => {
       const nameKey = normalizeName(partyName);
       const tallyContact = contactMap[nameKey] || {};
       const matchingParty = (parties || []).find((party) => (party.PartyName || party.name || '').trim().toLowerCase() === partyName.trim().toLowerCase());
-      const extraBills = useLiveData && activeTab === 'receivable'
-        ? (tallyOutstanding?.customerBills || []).filter((bill) => (bill.customer_name || bill.party_name || '').trim().toLowerCase() === partyName.trim().toLowerCase())
+      const extraBills = activeTab === 'receivable'
+        ? [] // handled natively by T68 inside tallyFull
         : [];
-      const risk = useLiveData && activeTab === 'receivable'
-        ? (tallyOutstanding?.customerRisk || []).find((row) => (row.customer_name || row.party_name || '').trim().toLowerCase() === partyName.trim().toLowerCase())?.risk_level || tallyContact.risk
+      const risk = activeTab === 'receivable'
+        ? tallyContact.risk || null
         : null;
-      const msme = useLiveData && activeTab === 'payable'
-        ? (tallyOutstanding?.msmePayables || []).some((row) => (row.vendor_name || row.party_name || '').trim().toLowerCase() === partyName.trim().toLowerCase())
+      const msme = activeTab === 'payable'
+        ? false // msme info can be fetched from party detail map if needed, default to false
         : false;
-      const earlyDiscount = useLiveData && activeTab === 'payable'
-        ? (tallyOutstanding?.discountPayables || []).find((row) => (row.vendor_name || row.party_name || '').trim().toLowerCase() === partyName.trim().toLowerCase())?.early_payment_discount_pct
+      const earlyDiscount = activeTab === 'payable'
+        ? null
         : null;
       return {
         partyId: p.partyId || p.PartyID || p.id || tallyContact.billReference || matchingParty?.PartyID || matchingParty?.id || partyName,
@@ -141,7 +171,13 @@ const Outstanding = () => {
         creditDays: tallyContact.creditDays || 0,
         salesPerson: tallyContact.salesPerson || null,
         transactionCount: p.transactionCount || 0,
-        aging: p.aging || { notDue: 0, overdue0to30: 0, overdue31to60: 0, overdue61to90: 0, over90: 0 },
+        aging: p.aging || { 
+          notDue: p.agingNotDue || 0, 
+          overdue0to30: p.aging0to30 || 0, 
+          overdue31to60: p.aging31to60 || 0, 
+          overdue61to90: p.aging61to90 || 0, 
+          over90: p.aging90plus || 0 
+        },
         invoiceAging: p.invoiceAging || [],
         extraBills,
         risk,
@@ -149,7 +185,7 @@ const Outstanding = () => {
         earlyDiscount,
       };
     });
-  }, [data, parties, useLiveData, activeTab, tallyOutstanding, contactMap]);
+  }, [data, parties, activeTab, contactMap]);
 
   const totals = useMemo(() => {
     return {
@@ -162,8 +198,8 @@ const Outstanding = () => {
   }, [normalizedData]);
 
   const grandTotal = Object.values(totals).reduce((sum, v) => sum + v, 0);
-  const receivableCount = hasLiveReceivables ? (tallyOutstanding?.receivables?.length || 0) : (outstandingReceivables?.length || 0);
-  const payableCount = hasLivePayables ? (tallyOutstanding?.payables?.length || 0) : (outstandingPayables?.length || 0);
+  const receivableCount = tallyFull?.receivables?.length || groupReceivables?.length || 0;
+  const payableCount = groupPayables?.length || 0;
 
   // Compute Auto Reminders Due
   const remindersDue = useMemo(() => {
@@ -259,30 +295,24 @@ const Outstanding = () => {
       transition={{ duration: 0.3 }}
       className="min-h-screen bg-slate-50 pb-20 md:pb-6 font-sans"
     >
-      {tallyError && !tallyLoading && (
-        <div className="mx-4 mt-4 max-w-7xl md:mx-auto rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-          Live Tally outstanding data is unavailable. Google Sheets data remains displayed.
-        </div>
-      )}
       {/* Combined Sticky Header + Aging */}
       <div className="bg-slate-50">
         {/* Header */}
         <div className="bg-white border-b border-slate-100">
           <div className="px-4 py-4 md:px-8 max-w-7xl mx-auto">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
               <div>
                 <h1 className="text-2xl md:text-3xl font-display font-bold text-ink-900 tracking-tight flex items-center gap-3">
                   <div className="bg-kinetic-primary/10 p-2 rounded-xl">
                     <AlertCircle className="w-6 h-6 text-kinetic-primary" />
                   </div>
                   Outstanding
-                  {useLiveData && <span className="text-xs font-bold text-kinetic-primary">LIVE TALLY</span>}
                 </h1>
                 <p className="text-sm font-medium text-kinetic-neutral mt-1">
                   {activeTab === 'receivable' ? 'Money owed to you' : 'Money you owe'}
                 </p>
               </div>
-              <div className="text-right">
+              <div className="text-left md:text-right">
                 <p className="text-sm font-bold text-kinetic-neutral uppercase tracking-widest mb-1">Total Outstanding</p>
                 <p className={`text-2xl md:text-3xl font-extrabold ${activeTab === 'receivable' ? 'text-kinetic-secondary' : 'text-kinetic-tertiary'}`}>
                   {formatCurrency(grandTotal)}
@@ -324,7 +354,7 @@ const Outstanding = () => {
             <Calendar className="w-4 h-4" />
             Aging Analysis
           </h3>
-          <div className="grid grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
             <AgingBucket label="Not Due" amount={totals.notDue} color="bg-slate-50 border border-slate-100" />
             <AgingBucket label={`0-${agingSettings.bucket1} days`} amount={totals.overdue0to30} color="bg-orange-50 text-orange-900" isOverdue />
             <AgingBucket label={`${agingSettings.bucket1 + 1}-${agingSettings.bucket2} days`} amount={totals.overdue31to60} color="bg-orange-100 text-orange-900" isOverdue />

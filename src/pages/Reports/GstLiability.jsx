@@ -56,7 +56,12 @@ const GstLiability = () => {
       <div className="bg-white border-b border-canvas-faint">
         <div className="px-4 py-4 md:px-6 md:py-4">
           <div className="flex flex-col gap-4">
-            <h1 className="text-xl font-semibold text-ink-default">GST Liability</h1>
+            <div className="flex items-center gap-3">
+              <button onClick={() => window.history.back()} className="p-2 hover:bg-canvas-faint rounded-lg transition-colors">
+                <svg className="w-5 h-5 text-ink-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+              </button>
+              <h1 className="text-xl font-semibold text-ink-default">GST Liability</h1>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               <div className="p-4 bg-brand-50 rounded-lg border border-brand-100">
                 <p className="text-sm text-brand-600 mb-1 font-medium">Total Liability</p>

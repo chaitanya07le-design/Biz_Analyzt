@@ -3,11 +3,10 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Skeleton from '../../components/shared/Skeleton';
 import VoucherPagination, { DEFAULT_PAGE_SIZE } from '../../components/voucher/VoucherPagination';
-import useGoogleSheetsData from '../../hooks/useGoogleSheetsData';
-import useTallyPartyDetails from '../../hooks/useTallyPartyDetails';
+import useTallyCustomerMovementRollup from '../../hooks/useTallyCustomerMovementRollup';
+import useTallyOutstandingGroupView from '../../hooks/useTallyOutstandingGroupView';
 import { useCompany } from '../../context/CompanyContext';
 import { useDateRange } from '../../context/DateRangeContext';
-import api from '../../services/api';
 
 const CustomerView = () => {
   const navigate = useNavigate();
@@ -18,173 +17,92 @@ const CustomerView = () => {
   const pageSize = DEFAULT_PAGE_SIZE;
   const [tallyTxns, setTallyTxns] = useState(null);
 
-  const { parties: apiParties, vouchers, loading } = useGoogleSheetsData(currentCompany?.id || 'COMP-0001');
-  const tallyParties = useTallyPartyDetails();
+  const tallyMovement = useTallyCustomerMovementRollup();
+  const { receivables: groupReceivables, loading: outstandingLoading } = useTallyOutstandingGroupView();
 
-  // Fetch Tally customer transactions (Sales + Receipts) when Tally is active
-  useEffect(() => {
-    if (tallyParties && tallyParties.length > 0) {
-      let active = true;
-      api.getTallyCustomerTransactions()
-        .then((data) => { if (active) setTallyTxns(data); })
-        .catch(() => {});
-      return () => { active = false; };
-    }
-  }, [tallyParties]);
+  const loading = outstandingLoading || !tallyMovement;
 
   // Reset page on search change
   useEffect(() => { setCurrentPage(1); }, [searchQuery]);
 
-  const normalizedParties = useMemo(() => {
-    if (tallyParties && tallyParties.length > 0) {
-      return tallyParties.map((t, i) => ({
-        id: t.id || `tally-party-${i}`,
-        name: t.name || '—',
-        type: t.type || 'Customer',
-        city: t.city || '',
-        state: t.state || '',
-        pin: t.pin || '',
-        gstin: t.gstin || '',
-        mobile: t.mobile || '',
-        email: t.email || '',
-        pan: t.pan || '',
-        creditLimit: t.creditLimit || 0,
-        creditDays: t.creditDays || 0,
-        salesPerson: t.salesPerson || '',
-        openingBalance: t.openingBalance || 0,
-        balance: t.balance || 0,
-        status: t.status || 'Active',
-        contactPerson: t.contactPerson || '',
-        parentGroup: t.parentGroup || '',
-        incomeTaxNumber: t.incomeTaxNumber || '',
-        address: t.address || '',
-      }));
-    }
-    if (!apiParties || apiParties.length === 0) return [];
-    return apiParties.map(p => ({
-      id: p.PartyID || p.id,
-      name: p.PartyName || p.name || '',
-      type: p.PartyType || p.type || '',
-      city: p.City || p.city || '',
-    }));
-  }, [apiParties, tallyParties]);
-
-  const normalizedVouchers = useMemo(() => {
-    if (!vouchers || vouchers.length === 0) {
-      return { sales: [], receipts: [] };
-    }
-    let filteredVouchers = vouchers;
-    if (dateRange.startDate && dateRange.endDate) {
-      filteredVouchers = vouchers.filter(v => {
-        const voucherDate = new Date(v.VoucherDate || v.date);
-        return voucherDate >= new Date(dateRange.startDate) && voucherDate <= new Date(dateRange.endDate);
-      });
-    }
-    const sales = filteredVouchers.filter(v => v.VoucherType === 'Sales' || v.voucherType === 'Sales').map(v => ({
-      id: v.VoucherID || v.id,
-      partyId: v.PartyID || v.partyId,
-      date: v.VoucherDate || v.date,
-      netAmount: parseFloat(v.GrandTotal || v.netAmount || 0),
-      outstanding: parseFloat(v.Outstanding || v.outstanding || 0),
-    }));
-    const receipts = filteredVouchers.filter(v => v.VoucherType === 'Receipt' || v.voucherType === 'Receipt').map(v => ({
-      id: v.VoucherID || v.id,
-      partyId: v.PartyID || v.partyId,
-      grossTotal: parseFloat(v.GrandTotal || v.grossTotal || 0),
-    }));
-    return { sales, receipts };
-  }, [vouchers, dateRange]);
-
   const customerData = useMemo(() => {
-    const customers = normalizedParties.filter(p => p.type === 'Customer');
-    const tallyActive = tallyTxns && tallyParties && tallyParties.length > 0;
+    if (!tallyMovement || !groupReceivables) return [];
 
-    const customerSummary = [];
     const nameIndex = new Map();
+    const customerSummary = [];
 
-    customers.forEach(customer => {
+    // Base from Outstanding (T91)
+    groupReceivables.forEach(customer => {
+      const normName = customer.partyName.toLowerCase().trim();
       const summary = {
-        party: customer,
+        party: {
+          id: customer.partyId,
+          name: customer.partyName,
+          type: 'Customer',
+          city: '',
+          state: '',
+          pin: '',
+          gstin: '',
+          mobile: '',
+          email: '',
+          pan: '',
+          creditLimit: customer.creditLimit || 0,
+          creditDays: customer.creditDays || 0,
+        },
         totalSales: 0,
         totalReceipts: 0,
-        outstanding: customer.openingBalance || customer.balance || 0,
+        outstanding: customer.totalOutstanding || 0,
         transactionCount: 0,
         lastTransaction: null
       };
+      nameIndex.set(normName, summary);
       customerSummary.push(summary);
-
-      // Build name lookup (case-insensitive) for Tally matching
-      const normName = customer.name.toLowerCase().trim();
-      if (normName) nameIndex.set(normName, summary);
     });
 
-    if (tallyActive && tallyTxns) {
-      // Join Tally transactions by party_name
-      const salesBy = tallyTxns.salesByParty || {};
-      const receiptsBy = tallyTxns.receiptsByParty || {};
-
-      Object.keys(salesBy).forEach(partyName => {
-        const norm = partyName.toLowerCase().trim();
-        const found = nameIndex.get(norm);
-        if (found) {
-          found.totalSales += salesBy[partyName].totalSales;
-          found.transactionCount += salesBy[partyName].transactionCount;
-          const lt = salesBy[partyName].lastTransaction;
-          if (lt && (!found.lastTransaction || new Date(lt) > new Date(found.lastTransaction))) {
-            found.lastTransaction = lt;
-          }
-        }
-      });
-
-      Object.keys(receiptsBy).forEach(partyName => {
-        const norm = partyName.toLowerCase().trim();
-        const found = nameIndex.get(norm);
-        if (found) {
-          found.totalReceipts += receiptsBy[partyName];
-        }
-      });
-    } else {
-      // Google Sheets fallback: join by PartyID
-      const gsMap = {};
-      customerSummary.forEach(c => { gsMap[c.party.id] = c; });
-
-      normalizedVouchers.sales.forEach(voucher => {
-        if (gsMap[voucher.partyId]) {
-          gsMap[voucher.partyId].totalSales += voucher.netAmount;
-          gsMap[voucher.partyId].transactionCount++;
-          gsMap[voucher.partyId].outstanding += voucher.outstanding || 0;
-          if (!gsMap[voucher.partyId].lastTransaction || new Date(voucher.date) > new Date(gsMap[voucher.partyId].lastTransaction)) {
-            gsMap[voucher.partyId].lastTransaction = voucher.date;
-          }
-        }
-      });
-
-      normalizedVouchers.receipts.forEach(voucher => {
-        if (gsMap[voucher.partyId]) {
-          gsMap[voucher.partyId].totalReceipts += voucher.grossTotal;
-        }
-      });
-    }
+    // Enrich with Movement (T90)
+    tallyMovement.forEach(movement => {
+      if (movement.partyType !== 'Customer') return;
+      const normName = movement.partyName.toLowerCase().trim();
+      let found = nameIndex.get(normName);
+      if (!found) {
+        found = {
+          party: {
+            id: movement.partyId,
+            name: movement.partyName,
+            type: 'Customer',
+            city: movement.city || '',
+            state: movement.state || '',
+          },
+          totalSales: 0,
+          totalReceipts: 0,
+          outstanding: 0,
+          transactionCount: 0,
+          lastTransaction: null
+        };
+        customerSummary.push(found);
+        nameIndex.set(normName, found);
+      }
+      
+      found.totalSales = movement.totalSalesValue || 0;
+      found.transactionCount = movement.transactionCount || 0;
+      found.lastTransaction = movement.lastTransactionDate || null;
+      if (movement.city) found.party.city = movement.city;
+      if (movement.state) found.party.state = movement.state;
+    });
 
     let result = customerSummary;
-
-    // When Tally active: show ALL customers (not just those with transactions)
-    if (!tallyActive) {
-      result = result.filter(c => c.transactionCount > 0 || c.party.openingBalance > 0);
-    }
 
     // Search filter
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       result = result.filter(c =>
         c.party.name.toLowerCase().includes(q) ||
-        (c.party.city || '').toLowerCase().includes(q) ||
-        (c.party.gstin || '').toLowerCase().includes(q)
+        (c.party.city || '').toLowerCase().includes(q)
       );
     }
 
     return result.sort((a, b) => b.totalSales - a.totalSales);
-  }, [normalizedParties, normalizedVouchers, searchQuery, tallyTxns, tallyParties]);
+  }, [tallyMovement, groupReceivables, searchQuery]);
 
   const totalPages = Math.max(1, Math.ceil(customerData.length / pageSize));
   const paginatedCustomers = customerData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
@@ -248,7 +166,7 @@ const CustomerView = () => {
             </button>
             <div>
               <h1 className="text-xl md:text-2xl font-semibold text-ink-default">Customer View</h1>
-              <p className="text-sm text-ink-muted">Customer-wise transaction summary {tallyParties && tallyParties.length > 0 ? <span className="font-bold text-brand-primary">· LIVE TALLY</span> : ''}</p>
+              <p className="text-sm text-ink-muted">Customer-wise transaction summary {tallyMovement && tallyMovement.length > 0 ? <span className="font-bold text-brand-primary">· LIVE TALLY</span> : ''}</p>
             </div>
           </div>
         </motion.div>

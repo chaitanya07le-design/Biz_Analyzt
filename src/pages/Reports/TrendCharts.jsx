@@ -202,9 +202,14 @@ const TrendCharts = () => {
       className="min-h-screen bg-canvas-default pb-20 md:pb-6"
     >
       <div className="px-4 py-4 md:px-6 md:py-6">
-        <motion.div className="mb-6" initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
-          <h1 className="text-xl md:text-2xl font-semibold text-ink-default">Sales & Purchase Trends</h1>
-          <p className="text-sm text-ink-muted mt-1">Historical performance analysis</p>
+        <motion.div className="mb-6 flex items-center gap-3" initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
+          <button onClick={() => window.history.back()} className="p-2 hover:bg-canvas-faint rounded-lg transition-colors">
+            <svg className="w-5 h-5 text-ink-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+          </button>
+          <div>
+            <h1 className="text-xl md:text-2xl font-semibold text-ink-default">Sales & Purchase Trends</h1>
+            <p className="text-sm text-ink-muted mt-1">Historical performance analysis</p>
+          </div>
         </motion.div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
@@ -386,8 +391,8 @@ const TrendCharts = () => {
             </div>
           </div>
 
-          <div className="p-4">
-            <div className="h-64 flex items-end gap-1">
+          <div className="p-4 overflow-x-auto">
+            <div className="h-64 flex items-end gap-1 min-w-max">
               {chartData.map((d, idx) => {
                 const salesHeight = (d.sales / maxValue) * 100;
                 const purchaseHeight = (d.purchase / maxValue) * 100;
@@ -433,8 +438,8 @@ const TrendCharts = () => {
               <h3 className="font-medium text-ink-default">3-Month Sales Moving Average</h3>
               <p className="text-xs text-ink-muted">Trend line smoothing monthly fluctuations</p>
             </div>
-            <div className="p-4">
-              <div className="flex items-end gap-4">
+            <div className="p-4 overflow-x-auto">
+              <div className="flex items-end gap-4 min-w-max">
                 <div className="text-xs text-ink-muted flex flex-col justify-between h-48 py-2">
                   <span>100%</span><span>50%</span><span>0%</span>
                 </div>

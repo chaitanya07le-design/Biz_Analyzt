@@ -30,7 +30,9 @@ export default function PendingOrders({ type }) {
 
   return <div className="min-h-screen bg-canvas-default p-4 md:p-6 space-y-5">
     <div className="flex items-center gap-3">
-      <button onClick={() => navigate('/reports')} className="p-2 hover:bg-canvas-faint rounded-lg">←</button>
+      <button onClick={() => navigate('/reports')} className="p-2 hover:bg-canvas-faint rounded-lg transition-colors">
+        <svg className="w-5 h-5 text-ink-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+      </button>
       <div><h1 className="text-xl md:text-2xl font-semibold text-ink-default">Pending {isSales ? 'Sales' : 'Purchase'} Orders</h1><p className="text-sm text-ink-muted">Open orders awaiting fulfilment</p></div>
     </div>
     <div className="grid grid-cols-2 gap-3 max-w-xl">

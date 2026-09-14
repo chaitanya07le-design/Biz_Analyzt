@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../services/api';
 import VoucherHeader from '../components/voucher/VoucherHeader';
 import VoucherItemsTable from '../components/voucher/VoucherItemsTable';
@@ -19,6 +19,9 @@ const TallyVoucherDetail = () => {
 
   // voucherId is only present in URLs from ExpensesReport (composite key with |) or as a UUID
   // URLs like "Purchase/78/24-25" have no voucherId — the / is part of the voucher number
+  const [searchParams] = useSearchParams();
+  const queryVoucherId = searchParams.get('id');
+
   const lastSlash = decodedSplat.lastIndexOf('/');
   let voucherNo, voucherId;
   if (lastSlash > 0) {
@@ -26,15 +29,15 @@ const TallyVoucherDetail = () => {
     // A voucherId is either a composite key (contains |) or a UUID (contains -)
     const looksLikeVoucherId = lastPart.includes('|') || (lastPart.includes('-') && lastPart.length > 30);
     if (looksLikeVoucherId) {
-      voucherNo = decodedSplat.slice(0, lastSlash);
-      voucherId = lastPart;
+      voucherNo = decodedSplat.slice(0, lastSlash).trim();
+      voucherId = queryVoucherId || lastPart;
     } else {
-      voucherNo = decodedSplat;
-      voucherId = null;
+      voucherNo = decodedSplat.trim();
+      voucherId = queryVoucherId || null;
     }
   } else {
-    voucherNo = decodedSplat;
-    voucherId = null;
+    voucherNo = decodedSplat.trim();
+    voucherId = queryVoucherId || null;
   }
 
   const [voucher, setVoucher] = useState(null);

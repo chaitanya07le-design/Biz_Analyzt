@@ -43,5 +43,5 @@ export default function PartyWiseSales() {
 
   const activeData = tallyPartySales ?? partySales;
 
-  return <VoucherReportLayout title="Party-wise Sales Report" data={activeData} tallyData={tallyPartySales} loading={loading} columns={columns} partyList={partyList} emptyMessage="No sales vouchers found" />;
+  return <VoucherReportLayout title="Party-wise Sales Report" showBackButton={true} data={activeData} tallyData={tallyPartySales} loading={loading} columns={columns} partyList={partyList} emptyMessage="No sales vouchers found" />;
 }

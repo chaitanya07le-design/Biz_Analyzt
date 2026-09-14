@@ -348,6 +348,7 @@ const ReportsPage = () => {
           {filteredReports.map((report, idx) => (
             <motion.div
               key={report.id}
+              className="h-full w-full flex"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.1 + idx * 0.03 }}

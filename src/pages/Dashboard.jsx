@@ -449,11 +449,11 @@ const Dashboard = () => {
             Live Tally dashboard data is unavailable. Existing Google Sheets data remains displayed.
           </div>
         )}
-        <div className="flex items-start justify-between bg-white p-6 rounded-2xl shadow-card border border-slate-100">
+        <div className="flex flex-col md:flex-row md:items-center justify-between bg-white p-5 md:p-6 rounded-2xl shadow-card border border-slate-100 gap-4">
           <div>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2 md:gap-3">
               <h1 className="text-2xl md:text-3xl font-display font-bold text-ink-900 tracking-tight">System Dashboard</h1>
-              <span className={`px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded-md ${
+              <span className={`px-2.5 py-1 text-[10px] md:text-xs font-bold uppercase tracking-wider rounded-md ${
                 connectionStatus === 'connected' 
                   ? 'bg-kinetic-secondary/10 text-kinetic-secondary' 
                   : connectionStatus === 'disconnected'
@@ -465,14 +465,14 @@ const Dashboard = () => {
                 {connectionStatus === 'checking' && '● Checking...'}
               </span>
               {!tallyLoading && Object.keys(tallyTemplates).length > 0 && (
-                <span className="text-xs font-medium text-kinetic-neutral">Tally refresh requested</span>
+                <span className="text-[10px] md:text-xs font-medium text-kinetic-neutral">Tally refresh requested</span>
               )}
             </div>
             <p className="text-sm text-kinetic-neutral font-medium mt-1">
               {currentCompany?.name || 'Sharma Trading Co.'}
             </p>
           </div>
-          <div className="bg-slate-50 px-4 py-2 rounded-lg border border-slate-100 text-sm font-semibold text-ink-muted">
+          <div className="bg-slate-50 px-3 py-1.5 md:px-4 md:py-2 rounded-lg border border-slate-100 text-xs md:text-sm font-semibold text-ink-muted self-start md:self-auto">
             {dateRange.label || 'All data'}
           </div>
         </div>

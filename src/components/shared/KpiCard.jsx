@@ -74,7 +74,10 @@ const KpiCard = ({ title, value, trend, trendDirection, icon, color = 'kinetic-p
         </div>
         
         <div>
-          <p className="font-sans text-3xl font-extrabold text-ink-DEFAULT tracking-tight">
+          <p 
+            className="font-sans text-[1.1rem] min-[380px]:text-lg sm:text-xl md:text-2xl lg:text-3xl font-extrabold text-ink-DEFAULT tracking-tight"
+            title={typeof value === 'number' ? `₹${value.toLocaleString('en-IN')}` : value}
+          >
             {typeof value === 'number' ? `₹${value.toLocaleString('en-IN')}` : value}
           </p>
           
